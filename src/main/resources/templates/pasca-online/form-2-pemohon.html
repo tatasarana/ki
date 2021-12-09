@@ -1,0 +1,145 @@
+<div class="row display--none" js-direction="step-form-place" js-id="2" xmlns:th="http://www.w3.org/1999/xhtml">
+    <form id="formPemohon" th:object="${dataPemohon}">
+        <!--Header Judul-->
+        <div class="row col-md-12" style="margin-bottom: 15px">
+            <div class="col-md-4">
+                <h3>Data Pemohon</h3>
+            </div>
+            <div class="col-md-8">
+                <div class="pull-right">
+                    <li js-direction="step-form" js-id="1" style="list-style-type:none; float:left">
+                        <button type="button" class="btn btn-warning">
+                            Sebelumnya
+                        </button>
+                    </li>
+                    <li style="list-style-type:none; float:right; margin-left:5px;">
+                        <button type="button" class="btn btn-primary" id="btnSaveFormPemohon">
+                            Simpan dan Lanjutkan
+                        </button>
+                    </li>
+                </div>
+            </div>
+            <div class="pull-right">
+                <label class="col-form-label notice">*) Wajib Diisi</label>
+            </div>
+        </div>
+        
+        <!--Form-->
+        <div class="row col-md-12">
+        	<div class="col-md-12">
+             	<div class="form-group">
+                	<label class="col-form-label col-sm-3">Nomor KTP</label>
+               		<div class="col-sm-9">
+                    	<input type="text" class="form-control" placeholder="Nomor KTP" th:field="*{no}" maxlength="16" id="ownerNo"/>
+                    	<span class="help-block" th:if="${#fields.hasErrors('no')}" th:errors="*{no}"></span>
+                	</div>
+             	</div>
+             	<div class="form-group required">
+                	<label class="col-form-label required-label col-sm-3">Nama Pemohon</label>
+                	<div class="col-sm-9">
+                    	<input type="text" class="form-control" placeholder="Nama Pemohon" id="ownerName"
+                        	th:field="*{name}" th:required="true" maxlength="150"/>
+                    	<span class="help-block" th:if="${#fields.hasErrors('name')}"
+                        	th:errors="*{name}"></span>
+                 	</div>
+             	</div>
+             	<div class="form-group required">
+                	<label class="col-form-label required-label col-sm-3">Kewarganegaraan</label>
+                	<div class="col-sm-9">
+                    	<select class="form-control" th:field="*{nationality.id}" id="ownerNationality"
+                        	th:required="true">
+                        	<option style="display: none" value="">-Pilih Kewarganegaraan-</option>
+                        	<option th:each="listCountry : ${listCountry}" th:value="${listCountry.id}"
+                            	th:text="${listCountry.name}"></option>
+                   		</select>
+                 	</div>
+             	</div>
+             	<div class="form-group">
+                	<label class="col-form-label col-sm-3">Jenis Pemohon</label>
+                	<div class="col-sm-9">
+                    	<label class="radio-inline">
+                       		<input type="radio" name="jPerusahaan"
+                        		th:field="*{ownerType}" value="Perorangan" id="jp1"/>Perorangan
+                    	</label>
+                     	<label class="radio-inline">
+                        	<input type="radio" name="jPerusahaan" th:field="*{ownerType}"
+                            	value="Badan Hukum" id="jp2"/>Badan Hukum
+                     	</label>
+                     	<input type="hidden" th:value="*{ownerType}" id="tempOwnerType" />
+             		</div>
+             	</div>
+             	<div class="form-group required">
+                 	<label class="col-form-label required-label col-sm-3">Negara</label>
+                 	<div class="col-sm-9">
+                    	<select class="form-control" th:field="*{mCountry.id}" id="ownerCountry" th:required="true">
+                       		<option style="display: none" value="">-Pilih Negara-</option>
+                         	<option th:each="listCountry : ${listCountry}" th:value="${listCountry.id}"
+                            	th:text="${listCountry.name}"></option>
+                     	</select>
+                     	<input type="hidden" th:value="*{mCountry.id}" id="tempOwnerCountry"/>
+                 	</div>
+             	</div>
+             	<div class="form-group">
+                 	<label class="col-form-label col-sm-3">Provinsi</label>
+                 	<div class="col-sm-9">
+                     	<select class="form-control cDisable" th:field="*{mProvince.id}" id="ownerProvince">
+                        	<option style="display: none" value="">-Pilih Provinsi-</option>
+                         	<option th:each="listProvince : ${listProvince}" th:value="${listProvince.id}"
+                            	th:text="${listProvince.name}"></option>
+                     	</select>
+                     	<input type="hidden" th:value="*{mProvince.id}" id="tempOwnerProvince"/>
+                 	</div>
+             	</div>
+             	<div class="form-group">
+                	<label class="col-form-label col-sm-3">Kabupaten/Kota</label>
+                 	<div class="col-sm-9">
+                    	<select class="form-control cDisable" th:field="*{mCity.id}" id="ownerCity">
+                        	<option style="display: none" value="">-Pilih Kabupaten/Kota-</option>
+                        	<option class="optCity" th:each="listCity : ${listCity}" th:value="${listCity.id}"
+                            	th:text="${listCity.name}" th:classappend="${listCity.mProvince.id}"></option>
+                     	</select>
+                     	<input type="hidden" th:value="*{mCity.id}" id="tempOwnerCity"/>
+                 	</div>
+             	</div>
+             	<div class="form-group required">
+					<div class="col-md-3">
+						<label class="col-form-label required-label"> Alamat </label> <br /> <span
+							style="color: black; font-size: 12px">(Mohon Diisi Lengkap)</span>
+					</div>
+                 	<div class="col-sm-9">
+                    	<textarea class="form-control" placeholder="Alamat pemohon (mohon diisi lengkap). Contoh: Gedung Sudirman, Lantai 5 Unit G, Jl. Sultan II-A No. 34, RT/RW: 003/004, Pondok Indah (tidak perlu menuliskan kab/kota, provinsi dan kode pos); atau Suite 6 Build A, 6 Floor, Atlantic Suites, Europort;" id="ownerAddress"
+                        	th:field="*{address}" th:required="true" maxlength="255"></textarea>
+                     	<span class="help-block" th:if="${#fields.hasErrors('address')}"
+                        	th:errors="*{address}"></span>
+                 	</div>
+             	</div>
+             	<div class="form-group">
+                	<label class="col-form-label col-sm-3">Kode Pos</label>
+                	<div class="col-sm-9">
+                    	<input type="text" class="form-control" placeholder="Kode Pos" id="ownerZipCode"
+                        	th:field="*{zipCode}" maxlength="9"/>
+                     	<span class="help-block" th:if="${#fields.hasErrors('zipCode')}"
+                           	th:errors="*{zipCode}"></span>
+                	</div>
+             	</div>
+             	<div class="form-group required">
+                 	<label class="col-form-label required-label col-sm-3">Nomor HP</label>
+                 	<div class="col-sm-9">
+                     	<input type="text" class="form-control" placeholder="Nomor HP" id="ownerPhone"
+                    		th:field="*{phone}" th:required="true" maxlength="16"/>
+                     	<span class="help-block" th:if="${#fields.hasErrors('phone')}"
+                           	th:errors="*{phone}"></span>
+                 	</div>
+             	</div>
+             	<div class="form-group required">
+                	<label class="col-form-label required-label col-sm-3">Email</label>
+                 	<div class="col-sm-9">
+                    	<input type="email" class="form-control" placeholder="Email" id="ownerEmail"
+                        	th:field="*{email}" th:required="true"/>
+                     	<span class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                 	</div>
+             	</div>
+         	</div>         
+        </div>
+    </form>
+</div>

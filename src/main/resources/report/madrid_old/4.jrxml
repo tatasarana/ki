@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="4" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5074e2f0-89f8-4eb6-b3ef-03243fdf7c9f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="119"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA["MID2019000001"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="priorList" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="brandLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+A.APPLICATION_ID,
+D.TM_PRIOR_ID,
+COALESCE(B.COUNTRY_NAME,'-') AS COUNTRY_NAME,
+COALESCE(D.TM_PRIOR_NO,'-') AS TM_PRIOR_NO,
+COALESCE(D.TM_PRIOR_NOTE,'-') AS TM_PRIOR_NOTE,
+COALESCE(TO_CHAR(D.TM_PRIOR_DATE,'DD/MM/YY'),' ') AS TM_PRIOR_DATE,
+COALESCE(C.TM_STANDARD_CHAR,0) AS TM_STANDARD_CHAR,
+COALESCE(C.TM_COLOR_COMBINATION,0) AS TM_COLOR_COMBINATION,
+COALESCE(C.TM_BRAND_COLOR,' ') AS TM_BRAND_COLOR,
+COALESCE(C.TM_COLOR_COMBINATION,0) AS TM_COLOR_COMBINATION,
+COALESCE(C.TM_COLOR_INDICATION,' ') AS TM_COLOR_INDICATION
+FROM TX_TM_GENERAL A
+LEFT JOIN TX_TM_PRIOR D ON D.APPLICATION_ID = A.APPLICATION_ID
+LEFT JOIN M_COUNTRY B ON B.COUNTRY_ID = D.TM_PRIOR_COUNTRY
+LEFT JOIN TX_TM_BRAND C ON C.APPLICATION_ID = A.APPLICATION_ID
+WHERE A.APPLICATION_ID = $P{applicationId}
+ORDER BY D.TM_PRIOR_NO ASC]]>
+	</queryString>
+	<field name="APPLICATION_ID" class="java.lang.String"/>
+	<field name="TM_PRIOR_ID" class="java.lang.String"/>
+	<field name="COUNTRY_NAME" class="java.lang.String"/>
+	<field name="TM_PRIOR_NO" class="java.lang.String"/>
+	<field name="TM_PRIOR_NOTE" class="java.lang.String"/>
+	<field name="TM_PRIOR_DATE" class="java.lang.String"/>
+	<field name="TM_STANDARD_CHAR" class="java.math.BigDecimal"/>
+	<field name="TM_COLOR_COMBINATION" class="java.math.BigDecimal"/>
+	<field name="TM_BRAND_COLOR" class="java.lang.String"/>
+	<field name="TM_COLOR_INDICATION" class="java.lang.String"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="100" y="25" width="225" height="224" uuid="8016c2f4-8165-4cb1-829b-94e4b34c8dda">
+					<printWhenExpression><![CDATA[$P{approve}!=null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="802" splitType="Stretch">
+			<textField>
+				<reportElement x="65" y="568" width="468" height="47" uuid="b59719d6-c122-4123-a97a-6db79238a853"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Color or combination of colors claimed : "+($F{TM_BRAND_COLOR}==null?"":$F{TM_BRAND_COLOR})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="48" y="273" width="212" height="192" uuid="bea5e037-e303-4b58-8f0b-3fe45af70e90"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="15" y="15" width="525" height="190" uuid="9e96ffd2-251c-4a81-aedf-2cd0a6f6876f"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="470" y="0" width="70" height="15" uuid="6d69f93d-14c3-4b22-a274-da79a9f1098a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[MM2(E), page 3]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="47" y="20" width="307" height="20" uuid="aab8f2eb-6067-4ae0-b6b6-4459bc6076cc"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRIORITY CLAIMED]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="73" y="41" width="460" height="18" uuid="3b54ead2-f361-4436-be99-64aa2cd2d6da"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["The applicant claims the priority of the earlier filing mentioned below"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="48" y="45" width="10" height="10" backcolor="#808080" uuid="42f641d0-6b26-406f-9918-fd833d06dbff"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_PRIOR_ID} != null ? "X":""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="48" y="59" width="485" height="18" uuid="f81a5c6c-22a9-4e7e-a3b7-35b2b853ee4c"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Office of earlier filing : "+($F{COUNTRY_NAME}!=null ?$F{COUNTRY_NAME}:"-")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="48" y="113" width="485" height="27" uuid="ab3f62f0-703d-49ea-abd2-b8286e8b15e3"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["If the earlier filing does not relate to all the goods and services listed in item 10 of this form, indicate in the space provided below the goods and services to which it does relate :"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="48" y="140" width="485" height="36" uuid="a04f2fb8-8298-4f34-b159-f1309cd1e6e5"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_PRIOR_NOTE}==null?"":$F{TM_PRIOR_NOTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="47" y="142" width="485" height="36" uuid="302ec6f6-24df-4a17-9325-048c884ca106"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="22" y="21" width="20" height="20" backcolor="#000000" uuid="59e216bb-d4a1-4f85-a7a8-3951b90c56f8"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="22" y="21" width="20" height="19" forecolor="#FFFFFF" uuid="81d3c3d1-8aa3-4f61-8a9c-15c98cbc439b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[6]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="15" y="207" width="525" height="310" uuid="1252c9a4-1c35-4fe0-8f4f-2b869abaeefb"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Transparent" x="47" y="213" width="307" height="20" uuid="39dc860b-474d-463b-bec1-8d7ae3aaa090"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[THE MARK]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="22" y="213" width="20" height="20" backcolor="#000000" uuid="688f3d65-624f-4a7d-9714-466caf8ff5f2"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="22" y="213" width="20" height="19" forecolor="#FFFFFF" uuid="6f628f4c-24cc-4254-a4c0-a0f9979ef01a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[7]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="60" y="233" width="200" height="40" uuid="1b11bf89-c840-4442-9e66-db5d418455c0"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Place the reproduction of the mark, as it appears in the basic application or basic registration, in the square below."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="47" y="233" width="13" height="18" uuid="c201c091-aaef-450f-9e12-58250312cdcf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(a)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="292" y="233" width="13" height="18" uuid="3989bc87-e98c-412a-8519-c35f125671f6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(b)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="305" y="233" width="200" height="40" uuid="27b46954-fec0-4fc6-a896-495315e0e4b6"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Where the reproduction in item (a) is in black and white and color is claimed in item 8, place a color reproduction of the mark in the square below."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="225" y="570" width="308" height="18" uuid="d0fc4277-33d9-4bc9-a4b6-bdaf2ff97587"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["...................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="15" y="519" width="525" height="170" uuid="e5033e00-c3ae-4cbd-949d-16fa6b05e847"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Transparent" x="47" y="525" width="307" height="20" uuid="8d6ad231-54f3-4635-81e8-1f1d3e174bd0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COLOR(S) CLAIMED]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="22" y="525" width="20" height="20" backcolor="#000000" uuid="e57f0e1a-ebd4-4a22-9c33-123db6e2a4ce"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="22" y="525" width="20" height="19" forecolor="#FFFFFF" uuid="bd17323c-4ecf-4e73-85cf-eb72fe20f4b5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[8]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="15" y="783" width="100" height="17" uuid="5a225c0e-afa2-4ac2-a95a-240f9c5a0952"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="48" y="77" width="485" height="18" uuid="45f767d6-3708-4268-98d1-8ef56474f388"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Number of earlier filing (if available) : "+($F{TM_PRIOR_NO}!=null?$F{TM_PRIOR_NO}:"-")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="48" y="95" width="425" height="18" uuid="b019dac7-fe91-4a3e-bc7d-661dd0b6419d"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Date of earlier filing : "+($F{TM_PRIOR_DATE}!=null?$F{TM_PRIOR_DATE}:"-")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="73" y="176" width="460" height="27" uuid="cba385ff-069e-4299-b3ad-e6f1a2ac830d"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["If several priorities are claimed, check the box and use a continuation sheet giving the above required information for each priority claimed."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="48" y="182" width="10" height="10" backcolor="#808080" uuid="4db1393f-6d49-4102-be6b-ed799eae9e47"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{priorList}==null?"":$P{priorList} > 1 ? "X" : "")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="292" y="273" width="213" height="192" uuid="b9ad7660-c3d6-44ee-bb51-e15e9588454a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="47" y="475" width="13" height="18" uuid="9cd86cec-010e-4e08-ba7e-5aa2301e3f81"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(c)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="47" y="496" width="13" height="18" uuid="821f8649-b5c1-4936-82b2-513a574f38b0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(d)]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="66" y="479" width="10" height="10" backcolor="#808080" uuid="0e9f3dd3-9052-49c2-bd27-4e85bff37762"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TM_STANDARD_CHAR}==null?"":$F{TM_STANDARD_CHAR}.longValue()>0?"X":"")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="66" y="500" width="10" height="10" backcolor="#808080" uuid="161889b2-8635-45a7-8472-8a6b9db5525a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TM_COLOR_COMBINATION}==null?"":$F{TM_COLOR_COMBINATION}.longValue()>0?"X":"")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="475" width="438" height="18" uuid="69944323-d8e4-40aa-89ea-ab22efb4fdef"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["The applicant declares that he wishes the mark to be considered as a mark in standard characters."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="496" width="438" height="18" uuid="554f64e8-ebea-4990-ab93-8f122ad877e4"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["The mark consists exclusively of a color or a combination of colors as such, without any figurative element."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="66" y="553" width="10" height="10" backcolor="#808080" uuid="13391524-b0d2-4576-abfe-aa6e6af60452"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_BRAND_COLOR} !=null ? "X":""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="549" width="438" height="18" uuid="cc47ff98-a352-4537-a685-862602cea069"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["The applicant claims color as a distinctive feature of the mark."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="47" y="549" width="13" height="18" uuid="7ae49576-00ac-4f95-83d2-516ea461f404"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(a)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="478" y="95" width="55" height="18" uuid="911c2c9c-24af-414b-b37e-e0046f982f60"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(dd/mm/yyyy)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="48" y="619" width="13" height="18" uuid="c3880059-cca3-40ff-b3f9-1e0dc0b04c9b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(b)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="65" y="619" width="468" height="29" uuid="515a970d-097a-435e-9c12-0d88d899f2e3"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Indication, for each color, of the principal parts of the mark that are in that color (as may be required by certain designated Contracting Parties):"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="65" y="648" width="469" height="34" uuid="8049ea7d-8406-4115-8f77-fa4a249daea9"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_COLOR_INDICATION}==null?"":$F{TM_COLOR_INDICATION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="65" y="650" width="469" height="32" uuid="f5f4f9df-18e0-4114-b08e-ca6449a0aca3"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="137" y="61" width="396" height="18" uuid="a73ed972-5887-4182-90d7-1dba5ede8098"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["...................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="195" y="79" width="338" height="18" uuid="3b12dd87-6e57-4d9a-8e67-7b1a1fad7087"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["...................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="131" y="97" width="347" height="18" uuid="731fdcd1-600d-440d-aca3-bb460ace74e3"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["...................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="52" y="276" width="205" height="185" uuid="e1da0c6f-67b7-4763-a3c5-6f56254df2f2">
+					<printWhenExpression><![CDATA[$P{brandLogo}!=null && !$P{brandLogo}.equals("") && !$P{brandLogo}.equals(" ")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{brandLogo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="66" y="580" width="467" height="35" uuid="8165b4e7-da95-40e5-b25a-9a1ede7ab393"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[".............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

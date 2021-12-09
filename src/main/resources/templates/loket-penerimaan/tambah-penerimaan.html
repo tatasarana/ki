@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+	<p th:replace="fragment/header :: navbar"/>
+	<div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+	<form class="form-horizontal" autocomplete="off" th:object="${form}" th:action="@{/layanan/tambah-penerimaan}" method="post">
+		<div class="my-wrapper" id="my-wrapper">
+			<div class="my-wrapper--inner">
+				<div class="wrapper-content" id="permohonan-baru">
+					<div class="content--top border--bottom padding-content--left-right">
+						<div class="row">
+							<div class="col-md-12">
+								<h3 class="content--title text--bold">
+									<i class="fas fa-file-alt"></i> Loket Penerimaan Permohonan - Tambah
+								</h3>
+								<small class="sub-header">Loket Penerimaan / Permohonan Baru</small>
+							</div>
+						</div>
+					</div>
+					<div class="content--center padding-content--left-right">
+						<div class="wrapper--bg">
+							<div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+								<button data-dismiss="alert" class="close close-sm" type="button">
+									<i class="icon-remove"></i>
+								</button>
+								<p>[[${errorMessage}]]</p>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label required-label">Asal Permohonan</label>
+										<div class="col-sm-7">
+											<select class="form-control mFileSequence" th:required="true" id="mFileSequence" disabled="true">
+												<option style="display: none" value="">Asal Permohonan</option>
+												<option th:each="mFileSequence :${fileSequenceList}"  th:value="${mFileSequence.id}" th:text="${mFileSequence.desc}" th:selected="${'__${mFileSequence.id}__'.equalsIgnoreCase('__*{mFileSequence.id}__')}"/>
+											</select>
+											<input type="hidden" class="mFileSequence" th:field="*{mFileSequence.id}" th:required="true"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label required-label">Tipe Permohonan</label>
+										<div class="col-sm-7">
+											<select class="form-control" th:field="*{mFileType.id}" th:required="true" id="mFileType" >
+												<option style="display: none" value="">-Pilih Tipe Permohonan-</option>
+												<option th:each="mFileType :${fileTypeList}" th:value="${mFileType.id}" th:text="${mFileType.desc}"/>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label required-label">Jenis Permohonan</label>
+										<div class="col-sm-7">
+											<select class="form-control mFileTypeDetail" th:required="true" id="mFileTypeDetail" disabled="true">
+												<option style="display: none" value="">Jenis Permohonan</option>
+												<option th:each="mFileTypeDetail :${fileTypeDetailList}" th:value="${mFileTypeDetail.id}" th:text="${mFileTypeDetail.desc}" th:selected="${'__${mFileTypeDetail.id}__'.equalsIgnoreCase('__*{mFileTypeDetail.id}__')}"/>
+											</select>
+											<input type="hidden" class="mFileTypeDetail" th:field="*{mFileTypeDetail.id}" th:required="true"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label required-label">Tanggal Pengajuan</label>
+										<div class="col-sm-7">
+											<input type="text" class="form-control" th:field="*{applicationDateTemp}" id="applicationDateTemp" placeholder="Tanggal Pengajuan" th:value="*{applicationDate != null} ? *{#dates.format(applicationDate, 'dd/MM/yyyy HH:mm:ss')} : ''" readonly="true"/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group required">
+										<label class="col-sm-5 col-form-label required-label">Kode Billing</label>
+										<div class="col-sm-5">
+											<input type="text" class="form-control col-md-1" th:field="*{bankCode}" placeholder="Kode Billing" th:required="true" id="codeBilling" th:disabled="${isNew == false}" 
+											th:value="*{bankCode}" maxlength="16"/>
+										</div>
+										<div class="col-sm-1" th:hidden="${isNew == false}">
+											<button type="button" class="btn btn-primary" id="btnCheckBilling" data-loading-text="&lt;i class='fa fa-spinner fa-spin'>&lt;/i> Checking"> Check</button>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label required-label">Tanggal Pembayaran</label>
+										<div class="col-sm-7">
+											<input type="text" class="form-control" th:field="*{paymentDateTemp}" id="paymentDateTemp" placeholder="Tanggal Pembayaran" th:value="*{paymentDate != null} ? *{#dates.format(paymentDate, 'dd/MM/yyyy HH:mm:ss')} : ''" readonly="true"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label required-label">Jumlah Pembayaran</label>
+										<div class="col-sm-7">
+											<input type="text" th:field="*{totalPaymentTemp}" class="form-control col-md-1" placeholder="Jumlah Pembayaran" id="totalPaymentTemp" th:value="*{totalPaymentTemp}" readonly="true"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label required-label">Jumlah Kelas</label>
+										<div class="col-sm-7">
+											<input type="text" class="form-control col-md-1" th:field="*{totalClass}" placeholder="Jumlah Kelas" id="totalClass" th:value="*{totalClass}" readonly="true"/>
+										</div>
+									</div>
+								</div>
+							</div>
+							<label class="control-label notice">*) Wajib Diisi</label>
+							<hr/>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="col-sm-offset-5 col-sm-5">
+											<input type="hidden" th:field="*{txTmOwner.name}" id="ownerName"/>
+											<input type="hidden" th:field="*{txTmOwner.email}" id="ownerEmail"/>
+											<input type="hidden" th:field="*{txTmOwner.phone}" id="ownerPhone"/>
+											<input type="hidden" th:field="*{txTmOwner.address}" id="ownerAddress"/>
+											<input type="hidden" th:field="*{txTmOwner.mCountry.id}" id="ownerCountry"/>
+											<input type="hidden" th:field="*{txTmOwner.mProvince.id}" id="ownerProvince"/>
+											<input type="hidden" th:field="*{txTmOwner.mCity.id}" id="ownerCity"/>
+											<!--<input type="hidden" th:field="*{txTmOwner.mRegion.id}" id="ownerRegion"/>-->
+											<a th:href="@{/layanan/loket-penerimaan}" class="btn btn-danger"><i class="fas fa-times"></i> Batal</a>
+											<button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Proses </button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	$(document).ready(function(){
+
+		$('.datepicker').datepicker({
+			format: 'dd/mm/yyyy',
+			autoclose: true,
+			todayBtn: 'linked',
+			todayHighlight: true,
+			endDate:'today',
+			orientation: "bottom"
+		});
+		$('.datepicker2').datepicker({
+			format: 'dd/mm/yyyy',
+			autoclose: true,
+			todayBtn: 'linked',
+			todayHighlight: true,
+			endDate:'today',
+			orientation: "bottom"
+		});
+		$('form').validate({
+			rules: {
+				'bankCode': {
+					digits: '##bankCode' 
+				}
+			},
+			messages:{
+				'mFileSequence.id':{
+					required:/*[[#{field.error.required('asal permohonan')}]]*/''
+				},
+				'mFileTypeDetail.id':{
+					required:/*[[#{field.error.required('jenis permohonan')}]]*/''
+				},
+				'mFileType.id':{
+					required:/*[[#{field.error.required('tipe permohonan')}]]*/''
+				},
+				'applicationDateTemp':{
+					required:/*[[#{field.error.required('tanggal pengajuan')}]]*/''
+				},
+				'totalClassTemp':{
+					required:/*[[#{field.error.required('jumlah kelas')}]]*/''
+				},
+				'totalPaymentTemp':{
+					required:/*[[#{field.error.required('jumlah pembayaran')}]]*/''
+				},
+				'paymentDateTemp':{
+					required:/*[[#{field.error.required('tanggal pembayaran')}]]*/''
+				},
+				'bankCode':{
+					required:/*[[#{field.error.required('kode billing')}]]*/''
+					,digits:/*[[#{field.error.not.numeric('kode billing')}]]*/''
+				}
+			},
+			highlight: function(element) {
+				$(element).closest('.form-group').addClass('has-error');
+			},
+			unhighlight: function(element) {
+				$(element).closest('.form-group').removeClass('has-error');
+			},
+			errorElement: 'span',
+			errorClass: 'help-block',
+			errorPlacement: function(error, element) {
+				if(element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else {
+					error.insertAfter(element);
+				}
+			},
+			submitHandler: function(form) {
+				swal("Konfirmasi", "Apakah Anda yakin akan proses data ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+	      		.then((value) => {
+	      			if (value) {
+	      				showLoading();
+				        $('form')[0].submit();
+	      		  	}
+	      		});	  
+			}
+		});
+
+		var csrf = /*[[${_csrf.token}]]*/'';
+		var header = "X-CSRF-TOKEN";
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, csrf);
+        });
+
+		$('#codeBilling').on('change', function (e) {
+        	isValidBilling = false;
+        });
+
+		$('#btnCheckBilling').on('click', function (e) {
+			var bankCode = $('#codeBilling').val();
+
+        	if(bankCode.trim().length > 0){
+        		$.ajax({
+	                type: 'POST',
+	                url: /*[[@{/layanan/check-code-billing-loket}]]*/'',
+	                datatype: 'jsonp',
+	                data:  {
+	                	bankCode: bankCode
+	                },
+	                beforeSend: function () {
+	                	showLoading();
+	                },
+	                complete:function(){
+	                	hideLoading();
+	                },
+	                success: function (data) {
+	                	var result = data;
+						
+	                	$('.mFileSequence').val(result.mFileSequence);
+                    	$('#mFileType').val(result.mFileType);
+                    	$('.mFileTypeDetail').val(result.mFileTypeDetail);
+                    	$('#paymentDateTemp').val(result.paymentDate);
+                    	$('#totalPaymentTemp').val(result.totalPaymentTemp);
+                    	$('#totalClass').val(result.totalClass==undefined ? '0' : result.totalClass);
+                    	$('#applicationDateTemp').val(result.applicationDate);
+                    	$('#ownerName').val(result.ownerName);
+                    	$('#ownerEmail').val(result.ownerEmail);
+                    	$('#ownerPhone').val(result.ownerPhone);
+                    	$('#ownerAddress').val(result.ownerAddress);
+                    	$('#ownerCountry').val(result.ownerCountry);
+                    	$('#ownerProvince').val(result.ownerProvince);
+                    	$('#ownerCity').val(result.ownerCity);
+                    	<!--$('#ownerRegion').val(result.ownerRegion);-->
+
+                    	if (result.statusError != null) {
+	                		isValidBilling = false;
+	                		swal("Informasi", result.statusError, "info");
+	                	} else {
+	                		isValidBilling = true;
+	                	}
+	                },
+	                error: function (xhr, status) {
+	                    swal("Error", "Pengecekan kode billing gagal karena terjadi gangguan koneksi ke Simpaki.", "error");
+	                },
+			        timeout: 300000
+	            });
+        	}
+        });
+	});
+</script>
+</body>
+</html>

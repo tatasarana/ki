@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="form-4" th:remove="tag" th:if="${form=='kelas'} or ${isEdit == false}">
+    <script type="text/javascript" language="javascript" th:inline="javascript">
+    /*<![CDATA[*/
+        var csrf = /*[[${_csrf.token}]]*/'';
+        var header = "X-CSRF-TOKEN";
+        var redirect = /*[[@{/layanan/pratinjau-permohonan-proses-madrid(no=${eFilingNo})}]]*/'';
+        var noGeneral = /*[[${noGeneral}]]*/'';
+        var totalClass = /*[[${totalClass}]]*/'';
+        var lookupKonfirm = /*[[${lookupKonfirm}]]*/'';
+        var fileType = /*[[${txReception.mFileType.id}]]*/'';
+        var isNew = /*[[${isNew}]]*/'';
+        var isEdit = /*[[${isEdit}]]*/'';
+        var tableClass = $('#tableTxTmClass');
+		var classStatusEnum = JSON.parse(/*[[${classStatusEnum}]]*/'');
+
+        var searchByArr6 = [];
+        var keywordArr6 = [];
+        var selectedClass = [];
+        var actionType = "none" ;
+
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, csrf);
+        });
+        $(document).ready(function () {
+        	noGeneral = isEdit ? noGeneral : $("#form8NoPermohonan").text();
+            actionType = "none";
+
+            //LIST Data Table in FORM
+			$(document).on('click','#kelas', function() {
+				tableClass = $('#tableTxTmClass').DataTable({
+					'createdRow': function( row, data, dataIndex ) {
+						  $(row).attr('id', data[0]);
+					},
+					searching : true,
+					'columnDefs': [
+						{
+							'targets': 0,
+							'visible': isEdit,
+							'searchable': false,
+							'orderable': false,
+							'className': 'dt-body-center',
+							'render': function (data, type, full, meta) {
+								if (full[9] == 'TRUE')
+									return '<input type="checkbox" checked="true" disabled="true"/>';
+								else if (full[8] == classStatusEnum.acceptLabel)
+									return '<input type="checkbox" checked="true"/>';
+								else
+									return '<input type="checkbox"/>';
+							}
+						},
+						{
+							'targets': 1,
+							'visible': true,
+							'searchable': false,
+						},
+						{
+							'targets': [3, 6, 7],
+							'visible': false,
+							'searchable': false,
+						},
+						{
+							'targets': -3,
+							'visible': isEdit,
+							'searchable': isEdit,
+						},
+						{
+							'targets': -2,
+							'visible': false,
+							'searchable': false,
+						},
+						{
+							'targets': -1,
+							'searchable': false,
+							'width': '80',
+							'data': null,
+							'className': 'dt-body-center',
+							'render': function (data, type, full, meta) {
+								if (full[9] == 'TRUE' || !isEdit)
+									return '<button type="button" class="btn btn-danger btn-xs">Hapus</button>';
+								else
+									return '';
+							}
+						}
+					],
+					ajax: {
+						type: 'GET',
+						data: {
+							appNo: noGeneral
+						},
+						url: /*[[@{/layanan/list-txclass}]]*/''
+
+					},
+					initComplete:function(settings,json){
+						$.each(tableClass.rows().nodes(), function (index, value) {
+							var row = tableClass.row(index);
+							var data = row.data();
+
+							excludeArr.push(data[0]);
+						});
+
+					},
+					language: {
+						url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+					}
+				});
+			});
+            
+            $(document).on('change', '.check-class', function(e) {
+                var checked = this.checked;
+                var idx = $(this).attr('data-idx');
+                if(checked) {
+                    
+                    var x = tableForm6.row($(this).parent().parent()).data();
+
+                    selectedClass.push(x);
+                } else {
+                    var i;
+                    for (i = 0; i < selectedClass.length; i++) {
+                        if(selectedClass[i][0] == idx) {
+                            selectedClass.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            });
+
+            tableClass.on('error.dt',function(e,settings,techNote,message){
+	            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+            });
+
+         	//LIST Data Table in Modal Tambah Kelas
+            var tableForm6 = $('#table6').DataTable({
+            	'createdRow': function( row, data, dataIndex ) {
+          	      	$(row).attr('id', data[0]);
+          	    },
+                pageLength: 10,
+                deferLoading: 0, // here
+                processing: true,
+                searching : false,
+                serverSide: true,
+                ajax: {
+                    data: function (d) {
+                        listId = []
+                        tableClass.rows().eq(0).each( function ( index ) {
+                            var data = tableClass.row(index).data();
+                            listId.push(data[0]);
+                        });
+
+                        d.searchByArr6 = searchByArr6;
+                        d.keywordArr6 = keywordArr6;
+                        d.excludeArr6 = listId;
+                        //d.orderBy = 'parentClass.no';
+                        d._csrf = csrf;
+                        d.actionType = actionType ;
+                    },
+                    type: 'POST',
+                    url: /*[[@{/layanan/list-kelas}]]*/''
+                },
+                'columnDefs': [
+                    {
+                        "targets": [2, 5, 6],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    {
+                        "targets": [7, 8],
+                        "visible": false,
+                        "searchable": true
+                    },
+                    {
+                        'targets': 0,
+                        'searchable': false,
+                        'orderable': true,
+                        'className': 'dt-body-center',
+                        'render': function (data, type, full, meta) {
+                            for (i = 0; i < selectedClass.length; i++) {
+                                if(selectedClass[0] == data) {
+                                    return '<input class="check-class" type="checkbox" data-idx="' + data + '" checked/>';
+                                }
+                            }
+                            return '<input class="check-class" type="checkbox" data-idx="' + data + '" />';
+                        }
+                    }],
+                initComplete:function(settings,json){
+                	$('#table6_filter.dataTables_filter').empty();
+                	$("#table6_length").css('margin-top', '29px');
+                    // swal("Informasi", "Silakan cari padanan kata jenis barang/jasa sesuai dengan sistem klasifikasi. Jika jenis barang/jasa tidak terdaftar, silakan hubungi Bagian Permohonan : " + lookupName + "", "info");
+
+                },
+                "dom":'<"top"flp>rt<"bottom"i><"clear">',
+                language: {
+                    url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+                }
+            });
+         	tableForm6.on('error.dt',function(e,settings,techNote,message){
+	            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+            });
+
+         	//LIST Data Table in Modal Import Kelas
+	        var tableImport = $('#tableImport').DataTable({
+            	'createdRow': function( row, data, dataIndex ) {
+          	      	$(row).attr('id', data[0]);
+        	    },
+                'columnDefs': [
+                    {
+                        "targets": [2, 5, 6],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    {
+                        'targets': 0,
+                        'searchable': true,
+                        'orderable': true,
+                        'className': 'dt-body-center',
+                        'render': function (data, type, full, meta) {
+                            return '<input type="checkbox"/>';
+                        }
+                    }],
+                language: {
+                    url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+                }
+            });
+
+         	// Handle click on checkbox to set state of "Select all" control
+            $('#tableTxTmClass tbody').on('change', 'input[type="checkbox"]', function () {
+            	if(this.checked)
+            		tableClass.cell('#' + $(this).parent().parent().attr('id'), 8).data(classStatusEnum.acceptLabel).draw(false);
+                else
+                	tableClass.cell('#' + $(this).parent().parent().attr('id'), 8).data(classStatusEnum.rejectLabel).draw(false);
+            });
+
+         	// Handle click on "Select all" control
+            $('#select-all-class').on('click', function () {
+                // Get all rows with search applied
+                var rows = tableForm6.rows({ page: 'current' }).nodes();
+
+                if(this.checked)
+                	$(rows).addClass('chkClass');
+                else
+                	$(rows).removeClass('chkClass');
+
+                // Check/uncheck checkboxes for all rows in the table
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+                $('input[type="checkbox"]', rows).change();
+            });
+
+            // Handle click on checkbox to set state of "Select all" control
+            $('#table6 tbody').on('change', 'input[type="checkbox"]', function () {
+            	if(this.checked)
+                	$(this).parent().parent().addClass('chkClass');
+                else
+                	$(this).parent().parent().removeClass('chkClass');
+
+            	// If checkbox is not checked
+                if (!this.checked) {
+                    // If "Select all" control is checked
+                    if ($('#select-all-class').get(0).checked) {
+                        $('#select-all-class').prop("checked", false);
+                    }
+                }
+            });
+
+         	// Handle click on "Select all" control
+            $('#select-all-class-import').on('click', function () {
+                // Get all rows with search applied
+                var rows = tableImport.rows({ page: 'current' }).nodes();
+                // Check/uncheck checkboxes for all rows in the table
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            });
+
+            // Handle click on checkbox to set state of "Select all" control
+            $('#tableImport tbody').on('change', 'input[type="checkbox"]', function () {
+                // If checkbox is not checked
+                if (!this.checked) {
+                    // If "Select all" control is checked
+                    if ($('#select-all-class-import').get(0).checked) {
+                        $('#select-all-class-import').prop("checked", false);
+                    }
+                }
+            });
+
+            //Ketika Selesai Ceklis
+            $('#btnPilihKelas').click(function () {
+                var jumlahKelas = $('#totalClass').val() == undefined ? totalClass : $('#totalClass').val();
+                var classValidate = [];
+                var listId = [];
+                var row = [];
+
+                tableClass.rows().eq(0).each( function ( index ) {
+                    var data = tableClass.row(index).data();
+                    if (classValidate.indexOf(data[2]) == -1) {
+                        classValidate.push(data[2]);
+                    }
+                    listId.push(data[0]);
+                });
+
+                for (var i = 0; i < selectedClass.length; i++) {
+                    if (classValidate.indexOf(selectedClass[i][1]) == -1) {
+                        classValidate.push(selectedClass[i][1]);
+                    }
+                    if (jQuery.inArray( selectedClass[i][0], listId ) == -1){
+                        row.push(selectedClass[i]);
+                    }
+                }
+
+                if (row.length > 0) {
+                    if (classValidate.length > jumlahKelas) {
+                        swal("Informasi", "Sesuai dengan pembayaran Anda hanya boleh memiliki '" + jumlahKelas + "' kelas.", "info");
+                    } else {
+                        $.each(row, function (index, value) {
+                            var data = value;
+
+                            tableClass
+                                .row.add([data[0], 0, data[1], data[2], data[3], data[4], data[5], data[6], classStatusEnum.acceptLabel, isEdit ? 'TRUE' : 'FALSE', ''])
+                                .draw()
+                                .node().id = data[0];
+                        });
+
+                        tableClass.column(1).nodes().each(function (cell, i) {
+                            cell.innerHTML = i + 1;
+                        });
+
+                        $("#tambahKelas").modal('hide');
+                    }
+                }
+                $("#tambahKelas").modal('hide');
+            });
+
+            //TAMBAH OPEN MODAL TAMBAH KELAS
+            $('#btnTambahKelas').click(function () {
+            	$.each(tableClass.rows().nodes(), function (index, value) {
+                    var row = tableClass.row(index);
+                    var data = row.data();
+                    var exist = tableForm6.rows('[id='+data[0]+']').any();
+                    if (exist)
+                        tableForm6.cell("#"+data[0], 7).data('hide').draw();
+                });
+
+                //var rows = tableForm6.rows().nodes();
+                //$('input[type="checkbox"]', rows).prop('checked', false);
+                var rows = tableForm6.rows( '.chkClass' ).nodes();
+                $('input[type="checkbox"]', rows).prop('checked', false);
+                $(rows).removeClass('chkClass');
+
+                $('#select-all-class').prop("checked", false);
+
+                $('#idListMClass').val('');
+                $('#uraian').val('');
+                $('#uraianEng').val('');
+
+                var classType = '';
+                var fileTypeTemp = isEdit ? fileType : $('#mFileType').val();
+                if (fileTypeTemp == 'MEREK_DAGANG') {
+                    $('.optClassJasa').attr('hidden',true);
+                    $('.optClassJasa').attr('disabled',true);
+                    $('.optClassDagang').attr('hidden',false);
+                    $('.optClassDagang').attr('disabled',false);
+                    classType= 'Dagang';
+                } else if (fileTypeTemp == 'MEREK_JASA') {
+                	$('.optClassJasa').attr('hidden',false);
+                    $('.optClassJasa').attr('disabled',false);
+                    $('.optClassDagang').attr('hidden',true);
+                    $('.optClassDagang').attr('disabled',true);
+                    classType= 'Jasa';
+                } else {
+                	$('.optClassJasa').attr('hidden',false);
+                    $('.optClassJasa').attr('disabled',false);
+                    $('.optClassDagang').attr('hidden',false);
+                    $('.optClassDagang').attr('disabled',false);
+                }
+
+                if(classType != '') {
+                    searchByArr6.push('parentClass.type');
+                    keywordArr6.push(classType);
+                }
+
+                selectedClass = [];
+
+                tableForm6.ajax.reload();
+                // tableForm6
+                //     .column(1).search('')
+                //     .column(3).search('')
+                //     .column(4).search('')
+                //     .column(7).search('"show"')
+                //     .column(8).search(classType)
+                //     .draw();
+            });
+
+            $('#uraian').keydown( function(e) {
+	            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+	            if(key == 13) {
+	                e.preventDefault();
+	                var inputs = $(this).closest('formSearch6').find('#uraian:visible');
+	                inputs.eq( inputs.index(this)+ 1 ).focus();
+	            }
+	        });
+
+	        $('#uraianEng').keydown( function(e) {
+	            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+	            if(key == 13) {
+	                e.preventDefault();
+	                var inputs = $(this).closest('formSearch6').find('#uraian:visible');
+	                inputs.eq( inputs.index(this)+ 1 ).focus();
+	            }
+	        });
+
+            //CARI DATA TABLE ON MODAL TAMBAH KELAS
+            $('#btnCariKelas').click(function () {
+                // alert('Button permohonan-online di klik');
+            	var mLookup = $('#lookupKonfirm').val() == undefined ? lookupKonfirm : $('#lookupKonfirm').val();
+                var classId = '^' + $('#idListMClass option:selected').text() + '$';
+
+                // menambahkan parameter 'Konfirmasi' dari mlookup untuk di swal info
+                var lookupName = '';
+                mLookup.forEach(function (element) {
+                	lookupName = element.name;
+                });
+
+                searchByArr6 = [];
+                keywordArr6 = [];
+                actionType = "goSearch" ;
+
+                if($('#idListMClass').val() != '') {
+                    classId = $('#idListMClass').val();
+                    searchByArr6.push('parentClass.id');
+                    keywordArr6.push(classId);
+                }
+
+                if ($('#uraian').val() != '') {
+                    uraian = $('#uraian').val().split(";");
+                    $.each(uraian, function(index, value) {
+                        var string = value.trim().replace(/([,-.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+                        searchByArr6.push('desc');
+                        keywordArr6.push(string);
+                    })
+                }
+
+                if ($('#uraianEng').val() != '') {
+                    uraianEng = $('#uraianEng').val().split(";");
+                    $.each(uraianEng, function(index, value) {
+                        var string = value.trim().replace(/([,-.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+                        searchByArr6.push('descEn');
+                        keywordArr6.push(string);
+                    })
+                }
+                var classType = '';
+                var fileTypeTemp = isEdit ? fileType : $('#mFileType').val();
+
+                if(fileTypeTemp == 'MEREK_DAGANG'){
+                    classType= 'Dagang';
+                    searchByArr6.push('parentClass.type');
+                    keywordArr6.push(classType);
+                }
+                if(fileTypeTemp == 'MEREK_JASA'){
+                    searchByArr6.push('parentClass.type');
+                    keywordArr6.push(classType);
+                    classType= 'Jasa';
+                }
+
+                tableForm6.ajax.reload(function (json) {
+                      if ((json.recordsTotal) == 0){
+                          // #rian@docotel.com
+                          //reset keyword
+                          //$('#uraian').val("");
+                          //$('#uraianEng').val("");
+                          //reset ajax config
+                          searchByArr6 = [];
+                            keywordArr6 = [];
+                            actionType = "goSearch" ;
+                            var classType = '';
+                            var fileTypeTemp = isEdit ? fileType : $('#mFileType').val();
+
+                            if(fileTypeTemp == 'MEREK_DAGANG'){
+                                classType= 'Dagang';
+                                searchByArr6.push('parentClass.type');
+                                keywordArr6.push(classType);
+                            }
+                            if(fileTypeTemp == 'MEREK_JASA'){
+                                searchByArr6.push('parentClass.type');
+                                keywordArr6.push(classType);
+                                classType= 'Jasa';
+                            }
+
+                            if($('#idListMClass').val() != '') {
+                                classId = $('#idListMClass').val();
+                                searchByArr6.push('parentClass.id');
+                                keywordArr6.push(classId);
+                            }
+                          //reload table
+                          tableForm6.ajax.reload();
+                          swal("Informasi", "Silakan cari padanan kata jenis barang/jasa sesuai dengan sistem klasifikasi. Jika jenis barang/jasa tidak terdaftar, silakan hubungi Bagian Permohonan : " + lookupName + "", "info");
+                      }
+                });
+
+                // tableForm6
+                //     .column(1).search(classId, true, false )
+                //     .column(3).search($('#uraian').val())
+                //     .column(4).search($('#uraianEng').val())
+                //     .column(7).search('"show"')
+                //     .column(8).search(classType)
+                //     .draw();
+
+                /*var info = tableForm6.page.info();
+
+                if (info.recordsDisplay == 0) {
+                    // alert("Riadmasc dfdf");
+                    // swal("Informasi", "Silakan cari padanan kata jenis barang/jasa sesuai dengan sistem klasifikasi. Jika jenis barang/jasa tidak terdaftar, silakan hubungi Bagian Permohonan : " + lookupName + "", "info");
+                }*/
+            });
+
+            //TAMBAH OPEN MODAL IMPORT KELAS
+            $('#btnImportKelas').click(function () {
+                $('#listMClassImport').val('');
+                $('#uraianImport').val('');
+                $('#uraianEngImport').val('');
+                $('#select-all-class-import').prop("checked", false);
+                $('#rdBahasa').prop('checked',true);
+
+                var fileTypeTemp = isEdit ? fileType : $('#mFileType').val();
+                if (fileTypeTemp == 'MEREK_DAGANG') {
+                    $('.optClassJasa').attr('hidden',true);
+                    $('.optClassJasa').attr('disabled',true);
+                }
+                if (fileTypeTemp == 'MEREK_JASA') {
+                    $('.optClassDagang').attr('hidden',true);
+                    $('.optClassDagang').attr('disabled',true);
+                }
+
+                tableImport.clear().draw();
+            });
+
+            $('#btnHapusAll').click(function () {
+                swal("Konfirmasi", "Apakah Anda yakin akan menghapus semua data kelas?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+                .then((value) => {
+                    if (value) {
+                        $.each(tableClass.rows().nodes(), function (index, value) {
+                            var data = tableClass.row(index).data();
+                            // tableForm6.cell("#"+data[0], 7).data('show').draw();
+                        });
+                        tableClass.clear().draw();
+                    }
+                });
+            });
+
+            //ACTION HAPUS PADA LIST YG SUDAH DI PILIH
+            $('#tableTxTmClass tbody').on('click', 'button', function () {
+                swal("Konfirmasi", "Apakah Anda yakin akan menghapus data kelas ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+                .then((value) => {
+                    if (value) {
+                        var row = tableClass.row($(this).parents('tr'));
+                        var data = row.data();
+
+                        // tableForm6.cell("#"+data[0], 7).data('show').draw();
+
+                        row.remove().draw(false);
+
+                        tableClass.column(1).nodes().each(function (cell, i) {
+                            cell.innerHTML = i + 1;
+                        });
+                    }
+                });
+            });
+
+            //PUSH TO TXTMCLASS
+            $('#btnSaveForm6').on('click', function (e) {
+                noGeneral = isEdit ? noGeneral : $("#form8NoPermohonan").text();
+                if (noGeneral != '') {
+                    if ($('#tableTxTmClass').DataTable().page.info().recordsDisplay == 0) {
+                        swal("Error", "Silakan melengkapi data Kelas, kemudian klik Simpan dan Lanjutkan.", "error");
+                        $("#kelas").trigger("click");
+                    } else {
+                        e.preventDefault();
+                        var listClassChildId = [];
+                        $.each(tableClass.rows().nodes(), function (index, value) {
+                            var row = tableClass.row(index);
+                            var data = row.data();
+                            var classStatus = data[8] == classStatusEnum.acceptLabel ? classStatusEnum.acceptValue : classStatusEnum.rejectValue;
+
+                            listClassChildId.push(data[0] + ';' + classStatus + ';' + data[9]);
+                        });
+
+                        var formData = new FormData;
+                        formData.append('listClassChildId', listClassChildId);
+                        formData.append('appNo', noGeneral);
+
+                        $.ajax({
+                            type: 'POST',
+                            url: /*[[@{/layanan/save-online-form-6}]]*/'',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            beforeSend: function () {
+                                showLoading();
+                            },
+                            complete:function(){
+                                hideLoading();
+                            },
+                            success: function (result) {
+                                if (isEdit){
+                                    window.location.replace(redirect);
+                                }else {
+                                    <!--$('#kelas').addClass('yet');-->
+                                    <!-- Start set value form 8 -->
+                                    var listNo = [];
+                                    var jsonObj = {};
+                                    tableClass.rows().eq(0).each(function (index) {
+                                        var row = tableClass.row(index);
+                                        var data = row.data();
+
+                                        if (jsonObj[[data[2],"desc"]] == undefined) {
+                                            listNo.push(data[2]);
+                                            jsonObj[[data[2],"desc"]] = data[4];
+                                            jsonObj[[data[2],"descEn"]] = data[5];
+                                        } else {
+                                            jsonObj[[data[2],"desc"]] = jsonObj[[data[2],"desc"]] + '; ' + data[4];
+                                            jsonObj[[data[2],"descEn"]] = jsonObj[[data[2],"descEn"]] + '; ' + data[5];
+                                        }
+                                    });
+
+                                    listNo = listNo.sort(function(a,b){
+                                        return a-b;
+                                    });
+
+                                    $("#form8TableKelas tbody").empty();
+                                    $.each( listNo, function( index, value ){
+                                        $("#form8TableKelas tbody").append("<tr><td>" + value + "</td><td>" + jsonObj[[value, "desc"]] + "</td><td>" + jsonObj[[value, "descEn"]] + "</td></tr>");
+                                    });
+                                    <!-- End set value form 8 -->
+                                    $('#dokumen').trigger("click");
+                                    var docIdTemps = '';
+                            	 	$.each(tableDoc.rows().nodes(), function (index, value) {
+                                        var row = tableDoc.row( index );
+                                        var data = row.data();
+
+                                        if(data[0] == 'F19') {
+                                        	docIdTemps = data[0];
+                                        }
+                                    });  
+                            		if($('#mFileTypeDetail').val() == 'UMKM' && docIdTemps == '') {
+                                    	swal("Informasi", "Untuk Jenis Permohonan UMKM, Wajib Melampirkan Jenis Dokumen: Surat UMKM Asli.", "info");
+                                    }
+                                }
+                            },
+    	                    error: function (xhr, status) {
+    		                    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+    	                    }
+                        });
+                    }
+                } else {
+                    $("#general").trigger("click");
+                    swal("Informasi", "Silakan melengkapi data General dan klik Simpan.", "info");
+                }
+            });
+        });
+        /*]]>*/
+    </script>
+</div>
+</html>

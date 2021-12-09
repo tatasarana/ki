@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<link href="../static/css/bootstrap-multiselect.css" rel="stylesheet" th:href="@{/css/bootstrap-multiselect.css}"/>
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <div class="my-wrapper" id="my-wrapper">
+        <div class="my-wrapper--inner">
+            <div class="wrapper-content">
+                <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="fas fa-edit"></i> Permohonan - Ubah
+                            </h3>
+                            <small class="sub-header">Pratinjau / General</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="content--center padding-content--left-right">
+                    <div class="wrapper--bg">
+                        <form id="idForm1" class="form form-horizontal" th:object="${dataLoketPenerimaan}">
+                            <input type="hidden" id="form1AppId" th:value="${noGeneral}"/>
+                            <input type="hidden" value="isEdit" id="isEdit"/>
+                            <div class="row col-md-12" style="margin-bottom: 15px">
+                                <div class="col-md-4">
+                                    <h3>General Info</h3>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="pull-right">
+                                        <button type="button" class="btn btn-primary" id="form1push" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PSGNRL')}">
+                                            <i class="fas fa-save"></i> Simpan
+                                        </button>
+                                        <button type="button" class="btn btn-danger"
+                                                onclick="window.history.go(-1); return false;">
+                                            <i class="fa fa-arrow-left"></i> Kembali
+                                        </button>
+
+                                    </div>
+                                </div>
+                                <div class="pull-right">
+                                    <label class="col-form-label notice">*) Wajib Diisi</label>
+                                </div>
+                            </div>
+                            <div class="row col-md-12">
+                                <div class="col-md-6">
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label col-sm-5">Tanggal Pengajuan</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" disabled="disabled"
+                                                   th:value="*{#dates.format(applicationDate, 'dd/MM/yyyy HH:mm:ss')}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label col-sm-5">Asal Permohonan</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" disabled="disabled">
+                                                <option th:text="*{mFileSequence.desc}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label col-sm-5">Tipe Permohonan</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" th:field="*{mFileType.id}" id="idTypeFiled" disabled="disabled">				                                id="idTypeFiled">
+					                            <option th:each="mFileType :${fileTypeList}" th:value="${mFileType.id}"
+					                                    th:text="${mFileType.desc}"/>
+					                        </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label col-sm-5">Jenis Permohonan</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" id="idtypefilechild" disabled="disabled"
+                                                    th:field="*{mFileTypeDetail.id}">
+                                                <option th:each="listFileTypeDetail : ${listFileTypeDetail}"
+                                                        th:value="${listFileTypeDetail.id}"
+                                                        th:text="${listFileTypeDetail.desc}"></option>
+                                            </select>
+                                            <input type="hidden" id="temp_ftChild" th:value="*{mFileTypeDetail.id}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label col-sm-5">Kode Billing</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" disabled="disabled"
+                                                   th:value="*{bankCode}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label col-sm-5">Tanggal Pembayaran</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" disabled="disabled"
+                                                   th:value="*{#dates.format(paymentDate, 'dd/MM/yyyy HH:mm:ss')}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label col-sm-5">Jumlah Pembayaran</label>
+                                        <div class="col-sm-6">
+                                            <input id="totalPayment" type="text" class="form-control"
+                                                   th:value="*{totalPayment}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label col-sm-5">Jumlah Kelas</label>
+                                        <div class="col-sm-6">
+                                            <input id="totalClass" type="text" class="form-control"
+                                                   th:value="*{totalClass}"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label col-sm-5">Tanggal Input</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" disabled="disabled"
+                                                   th:value="*{#dates.format(createdDate, 'dd/MM/yyyy HH:mm:ss')}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label col-sm-5">User Input</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" disabled="disabled"
+                                                   th:value="*{createdBy.username}"/>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row col-md-6">
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label col-sm-6">Nomor Permohonan</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" disabled="disabled"
+                                                   th:value="*{applicationNo}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-6">Nomor Transaksi</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" disabled="disabled"
+                                                   th:value="*{eFilingNo}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label col-sm-6">Status</label><br/>
+                                        <div class="col-sm-6">
+                                            <select id="idStatus" name="status" required="required" class="form-control">
+                                                <option value="">-</option>
+                                                <option th:each="mmStatus : ${statusList}" th:selected="(${mmStatus.id} == ${dataGeneral.mStatus.id})" th:value="${mmStatus.id}" th:text="${mmStatus.name}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label col-sm-6">Aksi</label>
+                                        <div class="col-sm-6">
+                                            <select id="idAction" name="action" required="required" class="form-control">
+                                                <!--<option th:if="(${dataGeneral.mAction.id == null})" value="">-</option>-->
+                                                <option th:each="mmAction : ${actionList}" th:value="${mmAction.id}" th:text="${mmAction.name}"></option>
+                                                <option th:each="mmAction : ${actionList}" th:if="(${dataGeneral.mAction != null})" th:selected="(${mmAction.id} == ${dataGeneral.mAction.id})" th:value="${mmAction.id}" th:text="${mmAction.name}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label required-label col-sm-6">Tanggal Penerimaan</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control datepicker"
+                                                   id="idTglPenerimaan"
+                                                   name="tglPenerimaan" required="required"
+                                                   th:value="${#dates.format(dataGeneral.filingDate, 'dd/MM/yyyy')}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label required-label col-sm-6">Dasar Hukum</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" th:field="${dataGeneral.mLaw.id}" required="required" id="idLaw" name="mLaw">
+                                                <option th:each="listLaw : ${listMLaw}" th:value="${listLaw.id}"
+                                                        th:text="${listLaw.desc}"></option>
+                                                <input type="hidden" id="temp_law" th:value="${dataGeneral.mLaw.id}"/>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group field--gap">
+                                        <label class="col-form-label required-label col-sm-6">Workflow</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" th:field="${dataGeneral.txReception.mWorkflow.id}" required="required" id="idWorkflow" name="mWorkflow">
+                                                <option th:each="listWorkflow : ${listMWorkflow}" th:value="${listWorkflow.id}"
+                                                        th:text="${listWorkflow.name}"></option>
+                                                <input type="hidden" id="temp_workflow" th:value="${dataGeneral.txReception.mWorkflow.id}"/>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-6">Catatan</label>
+                                        <div class="col-sm-6">
+                                           <textarea class="form-control"
+                                                     placeholder="Catatan (jika ada)" id="notesIpas" th:field="*{notesIpas}" th:value="${dataGeneral.txReception.notesIpas}" maxlength="4000"/>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datepickerEndDate"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<div th:replace="fragment/permohonan/js-form-1 :: form-1"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript"></script>
+</body>
+</html>

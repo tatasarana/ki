@@ -1,0 +1,50 @@
+<div class="row display--none" js-direction="step-form-place" js-id="7" xmlns:th="http://www.w3.org/1999/xhtml">
+    <!--Header Judul-->
+    <div class="row col-md-12" style="margin-bottom: 15px">
+        <div class="col-md-4">
+            <h3>Data Lampiran</h3>
+        </div>
+        <div class="col-md-8">
+            <div class="pull-right">
+                <li js-direction="step-form" class="current" js-id="6"
+                    style="list-style-type: none; float: left">
+                    <button type="button" class="btn btn-warning">
+                        Sebelumnya
+                    </button>
+                </li>
+                <li style="list-style-type:none; float: right; margin-left:5px;">
+                    <button class="btn btn-primary" id="btnsaveJenisDokumen">
+                        Simpan dan Lanjutkan
+                    </button>
+                </li>
+            </div>
+        </div>
+        <div class="pull-right">
+            <label class="col-form-label notice">*) Wajib Diisi</label>
+        </div>
+    </div>
+    <!--Form-->
+    <div class="row col-md-12">
+        <div class="col-md-12">
+            <div class="table-container">
+                <table class="table table-bordered" id="tableForm7">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="idForm7CB"/></th>
+                            <th>Jenis Dokumen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="docList : ${listDocType}">
+                            <td style="text-align: center">
+                                <input type="checkbox" name="docId" th:value="${docList[0]}"
+                                       th:checked="${docList[2] == '1'}"/>
+                            </td>
+                            <td th:text="${docList[1]}" name="docName"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

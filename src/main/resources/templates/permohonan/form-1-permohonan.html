@@ -1,0 +1,142 @@
+<div class="row display--none" js-direction="step-form-place" js-id="1" xmlns:th="http://www.w3.org/1999/xhtml">
+    <form id="idForm1" th:object="${dataLoketPenerimaan}">
+        <input type="hidden" id="form1AppId" th:value="${noGeneral}"/>
+        <!--Header Judul-->
+        <div class="row col-md-12" style="margin-bottom: 15px">
+            <div class="col-md-4">
+                <h3>General Info</h3>
+            </div>
+            <div class="col-md-8">
+                <div class="pull-right">
+                    <li style="list-style-type:none; float: right; margin-left:5px;">
+                        <button type="button" class="btn btn-primary" id="form1push">
+                            Simpan dan Lanjutkan
+                        </button>
+                    </li>
+                </div>
+            </div>
+            <div class="pull-right">
+                <label class="col-form-label notice">*) Wajib Diisi</label>
+            </div>
+        </div>
+        <!--Form-->
+        <div class="row col-md-12">
+            <div class="col-md-6">
+                <div class="form-group field--gap">
+                    <label class="col-form-label col-sm-5">Kode Billing</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" disabled="disabled"
+                               th:value="*{bankCode}"/>
+                    </div>
+                </div>
+                <div class="form-group field--gap">
+                    <label class="col-form-label col-sm-5">Asal Permohonan</label>
+                    <div class="col-sm-7">
+                        <select class="form-control" disabled="disabled">
+                            <option th:text="*{mFileSequence.desc}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group field--gap">
+                    <label class="col-form-label col-sm-5">Tipe Permohonan</label>
+                    <div class="col-sm-7">
+                        <select class="form-control" th:field="*{mFileType.id}" id="idTypeFiled" disabled="disabled">				                                id="idTypeFiled">
+                            <option th:each="mFileType :${fileTypeList}" th:value="${mFileType.id}"
+                                    th:text="${mFileType.desc}"/>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group field--gap">
+                    <label class="col-form-label col-sm-5">Jenis Permohonan</label>
+                    <div class="col-sm-7">
+                        <select class="form-control" id="idtypefilechild" th:field="*{mFileTypeDetail.id}" disabled="disabled">
+                            <option th:each="listFileTypeDetail : ${fileTypeDetailList}"
+                                    th:value="${listFileTypeDetail.id}"
+                                    th:text="${listFileTypeDetail.desc}"></option>
+                        </select>
+                        <input type="hidden" id="temp_ftChild" th:value="*{mFileTypeDetail.id}"/>
+                    </div>
+                </div>
+                <div class="form-group field--gap">
+                    <label class="col-form-label col-sm-5">Tanggal Pembayaran</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" disabled="disabled"
+                               th:value="*{#dates.format(paymentDate, 'dd/MM/yyyy HH:mm:ss')}"/>
+                    </div>
+                </div>
+                <div class="form-group field--gap">
+                    <label class="col-form-label col-sm-5">Jumlah Pembayaran</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" disabled="disabled"
+                               th:value="*{totalPayment}"/>
+                    </div>
+                </div>
+                <div class="form-group field--gap">
+                    <label class="col-form-label col-sm-5">Jumlah Kelas</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" disabled="disabled"
+                               th:value="*{totalClass}"/>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <div class="form-group field--gap">
+                    <label class="col-form-label col-sm-5">Tanggal Pengajuan</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" disabled="disabled"
+                               th:value="*{#dates.format(applicationDate, 'dd/MM/yyyy HH:mm:ss')}"/>
+                    </div>
+                </div>
+                <div class="form-group field--gap">
+                    <label class="col-form-label col-sm-5">Tanggal Input</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" disabled="disabled"
+                               th:value="*{#dates.format(createdDate, 'dd/MM/yyyy HH:mm:ss')}"/>
+                    </div>
+                </div>
+                <div class="form-group field--gap">
+                    <label class="col-form-label col-sm-5">User Input</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" disabled="disabled"
+                               th:value="*{createdBy.username}"/>
+
+                    </div>
+                </div>
+                <div class="form-group field--gap">
+                    <label class="col-form-label col-sm-5">Nomor Permohonan</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" disabled="disabled"
+                               th:value="*{applicationNo}"/>
+                    </div>
+                </div>
+                <div class="form-group field--gap">
+                    <label class="col-form-label col-sm-5">Status</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" disabled="disabled"
+                               th:value="${dataGeneral.mStatus.name}"/>
+                    </div>
+                </div>
+                <div class="form-group field--gap">
+                    <label class="col-form-label required-label col-sm-5">Tanggal Penerimaan</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control datepicker" id="idTglPenerimaan"
+                               name="tglPenerimaan"
+                               required="required" th:value="${#dates.format(dataGeneral.filingDate, 'dd/MM/yyyy')}"/>
+                    </div>
+                </div>
+                <div class="form-group field--gap">
+                    <label class="col-form-label required-label col-sm-5">Dasar Hukum</label>
+                    <div class="col-sm-7">
+                        <select class="form-control" th:required="true" th:autofocus="true" name="mLaw" id="idLaw">
+                            <option th:each="listLaw : ${listLaw}" th:value="${listLaw.id}"
+                                    th:text="${listLaw.desc} "/>
+                        </select>
+                        <input type="hidden" name="mLaw" id="idLaw" th:value="${dataGeneral.mLaw.id}"/>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

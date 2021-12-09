@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<style>
+	.custom-combobox-toggle {
+		position: absolute;
+		top: 173px;
+		bottom: auto;
+		height: 33px;
+		margin-left: -1px;
+		padding: 0;
+	}
+	.custom-combobox-input {
+			width: 95%;
+	}
+	.btn {
+		margin-right: 15px;
+	}
+</style>
+<body th:inline="text">
+	<link href="../static/css/bootstrap-multiselect.css" rel="stylesheet" th:href="@{/css/bootstrap-multiselect.css}"/>
+
+	<div class="my-wrapper-body bghome panel-container">
+		<p th:replace="fragment/header :: navbar"/>
+		<div id="mySideBar" class="panel-left">
+			<span id="position"></span>
+			<p th:replace="fragment/sidebar :: left"/>
+		</div>
+		<div id="myDragBar" class="splitter"></div>
+		<div id="myMain" class="panel-right">
+		<div class="my-wrapper" id="my-wrapper">
+			<div class="my-wrapper--inner">
+
+
+				<!-- dahboard permohonan start -->
+				<div class="wrapper-content">
+
+					<div class="content--top border--bottom padding-content--left-right">
+							<div class="row">
+								<div class="col-md-12">
+									<h3 class="content--title text--bold">
+										<i class="fas fa-tachometer-alt"></i> Dashboard Top 10 Pemohon dan Kuasa
+									</h3>
+								</div>
+							</div>
+					</div>
+
+					<div class="content--center padding-content--left-right">
+											<div class="wrapper--bg">
+							<div class="jumbotron filterSearch">
+								<form>
+									<div class="row">
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Tanggal Penerimaan</label>
+												<div class="row">
+													<div class="col-md-6">
+														<input type="text" id="startDate" class="form-control datepicker" placeholder="Dari"/>
+													</div>
+													<div class="col-md-6 no-left-padding">
+														<input type="text" id="endDate" class="form-control datepicker" placeholder="Sampai"/>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label>Tipe Permohonan</label>
+												<select id="mfileType" class="form-control">
+													<option value="">Semua</option>
+													<option th:each="mFileType :${fileTypeList}" th:value="${mFileType.id}" th:text="${mFileType.desc}"/>
+												</select>
+											</div>
+											<div class="form-group">
+												<label>Kelas</label>
+												<select id="mClass" multiple="multiple">
+													<option th:each="mClass : ${classList}" th:value="${mClass.id}" th:text="${mClass.no}"></option>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Tipe Merek</label>
+												<select id="mListBrandType" class="form-control">
+													<option value="">Semua</option>
+													<option th:each="mListBrandType : ${listBrandType}" th:value="${mListBrandType.id}" th:text="${mListBrandType.name}"/>
+												</select>
+											</div>
+											<div class="form-group">
+												<label>Jenis Permohonan</label>
+												<select id="mFileTypeDetail" class="form-control">
+													<option value="">Semua</option>
+													<option th:each="mFileTypeDetail : ${fileTypeDetailList}" th:value="${mFileTypeDetail.id}" th:text="${mFileTypeDetail.desc}"></option>
+												</select>
+											</div>
+											<div class="form-group">
+												<label>Status</label>
+												<select id="mStatus" class="form-control">
+													<option value="">Semua</option>
+													<option th:each="mmStatus : ${statusList}" th:value="${mmStatus.id}" th:text="${mmStatus.name}"/>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Negara</label>
+												<select id="mListCountry" class="form-control">
+													<option value="">Semua</option>
+													<option th:each="mListCountry : ${listCountry}" th:value="${mListCountry.id}" th:text="${mListCountry.name}"></option>
+												</select>
+											</div>
+											<div class="form-group">
+												<label>Provinsi</label>
+												<select id="mListProvince" class="form-control">
+													<option value="">Semua</option>
+													<option th:each="mListProvince : ${listProvince}" th:value="${mListProvince.id}" th:text="${mListProvince.name}"></option>
+												</select>
+											</div>
+											<div class="form-group">
+												<label>Kab/Kota</label>
+												<select id="mListCity" class="form-control">
+													<option value="">Semua</option>
+													<option class="optCity" th:each="mListCity : ${listCity}" th:value="${mListCity.id}" th:text="${mListCity.name}" th:classappend="${mListCity.mProvince.id}"></option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<button id="btnCari" type="button" class="btn btn-primary">
+												<i class="fas fa-search"></i>
+												Filter
+											</button>
+											<button type="submit" class="btn btn-info" onClick="window.location.reload()">
+												<i class="fas fa-sync-alt"></i>
+												Refresh
+											</button>
+											<button id="btnExport" type="button" class="btn btn-success"><i class="fas fa-file-excel"></i> Export to Excel</button>
+										</div>
+									</div>
+
+									<br></br>
+
+								</form>
+
+								<div class="row">
+									<div class="col-md-6">
+										<label>Top 10 Pemohon Terbanyak</label>
+										<div class="form-group">
+											<table id="table" class="table" style="width: 405px; background-color:#FFFFFF">
+												<tbody id="pemohon">
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<label>Top 10 Kuasa Terbanyak</label>
+										<div class="form-group">
+											<table id="table" class="table" style="width: 405px; background-color:#FFFFFF">
+												<tbody id="kuasa">
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<!-- dahboard permohonan end -->
+
+
+			</div>
+		</div>
+	</div>
+	</div>
+	<div th:replace="fragment/js :: default"></div>
+	<div th:replace="fragment/js :: main"></div>
+	<div th:replace="fragment/js :: datatables"></div>
+	<div th:replace="fragment/js :: datepicker"></div>
+	<script th:src="@{/js/bootstrap-multiselect.min.js}"></script>
+	<script type="text/javascript" language="javascript" th:inline="javascript">
+		/*<![CDATA[*/
+		$(document).ready(function() {
+			initializeUI();
+			reloadTable();
+
+			$("#btnCari").click(function(){
+				reloadTable();
+			});
+
+			$("#btnExport").click(function() {
+				var url = /*[[@{/layanan/cetak-dashboard-pemohon-kuasa"}]]*/
+				$.ajax({
+					type: 'POST',
+					url,
+					data: getFormData(),
+					processData: false,
+					contentType: false,
+					cache: false,
+					xhrFields: {
+						responseType: 'blob',
+					},
+					beforeSend: function () {
+						showLoading();
+					},
+					complete:function(){
+						hideLoading();
+					},
+					success: function (response) {
+						var downloadUrl = URL.createObjectURL(response);
+						var a = document.createElement("a");
+						a.href = downloadUrl;
+						a.download = "dashboard-pemohon-kuasa.xls";
+						document.body.appendChild(a);
+						a.click();
+					},
+				})
+			});
+
+			function reloadTable() {
+				var url = /*[[@{/layanan/dashboard-top-reload-table"}]]*/
+				$.ajax({
+					type: 'POST',
+					url,
+					data: getFormData(),
+					processData: false,
+					contentType: false,
+					dataType: 'JSON',
+					cache: false,
+					beforeSend: function () {
+						showLoading();
+					},
+					complete:function(){
+						hideLoading();
+					},
+					success: function (data) {
+						var xhtml = ''
+						for (i = 0; i < data.topPemohon.length; i++) {
+							var topPemohon = data.topPemohon[i]
+							xhtml += '<tr>'
+							xhtml += '<td>'+topPemohon.nama+'</td>'
+							xhtml += '<td>'+topPemohon.total+'</td>'
+							xhtml += '</tr>'
+						}
+						$('#pemohon').html(xhtml)
+
+						var zhtml = ''
+						for (j = 0; j < data.topKuasa.length; j++) {
+							var topKuasa = data.topKuasa[j]
+							zhtml += '<tr>'
+							zhtml += '<td>'+topKuasa.nama+'</td>'
+							zhtml += '<td>'+topKuasa.total+'</td>'
+							zhtml += '</tr>'
+						}
+						$('#kuasa').html(zhtml)
+					},
+					error: function (xhr, status) {
+						swal("Error", "error", "error");
+					}
+				});
+			}
+
+			function initializeUI() {
+				var lastMonthDate = new Date();
+				lastMonthDate.setDate(0);
+				var defaultStartDate = `${lastMonthDate.getFullYear()}/${String(lastMonthDate.getMonth() + 1).padStart(2, '0')}/01`;
+				var defaultEndDate = `${lastMonthDate.getFullYear()}/${String(lastMonthDate.getMonth() + 1).padStart(2, '0')}/${String(lastMonthDate.getDate()).padStart(2, '0')}`;
+				var datepickerOptions = {
+					format: 'yyyy/mm/dd',
+					autoclose: true,
+					todayBtn: 'linked',
+					endDate: 'today',
+					todayHighlight: true,
+					orientation: "bottom"
+				};
+
+				$('#startDate').val(defaultStartDate);
+				$('#endDate').val(defaultEndDate);
+				$('.datepicker').datepicker(datepickerOptions);
+
+				$('#mClass').multiselect({
+					selectAllValue: 'multiselect-all',
+					enableCaseInsensitiveFiltering: true,
+					enableFiltering: true,
+					maxHeight: '300',
+					buttonHeight: '34',
+					buttonWidth: '100%',
+					onChange: function(element, checked) {
+						var brands = $('#mClass option:selected');
+						var selected = [];
+						$(brands).each(function(index, brand){
+							selected.push([$(this).val()]);
+						});
+					}
+				});
+
+				$('#mStatus').combobox();
+				$(".custom-combobox-input").attr("placeholder", "Semua");
+			}
+
+			function getFormData() {
+				var formData = new FormData;
+				var data = {}
+				data.tipe = $('#mfileType').val()
+				data.jenis = $('#mFileTypeDetail').val()
+				data.kelas = $('#mClass').val()
+				data.status = $('#mStatus').val()
+				data.merek = $('#mListBrandType').val()
+				data.country = $('#mListCountry').val()
+				data.city = $('#mListCity').val()
+				data.province = $('#mListProvince').val()
+				data.start = $('#startDate').val()
+				data.end = $('#endDate').val()
+				formData.append('data', JSON.stringify(data));
+				return formData;
+			}
+		});
+		/*]]>*/
+	</script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 7.2.1.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CetakSuratPernyataan" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cc0ac094-5097-4bdc-b4cc-d5de33e01c46">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="pUploadFileTandaTanganDigital" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pTtdImage" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="brandName" class="java.lang.String"/>
+	<field name="brandLogo" class="java.lang.String"/>
+	<field name="ownerName" class="java.lang.String"/>
+	<field name="ownerAddress" class="java.lang.String"/>
+	<field name="createdDate" class="java.lang.String"/>
+	<field name="ownerOrReprsName" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="60" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="20" uuid="5025b06e-fad5-4226-9f0b-5b6e8a395c61"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="11" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[SURAT PERNYATAAN PERMOHONAN PENDAFTARAN MEREK]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="374" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="43" height="16" uuid="ed6690d2-98ea-446c-b0f3-ff65e094528d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[Merek :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="43" y="0" width="512" height="16" uuid="62da35a8-419c-4a6a-b558-a5e553ced053">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{brandName}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement x="134" y="40" width="289" height="280" uuid="bf6487e0-2e22-4aaa-ad43-4810301051fd"/>
+				<image hAlign="Center" vAlign="Middle" onErrorType="Blank">
+					<reportElement x="-1" y="0" width="289" height="280" uuid="7606d1dd-f6a5-4243-b6c1-96b77016eca5"/>
+					<box padding="0">
+						<pen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[$F{brandLogo}]]></imageExpression>
+				</image>
+			</frame>
+		</band>
+		<band height="95">
+			<staticText>
+				<reportElement x="0" y="0" width="554" height="14" uuid="c64268ad-f14e-4ef0-b2be-8f5bd901ab4f"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[Yang diajukan untuk permohonan pendaftaran merek oleh:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="80" height="14" uuid="efdd0de2-9bd1-48ca-a36f-0a732448eb9f"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[Nama Pemohon ]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="90" y="30" width="465" height="14" uuid="249ef759-6ba2-48eb-a806-59ff061f2c8e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ownerName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="50" width="80" height="14" uuid="ed08a9f4-f68c-46e9-aa21-2905024cef6e"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[Alamat 	            ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="30" width="10" height="14" uuid="f5cb5b55-a563-4578-9bf7-21cc36b07e5b"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="50" width="10" height="14" uuid="8f05c16e-929f-4d18-9dec-7e5b52081b78"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ContainerHeight" x="90" y="50" width="465" height="14" uuid="dfa4d987-9f86-4009-9124-704bb7fbc79d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+					<paragraph lineSpacingSize="1.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ownerAddress}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="257">
+			<staticText>
+				<reportElement x="0" y="0" width="554" height="14" uuid="1257efbe-0fbe-43ac-bc33-747042d0bace"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[Dengan ini menyatakan bahwa merek tersebut merupakan milik pemohon dan tidak meniru merek milik]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="82" width="40" height="14" uuid="367656fa-5382-48bb-9839-a86c36c1f1d4"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[Jakarta,]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="360" y="82" width="194" height="14" uuid="d34c298d-4932-4ca0-9b11-ecf117243dcc">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+					<paragraph lineSpacingSize="1.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{createdDate}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="320" y="222" width="234" height="14" uuid="edd5e91a-3baf-415c-9913-4c608b863d29">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ownerOrReprsName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="14" width="554" height="14" uuid="18238492-bafd-43b6-8eb9-ea8d66ea26ec"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[pihak lain.]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="302" y="102" width="150" height="115" uuid="131d987f-9c12-4858-8580-80c1b9fdebf8"/>
+				<imageExpression><![CDATA[$P{pUploadFileTandaTanganDigital} + $P{pTtdImage}]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

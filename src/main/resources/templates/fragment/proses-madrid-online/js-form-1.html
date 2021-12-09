@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="form-1" th:remove="tag">
+    <script type="text/javascript" language="javascript" th:inline="javascript">
+    /*<![CDATA[*/
+        var csrf = /*[[${_csrf.token}]]*/'';
+        var redirect = /*[[@{/layanan/pratinjau-permohonan-proses-madrid(no=${eFilingNo})}]]*/'';
+        var isNew = /*[[${isNew}]]*/'';
+        var isNewOrEdit = /*[[${isNewOrEdit}]]*/'';
+        var isEditPermohonan = /*[[${isEditPermohonan}]]*/'';
+        var isEdit = /*[[${isEdit}]]*/'';
+        var isReprs = /*[[${isReprs}]]*/'';
+        var isValidBilling = !isNew;
+		
+		$(document).ready(function () { 
+            $("#formGeneral").validate({
+        		rules: {
+    				'codeBilling' : {
+    					digits: '#codeBilling'
+    				}
+        		},
+              	messages: {
+            		'codeBilling': {
+                    	required: /*[[#{field.error.required('Kode Billing')}]]*/''
+                    	,digits: /*[[#{field.error.not.numeric('Kode Billing')}]]*/''
+                  	},
+                  	"mFileType.id": {
+                    	required: /*[[#{field.error.required('Tipe Permohonan')}]]*/''
+                  	}
+              	},
+              	highlight: function (element) {
+                 	$(element).closest('.form-group').addClass('has-error');
+              	},
+              	unhighlight: function (element) {
+                  	$(element).closest('.form-group').removeClass('has-error');
+              	},
+              	errorElement: 'span',
+              	errorClass: 'help-block',
+              	errorPlacement: function (error, element) {
+                  	if (element.parent('.input-group').length) {
+                      	error.insertAfter(element.parent());
+                  	} else {
+                      	error.insertAfter(element);
+                  	}
+              	}
+          	});
+  		});        
+        
+        var header = "X-CSRF-TOKEN";
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, csrf);
+        });
+
+        if(isEditPermohonan) {
+        	$('.'+$('#mFileType').val()).attr('hidden',false);
+        } 
+        $('#mFileType').change(function () {
+        	$('.optDocType').attr('hidden',true);
+        	$('.'+this.value).attr('hidden',false);
+        });
+        
+        $('#codeBilling').on('change', function (e) {
+        	isValidBilling = false;
+        });
+        
+        $('#btnCheckBilling').on('click', function (e) {
+        	$('select[name="mFileType.id"]').rules('remove', 'required');
+        	$('#mFileType').closest('.form-group').removeClass('has-error');
+        	$('#mFileType').next().remove();
+        	
+        	if($("#formGeneral").valid()){
+        		$.ajax({
+	                type: 'POST',
+	                url: /*[[@{/layanan/check-code-billing/proses-madrid}]]*/'',
+	                datatype: 'jsonp',
+	                data:  {
+	                	bankCode: $('#codeBilling').val()
+	                },
+	                beforeSend: function () {
+	                	showLoading();
+	                },
+	                complete:function(){
+	                	hideLoading();
+	                },
+	                success: function (data) {
+	                	var result = JSON.parse(data);
+	                	console.log(result);
+	                	$('#mFileseq').val(result.mFileSequence);
+                    	$('#mFileType').val(result.mFileType);
+                    	$('#mFileTypeDetail').val(result.mFileTypeDetail);
+                    	$('#tglPembayaran').val(result.paymentDate);
+                    	$('#totalPayment').val(result.totalPayment);
+                    	$('#totalPaymentTemp').val(result.totalPaymentTemp);
+                    	$('#totalClass').val(result.totalClass);
+                    	$('#mLaw').val(result.mLaw);
+                    	
+                    	$('#idName').val(result.ownerName);
+                    	$('#idPhone').val(result.ownerPhone);
+                    	$('#idEmail').val(result.ownerEmail);
+                    	$('#nationality').val(result.ownerCountry);
+                    	$('#idCountry').val(result.ownerCountry);
+                    	$('#idAddress').val(result.ownerAddress);
+                    	
+                    	if (result.ownerCountry == 'ID') {
+	                    	$('.cDisable').attr("disabled", false);
+	                    	$('#idProvinsi').val(result.ownerProvince);
+	                    	getCity(result.ownerProvince, result.ownerCity);
+	                        <!--getRegion(result.ownerCity, result.ownerRegion);-->
+                    	}
+                    	
+	                	if (result.statusError != null) {
+	                		isValidBilling = false;
+	                		swal("Informasi", result.statusError, "info");
+	                	} else {
+	                		isValidBilling = true;
+	                	}
+	                	 //set form referensi
+	                	if(result.mFileType === "MADRID_TRANSFORMASI"){
+	                        $("#idTranformasiMadrid").show();
+	                        $("#idReplacementMadrid").hide();
+	                        $("#idReplacementMadridPenggantian").hide();
+	                    }else if(result.mFileType === "MADRID_REPLACEMENT"){
+	                        $("#idTranformasiMadrid").hide();
+	                        $("#idReplacementMadrid").show();
+	                        $("#idReplacementMadridPenggantian").show();
+	                    }else{
+	                        $("#idTranformasiMadrid").hide();
+	                        $("#idReplacementMadrid").hide();
+	                        $("#idReplacementMadridPenggantian").hide();
+	                    } 
+	                },
+			        error: function (xhr, status) {
+				        swal("Error", "Pengecekan kode billing gagal karena terjadi gangguan koneksi ke Simpaki.", "error");
+			        }
+	            });
+        	}
+        });
+        
+        $('#btnSaveForm1').on('click', function (e) {
+        	$('select[name="mFileType.id"]').rules('add', { required: true }); 
+        	var isDisabled = $('#codeBilling').prop('disabled');
+        	
+            var isValidForm = $("#formGeneral").valid();
+            console.log(isEdit);
+            if (isValidForm) { 
+            	if (isValidBilling) {
+            		if($('#mFileType').val() == 'MEREK_DAGANG_JASA' && $('#totalClass').val() <= 1) {
+            			swal("Informasi", "Tipe Permohonan: Merek Dagang & Jasa hanya berlaku jika jumlah kelas lebih dari satu. Jumlah kelas yang Anda bayarkan adalah " + $('#totalClass').val() + " kelas.", "info");
+            		} else {
+            			if(isNew && !isDisabled) {
+            				swal("Konfirmasi", "Apakah data yang Anda isi sudah benar? Tipe permohonan akan mempengaruhi pencarian uraian barang/jasa.", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+                      		.then((value) => {
+                      			if(value) {
+                      				e.preventDefault();
+                                	doSave1();
+                      			}
+                      		});
+            			} else {
+            				e.preventDefault();
+                        	doSave1();
+            			}
+            		}
+            	} else {
+            		//swal("Informasi", "Kode Billing '" + $('#codeBilling').val() + "' Tidak Ditemukan", "info");
+            		swal("Informasi", "Klik tombol 'Check' Kode Billing dan periksa data kode billing", "info");
+            	}
+            }
+        });
+
+        function doSave1() {
+        	var appid = $("#form8NoPermohonan").text();         
+            var law =  $('#mLaw').val();
+            var bankCode = $('#codeBilling').val();
+            var applicationDate = $('#tglPengajuan').val(); 
+            var paymentDate = $('#tglPembayaran').val(); 
+			var mFileSequence = { id: $('#mFileseq').val() };
+			var mFileType = { id: $('#mFileType').val() };
+			var mFileTypeDetail = { id: $('#mFileTypeDetail').val() };
+			var totalClass = $ ('#totalClass').val() 
+			var totalPayment = $ ('#totalPayment').val() 
+            
+			 
+            var data = {
+				appid: appid,
+				law: law,
+				bankCode: bankCode,
+                applicationDate: applicationDate, 
+                paymentDate: paymentDate, 
+                mFileSequence: mFileSequence,
+                mFileType: mFileType,
+                mFileTypeDetail: mFileTypeDetail,
+                totalClass: totalClass,
+                totalPayment: totalPayment
+            };
+            $.ajax({
+                type: 'POST',
+                contentType: "application/json",
+                url: /*[[@{/layanan/save-proses-madrid-form-general}]]*/'',
+                data: JSON.stringify(data),
+                dataType: 'json',
+	            beforeSend:function(){
+		            showLoading();
+	            },
+	            complete:function(){
+		            hideLoading();
+	            },
+                success: function (data) {
+                    if (isEdit) { 
+                        window.location.replace(redirect);
+                    }else if (data == "usedBilling"){
+                        swal("Informasi", "Maaf, Kode Billing " + $('#codeBilling').val() + " Sudah Terpakai !!", "info");
+                    } else if (data == "errorValid") {
+                        swal("Informasi", "Tipe Permohonan: Merek Dagang & Jasa hanya berlaku jika jumlah kelas lebih dari satu. Jumlah kelas yang Anda bayarkan adalah " + $('#totalClass').val() + " kelas.", "info");
+                    } else{
+                    	$("#btnCheckBilling").prop('disabled', true);
+                    	$("#codeBilling").prop('disabled', true);
+                    	//$("#mFileType").prop('disabled', true);
+                    	$("#form8NoPermohonan").text(data);
+                    	$("#form8eFilingNo").text(data);
+                    	$("#form8KodeBilling").text($('#codeBilling').val());
+                    	$('#appNoGeneral').val(data);
+                    	$('#form8AsalPermohonan').text($('#mFileseq option:selected').text());
+                    	$('#form8TipePermohonan').text($('#mFileType option:selected').text());
+                    	$('#form8JenisPermohonan').text($('#mFileTypeDetail option:selected').text());
+                    	$('#form8TanggalPengajuan').text($('#tglPengajuan').val());
+                    	$('#form8TanggalPembayarann').text($('#tglPembayaran').val());
+                    	$('#form8JumlahPembayaran').text($('#totalPaymentTemp').val());
+                    	$('#form8DasarHukum').text($('#mLaw option:selected').text());
+
+                    	 //disini
+
+                    	setTimeout(function() {
+                    		$("#pemohon").trigger("click");
+                	   	}, 500);
+                    }
+                },
+	            error: function (xhr, status) {
+		            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	            }
+            });
+        }
+        /*]]>*/
+    </script>
+</div>
+</html>

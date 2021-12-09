@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <form class="form-horizontal" th:object="${form}" th:action="@{/layanan/distribusi}" method="post">
+        <div class="my-wrapper" id="my-wrapper">
+            <div class="my-wrapper--inner">
+
+                <div class="wrapper-content">
+                    <div class="content--top border--bottom padding-content--left-right">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="content--title text--bold">
+                                    <i class="fas fa-share-square"></i> Distribusi Permohonan
+                                </h3>
+                                <small class="sub-header">Pelayanan Teknis / Distribusi Permohonan</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content--center padding-content--left-right">
+                        <div class="wrapper--bg">
+                            <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                                <button data-dismiss="alert" class="close close-sm" type="button">
+                                    <i class="icon-remove"></i>
+                                </button>
+                                <p>[[${errorMessage}]]</p>
+                            </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-3">Nama Grup</label>
+                                            <div class="col-sm-9">
+                                             <select class="form-control" id="selGrup" th:field="*{txGroup.id}"
+                                                    th:required="true" th:autofocus="true">
+                                                <option style="display:none" value="">-Pilih Grup-</option>
+                                                <option th:each="group : ${groupList}" th:value="${group.id}"
+                                                        th:text="${group.name}" th:attr="total=${group.total}"></option>
+                                             </select>
+                                             <span class="help-block" th:if="${#fields.hasErrors('txGroup.id')}"
+                                                  th:errors="*{txGroup.id}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label col-sm-3">Jumlah Dokumen</label>
+                                            <div class="col-sm-9">
+                                                 <p id="jumDoc">-</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-3">Nama Pemeriksa</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="selPem"
+                                                    th:field="*{mRoleSubstantifDetail.id}" th:required="true">
+                                                    <option style="display:none" value="">-Pilih Pemeriksa-</option>
+                                                    <option th:each="pemeriksa : ${userSubsList}" th:value="${pemeriksa.id}"
+                                                        th:attr="pemeriksa=${pemeriksa.mEmployee.employeeName}"
+                                                        th:text="${pemeriksa.mRoleSubstantif.name + ': ' + pemeriksa.mEmployee.employeeName}"></option>
+                                                        <!--th:text="${pemeriksa.mRoleSubstantif.name + ': ' + pemeriksa.mEmployee.employeeName + ' (' + #lists.size(pemeriksa.txServDistList) + ')'}"></option>-->
+                                                </select>
+                                                <span class="help-block"
+                                                  th:if="${#fields.hasErrors('mRoleSubstantifDetail.id')}"
+                                                  th:errors="*{mRoleSubstantifDetail.id}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label col-sm-3">Catatan Pelayanan Teknis</label>
+                                            <div class="col-sm-9">
+                                              <textarea class="textarea form-control" th:field="*{notes}" placeholder="Catatan Pelayanan Teknis" maxlength="255"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+								<label class="col-label-form notice">*) Wajib Diisi</label>
+								<hr/>
+                                <!--<br/>-->
+                                <div class="row">
+                                <div class="col-md-12"> 
+                                <div class="form-group">
+                                <div class="col-sm-offset-3 col-sm-9">
+                                        <a th:href="@{/layanan/pelayanan-teknis}" class="btn btn-danger"><i class="fas fa-times"></i> Batal</a>
+                                        <a id="approv" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Proses</a>
+                                    </div>
+                                </div>
+                            <!--</div>-->
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function () {
+        var permohonan;
+        var pemeriksa;
+        
+        $('form').validate({
+            messages: {
+                'txGroup.id': {
+                    required: /*[[#{field.error.required('nama grup')}]]*/''
+                },
+                'mRoleSubstantifDetail.id': {
+                    required: /*[[#{field.error.required('pemeriksa')}]]*/''
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function(form) {
+				showLoading();
+				$('form')[0].submit();
+	      	}
+        });
+
+        $('#selGrup').on('change', function () {
+            permohonan = $("option:selected", this).attr('total');
+            $('#jumDoc').text(permohonan + ' Permohonan');
+        });
+
+        $('#selPem').on('change', function () {
+            pemeriksa = $("option:selected", this).attr('pemeriksa');
+        });
+
+        $('#approv').click(function () {
+        	if ($('form').valid()) {
+	            if (permohonan != null && pemeriksa != null) {
+	                swal("Konfirmasi", 'Jumlah Permohonan yang dipilih : ' + permohonan + ',\nApakah anda yakin akan didistribusikan ke Pemeriksa ' + pemeriksa + ' ? ', "warning", {
+	                    buttons: {
+	                        cancel: 'Tidak',
+	                        confirm: 'Ya'
+	                    }
+	                })
+	            	.then((value) => {
+	                    if(value) {
+	                        $('form').submit();
+	                    }
+	                });
+	            }
+        	}
+        });        
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

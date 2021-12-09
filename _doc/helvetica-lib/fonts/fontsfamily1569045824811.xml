@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fontFamilies>
+	<fontFamily name="Helvetica">
+		<normal><![CDATA[fonts/Helvetica/Helvetica.ttf]]></normal>
+		<bold><![CDATA[fonts/Helvetica/Helvetica.ttf]]></bold>
+		<italic><![CDATA[fonts/Helvetica/Helvetica.ttf]]></italic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+		<pdfEmbedded><![CDATA[true]]></pdfEmbedded>
+		<exportFonts/>
+	</fontFamily>
+	<fontFamily name="helvetica">
+		<normal><![CDATA[fonts/Helvetica/Helvetica.ttf]]></normal>
+		<bold><![CDATA[fonts/Helvetica/Helvetica.ttf]]></bold>
+		<italic><![CDATA[fonts/Helvetica/Helvetica.ttf]]></italic>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+		<pdfEmbedded><![CDATA[true]]></pdfEmbedded>
+		<exportFonts/>
+	</fontFamily>
+</fontFamilies>

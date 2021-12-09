@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="3" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5074e2f0-89f8-4eb6-b3ef-03243fdf7c9f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="classContinues" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="listContract" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="contractContinues" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<parameter name="listClass" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="100" y="25" width="225" height="224" uuid="8016c2f4-8165-4cb1-829b-94e4b34c8dda">
+					<printWhenExpression><![CDATA[$P{approve}!=null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="800" splitType="Stretch">
+			<staticText>
+				<reportElement x="440" y="0" width="70" height="15" uuid="6d69f93d-14c3-4b22-a274-da79a9f1098a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[MM2(E), page 8]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="15" y="783" width="100" height="17" uuid="5a225c0e-afa2-4ac2-a95a-240f9c5a0952"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="50" y="91" width="18" height="20" forecolor="#003366" uuid="932d11bd-78ac-46ce-b330-302b57e7dd18"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(a)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="91" width="400" height="29" forecolor="#003366" uuid="630b8004-b624-4f3e-a8b9-3ee0c8bee190"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Indicate below the goods and services for which the international registration is sought :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="60" width="330" height="20" forecolor="#FF0000" uuid="48b8bdbf-f741-4954-b950-d402e2ab4b48"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[10. GOODS AND SERVICES ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="130" width="51" height="18" uuid="836a5582-a777-4900-8521-20be7cd5544e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Class:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="101" y="130" width="409" height="18" uuid="15bd5703-ce88-4fa4-bc9c-e422ff8acf18"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Goods and Services :]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="80" y="375" width="10" height="10" backcolor="#808080" uuid="6ef3e33a-54b2-4327-bfb7-ad68d8f3d13c"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{listContract} > 0 ? "X" : ""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="50" y="370" width="18" height="20" forecolor="#003366" uuid="caed5004-f7ba-4879-aa20-26b12e4529d3"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(b)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="370" width="410" height="30" forecolor="#003366" uuid="92871be2-1082-4cef-ae3c-533aea7923bc"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[The applicant wishes to limit the list of goods and services in respect of one or more designated Contracting Parties, as follows:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="410" width="100" height="30" uuid="5dabc2be-c23b-43e9-a6dc-784bfdda1f95"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Contracting Party:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="410" width="360" height="30" uuid="fff78c25-38b5-431c-979f-9a2a53c556e3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Class(es) or list of goods and services for which protection is sought in this Contracting Party:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="52" y="710" width="478" height="70" uuid="964fe3f9-aa8b-476c-b9c5-c428cb8840a1"/>
+				<textElement>
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[	You can use the Madrid Goods and Services Manager (MGS) to find indications accepted by WIPO.  In MGS, you can also find acceptance information for selected Contracting Parties.  MGS is available at www.wipo.int/mgs.  
+  	Use font “Courier New” or “Times New Roman”, size 12 pt., or larger.  
+  	Use semicolon (;) to separate indications or goods or services listed in a given class.  For example:
+	09	Screens for photoengraving;  computers.  
+	35	Advertising;  compilation of statistics;  commercial information agencies.  
+]]></text>
+			</staticText>
+			<line>
+				<reportElement x="52" y="705" width="160" height="1" uuid="25f5b87e-519a-4534-b9ba-c766e808fae4"/>
+			</line>
+			<textField>
+				<reportElement mode="Transparent" x="50" y="670" width="10" height="10" backcolor="#808080" uuid="bf9caac6-8017-478e-b430-e2de44268867"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{classContinues} > 0 || $P{contractContinues} >0) ? "X" : ""]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="false">
+				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="50" y="150" width="460" height="210" isRemoveLineWhenBlank="true" uuid="5cea6cd7-348c-4580-b239-8db420ea9918">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="listClass">
+					<subreportParameterExpression><![CDATA[$P{listClass}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="classContinues">
+					<subreportParameterExpression><![CDATA[$P{classContinues}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"8_class.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement isPrintRepeatedValues="false" x="50" y="440" width="460" height="210" uuid="d726e349-5324-4975-8f70-fb5fd233211b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<subreportParameter name="contractContinues">
+					<subreportParameterExpression><![CDATA[$P{contractContinues}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="listContract">
+					<subreportParameterExpression><![CDATA[$P{listContract}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"8_limit.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="80" y="668" width="460" height="20" forecolor="#003366" uuid="62cdf1fb-6895-45be-8051-5a0d1a1ccb13"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["If the space provided is not sufficient, check the box and use a <b>continuation sheet.</b>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

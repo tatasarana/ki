@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="form-5" th:remove="tag" th:if="${form=='referensi'} or ${isEdit == false}">
+    <script type="text/javascript" language="javascript" th:inline="javascript">
+     
+    
+    
+    /*<![CDATA[*/
+        var csrf = /*[[${_csrf.token}]]*/'';
+        var redirect = /*[[@{/layanan/pratinjau-permohonan-proses-madrid(no=${eFilingNo})}]]*/'';
+        var noGeneral = /*[[${noGeneral}]]*/'';
+        var isNew = /*[[${isNew}]]*/'';
+        var isEdit = /*[[${isEdit}]]*/'';
+        var docUploadDate = /*[[${docUploadDate}]]*/'';
+        var tableDoc = $('#tableDoc');
+        var files;
+        var dataTableTransformasi = null;
+        var dataTableReplacementPendaftar = null;
+        var dataTableReplacementPendaftar = null;
+        var dataTableReplacementPendaftarPengganti = null;
+        var tableTransformasi = $("#tableTransformasi");
+        var tableReplacementPendaftar = $("#tableReplacementPendaftar");
+        var tableReplacementPendaftarPengganti = $("#tableReplacementPendaftarPengganti");
+
+        /**
+         * trans_applicationID tergenerate setelah
+         * tab general tersimpan
+         * */
+        var trans_applicationID = $('#appNoGeneral').val(); 
+        var trans_refApplicationID = null;
+        var trans_refRegNo=null;
+        var repl_refApplicationID = null;
+        var repl_refApplicationIDPengganti = null; // Disini akan di ganti dengan multi with comma (,)
+
+        // to support multi reference replacement
+        var refReplacementArr = [[${referenceRegNo2}]];
+        
+
+        $(document).ready(function () {
+
+            var header = "X-CSRF-TOKEN";
+          
+          	
+            file_type = $('#mFileType').val();
+            console.log(file_type);
+            console.log(trans_applicationID);
+                
+                if(file_type === "MADRID_TRANSFORMASI"){
+                    $("#idTranformasiMadrid").show();
+                    $("#idReplacementMadrid").hide();
+                    $("#idReplacementMadridPenggantian").hide();
+                }else if(file_type === "MADRID_REPLACEMENT"){
+                    $("#idTranformasiMadrid").hide();
+                    $("#idReplacementMadrid").show();
+                    $("#idReplacementMadridPenggantian").show();
+                }else{
+                    $("#idTranformasiMadrid").hide();
+                    $("#idReplacementMadrid").hide();
+                    $("#idReplacementMadridPenggantian").hide();
+                }
+
+            /////// init table transformasi by default applicationNo /////////
+                /*if(dataTableTransformasi){
+                    dataTableTransformasi.destroy();
+            	}*/
+                let searchByArr = [];
+                let keywordArr = [];
+                searchByArr.push('applicationNo');
+                keywordArr.push([[${referenceAppNo}]]!=""?[[${referenceAppNo}]]:"-");
+                console.log(searchByArr, keywordArr);
+                tableTransformasi.data('searchByArr', searchByArr);
+                tableTransformasi.data('keywordArr', keywordArr);
+                tableTransformasi.data('orderBy', 'applicationNo');
+                dataTableTransformasi = $('#tableTransformasi').DataTable({
+                    'columnDefs': [
+                        {'targets': [0, 4], 'orderable': false}
+                    ],
+                    ajax: {
+                        data: function (d) {
+                            d.searchByArr = tableTransformasi.data('searchByArr');
+                            d.keywordArr = tableTransformasi.data('keywordArr');
+                            d._csrf = csrf;
+                        },
+                        type: 'POST',
+                        url:/*[[@{/layanan/search-nomor-transformasi-replacement}]]*/'',
+                    },
+                    initComplete: function (settings, json) {
+                    	if($('#cariNoTranformasiMadrid').val()){
+							console.log('sini 3')
+                    	    trans_refApplicationID = $('#cariNoTranformasiMadrid').val();
+                    	}
+                    	if($('#cariRegistrasiTransformasiMadrid').val()){
+							console.log('sini 3xx')
+							trans_refApplicationID = $('#cariNoTranformasiMadrid').val();
+                    		trans_refRegNo = $('#cariRegistrasiTransformasiMadrid').val();
+                    	}
+                        for(var i in json.data){
+							console.log('sini 2')
+                            trans_refApplicationID = json.data[i][1];
+                        }
+                    },
+                    ordering: true,
+                    order: [[0, 'desc']],
+                    language: {
+                        url:/*[[@{/js/i18n/datatables.in.json}]]*/''
+                    },
+                    lengthMenu: [[10, 30, 90], [10, 30, 90]],
+                    pageLength: 10,
+                    processing: true,
+                    searching:false,
+                    serverSide: true,
+                });
+                dataTableTransformasi.on('error.dt',function(e,settings,techNote,message){
+                    alert(message);
+                    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                });
+
+            /////// init table replacement1 //////
+                searchByArr = [];
+                keywordArr = [];
+
+                searchByArr.push('txRegistration.no');
+                keywordArr.push([[${referenceRegNo1}]]!=""?[[${referenceRegNo1}]]:"-");
+
+                console.log(searchByArr, keywordArr);
+
+                tableReplacementPendaftar.data('searchByArr', searchByArr);
+                tableReplacementPendaftar.data('keywordArr', keywordArr);
+                tableReplacementPendaftar.data('orderBy', 'applicationNo');
+
+                dataTableReplacementPendaftar = tableReplacementPendaftar.DataTable({
+                    'columnDefs': [
+                        {'targets': [0, 4], 'orderable': false}
+                    ],
+                    ajax: {
+                        data: function (d) {
+                            d.searchByArr = tableReplacementPendaftar.data('searchByArr');
+                            d.keywordArr = tableReplacementPendaftar.data('keywordArr');
+                            /*d.orderBy = table.data('orderBy');
+                            d.orderType = table.data('orderType');*/
+                            d._csrf = csrf;
+                        },
+                        type: 'POST',
+                        url:/*[[@{/layanan/search-nomor-transformasi-replacement}]]*/'',
+                    },
+                    initComplete: function (settings, json) {
+                        //repl_refApplicationID = $('#cariNoPendaftaranInter').val();
+                        refApplicationIDArr = [];
+                        for(var i in json.data){
+                            refApplicationIDArr.push(json.data[i][3]);
+                        }
+                        repl_refApplicationID = refApplicationIDArr.join();
+                    },
+                    ordering: true,
+                    order: [[0, 'desc']],
+                    language: {
+                        url:/*[[@{/js/i18n/datatables.in.json}]]*/''
+                    },
+                    lengthMenu: [[10, 30, 90], [10, 30, 90]],
+                    pageLength: 10,
+                    processing: true,
+                    searching:false,
+                    serverSide: true,
+                });
+
+          ///// Init table replacement 2 ////////
+                searchByArr = [];
+                keywordArr = [];
+
+                searchByArr.push('txRegistration.no');
+                keywordArr.push(refReplacementArr.join()!=""?refReplacementArr.join():"-");
+
+                console.log(searchByArr, keywordArr);
+
+                tableReplacementPendaftarPengganti.data('searchByArr', searchByArr);
+                tableReplacementPendaftarPengganti.data('keywordArr', keywordArr);
+                tableReplacementPendaftarPengganti.data('orderBy', 'txRegistration.no');
+
+                dataTableReplacementPendaftarPengganti = tableReplacementPendaftarPengganti.DataTable({
+                    'columnDefs': [
+                        {'targets': [0, 4], 'orderable': false}
+                    ],
+                    ajax: {
+                        data: function (d) {
+                            d.searchByArr = tableReplacementPendaftarPengganti.data('searchByArr');
+                            d.keywordArr = tableReplacementPendaftarPengganti.data('keywordArr');
+                            /*d.orderBy = table.data('orderBy');
+                            d.orderType = table.data('orderType');*/
+                            d._csrf = csrf;
+                        },
+                        type: 'POST',
+                        url:/*[[@{/layanan/search-nomor-transformasi-replacement}]]*/'',
+                    },
+                    initComplete: function (settings, json) {
+                        //keep multi reference from initialize
+                        refReplacementArr = [];
+                        for(var i in json.data){
+                            refReplacementArr.push(json.data[i][3]);
+                        }
+                        repl_refApplicationIDPengganti = refReplacementArr.join(); //$('#cariNoReplacementMadridInter').val();
+                    },
+                    ordering: true,
+                    order: [[0, 'desc']],
+                    language: {
+                        url:/*[[@{/js/i18n/datatables.in.json}]]*/''
+                    },
+                    lengthMenu: [[10, 30, 90], [10, 30, 90]],
+                    pageLength: 10,
+                    processing: true,
+                    searching:false,
+                    serverSide: true,
+                });
+
+            $("#cariBtnTransformasiMadrid").click(function () {
+
+                if( $('#cariRegistrasiTransformasiMadrid').val()=="" ){
+                    if( !$('#cariNoTranformasiMadrid').val().toLowerCase().startsWith("m") ){
+				        swal("Error", "1 Field tidak boleh kosong / hanya dapat di input dengan nomor madrid, silakan input dengan nomor madrid (contoh : M002019xxxxxxx).", "error");
+                        return;
+                    }
+                }
+                else if( $('#cariNoTranformasiMadrid').val()=="" ){
+                    if( !$('#cariRegistrasiTransformasiMadrid').val().toLowerCase().startsWith("idm") ){
+                        swal("Error", "2 Field tidak boleh kosong / hanya dapat di input dengan nomor registrasi, silakan input dengan nomor registrasi (contoh : IDM00000231).", "error");
+                        return;
+                    }
+                }
+                else {
+                    if( !$('#cariNoTranformasiMadrid').val().toLowerCase().startsWith("m") ){
+                        swal("Error", "3 Field tidak boleh kosong / hanya dapat di input dengan nomor madrid, silakan input dengan nomor madrid (contoh : M002019xxxxxxx).", "error");
+                        return;
+                    }
+                    if( !$('#cariRegistrasiTransformasiMadrid').val().toLowerCase().startsWith("idm") ){
+                        swal("Error", "4 Field tidak boleh kosong / hanya dapat di input dengan nomor registrasi, silakan input dengan nomor registrasi (contoh : IDM00000231).", "error");
+                        return;
+                    }
+                }
+
+            	if(dataTableTransformasi){ 
+                    dataTableTransformasi.destroy(); 
+            	}  
+            	 
+                let searchByArr = [];
+                let keywordArr = [];
+
+                searchByArr.push('applicationNo');
+                searchByArr.push('txRegistration.no');
+                keywordArr.push($('#cariNoTranformasiMadrid').val());
+                keywordArr.push($('#cariRegistrasiTransformasiMadrid').val());
+                console.log(searchByArr, keywordArr);
+
+                tableTransformasi.data('searchByArr', searchByArr);
+                tableTransformasi.data('keywordArr', keywordArr);
+                tableTransformasi.data('orderBy', 'applicationNo');
+
+                dataTableTransformasi = $('#tableTransformasi').DataTable({  
+                    'columnDefs': [
+                        {'targets': [0, 4], 'orderable': false}
+                    ],
+                    ajax: {
+                        data: function (d) {
+                            d.searchByArr = tableTransformasi.data('searchByArr');
+                            d.keywordArr = tableTransformasi.data('keywordArr'); 
+                            d._csrf = csrf;
+                        },
+                        type: 'POST',
+                        url:/*[[@{/layanan/search-nomor-transformasi-replacement}]]*/'',
+                    },
+                    initComplete: function (settings, json) {
+                        /*//keep multi reference from initialize
+                        var refTransformasiArr = [];
+                        for(var i in json.data){
+                            refTransformasiArr.push(json.data[i][3]);
+                        }
+                        trans_refRegNo = refTransformasiArr.join();*/
+						console.log('sini xxx')
+                    	if($('#cariNoTranformasiMadrid').val()){
+							console.log('sini 1')
+                    	    trans_refApplicationID = $('#cariNoTranformasiMadrid').val();
+                    	}
+                    	if($('#cariRegistrasiTransformasiMadrid').val()){
+							console.log('sini 1xx')
+                    		trans_refRegNo = $('#cariRegistrasiTransformasiMadrid').val(); 
+                    	}
+						for(var i in json.data){
+							console.log('sini sini')
+                            trans_refApplicationID = json.data[i][1];
+                        }
+                        updatePratinjauReferenceTransformasiTable(json);
+                    },
+                    ordering: true,
+                    order: [[0, 'desc']],
+                    language: {
+                        url:/*[[@{/js/i18n/datatables.in.json}]]*/''
+                    },
+                    lengthMenu: [[10, 30, 90], [10, 30, 90]],
+                    pageLength: 10,
+                    processing: true,
+                    searching:false,
+                    serverSide: true,
+                });
+                dataTableTransformasi.on('error.dt',function(e,settings,techNote,message){
+                    alert(message);
+                    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                });
+
+                /*if($('#searchAppNo').val().trim().length == 0 && $('#searchRegNo').val().trim().length == 0){
+                    dataTableReferensiTransformasi.clear().draw();
+                } else {
+
+                }*/
+            });
+
+            $("#cariBtnNoPendaftaranInter").click(function () {
+
+                if(!$('#cariNoPendaftaranInter').val().toLowerCase().startsWith("idm")){
+				    swal("Error", "Field tidak boleh kosong / hanya dapat di input dengan nomor registrasi, silakan input dengan nomor registrasi (contoh : IDM000000123).", "error");
+                    return;
+                }
+
+            	if(dataTableReplacementPendaftar){ 
+            		dataTableReplacementPendaftar.destroy(); 
+            	}
+            	 
+                let searchByArr = [];
+                let keywordArr = [];
+
+               // searchByArr.push('applicationNo');
+                searchByArr.push('txRegistration.no');
+                keywordArr.push($('#cariNoPendaftaranInter').val()); 
+
+                console.log(searchByArr, keywordArr);
+
+                tableReplacementPendaftar.data('searchByArr', searchByArr);
+                tableReplacementPendaftar.data('keywordArr', keywordArr);
+                tableReplacementPendaftar.data('orderBy', 'applicationNo');
+
+                dataTableReplacementPendaftar = tableReplacementPendaftar.DataTable({
+                    'columnDefs': [
+                        {'targets': [0, 4], 'orderable': false}
+                    ],
+                    ajax: {
+                        data: function (d) {
+                            d.searchByArr = tableReplacementPendaftar.data('searchByArr');
+                            d.keywordArr = tableReplacementPendaftar.data('keywordArr');
+                            /*d.orderBy = table.data('orderBy');
+                            d.orderType = table.data('orderType');*/
+                            d._csrf = csrf;
+                        },
+                        type: 'POST',
+                        url:/*[[@{/layanan/search-nomor-transformasi-replacement}]]*/'',
+                    },
+                    initComplete: function (settings, json) {
+                        //repl_refApplicationID = $('#cariNoPendaftaranInter').val();
+
+                        refApplicationIDArr = [];
+                        for(var i in json.data){
+                            refApplicationIDArr.push(json.data[i][3]);
+                        }
+                        repl_refApplicationID = refApplicationIDArr.join();
+
+                        updatePratinjauReferenceTransformasiTable(json);
+                    },
+                    ordering: true,
+                    order: [[0, 'desc']],
+                    language: {
+                        url:/*[[@{/js/i18n/datatables.in.json}]]*/''
+                    },
+                    lengthMenu: [[10, 30, 90], [10, 30, 90]],
+                    pageLength: 10,
+                    processing: true,
+                    searching:false,
+                    serverSide: true,
+                });
+                dataTableTransformasi.on('error.dt',function(e,settings,techNote,message){
+                    alert(message);
+                    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                });
+
+                /*if($('#searchAppNo').val().trim().length == 0 && $('#searchRegNo').val().trim().length == 0){
+                    dataTableReferensiTransformasi.clear().draw();
+                } else {
+
+                }*/
+            });
+
+            // update pratinjau page dynamically
+            function updatePratinjauReferenceTransformasiTable(json){
+                var tablebody = ""
+                //Nomor Permohonan	Nama Merek	Nomor Registrasi	Tanggal Penerimaan	Tanggal Registrasi
+                for(var i in json.data){
+                    var noPermohonan = json.data[i][1]
+                    var tglPenerimaan =json.data[i][2]
+                    var noPendaftaran = json.data[i][3]
+                    var tglPendaftaran = json.data[i][4]
+                    var tglPrioritas = json.data[i][5]
+                    var namaMerek = json.data[i][6]
+                    tablebody += "<tr>"+
+                        + "<td>"+json.data[i][0]+"</td>"
+                        + "<td>"+noPermohonan+"</td>"
+                        + "<td>"+namaMerek+"</td>"
+                        + "<td>"+noPendaftaran+"</td>"
+                        + "<td>"+tglPenerimaan+"</td>"
+                        + "<td>"+tglPendaftaran+"</td>"
+                        +"</tr>"
+                }
+                $("#pratinjauReferenceTransformasiTable tbody").html(tablebody);
+            }
+
+            // update pratinjau page dynamically
+            function updatePratinjauReferenceTable(json){
+                var tablebody = ""
+                //Nomor Permohonan	Nama Merek	Nomor Registrasi	Tanggal Penerimaan	Tanggal Registrasi
+                for(var i in json.data){
+                    var noPermohonan = json.data[i][1]
+                    var tglPenerimaan =json.data[i][2]
+                    var noPendaftaran = json.data[i][3]
+                    var tglPendaftaran = json.data[i][4]
+                    var tglPrioritas = json.data[i][5]
+                    var namaMerek = json.data[i][6]
+                    tablebody += "<tr>"+
+                        + "<td>"+json.data[i][0]+"</td>"
+                        + "<td>"+noPermohonan+"</td>"
+                        + "<td>"+namaMerek+"</td>"
+                        + "<td>"+noPendaftaran+"</td>"
+                        + "<td>"+tglPenerimaan+"</td>"
+                        + "<td>"+tglPendaftaran+"</td>"
+                        +"</tr>"
+                }
+                $("#pratinjauReferensiTable tbody").html(tablebody);
+            }
+
+            $("#hapusBtnNoReplacementMadridInter").click(function () {
+                if(!$('#cariNoReplacementMadridInter').val().toLowerCase().startsWith("idm")){
+				    swal("Error", "Field tidak boleh kosong / hanya dapat di input dengan nomor registrasi, silakan input dengan nomor registrasi (contoh : IDM000000123).", "error");
+                    return;
+                }
+
+                let searchByArr = [];
+                let keywordArr = [];
+
+                //searchByArr.push('applicationNo');
+                searchByArr.push('txRegistration.no');
+                //keywordArr.push($('#cariNoReplacementMadridInter').val());
+
+                // remove search input with refReplacementArr
+                tempRefReplacementArr = [];
+                for(i in refReplacementArr){
+                    if(refReplacementArr[i]==$('#cariNoReplacementMadridInter').val()){
+                        continue;
+                    } else {
+                        tempRefReplacementArr.push(refReplacementArr[i]);
+                    }
+                }
+                keywordArr.push(tempRefReplacementArr.join()); //removed
+                refReplacementArr = [] //reset
+
+
+                if(dataTableReplacementPendaftarPengganti){
+            		dataTableReplacementPendaftarPengganti.destroy();
+            	}
+                // no API call while no more regno
+                if(tempRefReplacementArr.length<1){
+                    swal("Error", "replacement tidak bole dikosongkan!", "error");
+                    return;
+                }
+
+                console.log(searchByArr, keywordArr);
+
+                tableReplacementPendaftarPengganti.data('searchByArr', searchByArr);
+                tableReplacementPendaftarPengganti.data('keywordArr', keywordArr);
+                tableReplacementPendaftarPengganti.data('orderBy', 'txRegistration.no');
+
+                dataTableReplacementPendaftarPengganti = tableReplacementPendaftarPengganti.DataTable({
+                    'columnDefs': [
+                        {'targets': [0, 4], 'orderable': false}
+                    ],
+                    ajax: {
+                        data: function (d) {
+                            d.searchByArr = tableReplacementPendaftarPengganti.data('searchByArr');
+                            d.keywordArr = tableReplacementPendaftarPengganti.data('keywordArr');
+                            /*d.orderBy = table.data('orderBy');
+                            d.orderType = table.data('orderType');*/
+                            d._csrf = csrf;
+                        },
+                        type: 'POST',
+                        url:/*[[@{/layanan/search-nomor-transformasi-replacement}]]*/'',
+                    },
+                    initComplete: function (settings, json) {
+                        //repl_refApplicationIDPengganti = $('#cariNoReplacementMadridInter').val();
+                        //console.log("repl_refApplicationIDPengganti", json);
+
+                        //keep multi reference from initialize
+                        refReplacementArr = [];
+                        for(var i in json.data){
+                            refReplacementArr.push(json.data[i][3]);
+                        }
+                        repl_refApplicationIDPengganti = refReplacementArr.join(); //$('#cariNoReplacementMadridInter').val();
+                        // update pratinjau page dynamically
+                        updatePratinjauReferenceTable(json);
+                    },
+                    ordering: true,
+                    order: [[0, 'desc']],
+                    language: {
+                        url:/*[[@{/js/i18n/datatables.in.json}]]*/''
+                    },
+                    lengthMenu: [[10, 30, 90], [10, 30, 90]],
+                    pageLength: 10,
+                    processing: true,
+                    searching:false,
+                    serverSide: true,
+                });
+                dataTableTransformasi.on('error.dt',function(e,settings,techNote,message){
+                    alert(message);
+                    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                });
+
+                /*if($('#searchAppNo').val().trim().length == 0 && $('#searchRegNo').val().trim().length == 0){
+                    dataTableReferensiTransformasi.clear().draw();
+                } else {
+
+                }*/
+            });
+
+            $("#cariBtnNoReplacementMadridInter").click(function () {
+                if(!$('#cariNoReplacementMadridInter').val().toLowerCase().startsWith("idm")){
+				    swal("Error", "Field tidak boleh kosong / hanya dapat di input dengan nomor registrasi, silakan input dengan nomor registrasi (contoh : IDM000000123).", "error");
+                    return;
+                }
+
+            	if(dataTableReplacementPendaftarPengganti){ 
+            		dataTableReplacementPendaftarPengganti.destroy();
+            	}
+                let searchByArr = [];
+                let keywordArr = [];
+
+                //searchByArr.push('applicationNo');
+                searchByArr.push('txRegistration.no');
+                //keywordArr.push($('#cariNoReplacementMadridInter').val());
+
+                // appending refReplacementArr with search input
+                if(refReplacementArr.join()==""){
+                    keywordArr.push($('#cariNoReplacementMadridInter').val()); //appending
+                }else{
+                    keywordArr.push(refReplacementArr.join()+","+$('#cariNoReplacementMadridInter').val()); //appending
+                }
+                refReplacementArr = [] //reset
+
+                console.log(searchByArr, keywordArr);
+
+                tableReplacementPendaftarPengganti.data('searchByArr', searchByArr);
+                tableReplacementPendaftarPengganti.data('keywordArr', keywordArr);
+                tableReplacementPendaftarPengganti.data('orderBy', 'txRegistration.no');
+
+                dataTableReplacementPendaftarPengganti = tableReplacementPendaftarPengganti.DataTable({
+                    'columnDefs': [
+                        {'targets': [0, 4], 'orderable': false}
+                    ],
+                    ajax: {
+                        data: function (d) {
+                            d.searchByArr = tableReplacementPendaftarPengganti.data('searchByArr');
+                            d.keywordArr = tableReplacementPendaftarPengganti.data('keywordArr');
+                            /*d.orderBy = table.data('orderBy');
+                            d.orderType = table.data('orderType');*/
+                            d._csrf = csrf;
+                        },
+                        type: 'POST',
+                        url:/*[[@{/layanan/search-nomor-transformasi-replacement}]]*/'',
+                    },
+                    initComplete: function (settings, json) {
+                        //repl_refApplicationIDPengganti = $('#cariNoReplacementMadridInter').val();
+                        //console.log("repl_refApplicationIDPengganti", json);
+
+                        //keep multi reference from initialize
+                        refReplacementArr = [];
+                        for(var i in json.data){
+                            refReplacementArr.push(json.data[i][3]);
+                        }
+                        repl_refApplicationIDPengganti = refReplacementArr.join(); //$('#cariNoReplacementMadridInter').val();
+                        // update pratinjau page dynamically
+                        updatePratinjauReferenceTable(json);
+                    },
+                    ordering: true,
+                    order: [[0, 'desc']],
+                    language: {
+                        url:/*[[@{/js/i18n/datatables.in.json}]]*/''
+                    },
+                    lengthMenu: [[10, 30, 90], [10, 30, 90]],
+                    pageLength: 10,
+                    processing: true,
+                    searching:false,
+                    serverSide: true,
+                });
+                dataTableTransformasi.on('error.dt',function(e,settings,techNote,message){
+                    alert(message);
+                    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                });
+
+                /*if($('#searchAppNo').val().trim().length == 0 && $('#searchRegNo').val().trim().length == 0){
+                    dataTableReferensiTransformasi.clear().draw();
+                } else {
+
+                }*/
+            });
+
+            $('#btnSaveForm5').click(function () {
+                console.log("??", repl_refApplicationID , repl_refApplicationIDPengganti)
+				if(repl_refApplicationID && repl_refApplicationIDPengganti ){	
+					var trans_applicationID = $('#appNoGeneral').val();
+                	if(trans_applicationID){
+                		 var formData = new FormData;
+                         
+                         formData.append('trans_applicationID', trans_applicationID);
+                         formData.append('repl_refApplicationID', repl_refApplicationID);
+                         formData.append('repl_refApplicationIDPengganti', repl_refApplicationIDPengganti);
+
+     					console.log(trans_applicationID); 
+     					console.log(repl_refApplicationID);
+     					console.log(repl_refApplicationIDPengganti);
+     					
+     					
+                         $.ajax({
+                             type: 'POST',
+                             url: /*[[@{/layanan/save-reference-replacement"}]]*/'',
+                             data: formData,
+                             processData: false,
+                             contentType: false,
+                             cache: false,
+                             beforeSend: function () {
+                                 showLoading();
+                             },
+                             complete:function(){
+                                 hideLoading();
+                             }, 
+                             success: function (data) { 
+                                 console.log("Sukses Save Form Referensi");
+                     
+                                     if (isEdit){
+                                         window.location.replace(redirect);
+                                     }else { 
+                                         $("#kelas").trigger("click");
+                                        swal("Informasi", "Pastikan jenis barang/jasa pendaftaran internasional tercakup dalam jenis barang/jasa yang ada pada nomor pendaftaran nasional.", "info");
+                                     }
+                             },
+                             error: function (xhr, status) {
+                                 swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                             }
+                         }); 
+                	} else{
+                		swal("Error", "Klik Simpan dan Lanjutkan Form General", "error");
+                		return;
+                	}
+                } else if(trans_refApplicationID){
+					var trans_applicationID = $('#appNoGeneral').val();
+                	
+                	if(trans_applicationID){
+                		var formData = new FormData;
+                        
+                        formData.append('trans_applicationID', trans_applicationID);
+                        formData.append('trans_refApplicationID', trans_refApplicationID);
+
+    					console.log(trans_applicationID);
+    					console.log(trans_refApplicationID); 
+    					 
+                        $.ajax({
+                            type: 'POST',
+                            url: /*[[@{/layanan/save-reference-transformasi"}]]*/'',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            beforeSend: function () {
+                                showLoading();
+                            },
+                            complete:function(){
+                                hideLoading();
+                            }, 
+                            success: function (data) {
+                               // var result = JSON.parse(data);
+                                console.log("Sukses Save Form Referensi");
+                    
+                                    if (isEdit){
+                                        window.location.replace(redirect);
+                                    }else {
+                                        <!--$('#dokumen').addClass('yet');-->
+                                        $("#kelas").trigger("click");
+                                    } 
+                            },
+                            error: function (xhr, status) {
+                                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                            }
+                        });
+                	}else {
+                		swal("Error", "Klik Simpan dan Lanjutkan Form General", "error");
+                		return;
+                	}
+                } else if (trans_refRegNo){
+					var trans_applicationID = $('#appNoGeneral').val();
+                	
+                	if(trans_applicationID){
+                		var formData = new FormData;
+
+                        formData.append('trans_applicationID', trans_applicationID);
+                        formData.append('trans_refRegNo', trans_refRegNo); 
+
+    					console.log(trans_refRegNo);
+    					console.log(trans_refRegNo); 
+    					 
+                        $.ajax({
+                            type: 'POST',
+                            url: /*[[@{/layanan/save-reference-reg-transformasi"}]]*/'',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            beforeSend: function () {
+                                showLoading();
+                            },
+                            complete:function(){
+                                hideLoading();
+                            }, 
+                            success: function (data) {
+                               // var result = JSON.parse(data);
+                                console.log("Sukses Save Form Referensi");
+                    
+                                    if (isEdit){
+                                        window.location.replace(redirect);
+                                    }else {
+                                        <!--$('#dokumen').addClass('yet');-->
+                                        $("#kelas").trigger("click");
+                                    } 
+                            },
+                            error: function (xhr, status) {
+                                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                            }
+                        });
+                	}else {
+                		swal("Error", "Klik Simpan dan Lanjutkan Form General", "error");
+                		return;
+                	}
+                } else{
+                    swal("Warning", "Data belum lengkap", "error");
+                }
+            });
+
+        });
+        // End documen ready
+
+        //Delete Dokumen
+        function deleteDoc(deleteRowDoc){
+        	swal("Konfirmasi", "Apakah Anda yakin akan menghapus data dokumen ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+      		.then((value) => {
+      			if (value) {
+      				$.ajax({
+                        type : "POST",
+                        url:/*[[@{/layanan/delete-dokumen-online}]]*/'',
+                        datatype:'jsonp',
+                        data : {
+                            idDoc : deleteRowDoc,
+                        },
+                        beforeSend: function () {
+    	                	showLoading();
+    	                },
+                        success:function(result){
+                        	tableDoc.ajax.reload();
+                        },
+				        error: function (xhr, status) {
+					        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+				        }
+                    });
+      		  	}
+      		});
+        }
+        /*]]>*/
+    </script>
+</div>
+</html>

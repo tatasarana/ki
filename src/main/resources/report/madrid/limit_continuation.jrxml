@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="limit_continuation" pageWidth="595" pageHeight="120" whenNoDataType="AllSectionsNoDetail" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="12e33e45-ea8b-4bfb-aa07-255962c97973">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="listContract" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("1")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT *
+FROM(
+SELECT ROWNUM AS R, C.COUNTRY_NAME, B.CLASS_DESC_EN,  A.APPLICATION_ID
+     FROM TX_TM_CLASS_LIMITATION A
+     INNER JOIN M_CLASS_DETAIL B ON A.CLASS_DETAIL_ID = B.CLASS_DETAIL_ID
+     INNER JOIN M_COUNTRY C ON A.TM_CLASS_LIMITATION_COUNTRY=C.COUNTRY_ID
+     WHERE 1=1
+     ORDER BY C.COUNTRY_NAME,A.TM_CLASS_LIMITATION_ID ASC)
+WHERE R <100]]>
+	</queryString>
+	<field name="R" class="java.math.BigDecimal"/>
+	<field name="COUNTRY_NAME" class="java.lang.String"/>
+	<field name="CLASS_DESC_EN" class="java.lang.String"/>
+	<field name="APPLICATION_ID" class="java.lang.String"/>
+	<columnHeader>
+		<band height="90">
+			<staticText>
+				<reportElement x="150" y="50" width="360" height="40" uuid="69b0569d-1f23-4ef7-a91f-d8507154f29c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Class(es) or list of goods and services for which protection is sought in this Contracting Party:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="50" width="100" height="40" uuid="0aca4dc0-6922-498d-91aa-f1f5f8df7b04"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Contracting Party:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="15" width="330" height="20" forecolor="#000000" uuid="64617ebd-a873-444d-8419-099f5a77110e"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[10. GOODS AND SERVICES ]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="50" y="0" width="100" height="20" uuid="0b88ec17-152e-4736-a88a-85f2b10df2da"/>
+				<box>
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textElement>
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COUNTRY_NAME}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="0" width="361" height="20" uuid="3f30bebd-3b4c-4845-9fb3-21b52e6bfc84"/>
+				<box>
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textElement textAlignment="Justified">
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLASS_DESC_EN}.toUpperCase()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

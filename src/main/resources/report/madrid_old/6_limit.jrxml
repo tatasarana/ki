@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="6_limit" pageWidth="439" pageHeight="162" whenNoDataType="AllSectionsNoDetail" columnWidth="439" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="33f65c68-1aac-4180-9ad1-45c50b5f428a">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="listContract" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="contractContinues" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT C.COUNTRY_NAME, B.CLASS_DESC_EN
+     FROM TX_TM_CLASS_LIMITATION A
+     INNER JOIN M_CLASS_DETAIL B ON A.CLASS_DETAIL_ID = B.CLASS_DETAIL_ID
+     INNER JOIN M_COUNTRY C ON A.TM_CLASS_LIMITATION_COUNTRY=C.COUNTRY_ID
+     WHERE A.APPLICATION_ID = $P{applicationId}
+AND ROWNUM <=$P{listContract}
+ORDER BY C.COUNTRY_NAME,A.TM_CLASS_LIMITATION_ID ASC]]>
+	</queryString>
+	<field name="COUNTRY_NAME" class="java.lang.String"/>
+	<field name="CLASS_DESC_EN" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="120" height="20" uuid="e5dbd388-3657-4dc5-9ce2-7369bec6e3a3"/>
+				<textElement>
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COUNTRY_NAME}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="0" width="318" height="20" uuid="cea000c5-d6c0-4555-a281-86cc050fece4"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLASS_DESC_EN}.toUpperCase()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement positionType="Float" x="0" y="4" width="439" height="20" uuid="4efc0870-7a23-4962-97c7-aed629444c07">
+					<printWhenExpression><![CDATA[$P{contractContinues}.equals(new Integer("1"))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="Courier New" size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PLEASE SEE MORE IN CONTINUATION SHEET"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

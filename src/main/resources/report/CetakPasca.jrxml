@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CetakPasca" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="170dc7ea-6a23-41e0-8b5c-e76587c9b0eb">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="pTitleReport" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pPrintDate" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pSignName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pUploadImgPath" class="java.lang.String"/>
+	<parameter name="pCapDjki" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="flag" class="java.lang.Integer"/>
+	<field name="headerInd" class="java.lang.String"/>
+	<field name="headerEng" class="java.lang.String"/>
+	<field name="postNo" class="java.lang.String"/>
+	<field name="eFilingNo" class="java.lang.String"/>
+	<field name="note" class="java.lang.String"/>
+	<field name="postDate" class="java.sql.Timestamp"/>
+	<field name="paymentDate" class="java.sql.Timestamp"/>
+	<field name="refAppNo" class="java.lang.String"/>
+	<field name="refRegNo" class="java.lang.String"/>
+	<field name="refDetail" class="java.lang.String"/>
+	<field name="reprsName" class="java.lang.String"/>
+	<field name="reprsAddress" class="java.lang.String"/>
+	<field name="reprsEmailPhone" class="java.lang.String"/>
+	<field name="docName" class="java.lang.String"/>
+	<group name="grpFlag">
+		<groupExpression><![CDATA[$F{flag}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField>
+					<reportElement mode="Opaque" x="0" y="0" width="555" height="20" backcolor="#D6D4D4" uuid="8508d5bd-428a-493e-9d09-bd900a780a37"/>
+					<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="0">
+						<pen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="styled">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{headerInd} + " (<style isItalic=\"true\">" + $F{headerEng} + "</style>)"]]></textFieldExpression>
+				</textField>
+			</band>
+			<band height="30">
+				<printWhenExpression><![CDATA[new Boolean($F{flag}==2)]]></printWhenExpression>
+				<staticText>
+					<reportElement x="0" y="0" width="150" height="15" uuid="a28b1331-198c-4be5-a3ee-78489ea1a9a0"/>
+					<box topPadding="0" leftPadding="5" rightPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Nomor Registrasi]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="15" width="150" height="15" uuid="175ef836-9bfa-4f00-808c-f49ee99b94dc"/>
+					<box topPadding="0" leftPadding="5" rightPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isItalic="true"/>
+					</textElement>
+					<text><![CDATA[(Registration Number)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="150" y="0" width="150" height="15" uuid="e5993dcf-823f-4098-b9cd-18948b03b7e6"/>
+					<box topPadding="0" leftPadding="5" rightPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Nomor Permohonan]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="150" y="15" width="150" height="15" uuid="f1366121-5c1c-42ee-962c-b7a5063b5a30"/>
+					<box topPadding="0" leftPadding="5" rightPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isItalic="true"/>
+					</textElement>
+					<text><![CDATA[(Application Number)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="300" y="0" width="255" height="15" uuid="4c333703-f60a-4294-8910-572f2bae2c6e"/>
+					<box topPadding="0" leftPadding="5" rightPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Rincian Permohonan]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="300" y="15" width="255" height="15" uuid="e3838cc0-c2f0-42f7-b383-27e0efa8980a"/>
+					<box topPadding="0" leftPadding="5" rightPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isItalic="true"/>
+					</textElement>
+					<text><![CDATA[(Application Detail)]]></text>
+				</staticText>
+			</band>
+			<band height="30">
+				<printWhenExpression><![CDATA[new Boolean($F{flag}==3)]]></printWhenExpression>
+				<staticText>
+					<reportElement x="0" y="0" width="150" height="15" uuid="72ef5ed2-d1f3-4b10-8857-8c65473b58e9"/>
+					<box topPadding="0" leftPadding="5" rightPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Nama]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="15" width="150" height="15" uuid="6c2ca4f1-bc12-4b65-bee8-31c72cb3c733"/>
+					<box topPadding="0" leftPadding="5" rightPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isItalic="true"/>
+					</textElement>
+					<text><![CDATA[(Name)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="150" y="0" width="255" height="15" uuid="f7777c49-c37f-493f-be9e-ca8f2bca61d8"/>
+					<box topPadding="0" leftPadding="5" rightPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Alamat]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="150" y="15" width="255" height="15" uuid="e3b6f922-25ef-477d-b119-d88583f89d12"/>
+					<box topPadding="0" leftPadding="5" rightPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isItalic="true"/>
+					</textElement>
+					<text><![CDATA[(Address)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="405" y="0" width="150" height="15" uuid="00631fb1-2e20-4637-bed6-44dddb2b3324"/>
+					<box topPadding="0" leftPadding="5" rightPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Surel/Telp]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="405" y="15" width="150" height="15" uuid="a023f4c1-082c-4fe6-bd81-c3d274539dc1"/>
+					<box topPadding="0" leftPadding="5" rightPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isItalic="true"/>
+					</textElement>
+					<text><![CDATA[(Email/Phone)]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="15"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="33" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="555" height="20" uuid="580082ef-9212-402c-b991-e5f55008e9ad"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["FORMULIR " + $P{pTitleReport}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="90" splitType="Stretch">
+			<printWhenExpression><![CDATA[new Boolean($F{flag}==1)]]></printWhenExpression>
+			<staticText>
+				<reportElement x="0" y="0" width="130" height="15" uuid="d7a055cc-66bf-413b-9ce3-28dca5acaedd"/>
+				<box topPadding="2" leftPadding="5">
+					<leftPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<text><![CDATA[Nomor Transaksi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="0" width="10" height="15" uuid="ef90445f-9bf2-4cde-a6b5-050a5de6b549"/>
+				<box topPadding="2" leftPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="140" y="0" width="140" height="30" uuid="4f5cc492-54e3-4848-b488-040343b1cf23">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="5">
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{eFilingNo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="15" width="140" height="15" uuid="323bf043-191f-47b3-acdf-c1a07decf02d"/>
+				<box topPadding="2" leftPadding="5">
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Transaction Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="130" height="15" uuid="e46b6ee8-645c-4f59-8b1f-d7e607b5f461"/>
+				<box topPadding="2" leftPadding="5">
+					<leftPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<text><![CDATA[Nomor Dokumen]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="30" width="10" height="15" uuid="f7511afe-0404-4988-9fe1-0f269850edba"/>
+				<box topPadding="2" leftPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="140" y="30" width="140" height="30" uuid="8ac96361-01ff-4f50-9ce7-fa1c764dc585">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="5">
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{postNo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="45" width="140" height="15" uuid="06ddf7b3-a74a-4cf0-b19b-2d7089405d7d"/>
+				<box topPadding="2" leftPadding="5">
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Document Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="125" height="15" uuid="b0df4806-f5ee-4091-9c82-6725cd11d221"/>
+				<box topPadding="2" leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<text><![CDATA[Tanggal Pengajuan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="15" width="135" height="15" uuid="cc8948fa-fbe0-4f65-be9c-b682d857819c"/>
+				<box topPadding="2" leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Application Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="30" width="125" height="15" uuid="2665640d-b8d5-489f-b4f5-4d1956ee70da"/>
+				<box topPadding="2" leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<text><![CDATA[Tanggal Pembayaran]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="405" y="0" width="10" height="15" uuid="3d9f835d-c25f-42f7-a7ce-c913c6e6ac03"/>
+				<box topPadding="2" leftPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="405" y="30" width="10" height="15" uuid="392cdf2f-b9c5-4af3-a547-7efd034e28cb"/>
+				<box topPadding="2" leftPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="45" width="135" height="15" uuid="70b680ab-b40a-4fb7-8ef9-66a2c8114cd7"/>
+				<box topPadding="2" leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Payment Date]]></text>
+			</staticText>
+			<textField pattern="dd-MM-yyyy HH:mm:ss" isBlankWhenNull="true">
+				<reportElement x="415" y="30" width="140" height="30" uuid="a9bb8661-974e-4de7-b62f-e73cc3ac79fc">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="5">
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{paymentDate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy HH:mm:ss" isBlankWhenNull="true">
+				<reportElement x="415" y="0" width="140" height="30" uuid="eea30245-3911-4597-a060-7fee8fe213c1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="5">
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{postDate}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement positionType="Float" x="0" y="60" width="555" height="30" uuid="2ffeed78-2cf7-4a63-8b3e-4af1e7c455bb"/>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textField isStretchWithOverflow="true" pattern="yyyy-MM-dd HH:mm:ss" isBlankWhenNull="true">
+					<reportElement x="140" y="0" width="415" height="30" isPrintWhenDetailOverflows="true" uuid="236cfcb0-fff4-44af-a3e5-c2b2d48efd95">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+					</reportElement>
+					<box topPadding="2" leftPadding="5">
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement verticalAlignment="Top"/>
+					<textFieldExpression><![CDATA[$F{note}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="130" y="0" width="10" height="15" uuid="692eb606-a94c-4da8-b5ab-47b4589576ac"/>
+					<box topPadding="2" leftPadding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top"/>
+					<text><![CDATA[:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="15" width="140" height="15" uuid="b782b35d-f1eb-4b28-b776-18aa1b809d24"/>
+					<box topPadding="2" leftPadding="5">
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Top">
+						<font isItalic="true"/>
+					</textElement>
+					<text><![CDATA[Notes]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="0" width="130" height="15" uuid="e0db43ae-7b83-4c27-8f9c-2fbf65ecfaea"/>
+					<box topPadding="2" leftPadding="5">
+						<leftPen lineWidth="0.25"/>
+					</box>
+					<textElement verticalAlignment="Top"/>
+					<text><![CDATA[Catatan]]></text>
+				</staticText>
+			</frame>
+		</band>
+		<band height="15">
+			<printWhenExpression><![CDATA[new Boolean($F{flag}==2)]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="150" height="15" uuid="e6fcdb3d-c237-4019-9c1e-e725d5a528a6">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="5">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{refRegNo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="150" y="0" width="150" height="15" uuid="05fc5195-4e8a-4f32-8059-52d91b48fbfb">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="5">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{refAppNo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="300" y="0" width="255" height="15" uuid="c438d28d-e87c-4ec2-8a40-c507791b7535">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="5">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{refDetail}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="15">
+			<printWhenExpression><![CDATA[new Boolean($F{flag}==3)]]></printWhenExpression>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="150" height="15" uuid="59f48dae-d47f-471e-8a83-b8b990f21aae">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="5">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{reprsName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="150" y="0" width="255" height="15" uuid="27523463-0114-4d35-b662-59915d2fbf93">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="5">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{reprsAddress}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="405" y="0" width="150" height="15" uuid="96646ff6-8022-455a-ba03-1e487a0af128">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="5">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{reprsEmailPhone}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="20">
+			<printWhenExpression><![CDATA[new Boolean($F{flag}==4)]]></printWhenExpression>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="555" height="15" uuid="dc1fdece-f864-407c-afe4-a04ab3c4d2ab">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="5">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{docName}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="405" y="0" width="150" height="15" uuid="7ecbc07f-9301-48d4-b90c-fd79a1e428fd">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="5" rightPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA["Halaman " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="138" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="280" height="15" uuid="a79e1abf-796e-4f00-be5f-cd8e8a30c1ac">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA["Jakarta, " + $P{pPrintDate}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="0" y="15" width="280" height="15" uuid="5aa138d9-055f-4cb0-98c7-8269e5ed7b03">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top" markup="styled"/>
+				<textFieldExpression><![CDATA["Pemohon / (<style isItalic=\"true\">Kuasa</style>)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="0" y="30" width="280" height="15" uuid="cf6af752-fdd7-48f8-a370-8720fdba1c7c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top" markup="styled"/>
+				<textFieldExpression><![CDATA["Applicant / (<style isItalic=\"true\">Representative</style>)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="0" y="105" width="280" height="15" uuid="571b3cc8-72b3-4acf-924b-ac25d3806211">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top" markup="styled"/>
+				<textFieldExpression><![CDATA["Tanda tangan / (<style isItalic=\"true\">Signature</style>)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="0" y="120" width="280" height="15" uuid="a2f115e3-bb59-4e7c-81ab-6271e04119c6">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f4d434-a62d-4ae5-9b36-9b4c62fafb92"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Top" markup="styled"/>
+				<textFieldExpression><![CDATA["Nama lengkap / (<style isItalic=\"true\">Full Name</style>)"]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="155" y="19" width="90" height="100" uuid="010a2ced-3d9b-4cd6-9ecf-4a55f543d0c8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{pUploadImgPath} + $P{pCapDjki}]]></imageExpression>
+			</image>
+		</band>
+	</summary>
+</jasperReport>

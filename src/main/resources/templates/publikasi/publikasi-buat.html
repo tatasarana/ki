@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <form class="form-horizontal" th:object="${form}" th:action="@{/layanan/publikasi-buat}" method="post">
+        <div class="my-wrapper" id="my-wrapper">
+            <div class="my-wrapper--inner">
+                <div class="wrapper-content">
+                    <div class="content--top border--bottom padding-content--left-right">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="content--title text--bold">
+                                    <i class="fas fa-bullhorn"></i> Berita Resmi Merek
+                                </h3>
+                                <small class="sub-header">Publikasi / Buat Berita Resmi Merek (BRM)</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content--center padding-content--left-right">
+                        <div class="wrapper--bg">
+                            <div class="row">
+                                <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                                    <button data-dismiss="alert" class="close close-sm" type="button">
+                                        <i class="icon-remove"></i>
+                                    </button>
+                                    <p>[[${errorMessage}]]</p>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label required-label col-sm-3">Nama Grup</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:field="*{TxGroup.id}" id="grupName" th:required="true"
+                                                    th:autofocus="true">
+                                                <option style="display:none" value="">-Pilih Grup-</option>
+                                                <option th:each="TxGroup :${listTxGroup}" th:value="${TxGroup.id}"
+                                                        th:text="${TxGroup.name} "/>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('txGroup.id')}"
+                                                  th:errors="*{txGroup.id}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label required-label col-sm-3">Nomor BRM</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="brmNo" placeholder="Nomor BRM"
+                                                   th:field="*{journalNo}" th:required="true" maxlength="25"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-3">Dasar Hukum</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:field="*{mLaw.id}" th:required="true"
+                                                    th:autofocus="true">
+                                                <option th:each="mLaw :${listMLaw}" th:value="${mLaw.id}"
+                                                        th:text="${mLaw.desc} "/>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('mLaw.id')}"
+                                                  th:errors="*{mLaw.id}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" th:with="intList = ${ {2, 3} }">
+                                        <label class="col-form-label col-sm-3">Masa Berlaku (Bulan)</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:required="true" th:autofocus="false" id="idMasaBerlaku"
+                                                    th:field="*{validityPeriod}">
+                                                <option th:each="sMonth : ${intList}" th:text="${sMonth}"
+                                                        th:value="${sMonth}"/>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label required-label col-sm-3">Tanggal Publikasi </label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control datepicker" id="idTglPublikasi"
+                                                   placeholder="Tanggal Publikasi" th:field="*{journalStartTemp}"
+                                                   th:required="true"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('journalStartTemp')}"
+                                                  th:errors="*{journalStartTemp}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label required-label col-sm-3">Tanggal Berakhir</label>
+                                        <!-- <input type="text" class="form-control datepicker" placeholder="to"/> -->
+                                        <div class="col-sm-9">
+                                            <input type="hidden"  th:field="*{journalEndTemp}" id="idTglBerakhir2"/>
+                                            <input type="text" class="form-control datepicker2" id="idTglBerakhir"
+                                                   placeholder="Tanggal Berakhir" th:field="*{journalEndTemp}"
+                                                   th:required="true"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('journalEndTemp')}"
+                                                  th:errors="*{journalEndTemp}"></span>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group required">
+                                        <label class="col-form-label required-label col-sm-3">Jenis BRM</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:field="*{journalType.id}" id="journalType" th:required="true">
+                                                <!--<option style="display: none" value="">-Pilih Jenis BRM-</option>-->
+                                                <option th:each="list : ${listJenisBRM}"
+                                                        th:value="${list.id}"
+                                                        th:text="${list.name}"></option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('journalType')}" th:errors="journalType"></span>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-3">Catatan Publikasi</label>
+                                        <div class="col-sm-9">
+                                         <textarea type="text" class="form-control" placeholder="Catatan Publikasi"
+                                                   th:field="*{journalNotes}"></textarea>
+                                        </div>
+                                        <label class="control-label notice col-md-12">*) Wajib Diisi</label>
+                                    </div>
+
+
+
+                                    <div class="row">
+                                        <div class="col-sm-offset-3 col-sm-9">
+                                            <a class="btn btn-danger" th:href="@{/layanan/publikasi}"><i class="fas fa-times"></i> Batal</a>
+                                            <button type="button" class="btn btn-primary" id="btnSimpan"><i class="fas fa-paper-plane"></i> Proses</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    $(document).ready(function () {
+
+        let result = '';
+        $('#idTglBerakhir').attr("disabled",true);
+
+        /* jQuery.validator.addMethod("alphanumeric", function(value, element) {
+            return this.optional(element) || /^[\w.]+$/i.test(value);
+        }, "Field Ini Hanya Boleh Diisi Oleh Angka"); */
+
+        // Lock key when Alphanumeric input
+        $('#journalNo').bind('keypress', function (event) {
+            //var regex = new RegExp("^[a-zA-Z0-9\b]+$");
+            var regex = new RegExp("^[a-zA-Z 0-9\/\-]*$"); // '/' adalah escape character, then only allow blank space, '/' and '-' in special character.
+            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+            if (!regex.test(key)) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        $('#grupName').change(function () {
+            $('#brmNo').val($('#grupName option:selected').text());
+        });
+
+        $('form').validate({
+            /* rules: {
+                    "journalNo": {
+                        required : true,
+                        alphanumeric : true
+                    }
+                },  */
+            messages: {
+                "journalNo": {
+                    required:/*[[#{field.error.required('Nomor BRM')}]]*/''
+// 					,alphanumeric:/*[[#{field.error.alphanumeric('Nomor BRM')}]]*/''
+                },
+                "journalStartTemp": {
+                    required: "Field Tgl Publikasi Wajib Diisi"
+                },
+                "journalEndTemp": {
+                    required: "Field Tgl Berakhir Wajib Diisi"
+                },
+                "TxGroup.id": {
+                    required: "Field Nama Grup Wajib Diisi"
+                },
+                "journalType.id" : {
+                    required: "Field Jenis BRM Wajib Diisi"
+                },
+                "journalSignature.id" : {
+                    required: "Field Karyawan Wajib Diisi"
+                },
+                "journalNotes": {
+                    required: "Field Catatan Publikasi Wajib Diisi"
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function(form) {
+                showLoading();
+                $('form')[0].submit();
+            }
+        });
+
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            todayBtn: 'linked',
+            todayHighlight: true,
+        });
+
+        $('#btnSimpan').click(function () {
+            if ($('form').valid()) {
+                swal("Konfirmasi", "Apakah Anda yakin akan membuat BRM?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+                    .then((value) => {
+                        if (value) {
+                            $('form').submit();
+                        }
+                    });
+            }
+        });
+
+        $('#idTglPublikasi').change(function() {
+            return getTglBerakhir();
+        });
+
+        $('#idMasaBerlaku').change(function() {
+            return getTglBerakhir();
+        });
+
+        function getTglBerakhir () {
+            var jmlbulan =  Number($('#idMasaBerlaku').val());
+            //var jmlHari = (365/12) * $('#idMasaBerlaku').val();
+            var dt = new Date(stringToDate($('#idTglPublikasi').val().toString() ,"dd/MM/yyyy","/") );
+            dt.setDate(dt.getDate());
+            dt.setMonth(dt.getMonth()+jmlbulan);
+
+            var d_ = dt.getDate();
+            var m_ = dt.getMonth()+1;
+            var y_ = dt.getFullYear();
+            result = d_ +'/'+m_+'/'+y_;
+
+            if($('#idTglPublikasi').val()!='') {
+                $('#idTglBerakhir').attr("disabled",false);
+
+                var dtx = new Date(stringToDate(result ,"dd/MM/yyyy","/") );
+
+                $('.datepicker2').datepicker({
+                    format: 'dd/mm/yyyy',
+                    autoclose: true,
+                    todayBtn: 'linked',
+                });
+                $('.datepicker2').datepicker('setDate', dtx);
+
+                $('#idTglBerakhir2').val(result);
+
+                // alert($('#idTglBerakhir').val())
+                // alert($('#idTglBerakhir2').val())
+
+                $('#idTglBerakhir').change(function() {
+                    $('#idTglBerakhir2').val($('#idTglBerakhir').val().toString());
+
+                    // alert($('#idTglBerakhir').val())
+                    // alert($('#idTglBerakhir2').val())
+                });
+            }
+        }
+
+    });
+
+
+
+    function stringToDate(_date,_format,_delimiter)
+    {
+        var formatLowerCase=_format.toLowerCase();
+        var formatItems=formatLowerCase.split(_delimiter);
+        var dateItems=_date.split(_delimiter);
+        var monthIndex=formatItems.indexOf("mm");
+        var dayIndex=formatItems.indexOf("dd");
+        var yearIndex=formatItems.indexOf("yyyy");
+        var month=parseInt(dateItems[monthIndex]);
+        month-=1;
+        var formatedDate = new Date(dateItems[yearIndex],month,dateItems[dayIndex]);
+        return formatedDate;
+    }
+
+    /* stringToDate("17/9/2014","dd/MM/yyyy","/");
+    stringToDate("9/17/2014","mm/dd/yyyy","/")
+    stringToDate("9-17-2014","mm-dd-yyyy","-") */
+</script>
+</body>
+</html>

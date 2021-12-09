@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<style>
+    .custom-combobox-toggle {
+        position: absolute;
+        top: 173px;
+        bottom: auto;
+        height: 33px;
+        margin-left: -1px;
+        padding: 0;
+    }
+    .custom-combobox-input {
+        width: 95%;
+    }
+</style>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container"> 	<p th:replace="fragment/header :: navbar"/> 	<div id="mySideBar" class="panel-left"> 		<span id="position"></span> 		<p th:replace="fragment/sidebar :: left"/> 	</div> 	<div id="myDragBar" class="splitter"></div> 	<div id="myMain" class="panel-right">
+    <div class="my-wrapper" id="my-wrapper">
+        <div class="my-wrapper--inner">
+            <div class="wrapper-content" id="cek-pasca-permohonan">
+                <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="fas fa-file-alt"></i> Cek Pasca Permohonan
+                            </h3>
+                            <small class="sub-header">Cek Permohonan / Cek Pasca Permohonan</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="content--center padding-content--left-right">
+                    <div class="wrapper--bg">
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                            <button data-dismiss="alert" class="close close-sm" type="button">
+                                <i class="icon-remove"></i>
+                            </button>
+                            <p>[[${errorMessage}]]</p>
+                        </div>
+                        <div class="jumbotron filterSearch">
+                            <form>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Tanggal Pengajuan</label>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <input type="text" id="postDate" class="form-control datepicker" placeholder="Dari"/>
+                                                </div>
+                                                <div class="col-md-6 no-left-padding">
+                                                    <input type="text" id="postEndDate" class="form-control datepicker" placeholder="Sampai"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Nomor Dokumen</label>
+                                            <input type="text" id="postNo" class="form-control" placeholder="Nomor Dokumen"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Status</label>
+                                            <select id="mStatus" class="form-control">
+                                                <option value="">Semua</option>
+                                                <option th:each="mmStatus : ${statusList}" th:value="${mmStatus.id}" th:text="${mmStatus.name}"/>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Tipe Permohonan</label>
+                                            <select id="mfileType" class="form-control">
+                                                <option value="">Semua</option>
+                                                <option th:each="mFileType :${fileTypeList}"
+                                                        th:value="${mFileType.id}"
+                                                        th:text="${mFileType.desc}"/>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Nomor Transaksi</label>
+                                            <input type="text" id="eFilingNo" class="form-control" placeholder="Nomor Transaksi"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Kode Billing</label>
+                                            <input type="text" id="billingCode" class="form-control" placeholder="Kode Billing"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button type="submit" id="search" class="btn btn-primary"><i class="fas fa-search"></i>
+                                            Filter
+                                        </button>
+                                        <button type="submit" class="btn btn-info"
+                                                onClick="window.location.reload()"
+                                                style="margin-left:15px;">
+                                            <i class="fas fa-sync-alt"></i>
+                                            Refresh
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-container">
+                            <table id="table" class="table table-striped table-bordered table-responsive">
+                                <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Nomor Transaksi</th>
+                                    <th>Tanggal Pengajuan</th>
+                                    <th style="width: 80px">Nomor Dokumen</th>
+                                    <th>Tipe Permohonan</th>
+                                    <th style="width: 80px">Kode Billing</th>
+                                    <th style="width: 75px">Tanggal Bayar</th>
+                                    <th style="width: 110px">Jumlah Pembayaran</th>
+                                    <th style="width: 85px">Status</th>
+                                    <th style="width: 40px" class="not-export-col"></th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div></div><div th:replace="fragment/js :: default"></div> <div th:replace="fragment/js :: main"></div> <div th:replace="fragment/js :: datatables"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function(){
+        var csrf=/*[[${_csrf.token}]]*/'';
+
+        $("#mStatus").combobox();
+        $('form').find(".custom-combobox-input").each(function(ev)
+        {
+            if(!$(this).val()) {
+                $(this).attr("placeholder", "Status");
+            }
+        });
+
+        $('#postDate').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            todayBtn: 'linked',
+            endDate: 'today',
+            todayHighlight: true,
+            orientation: "bottom",
+            onClose: function( selectedDate ) {
+                $( "#postEndDate" ).datepicker( "option", "startDate", selectedDate );
+            }
+
+        });
+
+
+        $('#postEndDate').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            todayBtn: 'linked',
+            todayHighlight: true,
+            endDate: 'today',
+            orientation: "bottom",
+        });
+
+        var table=$('#table');
+        var searchByArr=[];
+        var keywordArr=[];
+
+        searchByArr.push('postDate');
+        keywordArr.push($('#postDate').val());
+        searchByArr.push('postEndDate');
+        keywordArr.push($('#postEndDate').val());
+        searchByArr.push('mFileSequence.id');
+        keywordArr.push($('#fileSequence').val());
+        searchByArr.push('mFileType.id');
+        keywordArr.push($('#mfileType').val());
+        searchByArr.push('eFilingNo');
+        keywordArr.push($('#eFilingNo').val());
+        searchByArr.push('postNo');
+        keywordArr.push($('#postNo').val());
+        searchByArr.push('billingCode');
+        keywordArr.push($('#billingCode').val());
+        searchByArr.push('mStatus.id');
+        keywordArr.push($('#mStatus').val());
+
+        table.data('searchByArr', searchByArr);
+        table.data('keywordArr', keywordArr);
+        table.data('orderBy', 'postDate');
+        table.data('orderType', 'DESC');
+
+        /* Load DataTable */
+        var dataTable=table.DataTable({
+            dom: 'lBfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    title:'Cek Pasca Permohonan',
+                    exportOptions: {
+                        columns: ':visible:not(.not-export-col)'
+                    }
+                }
+            ],
+            ajax:{
+                data:function(d){
+                    d.searchByArr=table.data('searchByArr');
+                    d.keywordArr=table.data('keywordArr');
+                    d.orderBy=table.data('orderBy');
+                    d.orderType=table.data('orderType');
+                    d._csrf=csrf;
+                },
+                type:'POST',
+                url:/*[[@{/layanan/cari-cek-pasca-permohonan}]]*/''
+            },
+            columnDefs: [
+                { targets: [0, 9], orderable: false}
+            ],
+            ordering: true,
+            order:[[2,'desc']],
+            initComplete:function(settings,json){
+                $('.dt-buttons').addClass("dataTables_filter margin-bottom-8px").removeClass("dt-buttons");
+                $('.buttons-excel').empty();
+                $('.buttons-excel').append('<i class="fas fa-file-excel"></i> Export to Excel');
+                $('.buttons-excel').addClass('btn btn-success').removeClass('dt-button buttons-excel buttons-html5');
+            },
+            language:{
+                url:/*[[@{/js/i18n/datatables.in.json}]]*/''
+            },
+            lengthMenu:[[10,30,90,100000],[10,30,90,'Semua']],
+            // pageLength:10,
+            processing:true,
+            // searching:false,
+            serverSide:true,
+        });
+        dataTable.on('error.dt',function(e,settings,techNote,message){
+            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+        });
+
+        var alreadySearch = false;
+        /* Search */
+        $("#search").click(function(event){
+            event.preventDefault();
+            var searchByArr=[];
+            var keywordArr=[];
+
+            searchByArr.push('postDate');
+            keywordArr.push($('#postDate').val());
+            searchByArr.push('postEndDate');
+            keywordArr.push($('#postEndDate').val());
+            searchByArr.push('mFileSequence.id');
+            keywordArr.push($('#fileSequence').val());
+            searchByArr.push('mFileType.id');
+            keywordArr.push($('#mfileType').val());
+            searchByArr.push('eFilingNo');
+            keywordArr.push($('#eFilingNo').val());
+            searchByArr.push('postNo');
+            keywordArr.push($('#postNo').val());
+            searchByArr.push('billingCode');
+            keywordArr.push($('#billingCode').val());
+            searchByArr.push('mStatus.id');
+            keywordArr.push($('#mStatus').val());
+
+            table.data('searchByArr', searchByArr);
+            table.data('keywordArr', keywordArr);
+            dataTable.ajax.reload();
+
+            alreadySearch = false;
+            keywordArr.forEach(function(item) {
+                if(item !== "") {
+                    alreadySearch = true;
+                }
+            })
+        });
+
+    });
+
+
+    function modalDelete(id){
+        //alert('halo');
+        swal("Konfirmasi", "Apakah Anda yakin akan menghapus data ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+            .then((value) => {
+                if (value) {
+                    var listId = id;
+                    showLoading();
+                    $.ajax({
+                        url: "layanan/hapus-pasca-permohonan",
+                        method: "POST",
+                        data: {"listId":listId},
+                        context: document.body
+                    }).done(function(data, textStatus, xhr) {
+                            if(textStatus!="success"){
+                                swal("Error", "Terjadi kesalahan pada pemindahan permohonan, silahkan coba lagi!", "error");
+                            }else {
+                                 window.location.href = "layanan/cek-pasca-permohonan";
+                            }
+                            hideLoading();
+                    });
+                }
+            });
+    };
+
+    /*]]>*/
+</script>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="list-dokumen" th:remove="tag">
+<script type="text/javascript" language="javascript" th:inline="javascript">
+        /*---------------FORM 3---------------*/
+        var csrf = /*[[${_csrf.token}]]*/'';      
+        var table = $('#table');
+        var dataTable3 = null;      
+        var header = "X-CSRF-TOKEN";               
+        var noGeneral = /*[[${no}]]*/'';        
+
+		 function modalDelete(id){
+	      		//alert('halo');
+	        	swal("Konfirmasi", "Apakah Anda yakin akan menghapus data ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+	      		.then((value) => {
+	      			if (value) {
+	      				var table=$('#table').DataTable();
+	      			 	
+	      				$.ajax({
+	      		    		url:/*[[@{/layanan/hapus-loket-dokumen}]]*/'',
+	      		    		datatype:'jsonp',
+	      		    		data : {
+	      		    			receptionId : id
+	      		    		},
+	      		    		success:function(data){    			
+	      		    			table.ajax.reload();
+	      		    		},
+					        error: function (xhr, status) {
+						        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+					        }
+	      		    	});
+	      		  	} 
+	      		});
+	      };
+</script>
+</div>
+</html>

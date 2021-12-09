@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+
+
+<body th:inline="text">
+
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+
+    <div class="my-wrapper" id="my-wrapper">
+        <div class="my-wrapper--inner">
+            <div class="wrapper-content" id="pasca-online">
+                <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row" th:if="${isNew}">
+                        <input type="hidden" id="noIPT" value="" />
+                        <input type="hidden" id="ref_application_id" value="" />
+                        <input type="hidden" id="ref_application_no" value="" />
+                        <input type="hidden" id="ref_mFileType" value="" />
+                        <input type="hidden" id="isNew" value="1" />
+                        <input type="hidden" id="realId" th:value="${txPostDetail_id}" />
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="fas fa-edit"></i> Tambah Pasca Online <span id="noIPTheader"></span>
+                            </h3>
+                            <div style="display: none">
+                                <span id="header_FileType"></span>
+                                <span id="header_application_id"></span>
+                            </div>
+                            <small class="sub-header"><a th:href="@{/layanan/list-pasca-online}">Pasca Online</a>
+                                / Tambah
+                            </small>
+                            <small style="float:right;margin-left:13px"><a th:href="@{/layanan/list-pasca-online}"><i class="fa fa-arrow-left"></i> Kembali</a></small>
+                        </div>
+                    </div>
+                    <div class="row" th:if="${!isNew}">
+                        <input type="hidden" id="noIPT" th:value="${dataGeneral.eFilingNo}" />
+                        <input type="hidden" id="ref_application_id" th:value="${asal_application_id}" />
+                        <input type="hidden" id="ref_application_no" th:value="${asal_application_no}" />
+                        <input type="hidden" id="ref_mFileType" th:value="${type_mfile}" />
+                        <input type="hidden" id="isNew" value="0" />
+                        <input type="hidden" id="realId" th:value="${txPostDetail_id}" />
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="fas fa-edit"></i> Edit Pasca Online - <span th:text="${dataGeneral.eFilingNo}"></span>
+                            </h3>
+                            <small class="sub-header"><a th:href="@{/layanan/list-pasca-online}">Pasca Online</a>
+                                / <span th:text="${asal_application_no+' - '+type_mfile}"></span>
+                            </small>
+
+                            <small style="float:right;margin-left:13px"><a th:href="@{/layanan/list-pasca-online}"><i class="fa fa-arrow-left"></i> Kembali</a></small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="permohonan-baru--step">
+                    <ul class="display--flex" style="overflow-x: auto;flex-wrap: nowrap;padding-bottom: 20px">
+                        <!-- ##############################################
+                       Tambahkan class="yet" untuk data yang telah diedit dan disimpan pada <li>
+                        ################################################## -->
+                        <li js-direction="step-form" class="current" js-id="1" id="general">
+                            <div class="iconn text-center text-bold" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">1</div>
+                            <div class="textt text-bold text-center">
+                                <div class="textt text-bold text-center" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">
+                                    General
+                                </div>
+                            </div>
+                        </li>
+                        <li js-direction="step-form" js-id="2" id="pemohon">
+                            <div class="iconn text-center text-bold" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">2</div>
+                            <div class="textt text-bold text-center">
+                                <div class="textt text-bold text-center" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">
+                                    Pemohon
+                                </div>
+                            </div>
+                        </li>
+                        <li js-direction="step-form" js-id="3" id="kuasa">
+                            <div class="iconn text-center text-bold" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">3</div>
+                            <div class="textt text-bold text-center">
+                                <div class="textt text-bold text-center" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">
+                                    Kuasa
+                                </div>
+                            </div>
+                        </li>
+                        <li js-direction="step-form" js-id="4" id="dokumen">
+                            <div class="iconn text-center text-bold" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">4</div>
+                            <div class="textt text-bold text-center">
+                                <div class="textt text-bold text-center" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">
+                                    Lampiran
+                                </div>
+                            </div>
+                        </li>
+                        <li js-direction="step-form" js-id="5" id="preview">
+                            <div class="iconn text-center text-bold" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">5</div>
+                            <div class="textt text-bold text-center">
+                                <div class="textt text-bold text-center" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">
+                                    Preview
+                                </div>
+                            </div>
+                        </li>
+                        <li js-direction="step-form" js-id="6" id="resume">
+                            <div class="iconn text-center text-bold" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">6</div>
+                            <div class="textt text-bold text-center">
+                                <div class="textt text-bold text-center" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">
+                                    Notes
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="content--center padding-content--left-right">
+                    <div class="wrapper--bg">
+                        <div class="form-horizontal form--input">
+                            <!-- form 1 -->
+                            <p th:replace="/pasca-online/form-1-general"/>
+                            <!-- form 2 -->
+                            <p th:replace="/pasca-online/form-2-pemohon"/>
+                            <!-- form 3 -->
+                            <p th:replace="/pasca-online/form-3-kuasa"/>
+                            <!-- form 4 -->
+                            <p th:replace="/pasca-online/form-4-dokumen"/>
+                            <!-- form 5 -->
+                            <p th:replace="/pasca-online/form-5-preview"/>
+                            <!-- form 6 -->
+                            <p th:replace="/pasca-online/form-6-resume"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datepickerEndDate"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<div th:replace="fragment/pasca-online/js-form-1 :: general"></div>
+<div th:replace="fragment/pasca-online/js-form-2 :: pemohon"></div>
+<div th:replace="fragment/pasca-online/js-form-3 :: kuasa"></div>
+<div th:replace="fragment/pasca-online/js-form-4 :: dokumen"></div>
+<div th:replace="fragment/pasca-online/js-form-5 :: preview"></div>
+<div th:replace="fragment/pasca-online/js-form-6 :: resume"></div>
+</body>
+</html>

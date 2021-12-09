@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body  th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+
+    <div class="my-wrapper" id="my-wrapper">
+        <div class="my-wrapper--inner">
+            <!-- data pemohon -->
+            <div class="wrapper-content" id="permohonan-baru">
+                <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="fas fa-laptop"></i> Sertifikat
+                            </h3>
+                            <small class="sub-header">Dashboard / Cetak Sertifikat</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 content--center padding-content--left-right">
+                    <div style="margin: bottom">
+                        <a class="btn btn-danger" th:href="@{/layanan/list-data-permohonan}"><i class="fa fa-arrow-left"></i> Kembali</a>
+                        <!-- <a class="btn btn-success" href="download/cetakpublikasi.doc"><i class="fas fa-file-word"></i>
+                            Simpan</a> -->
+                        <br/>
+                    </div>
+                    <br/>
+                    <div style="width: 100% height=100%">
+                        <object th:data="@{/layanan/download/BRM.pdf}" type="application/pdf" width="100%" height="800px"/>
+                        <embed th:src="@{/layanan/download/cetakpublikasi.pdf}" type="application/pdf" width="100%" height="800px"/>
+                        <iframe th:src="@{/layanan/download/cetakpublikasi.pdf}" type="application/pdf" width="100%" height="800px"/>
+                        <iframe th:src="@{/publikasi/}" width="100%" height="800px" />
+                        <!-- <embed th:src="@{/layanan/download/cetakpublikasi.pdf}"  type="application/pdf" width="100%" height="800px"/> -->
+                        <!-- <object th:data="@{/layanan/download/cetakpublikasi.pdf}" type="application/pdf" width="100%" height="800px"/>  -->
+
+                        <!--  <embed th:src="@{/layanan/download/cetakpublikasi.pdf}" type="application/pdf" width="100%" height="800px"/> -->
+                        <!-- <embed src="download/cetakpublikasi.pdf" type="application/pdf" width="100%" height="800px"/> -->
+                        <!-- <iframe th:src="@{/resources/templates/publikasi/download/cetakpublikas.pdf}" width="100%" height="800px"/> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+</body>
+</html>

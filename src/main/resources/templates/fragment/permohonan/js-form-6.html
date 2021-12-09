@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="form-6" th:remove="tag">
+    <script type="text/javascript" language="javascript" th:inline="javascript">
+        var csrf = /*[[${_csrf.token}]]*/ '';
+        var header = "X-CSRF-TOKEN";
+        var redirect = /*[[@{/layanan/pratinjau-permohonan(no=${noGeneral})}]]*/ '';
+        var isEdit = $("#isEdit").val();
+        var noGeneral = /*[[${noGeneral}]]*/ '';
+        var lookupKonfirm = /*[[${lookupKonfirm}]]*/ '';
+        var fileType = /*[[${dataLoketPenerimaan.mFileType.id}]]*/ '';
+        var tableClass = $('#tableTxTmClass');
+        var tableForm6 = $('#table6');
+        var classStatusEnum = JSON.parse( /*[[${classStatusEnum}]]*/ '');
+
+        var searchByArr6 = [];
+        var keywordArr6 = [];
+        var selectedClass = [];
+        var actionType = "none";
+
+        $(document).ajaxSend(function(e, xhr, options) {
+            xhr.setRequestHeader(header, csrf);
+        });
+        $(document).ready(function() {
+            //LIST Data Table in FORM
+            tableClass = $('#tableTxTmClass').DataTable({
+                'createdRow': function(row, data, dataIndex) {
+                    $(row).attr('id', data[0]);
+                    $(row).attr('kelas', data[2]);
+                },
+                searching: true,
+                'columnDefs': [{
+                    'targets': 0,
+                    'visible': isEdit != undefined,
+                    'searchable': false,
+                    'orderable': true,
+                    'className': 'dt-body-center',
+                    'render': function(data, type, full, meta) {
+                        if (full[10] == 'TRUE')
+                            return '<input type="checkbox" checked="true" disabled="true"/>';
+                        else if (full[9] == classStatusEnum.acceptLabel)
+                            return '<input type="checkbox" checked="true"/>';
+                        else
+                            return '<input type="checkbox"/>';
+                    }
+                },
+                    {
+                        'targets': 1,
+                        'visible': true,
+                        'searchable': false,
+                    },
+                    {
+                        'targets': [6],
+                        'visible': false,
+                        'searchable': false,
+                    },
+                    {
+                        'targets': -4,
+                        'visible': isEdit != undefined,
+                        'searchable': isEdit != undefined,
+                    },
+                    {
+                        'targets': -2,
+                        'searchable': false,
+                        'width': '80',
+                        'visible': false,
+                        'data': null,
+                        'className': 'dt-body-center',
+                        'render': function(data, type, full, meta) {
+                            //if (full[10] == 'TRUE' || isEdit == undefined)
+                            return '<button type="button" id="btnHapus" class="btn btn-danger btn-xs" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PHPSKLS')}">Hapus</button>';
+                            //else
+                            //return '';
+                        }
+                    },
+                    {
+                        'targets': -1,
+                        'searchable': false,
+                        'width': '80',
+                        'visible': true,
+                        'data': null,
+                        'className': 'dt-body-center',
+                        'render': function(data, type, full, meta) {
+                            <!--return '<div class="btn-actions"><button type="button" class="btn btn-success btn-xs" onclick="modalUpdateTxClass(\'' + data[0] + '\')">Catatan</button>' + '<br/>' +-->
+                                <!--'<button type="button" class="btn btn-warning btn-xs" onclick="modalUpdateDataKelas(\'' + data[0] + '\')">Ubah Uraian</button></div>'-->
+                            return '<div class="btn-actions"><button type="button" class="btn btn-success btn-xs" onclick="modalUpdateTxClass(\'' + data[0] + '\')">Catatan</button>' +
+                                    '<button type="button" id="btnHapus" class="btn btn-danger btn-xs" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PHPSKLS')}">Hapus</button>' +
+                                    '<button type="button" class="btn btn-default btn-xs" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PUBMKLS')}" onclick="modalUpdateDataKelas(\'' + data[0] + '\')">Ubah Uraian</button></div>'
+
+                        }
+                    },
+                ],
+                ajax: {
+                    type: 'GET',
+                    data: {
+                        appNo: noGeneral
+                    },
+                    url: /*[[@{/layanan/list-txclass}]]*/ ''
+                },
+                language: {
+                    url: /*[[@{/js/i18n/datatables.in.json}]]*/ ''
+                },
+                "fnDrawCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+                    fillKelasData();
+                }
+            });
+            $(document).on('change', '.check-class', function(e) {
+                var checked = this.checked;
+                var idx = $(this).attr('data-idx');
+                if (checked) {
+
+                    var x = tableForm6.row($(this).parent().parent()).data();
+
+                    selectedClass.push(x);
+                } else {
+                    /*<![CDATA[*/
+                    var i;
+                    for (i = 0; i < selectedClass.length; i++) {
+                        if (selectedClass[i][0] == idx) {
+                            selectedClass.splice(i, 1);
+                            break;
+                        }
+                    }
+                    /*]]>*/
+                }
+            });
+
+            tableClass.on('error.dt', function(e, settings, techNote, message) {
+                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+            });
+
+            //LIST Data Table in Modal Tambah Kelas
+            tableForm6 = $('#table6').DataTable({
+                'createdRow': function(row, data, dataIndex) {
+                    $(row).attr('id', data[0]);
+                },
+                pageLength: 10,
+                deferLoading: 0, // here
+                processing: true,
+                searching: false,
+                serverSide: true,
+                ajax: {
+                    data: function(d) {
+                        listId = []
+                        tableClass.rows().eq(0).each(function(index) {
+                            var data = tableClass.row(index).data();
+                            listId.push(data[0]);
+                        });
+
+                        d.searchByArr6 = searchByArr6;
+                        d.keywordArr6 = keywordArr6;
+                        d.excludeArr6 = listId;
+                       // d.orderBy = 'parentClass.no';
+                        d._csrf = csrf;
+                        d.actionType = actionType;
+                    },
+                    type: 'POST',
+                    url: /*[[@{/layanan/list-kelas-petugas}]]*/ ''
+                },
+                'columnDefs': [{
+                    "targets": [2, 5, 6],
+                    "visible": false,
+                    "searchable": false
+                },
+                    {
+                        "targets": [7, 8],
+                        "visible": false,
+                        "searchable": true
+                    },
+                    {
+                        'targets': 0,
+                        'searchable': false,
+                        'orderable': true,
+                        'className': 'dt-body-center',
+                        'render': function(data, type, full, meta) {
+                            /*<![CDATA[*/
+                            for (i = 0; i < selectedClass.length; i++) {
+                                if (selectedClass[0] == data) {
+                                    return '<input class="check-class" type="checkbox" data-idx="' + data + '" checked/>';
+                                }
+                            }
+                            return '<input class="check-class" type="checkbox" data-idx="' + data + '" />';
+                            /*]]>*/
+                        }
+                    }
+
+                ],
+                initComplete: function(settings, json) {
+                    $('#table6_filter.dataTables_filter').empty();
+                },
+                language: {
+                    url: /*[[@{/js/i18n/datatables.in.json}]]*/ ''
+                }
+            });
+            tableForm6.on('error.dt', function(e, settings, techNote, message) {
+                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+            });
+
+            $("#modalUpdateKelas").submit(function(e) {
+                e.preventDefault();
+            }).validate({
+                messages: {
+                    'desc': {
+                        required: /*[[#{field.error.required('Uraian Barang/Jasa')}]]*/
+                    }
+
+                },
+                highlight: function(element) {
+                    $(element).closest('.form-group').addClass('has-error');
+                },
+                unhighlight: function(element) {
+                    $(element).closest('.form-group').removeClass('has-error');
+                },
+                errorElement: 'span',
+                errorClass: 'help-block',
+                errorPlacement: function(error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function(form) {
+                    $.ajax({
+                        data: {
+                            classId: $("#classNo").val(),
+                            desc: $("#updateUraian").val(),
+                            descEn: $("#updateUraianEng").val(),
+                            serialE: $("#serialE").val(),
+                            serialF: $("#serialF").val(),
+                            nomorDasar: $("#nomorDasar").val(),
+                            statusFlag: $("#statusFlag").val(),
+                            appNo: noGeneral,
+                            txIdClass: $("#txIdClass").val()
+                        },
+                        type: 'GET',
+                        beforeSend: function() {
+                            showLoading();
+                        },
+                        complete: function() {
+                            hideLoading();
+
+                            $("#updatedatakelas").removeAttr('detail_id');
+                        },
+                        success: function(result) {
+                            if (!result.success) {
+                                swal("Error", result.message, "error");
+                            } else {
+
+                              swal("Konfirmasi", "Apakah Anda yakin akan mengubah uraian barang/jasa data kelas ini? Jika Ya, perubahan akan mempengaruhi master uraian barang/jasa dan pemohonan yang menggunakan uraian yang sama.", "warning", {
+                              buttons: {
+                              confirm: 'Ya',
+                              cancel: 'Tidak'
+                              }
+                              })
+                                var idTxClass = $("#updatedatakelas").attr('detail_id');
+                                var data = tableClass.row('#' + idTxClass).data();
+                                data[4] = $("#updateUraian").val();
+                                data[5] = $("#updateUraianEng").val();
+                                tableClass.row('#' + idTxClass).data(data);
+                            }
+                        },
+                        error: function(xhr, status) {
+                            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                        },
+                        url: /*[[@{/layanan/update-data-kelas}]]*/ ''
+                    });
+                    $("#updatedatakelas").modal('hide');
+                    return false;
+                }
+            });
+
+            // Handle click on checkbox to set state of "Select all" control
+            $('#tableTxTmClass tbody').on('change', 'input[type="checkbox"]', function() {
+                if (this.checked)
+                    tableClass.cell('#' + $(this).parent().parent().attr('id'), 9).data(classStatusEnum.acceptLabel).draw(false);
+                else
+                    tableClass.cell('#' + $(this).parent().parent().attr('id'), 9).data(classStatusEnum.rejectLabel).draw(false);
+            });
+
+            // Handle click on "Select all" control
+            $('#select-all-class').on('click', function() {
+                // Get all rows with search applied
+                var rows = tableForm6.rows({
+                    page: 'current'
+                }).nodes();
+
+                if (this.checked)
+                    $(rows).addClass('chkClass');
+                else
+                    $(rows).removeClass('chkClass');
+
+                // Check/uncheck checkboxes for all rows in the table
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+                $('input[type="checkbox"]', rows).change();
+            });
+
+            // Handle click on checkbox to set state of "Select all" control
+            $('#table6 tbody').on('change', 'input[type="checkbox"]', function() {
+                if (this.checked)
+                    $(this).parent().parent().addClass('chkClass');
+                else
+                    $(this).parent().parent().removeClass('chkClass');
+
+                // If checkbox is not checked
+                if (!this.checked) {
+                    // If "Select all" control is checked
+                    if ($('#select-all-class').get(0).checked) {
+                        $('#select-all-class').prop("checked", false);
+                    }
+                }
+            });
+        });
+
+        function modalUpdateDataKelas(idClass) {
+            $('.form-group.txclassupdate').removeClass('has-error');
+            $('.form-control.txclassupdate').next().remove();
+            $('.form-group').find('.help-block').hide();
+
+            $.ajax({
+                type: 'POST',
+                url: /*[[@{/layanan/get-data-txclass}]]*/ '',
+                datatype: 'jsonp',
+                data: {
+                    idClass: idClass
+                },
+                beforeSend: function() {
+                    showLoading();
+                },
+                complete: function() {
+                    hideLoading();
+                },
+                success: function(data) {
+                    //$('#txIdClass').val(data.id);
+                    $('#classNo').val(data.parentClass.id);
+                    $('#updateUraian').val(data.desc);
+                    $('#updateUraianEng').val(data.descEn);
+                    $('#serialE').val(data.serial1);
+                    $('#serialF').val(data.serial2);
+                    $("#statusFlag option[value= \"" + data.statusFlag + "\"]").attr('selected', 'selected');
+                    $('#nomorDasar').val(data.classBaseNo);
+                    $('#updatedatakelas').modal('show');
+                    $('#updatedatakelas').attr('detail_id', data.id);
+                },
+                error: function(xhr, status) {
+                    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                }
+            });
+        }
+
+        //Ketika Selesai Ceklis
+        $('#btnPilihKelas').click(function() {
+            var jumlahKelas = /*[[${dataLoketPenerimaan.totalClass}]]*/ 'default';
+            var classValidate = [];
+            var listId = [];
+            var row = [];
+
+            tableClass.rows().eq(0).each(function(index) {
+                var data = tableClass.row(index).data();
+                if (classValidate.indexOf(data[2]) == -1) {
+                    classValidate.push(data[2]);
+                }
+                listId.push(data[0]);
+            });
+
+            /*<![CDATA[*/
+            for (var i = 0; i < selectedClass.length; i++) {
+                if (classValidate.indexOf(selectedClass[i][1]) == -1) {
+                    classValidate.push(selectedClass[i][1]);
+                }
+                if (jQuery.inArray(selectedClass[i][0], listId) == -1) {
+                    row.push(selectedClass[i]);
+                }
+            }
+            /*]]>*/
+
+            if (row.length > 0) {
+                if (classValidate.length > jumlahKelas) {
+                    swal("Informasi", "Sesuai dengan pembayaran Anda hanya boleh memiliki '" + jumlahKelas + "' kelas.", "info");
+                } else {
+                    $.each(row, function(index, value) {
+                        var data = value;
+                        // Aktifin kolum button
+                        tableClass.column(11).visible(false);
+                        tableClass
+                            .row.add([data[0], 0, data[1], data[2], data[3], data[4], data[5], '', data[6], classStatusEnum.acceptLabel, isEdit ? 'TRUE' : 'FALSE', '', ''])
+                            .draw()
+                            .node().id = data[0];
+                    });
+
+                    tableClass.column(1).nodes().each(function(cell, i) {
+                        cell.innerHTML = i + 1;
+                    });
+
+                    $("#tambahKelas").modal('hide');
+                }
+            }
+            $("#tambahKelas").modal('hide');
+        });
+
+        //TAMBAH OPEN MODAL TAMBAH KELAS
+        $('#btnTambahKelas').click(function() {
+            //$.each(tableClass.rows().nodes(), function (index, value) {
+            //    var row = tableClass.row(index);
+            //    var data = row.data();
+            //    var exist = tableForm6.rows('[id='+data[0]+']').any();
+            //    if (exist)
+            //		tableForm6.cell("#"+data[0], 7).data('hide').draw();
+            //});
+
+            //var rows = tableForm6.rows().nodes();
+            //$('input[type="checkbox"]', rows).prop('checked', false);
+            //var rows = tableForm6.rows( '.chkClass' ).nodes();
+            //$('input[type="checkbox"]', rows).prop('checked', false);
+            //$(rows).removeClass('chkClass');
+
+            //$('#select-all-class').prop("checked", false);
+
+            //$('#idListMClass').val('');
+            //$('#uraian').val('');
+            //$('#uraianEng').val('');
+
+            var classType = '';
+            var fileTypeTemp = isEdit != undefined ? fileType : $('#idTypeFiled').val();
+            if (fileTypeTemp == 'MEREK_DAGANG') {
+                $('.optClassJasa').attr('hidden', true);
+                $('.optClassJasa').attr('disabled', true);
+                classType = 'Dagang';
+            }
+            if (fileTypeTemp == 'MEREK_JASA') {
+                $('.optClassDagang').attr('hidden', true);
+                $('.optClassDagang').attr('disabled', true);
+                classType = 'Jasa';
+            }
+
+            if (classType != '') {
+                searchByArr6.push('parentClass.type');
+                keywordArr6.push(classType);
+            }
+            selectedClass = [];
+
+            tableForm6.ajax.reload();
+
+
+            // tableForm6
+            //     .column(1).search('')
+            //     .column(3).search('')
+            //     .column(4).search('')
+            //     .column(7).search('"show"')
+            //     .column(8).search(classType)
+            //     .draw();
+        });
+
+        $('#uraian').keydown(function(e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                e.preventDefault();
+                var inputs = $(this).closest('formSearch6').find('#uraian:visible');
+                inputs.eq(inputs.index(this) + 1).focus();
+            }
+        });
+
+        $('#uraianEng').keydown(function(e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                e.preventDefault();
+                var inputs = $(this).closest('formSearch6').find('#uraian:visible');
+                inputs.eq(inputs.index(this) + 1).focus();
+            }
+        });
+
+        //CARI DATA TABLE ON MODAL TAMBAH KELAS
+        $('#btnCariKelas').click(function() {
+            var mLookup = $('#lookupKonfirm').val() == undefined ? lookupKonfirm : $('#lookupKonfirm').val();
+            var classId = '^' + $('#idListMClass option:selected').text() + '$';
+
+            // menambahkan parameter 'Konfirmasi' dari mlookup untuk di swal info
+            var lookupName = '';
+            mLookup.forEach(function(element) {
+                lookupName = element.name;
+            });
+
+            searchByArr6 = [];
+            keywordArr6 = [];
+            actionType = "goSearch";
+
+            if ($('#idListMClass').val() != '') {
+                classId = $('#idListMClass').val();
+                searchByArr6.push('parentClass.id');
+                keywordArr6.push(classId);
+            }
+
+            if ($('#uraian').val() != '') {
+                uraian = $('#uraian').val().split(";");
+                $.each(uraian, function(index, value) {
+                    var string = value.trim();//.replace(/([,-.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+                    searchByArr6.push('desc');
+                    keywordArr6.push(string);
+                })
+            }
+
+            if ($('#uraianEng').val() != '') {
+                uraianEng = $('#uraianEng').val().split(";");
+                $.each(uraianEng, function(index, value) {
+                    var string = value.trim();//.replace(/([,-.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+                    searchByArr6.push('descEn');
+                    keywordArr6.push(string);
+                })
+            }
+
+            var classType = '';
+            var fileTypeTemp = isEdit != undefined ? fileType : $('#idTypeFiled').val();
+            if (fileTypeTemp == 'MEREK_DAGANG') {
+                classType = 'Dagang';
+                searchByArr6.push('parentClass.type');
+                keywordArr6.push(classType);
+            }
+            if (fileTypeTemp == 'MEREK_JASA') {
+                searchByArr6.push('parentClass.type');
+                keywordArr6.push(classType);
+                classType = 'Jasa';
+            }
+
+            tableForm6.ajax.reload(function(json) {
+                if ((json.recordsTotal) == 0) {
+                    // #rian@docotel.com
+                    //reset keyword
+                          //$('#uraian').val("");
+                          //$('#uraianEng').val("");
+                          //reset ajax config
+                            searchByArr6 = [];
+                            keywordArr6 = [];
+                            actionType = "goSearch" ;
+                          var classType = '';
+                            var fileTypeTemp = isEdit ? fileType : $('#mFileType').val();
+
+                            if(fileTypeTemp == 'MEREK_DAGANG'){
+                                classType= 'Dagang';
+                                searchByArr6.push('parentClass.type');
+                                keywordArr6.push(classType);
+                            }
+                            if(fileTypeTemp == 'MEREK_JASA'){
+                                searchByArr6.push('parentClass.type');
+                                keywordArr6.push(classType);
+                                classType= 'Jasa';
+                            }
+
+                            if($('#idListMClass').val() != '') {
+                                classId = $('#idListMClass').val();
+                                searchByArr6.push('parentClass.id');
+                                keywordArr6.push(classId);
+                            }
+                          //reload table
+                          tableForm6.ajax.reload();
+                    swal("Informasi", "Silakan cari padanan kata jenis barang/jasa sesuai dengan sistem klasifikasi. Jika jenis barang/jasa tidak terdaftar, silakan hubungi Bagian Permohonan : " + lookupName + "", "info");
+                }
+            });
+
+            // tableForm6
+            //     .column(1).search(classId, true, false )
+            //     .column(3).search($('#uraian').val())
+            //     .column(4).search($('#uraianEng').val())
+            //     .column(7).search('"show"')
+            //     .column(8).search(classType)
+            //     .draw();
+
+            var info = tableForm6.page.info();
+            if (info.recordsDisplay == 0) {
+                //swal("Informasi", "Silakan cari padanan kata jenis barang/jasa sesuai dengan sistem klasifikasi. Jika jenis barang/jasa tidak terdaftar, silakan hubungi Bagian Permohonan : " + lookupName + "", "info");
+            }
+        });
+
+        $('#btnUpdateTxClass').click(function() {
+            var isValidForm = $("#frmUpdateTxClass").valid();
+            var classId = $('#txClassId').val();
+            var classAppNo = $('#txAppNo').val();
+            var classNote = $('#noteTxClass').val();
+            if (isValidForm) {
+                tableClass.cell('#' + classId, 7).data(classNote).draw(false);
+                $('#updateTxClass').modal('hide');
+            }
+        });
+
+        $('#btnSubmitTambahUraian').click(function() {
+           if(listChildDesc==null) {
+            var kelas = $("#insertUraian_classNo").val()
+            var serialE = $("#insertUraian_serialE").val()
+            var serialF = $("#insertUraian_serialF").val()
+            var classBaseNo = $("#insertUraian_nomorDasar").val()
+            var listChildDesc = $("#insertUraian_Uraian").val()
+            var listChildDescEn = $("#insertUraian_UraianEng").val()
+            swal("Konfirmasi", "Apakah Anda yakin akan menyimpan urian barang/jasa kelas ini? Jika Ya, data akan tersimpan juga pada master kelas.", "warning", {
+                buttons: {
+                    cancel: 'Tidak',
+                    confirm: 'Ya'
+                }
+            })
+            .then((isConfirm) => {
+                if (isConfirm) {
+            $.ajax({
+                type: 'POST',
+                url: /*[[@{/layanan/insert-uraian}]]*/ '',
+                data: {
+                    serialE: serialE,
+                    serialF: serialF,
+                    classBaseNo: classBaseNo,
+                    listChildDesc: listChildDesc,
+                    listChildDescEn: listChildDescEn,
+                    kelas: kelas,
+                    appNo: noGeneral,
+                },
+                beforeSend: function() {
+                    showLoading();
+                },
+                complete: function() {
+                    hideLoading();
+                },
+                success: function(result) {
+                    //console.log(result.success);
+                    if(result){
+                        $('#tambahUraian').modal('hide');
+                        swal("Informasi", "Berhasil menambahkan uraian", "info");
+                        window.location.reload();
+                    }
+                },
+                error: function(xhr, status) {
+                    console.log(xhr, status)
+                    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                }
+            });
+             }
+            });
+            } else {
+            swal("Error", "Data Uraian Barang/Jasa Wajib Diisi", "error");}
+            
+        });
+
+        //Modal Kalo Kelas Lebih
+        $('#btnOKmodalinfo').click(function() {
+            $("#modalInfo").modal('hide');
+        });
+
+        $('#btnHapusAll').click(function() {
+            swal("Konfirmasi", "Apakah Anda yakin akan menghapus semua data kelas?", "warning", {
+                buttons: {
+                    cancel: 'Tidak',
+                    confirm: 'Ya'
+                }
+            })
+                .then((value) => {
+                if (value) {
+                    $.each(tableClass.rows().nodes(), function(index, value) {
+                        var data = tableClass.row(index).data();
+                        tableForm6.cell("#" + data[0], 7).data('show').draw();
+                    });
+                    tableClass.clear().draw();
+                }
+            });
+        });
+
+        $('#btnHapusPerKelas').click(function() {
+            var selected = $("#classListPermohonan option:selected").text().toString();
+            swal("Konfirmasi", "Apakah Anda yakin akan menghapus semua data berdasar kelas " + selected, "warning", {
+                buttons: {
+                    cancel: 'Tidak',
+                    confirm: 'Ya'
+                }
+            })
+            .then((isConfirm) => {
+                if (isConfirm) {
+                    tableClass.rows("[kelas*='"+selected+"']").remove().draw();
+                    swal("Informasi", "Data Berhasil Dihapus dari Layar, Silakan klik tombol Simpan", "info");
+                    $("#btnTambahKelas").hide();
+                }
+            });
+        });
+
+        function ClearTables() {
+            $(tableClass).dataTable().clear().draw();
+            //$('#myTable2').dataTable().clear().draw();
+        }
+
+        //ACTION HAPUS PADA LIST YG SUDAH DI PILIH
+        //$('#tableTxTmClass tbody').on('click', 'button', function () {
+        $(document).on('click', '#btnHapus', function() {
+            swal("Konfirmasi", "Apakah Anda yakin akan menghapus data kelas ini?", "warning", {
+                buttons: {
+                    confirm: 'Ya',
+                    cancel: 'Tidak'
+                }
+            })
+                .then((value) => {
+                if (value) {
+                    var row = tableClass.row($(this).parents('tr'));
+                    var data = row.data();
+                    row.remove().draw(false);
+                    tableClass.column(1).nodes().each(function(cell, i) {
+                        cell.innerHTML = i + 1;
+                    });
+                }
+            });
+        });
+
+        //MODAL UNTUK UPDATE NOTES KELAS
+        function modalUpdateTxClass(idTxClass) {
+            $("#updateTxClass").modal('show');
+
+            var data = tableClass.row('#' + idTxClass).data();
+            $("#txClassId").val(idTxClass);
+            $('#noteTxClass').val(data[7]);
+        }
+
+        $('#btnUpdateTxClass').on('click', function(e) {
+            var idTxClass = $("#txClassId").val()
+            var data = tableClass.row('#' + idTxClass).data();
+            data[7] = $('#noteTxClass').val();
+            tableClass.row('#' + idTxClass).data(data);
+            $("#updateTxClass").modal('hide');
+        })
+
+        $('#btnTambahUraian').on('click', function(e) {
+            $("#tambahKelas").modal('hide');
+        })
+
+        //PUSH TO TXTMCLASS
+        $('#form6push').on('click', function(e) {
+            e.preventDefault();
+            var listChildId = [];
+            var listChildStatus = [];
+            var listChildNote = [];
+            var listChildDesc = [];
+            var listChildDescEn = [];
+            var listChildCorretion = [];
+            $.each(tableClass.rows().nodes(), function(index, value) {
+                var row = tableClass.row(index);
+                var data = row.data();
+                var classStatus = data[9] == classStatusEnum.acceptLabel ? classStatusEnum.acceptValue : classStatusEnum.rejectValue;
+
+                //listClassChildId.push(data[0] + ';' + classStatus + ';' + data[7] + ';' + data[10]);
+                listChildId.push(data[0]);
+                listChildStatus.push(classStatus);
+                listChildNote.push(data[7]);
+                listChildDesc.push(data[4] ? data[4].split(",").join("|||") : '');
+                listChildDescEn.push(data[5] ? data[5].split(",").join("|||") : '');
+                listChildCorretion.push(data[10]);
+            });
+
+            var formData = new FormData;
+            formData.append('listChildId', listChildId);
+            formData.append('listChildStatus', listChildStatus);
+            formData.append('listChildNote', listChildNote);
+            formData.append('listChildDesc', listChildDesc);
+            formData.append('listChildDescEn', listChildDescEn);
+            formData.append('listChildCorretion', listChildCorretion);
+            formData.append('appNo', noGeneral);
+
+            $.ajax({
+                type: 'POST',
+                url: /*[[@{/layanan/insert-kelas}]]*/ '',
+                data: formData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    showLoading();
+                },
+                complete: function() {
+                    hideLoading();
+                },
+                success: function(result) {
+                    if (isEdit != undefined) {
+                        window.location.replace(redirect);
+                    } else {
+                        // $('#kelas').addClass('yet');
+                        //  Start set value form 8
+                        var listNo = [];
+                        var jsonObj = {};
+                        tableClass.rows().eq(0).each(function(index) {
+                            var row = tableClass.row(index);
+                            var data = row.data();
+
+                            if (jsonObj[[data[2], "desc"]] == undefined) {
+                                listNo.push(data[2]);
+                                jsonObj[[data[2], "desc"]] = data[4];
+                                jsonObj[[data[2], "descEn"]] = data[5];
+                            } else {
+                                jsonObj[[data[2], "desc"]] = jsonObj[[data[2], "desc"]] + ', ' + data[4];
+                                jsonObj[[data[2], "descEn"]] = jsonObj[[data[2], "descEn"]] + ', ' + data[5];
+                            }
+                        });
+
+                        listNo = listNo.sort(function(a, b) {
+                            return a - b;
+                        });
+
+                        $("#form8TableKelas tbody").empty();
+                        $.each(listNo, function(index, value) {
+                            $("#form8TableKelas tbody").append("<tr><td>" + value + "</td><td>" + jsonObj[[value, "desc"]] + "</td><td>" + jsonObj[[value, "descEn"]] + "</td></tr>");
+                        });
+                        //  End set value form 8
+                        $('#dokumen').trigger("click");
+                    }
+                },
+                error: function(xhr, status) {
+
+                    if (listChildId.length == '0') {
+                        swal("Error", "Silakan pilih minimal 1 Uraian Barang/Jasa", "error");
+                    } else {
+                        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                    }
+
+                }
+            });
+        });
+
+        //GET DESC KELAS olly@docotel.com
+        document.onclick = function(){
+            renderDescKelas()
+        }
+        function renderDescKelas(){
+            var select = document.getElementById('idListMClass');
+            var x = select.options[select.selectedIndex].text;
+            document.getElementById('resultdesc').innerHTML = x;
+        }
+
+
+        //Selection per-Class
+        function fillKelasData(){
+            var KelasOptions = "<option></option>";
+            var allKelas = [];
+            $.each(tableClass.data(), function(index, value) {
+                var data = tableClass.row(index).data();
+                var kelas = data[2];
+                if( allKelas.indexOf(kelas)==-1 ){
+                    allKelas.push(kelas);
+                    KelasOptions += "<option>"+kelas+"</option>";
+                }
+            });
+            $("#classListPermohonan").html(KelasOptions);
+        }
+
+        $("#classListPermohonan").change(function(){
+            var selectedkelas = $("#classListPermohonan option:selected").text();
+            // $("#tableTxTmClass_filter input").val(selectedkelas);
+            // $('#tableTxTmClass').DataTable().search(selectedkelas).draw();
+            $('#tableTxTmClass').DataTable().columns(2).search(selectedkelas).draw();
+            $("#classListPermohonan").val(selectedkelas);
+        });
+
+        $("#btnSelectSemua").click(function(){
+            var selectedkelas = $("#classListPermohonan option:selected").text();
+            $.each(tableClass.data(), function(index, value) {
+                var data = tableClass.row(index).data();
+                var kelas = data[2];
+                if( kelas == selectedkelas ){
+                    data[9] = classStatusEnum.acceptLabel;
+                }
+            });
+            tableClass.column(9).cells().invalidate().render();
+        });
+        $("#btnUnSelectSemua").click(function(){
+            var selectedkelas = $("#classListPermohonan option:selected").text();
+            $.each(tableClass.data(), function(index, value) {
+                var data = tableClass.row(index).data();
+                var kelas = data[2];
+                if( kelas == selectedkelas ){
+                    data[9] = classStatusEnum.rejectLabel;
+                }
+            });
+            tableClass.column(9).cells().invalidate().render();
+        });
+    </script>
+</div>
+</html>

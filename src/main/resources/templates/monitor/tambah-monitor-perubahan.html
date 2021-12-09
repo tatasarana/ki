@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+
+    <div class="my-wrapper" id="my-wrapper">
+        <div class="my-wrapper--inner">
+
+            <div class="wrapper-content" id="permohonan-baru">
+                <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="fas fa-tasks"></i> Monitor - Tambah Aksi
+                            </h3>
+                            <small class="sub-header">Permohonan / Monitor / Tambah Aksi</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="content--center padding-content--left-right">
+                    <div class="wrapper--bg">
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                            <button data-dismiss="alert" class="close close-sm" type="button">
+                                <i class="icon-remove"></i>
+                            </button>
+                            <p>[[${errorMessage}]]</p>
+                        </div>
+                        <form class="form-horizontal" th:object="${form}" th:action="@{/layanan/tambah-monitor}" enctype="multipart/form-data"
+                              method="post">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group" id="tglMonitor">
+                                        <label class="col-sm-3 col-form-label required-label">Tanggal</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="myDate" class="form-control datepicker" placeholder="Tanggal" th:field="*{createdDateTemp}" />
+                                            <span class="help-block" th:if="${#fields.hasErrors('createdDate')}"
+                                                  th:errors="*{createdDate}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Pilih Status</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:field="*{mWorkflowProcess.id}" id="wfProcess" th:required="true">
+                                                <option th:each="process : ${wfProcess}"
+                                                        th:value="${process.id}" th:text="${process.status.name}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Pilih Aksi</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:field="*{mWorkflowProcessActions.id}" id="wfProcessAction" th:required="true">
+                                                <option th:value="${null}">-Pilih Aksi-</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Catatan</label>
+                                        <div class="col-sm-9">
+                                            <textarea type="text" placeholder="Catatan" class="form-control" th:field="*{notes}" maxlength="1000"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="tglTempo">
+                                        <label class="col-sm-3 col-form-label required-label">Tanggal Jatuh Tempo</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control datepicker" th:field="*{dueDate}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="targetStatus">
+                                        <label class="col-sm-3 col-form-label required-label">Target Status</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:field="*{targetWorkflowProcess.id}">
+                                                <option th:value="${null}">-Pilih Status-</option>
+                                                <option th:each="process : ${wfProcess}"
+                                                        th:value="${process.id}" th:text="${process.status.name}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="uploadDokumen">
+                                        <label class="col-sm-3 col-form-label">File</label>
+                                        <div class="col-sm-9">
+                                            <input type="file" class="form-control" placeholder="File"
+                                                   name="file"/>
+                                        </div>
+                                    </div>
+                                    <label class="col-form-label  notice">*) Wajib Diisi</label>
+                                    <hr/>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-3 col-sm-9">
+                                            <input type="hidden" th:field="*{txTmGeneral.id}"/>
+                                            <a th:href="@{/layanan/list-monitor(no=*{txTmGeneral.applicationNo})}" class="btn btn-danger"><i class="fas fa-times"></i> Batal</a>
+                                            <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Proses</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+
+    var currentDate = new Date();
+    $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            todayBtn: 'linked',
+            todayHighlight: true,
+            endDate: 'today' 
+        }).datepicker('setDate', currentDate.toString());
+
+    $(document).ready(function(){
+        $('#tglTempo').hide();
+        $('#targetStatus').hide();
+        $('#uploadDokumen').hide();
+        
+        var processId = $('#wfProcess').val();
+        $('#wfProcessAction').empty();
+        $('#wfProcessAction').prepend($('<option></option>').html('Loading...'));
+        $.get('layanan/ajax-workflow-process-action?id='+processId, function(data, status){
+            var option = '';
+            if(status=='success'){
+                 $.each(data, function(index){
+                    aId = data[index].id;
+                    console.log(aId);
+                    name = data[index].actionName;
+                    option += '<option value="'+ aId +'">'+name+'</option>';
+                });
+                $('#wfProcessAction').empty();
+                $('#wfProcessAction').append('<option th:value="null">-Pilih Aksi-</option>');
+                $('#wfProcessAction').append(option);
+                 $('#loader').hide();
+            }else{
+                alert('Telah terjadi kesalahan');
+            }
+        });
+    });
+
+    function addDays(date, days) {
+        var result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+    }
+
+    $('#wfProcessAction').change(function(){
+        var processActionId = $('#wfProcessAction').val();
+        $.get('layanan/ajax-workflow-process-action-byid?id='+processActionId, function(action,status){
+            if(status=='success'){
+               if(action.actionType=='Otomatis'){
+                    $('#tglTempo').show();
+                    $('#targetStatus').show();
+                    $('#uploadDokumen').val("");
+                    $('#uploadDokumen').hide();
+                     var today = new Date();
+                     var newdate = new Date();
+                     newdate.setDate(today.getDate()+Number(action.actionDuration));
+                     $('.datepicker').datepicker('setDate', newdate);
+               }else if(action.actionType=='Upload'){
+                    $('#uploadDokumen').val("");
+                    $('#uploadDokumen').show();
+                    $('#tglTempo').val("");
+                    $('#targetStatus').val("");
+                    $('#tglTempo').hide();
+                    $('#targetStatus').hide();
+               }else{
+                    $('#tglTempo').val("");
+                    $('#targetStatus').val("");
+                    $('#uploadDokumen').val("");
+                    $('#tglTempo').hide();
+                    $('#targetStatus').hide();
+                    $('#uploadDokumen').hide();
+               }
+            }
+        });
+    });
+
+    <!--$(document).ready(function(){-->
+        <!--$("#wfProcess").combobox();-->
+        <!--$("#wfProcessAction").combobox();-->
+    <!--});-->
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <form class="form-horizontal" th:action="@{/layanan/edit-role-substantif}" th:object="${form}" th:method="post">
+        <input type="hidden" th:field="*{id}"/>
+        <div class="my-wrapper" id="my-wrapper">
+            <div class="my-wrapper--inner">
+                <!-- data pemohon -->
+                <div class="wrapper-content" id="permohonan-baru">
+                    <div class="content--top border--bottom padding-content--left-right">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="content--title text--bold">
+                                    <i class="fas fa-laptop"></i> Data Role Substantif - Ubah
+                                </h3>
+                                <small class="sub-header">Role Substantif / Ubah</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content--center padding-content--left-right">
+                        <div class="wrapper--bg">
+                            <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                                <button data-dismiss="alert" class="close close-sm" type="button">
+                                    <i class="icon-remove"></i>
+                                </button>
+                                <p>[[${errorMessage}]]</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Nama Role</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Nama Role" th:field="*{name}" th:required="true"
+                                            maxlength="200"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Deskripsi</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Deskripsi" th:field="*{desc}" th:required="true"
+                                            maxlength="255"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('desc')}" th:errors="*{desc}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Status</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:field="*{statusFlag}">
+                                                <option th:value="true"> Aktif </option>
+                                                <option th:value="false">Tidak Aktif </option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('statusFlag')}" th:errors="*{statusFlag}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <label class="col-form-label notice">*) Wajib Diisi</label>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-3 col-sm-9">
+                                            <a th:href="@{/layanan/list-role-substantif}" class="btn btn-danger"><i class="fas fa-times"></i> Batal</a>
+                                            <button type="submit" class="btn btn-primary"><i
+                                                    class="fas fa-paper-plane"></i> Proses
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	$(document).ready(function(){
+		$('.datepicker').datepicker({
+			format: 'dd/mm/yyyy',
+			autoclose: true,
+			todayBtn: 'linked',
+			todayHighlight: true,
+		});
+		$('form').validate({
+			messages:{
+				'name':{
+                    required:/*[[#{field.error.required('Nama Role')}]]*/''
+                },
+                'desc':{
+                    required:/*[[#{field.error.required('Deskripsi')}]]*/''
+                }
+			},
+			highlight: function(element) {
+				$(element).closest('.form-group').addClass('has-error');
+			},
+			unhighlight: function(element) {
+				$(element).closest('.form-group').removeClass('has-error');
+			},
+			errorElement: 'span',
+			errorClass: 'help-block',
+			errorPlacement: function(error, element) {
+				if(element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else {
+					error.insertAfter(element);
+				}
+			}
+		});
+	});
+
+
+
+</script>
+</body>
+</html>

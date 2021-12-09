@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <form class="form-horizontal" th:object="${form}" th:action="@{/layanan/tambah-asal-permohonan}" method="post">
+        <div class="my-wrapper" id="my-wrapper">
+            <div class="my-wrapper--inner">
+
+                <div class="wrapper-content" id="permohonan-baru">
+                    <div class="content--top border--bottom padding-content--left-right">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="content--title text--bold">
+                                    <i class="fas fa-map"></i> Data Asal Permohonan - Tambah
+                                </h3>
+                                <small class="sub-header">Asal Permohonan / Tambah</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content--center padding-content--left-right">
+                        <div class="wrapper--bg">
+                            <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                                <button data-dismiss="alert" class="close close-sm" type="button">
+                                    <i class="icon-remove"></i>
+                                </button>
+                                <p>[[${errorMessage}]]</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Kode Asal Permohonan</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Kode Asal Permohonan" th:field="*{code}" th:required="true" maxlength="10"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('code')}" th:errors="*{code}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Asal Permohonan</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Asal Permohonan" th:field="*{desc}" th:required="true"
+                                            maxlength="100"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('desc')}" th:errors="*{desc}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Kanwil</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:field="*{kanwilFlag}">
+                                                <option th:value="true">Ya</option>
+                                                <option th:value="false">Tidak</option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('kanwilFlag')}"
+                                                  th:errors="*{kanwilFlag}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <label class="col-form-label notice">*) Wajib Diisi</label>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                    <div class="col-sm-3"></div>
+                                        <div class="col-sm-9">
+                                            <a th:href="@{/layanan/list-asal-permohonan}" class="btn btn-danger"><i class="fas fa-times"></i> Batal</a>
+                                            <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Proses </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    $(document).ready(function(){
+        $('form').validate({
+            messages:{
+                'code':{
+                    required:/*[[#{field.error.required('Kode')}]]*/''
+                },
+                'desc':{
+                    required:/*[[#{field.error.required('Asal Permohonan')}]]*/''
+                }
+            },
+            highlight: function(element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function(error, element) {
+                if(element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function(form) {
+		        showLoading();
+		        $('form')[0].submit();
+	        }
+        });
+    });
+</script>
+</body>
+</html>

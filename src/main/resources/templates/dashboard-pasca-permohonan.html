@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<style>
+	.btn {
+		margin-right: 15px;
+	}
+</style>
+<body th:inline="text">
+	<script src="text/javascript" th:src="@{/js/highcharts.js}"></script>
+
+	<div class="my-wrapper-body bghome panel-container">
+		<p th:replace="fragment/header :: navbar"/>
+		<div id="mySideBar" class="panel-left">
+			<span id="position"></span>
+			<p th:replace="fragment/sidebar :: left"/>
+		</div>
+		<div id="myDragBar" class="splitter"></div>
+		<div id="myMain" class="panel-right">
+		<div class="my-wrapper" id="my-wrapper">
+			<div class="my-wrapper--inner">
+
+
+				<!-- dashboard permohonan start -->
+				<div class="wrapper-content">
+
+					<div class="content--top border--bottom padding-content--left-right">
+							<div class="row">
+								<div class="col-md-12">
+									<h3 class="content--title text--bold">
+										<i class="fas fa-tachometer-alt"></i> Dashboard Pasca Permohonan
+									</h3>
+								</div>
+							</div>
+					</div>
+
+					<div class="content--center padding-content--left-right">
+											<div class="wrapper--bg">
+							<div class="jumbotron filterSearch">
+								<form>
+									<div class="row">
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Tanggal Pengajuan</label>
+												<div class="row">
+													<div class="col-md-6">
+														<input type="text" id="startDate" class="form-control datepicker" placeholder="Dari"/>
+													</div>
+													<div class="col-md-6 no-left-padding">
+														<input type="text" id="endDate" class="form-control datepicker" placeholder="Sampai"/>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Tipe Permohonan</label>
+												<select id="mFileType" class="form-control">
+													<option value="">Semua</option>
+													<option th:each="mFileType :${fileTypeList}"
+															th:value="${mFileType.id}" th:text="${mFileType.desc}"/>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Status</label>
+												<select id="mStatus" class="form-control">
+													<option value="">Semua</option>
+													<option	th:value="DONE">Sudah Dikerjakan</option>
+													<option	th:value="NOTYET">Belum Dikerjakan</option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<button type="button" class="btn btn-primary" id="btnCari">
+												<i class="fas fa-search"></i>
+												Filter
+											</button>
+											<button type="submit" class="btn btn-info" onClick="window.location.reload()">
+												<i class="fas fa-sync-alt"></i>
+												Refresh
+											</button>
+											<button id="btnExport" type="button" class="btn btn-success"><i class="fas fa-file-excel"></i> Export to Excel</button>
+										</div>
+									</div>
+
+									<br></br>
+
+									<div class="row">
+										<figure class="highcharts-figure">
+											<div class="form-group">
+												<div id="grafikTipePermohonanPasca" class="col-lg-push-1"></div>
+												<p class="highcharts-description">
+												</p>
+											</div>
+										</figure>
+									</div>
+
+									<div class="row">
+										<figure class="highcharts-figure">
+											<div class="form-group">
+												<div id="grafikStatusPascaPermohonan" class="col-lg-push-1"></div>
+												<p class="highcharts-description">
+												</p>
+											</div>
+										</figure>
+									</div>
+
+								</form>
+
+								<div class="row">
+									<div class="col-md-12">
+										<label>Detail Tipe Permohonan</label>
+										<div class="form-group" style="max-height:300px; overflow:auto;">
+											<table id="table" class="table" style="width: 850px; background-color:#FFFFFF">
+												<tbody id="tipe">
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+	</div>
+	<div th:replace="fragment/js :: default"></div>
+	<div th:replace="fragment/js :: main"></div>
+	<div th:replace="fragment/js :: datatables"></div>
+	<div th:replace="fragment/js :: datepicker"></div>
+	<script type="text/javascript" language="javascript" th:inline="javascript">
+		/*<![CDATA[*/
+		$(document).ready(function() {
+			initializeUI();
+			reloadGrafik();
+
+			$("#btnCari").click(function(){
+				reloadGrafik();
+			});
+
+			$("#btnExport").click(function() {
+				var url = /*[[@{/layanan/cetak-dashboard-pasca-permohonan"}]]*/
+				$.ajax({
+					type: 'POST',
+					url,
+					data: getFormData(),
+					processData: false,
+					contentType: false,
+					cache: false,
+					xhrFields: {
+						responseType: 'blob',
+					},
+					beforeSend: function () {
+						showLoading();
+					},
+					complete:function(){
+						hideLoading();
+					},
+					success: function (response) {
+						var downloadUrl = URL.createObjectURL(response);
+						var a = document.createElement("a");
+						a.href = downloadUrl;
+						a.download = "dashboard-pasca-permohonan.xls";
+						document.body.appendChild(a);
+						a.click();
+					},
+				})
+			});
+
+			function reloadGrafik() {
+				var nama = $('#mFileType').val();
+				$.ajax({
+					type: 'POST',
+					url: /*[[@{/layanan/ajax-dashboard-pasca"}]]*/'',
+					data: getFormData(),
+					processData: false,
+					contentType: false,
+					dataType: 'JSON',
+					cache: false,
+					beforeSend: function () {
+						showLoading();
+					},
+					complete:function(){
+						hideLoading();
+
+					},
+					success: function (data) {
+						grafikTipe(data.grafikTipe, nama)
+						grafikStatus(data.grafikStatus)
+
+						var tipes = data.tipePermohonan;
+						var tipe = ''
+						var xhtml = ''
+						for (i = 0; i < tipes.length; i++) {
+							tipe = tipes[i]
+							xhtml += '<tr>'
+							xhtml += '<td>'+tipe.nama+'</td>'
+							xhtml += '<td>'+tipe.total+'</td>'
+							xhtml += '</tr>'
+						}
+						$('#tipe').html(xhtml);
+					},
+					error: function (xhr, status) {
+						swal("Error", "error", "error");
+					}
+				});
+			}
+
+			function getFormData() {
+				var formData = new FormData;
+				var data = {}
+				data.tipe = $('#mFileType').val()
+				data.status = $('#mStatus').val()
+				data.start = $('#startDate').val()
+				data.end = $('#endDate').val()
+				formData.append('data', JSON.stringify(data));
+				return formData;
+			}
+
+			//grafik permohonan
+			function grafikTipe(data, nama) {
+				Highcharts.chart('grafikTipePermohonanPasca', {
+					chart: {
+						type: 'column'
+					},
+
+					title: {
+						text: 'Grafik Tipe Pasca Permohonan'
+					},
+
+					legend: {
+						align: 'right',
+						verticalAlign: 'middle',
+						layout: 'vertical'
+					},
+
+					xAxis: {
+						categories: data.bulan,
+						labels: {
+							x: -10
+						}
+					},
+
+					yAxis: {
+						title: {
+							text: "Jumlah",
+						}
+					},
+
+					plotOptions: {
+						series: {
+							minPointLength: 3,
+						},
+					},
+
+					series: [{
+						name: "Permohonan",
+						data: data.value
+					}],
+				});
+			}
+
+			function grafikStatus(datas) {
+				Highcharts.chart('grafikStatusPascaPermohonan', {
+					chart: {
+						plotBackgroundColor: null,
+						plotBorderWidth: null,
+						plotShadow: false,
+						type: 'pie'
+					},
+					title: {
+						text: 'Pie Diagram Status Pasca Permohonan'
+					},
+					tooltip: {
+						pointFormat: '{series.name}: <b>{point.y:.0f}</b>'
+					},
+					accessibility: {
+						point: {
+							valueSuffix: ''
+						}
+					},
+					plotOptions: {
+						pie: {
+							allowPointSelect: true,
+							cursor: 'pointer',
+							dataLabels: {
+								enabled: true,
+								format: '<b>{point.name}</b>: {point.y:.0f}'
+							}
+						}
+					},
+					series: [{
+						name: 'Permohonan',
+						colorByPoint: true,
+						data: datas
+					}]
+				});
+			}
+
+			function initializeUI() {
+				var lastMonthDate = new Date();
+				lastMonthDate.setDate(0);
+				var defaultStartDate = `${lastMonthDate.getFullYear()}/${String(lastMonthDate.getMonth() + 1).padStart(2, '0')}/01`;
+				var defaultEndDate = `${lastMonthDate.getFullYear()}/${String(lastMonthDate.getMonth() + 1).padStart(2, '0')}/${String(lastMonthDate.getDate()).padStart(2, '0')}`;
+				var datepickerOptions = {
+					format: 'yyyy/mm/dd',
+					autoclose: true,
+					todayBtn: 'linked',
+					endDate: 'today',
+					todayHighlight: true,
+					orientation: "bottom"
+				};
+
+				$('#startDate').val(defaultStartDate);
+				$('#endDate').val(defaultEndDate);
+				$('.datepicker').datepicker(datepickerOptions);
+			}
+		});
+		/*]]>*/
+	</script>
+</body>
+</html>

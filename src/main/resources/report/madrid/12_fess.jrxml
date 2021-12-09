@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="9_fees" language="groovy" pageWidth="230" pageHeight="20" whenNoDataType="NoPages" columnWidth="230" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c758da60-27fb-4dc1-b67f-5e33d64ffc4d">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="startFees" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="endFees" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT *
+FROM(
+SELECT ROWNUM AS R, B.*
+FROM(
+SELECT D.COUNTRY_NAME, C.TOTAL_FEE
+FROM TX_TM_GENERAL A
+LEFT JOIN TX_TM_MADRID_FEE B ON A.APPLICATION_ID=B.APPLICATION_ID
+LEFT JOIN TX_TM_MADRID_FEE_DETAIL C ON B.TM_MADRID_FEE_ID=C.TM_MADRID_FEE_ID
+LEFT JOIN M_COUNTRY D ON C.TM_MADRID_FEE_DETAIL_COUNTRY=D.COUNTRY_CODE
+WHERE A.APPLICATION_ID = $P{applicationId} AND D.IS_MADRID = 1
+ORDER BY C.TM_MADRID_FEE_DETAIL_COUNTRY ASC) B)
+WHERE R BETWEEN $P{startFees} AND $P{endFees}]]>
+	</queryString>
+	<field name="R" class="java.math.BigDecimal"/>
+	<field name="COUNTRY_NAME" class="java.lang.String"/>
+	<field name="TOTAL_FEE" class="java.lang.String"/>
+	<detail>
+		<band height="20">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="140" height="20" isPrintWhenDetailOverflows="true" uuid="582e5a60-b801-4e76-a75c-0ce6da82012c"/>
+				<box>
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COUNTRY_NAME}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="140" y="0" width="90" height="20" isPrintWhenDetailOverflows="true" uuid="3605ecc9-e758-463e-9502-84c3b29f0571"/>
+				<box>
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_FEE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myMain" class="panel-right">
+		<div class="my-wrapper" id="my-wrapper">
+			<div class="my-wrapper--inner">
+				<div class="wrapper-content">
+					<div class="content--top border--bottom padding-content--left-right">
+						<div class="row">
+							<div class="col-md-12">
+								<h3 class="content--title text--bold">
+									<i class="fas fa-file"></i> Home Display
+								</h3>
+								<small class="sub-header">Master / Home Display Pemohon</small>
+							</div>
+						</div>
+					</div>
+					<div class="content--center padding-content--left-right">
+						<div class="wrapper--bg">
+							<form id="fileupload" class="form-horizontal" th:action="@{/layanan/home-display-upload-image}" method="POST" enctype="multipart/form-data">
+								<label>Upload Image</label>
+								<div class="form-group">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<td>
+												  <label class="col-sm-2 col-form-label">Masukan File</label>
+												  <div class="col-sm-7">
+													<span class="fname"></span>
+													<input type="file" th:name="photo" th:id="photo" multiple="multiple" style="color:transparent; width:70px;"/><br></br>
+													<button type="button" class="btn btn-info" id="uploadBtn"><i class="fas fa-upload"></i> Upload</button>
+													<button type="button" class="btn btn-danger" id="clearBtn"><i class="fas fa-trash"></i> Batal</button>
+												  </div>
+												  <div class="col-sm-3">
+													<span class="fimage"></span>
+												  </div>											  
+												</td>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</form>
+							<form id="fileupload2" class="form-horizontal" th:action="@{/layanan/home-display-upload-video}" method="POST" enctype="multipart/form-data">
+								<label>Upload Video</label>
+								<div class="form-group">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<td>
+												  <label class="col-sm-2 col-form-label">Masukan File</label>
+												  <div class="col-sm-6">
+													<span class="fname2"></span>
+													<input type="file" th:name="video" th:id="video" multiple="multiple" style="color:transparent; width:70px;"/><br></br>
+													<button type="button" class="btn btn-info" id="uploadBtn2"><i class="fas fa-upload"></i> Upload</button>
+													<button type="button" class="btn btn-danger" id="clearBtn2"><i class="fas fa-trash"></i> Batal</button>
+												  </div>	
+												  <div class="col-sm-3">
+													<span class="fimage2"></span>
+												  </div>											  
+												</td>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</form>
+							<div class="form-group">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<td>
+												<label class="col-sm-2 col-form-label">
+													Tanggal upload
+												</label>
+												<div class="col-sm-3">
+													<input type="text" id="tanggal" class="form-control datepicker" placeholder="Tanggal upload"/><br></br>
+													<button type="button" class="btn btn-primary" id="btnCari">												
+														<i class="fas fa-search"></i>
+														Filter
+													</button>
+													<button type="submit" class="btn btn-info" onClick="window.location.reload()" style="margin-left:15px;">
+														<i class="fas fa-sync-alt"></i>
+														Refresh
+													</button>
+												</div>
+												<label class="col-sm-1 col-form-label">
+													Judul
+												</label>
+												<div class="col-sm-3">
+													<input type="text" id="judul" class="form-control" placeholder="Judul"/>
+												</div>
+											</td>
+										</tr>
+									</thead>
+								</table>
+							</div>						
+							<div class="table-responsive">
+								<table id="myTable" class="table table-striped table-bordered">
+									<thead>
+										<tr>
+											<th>Tanggal Upload</th>
+											<th>Judul</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody id="getdata">
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: multiupload"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    /*<![CDATA[*/
+	
+	function deleteFile(id) {
+		console.log('delete')
+		$.ajax({
+			type: 'POST',
+			url: /*[[@{/layanan/home-display-delete"}]]*/'',
+			data: id,
+			processData: false,
+			contentType: false,
+			dataType: 'JSON',
+			cache: false,
+			beforeSend: function () {
+				showLoading();
+			},
+			complete:function(){
+				hideLoading();
+			},
+			success: function (data) {
+				console.log('result : '+data)
+				swal("Delete File", "Delete File Success", "success").then(function(){
+					location.reload();
+				});
+			},
+			error: function (xhr, status) {
+				swal("Error", "error", "error");
+			}
+		});
+	}
+	
+	function confirm(id) {
+		swal({
+			title : 'WARNING!',
+			text : "File Akan Di Hapus, Apaka Anda Yakin?",
+			icon : 'warning',
+			buttons : true
+		}).then(
+			function(isConfirm) {
+				if (isConfirm) {
+					deleteFile(id)
+				}
+		});
+	}
+		
+	$(document).ready(function(){
+	
+		$('.datepicker').datepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: true,
+            todayBtn: 'linked',
+            todayHighlight: true,
+            useCurrent: false,
+            endDate:'today'
+
+        });
+		
+		$('#myTable').DataTable();		
+		reloadTable();
+		$("#btnCari").click(function(){
+		  reloadTable();
+		});
+			
+		var fileId = 0;
+		var listRemoveFileId = [];
+		$('#fileupload').fileupload({			
+			add: function(e, data) {
+				fileId = fileId + 1;
+				data.files[0].fileId = fileId;
+								
+				var fshow = '<img src="'+URL.createObjectURL(data.files[0])+'" style="max-width:100px;max-height:120px">';
+				$('.fname').html(data.files[0].name);
+				$('.fimage').html(fshow);
+		        
+		        $('#uploadBtn').click(function () {
+	  				var id = '' + data.files[0].fileId;
+	  				
+  					if (jQuery.inArray(id, listRemoveFileId)=='-1') {
+  						if (data.files[0].size > 15728640) {
+  		  					$('#fact'+data.files[0].fileId).empty();
+  		  	            	$('#fact'+data.files[0].fileId).append('<label style="color: red">Uploaded bytes exceed file size</label>');
+  		                }
+  						data.submit();
+	  				}
+	  	        });
+				
+				$('#clearBtn').click(function () {
+					data.submit().abort();
+		            fileId = 0;
+					$('.fname').html('');
+					$('.fimage').html('');
+					listRemoveFileId=[];
+					location.reload();
+		        });
+  			},
+  			done: function(e, data) {
+  				var result = JSON.parse(data.result);
+  				
+  				if(result == 'Success') {
+					swal("Upload Image", "Upload Image Success", "success").then(function(){
+						location.reload();
+					});
+				} else {
+					swal("Upload Image", "Upload Image failed", "error").then(function(){
+						location.reload();
+					});
+				}
+  			}
+		});
+		
+		var fileId2 = 0;
+		var listRemoveFileId2 = [];
+		$('#fileupload2').fileupload({			
+			add: function(e, data) {
+				fileId2 = fileId2 + 1;
+				data.files[0].fileId = fileId2;
+								
+				var fshow = '<img src="'+URL.createObjectURL(data.files[0])+'" style="max-width:100px;max-height:120px">';
+				$('.fname2').html(data.files[0].name);
+				$('.fimage2').html(fshow);
+		        
+		        $('#uploadBtn2').click(function () {
+	  				var id = '' + data.files[0].fileId2;
+	  				
+  					if (jQuery.inArray(id, listRemoveFileId2)=='-1') {
+  						if (data.files[0].size > 15728640) {
+  		  					$('#fact'+data.files[0].fileId2).empty();
+  		  	            	$('#fact'+data.files[0].fileId2).append('<label style="color: red">Uploaded bytes exceed file size</label>');
+  		                }
+  						data.submit();
+	  				}
+	  	        });
+				
+				$('#clearBtn2').click(function () {
+					data.submit().abort();
+		            fileId2 = 0;
+					$('.fname2').html('');
+					$('.fimage2').html('');
+					listRemoveFileId2=[];
+					location.reload();
+		        });
+  			},
+  			done: function(e, data) {
+  				var result = JSON.parse(data.result);
+  				
+  				if(result == 'Success') {
+					swal("Upload Image", "Upload Image Success", "success").then(function(){
+						location.reload();
+					});
+				} else {
+					swal("Upload video", "Upload video failed", "error").then(function(){
+						location.reload();
+					});
+				}
+  			}
+		});
+		
+		function reloadTable() {
+			var formData = new FormData;
+			var datas = [];
+			var data = {}
+			data['judul'] = $('#judul').val();
+			data['tanggal'] = $('#tanggal').val();
+			datas.push(data);
+			formData.append('data', JSON.stringify(datas));
+			$.ajax({
+				type: 'POST',
+				url: /*[[@{/layanan/home-display-reload-table"}]]*/'',
+				data: formData,
+				processData: false,
+				contentType: false,
+				dataType: 'JSON',
+				cache: false,
+				beforeSend: function () {
+					showLoading();
+				},
+				complete:function(){
+					hideLoading();
+				},
+				success: function (data) {
+					console.log('result : '+data)
+					var xhtml = ''					
+					for (i = 0; i < data.length; i++) {
+						var id = "'"+data[i].id+"'"
+						xhtml += '<tr>'
+						xhtml += '<td style="width:30%">'+data[i].tanggal+'</td>'
+						xhtml += '<td style="width:50%">'+data[i].judul+'</td>'
+						xhtml += '<td style="text-align:center">'
+						xhtml += '<button class="btn btn-danger btn-xs" onClick="confirm('+id+');"><i class="fas fa-times"></i> Delete</button></td>'
+						xhtml += '</tr>'
+					}
+					$('#myTable').DataTable().destroy();
+					$('#getdata').html(xhtml);
+					$('#myTable').DataTable().draw();
+				},
+				error: function (xhr, status) {
+					swal("Error", "error", "error");
+				}
+			});
+		}
+	});
+	/*]]>*/	
+</script>
+</body>
+</html>

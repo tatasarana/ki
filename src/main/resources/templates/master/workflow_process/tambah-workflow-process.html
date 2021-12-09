@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+	<p th:replace="fragment/header :: navbar"/>
+	<div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+	<form class="form-horizontal" th:object="${form}" th:action="@{/layanan/tambah-workflow-process}" method="post">
+		<div class="my-wrapper" id="my-wrapper">
+			<div class="my-wrapper--inner">
+
+				<div class="wrapper-content" id="workflow-baru">
+					<div class="content--top border--bottom padding-content--left-right">
+						<div class="row">
+							<div class="col-md-12">
+								<h3 class="content--title text--bold">
+									<i class="fas fa-chart-line"></i> Workflow Process - Tambah
+								</h3>
+								<small class="sub-header">Workflow Process / Tambah</small>
+							</div>
+						</div>
+					</div>
+					<div class="content--center padding-content--left-right">
+						<div class="wrapper--bg">
+							<div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+								<button data-dismiss="alert" class="close close-sm" type="button">
+									<i class="icon-remove"></i>
+								</button>
+								<p>[[${errorMessage}]]</p>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Nama Proses</label>
+                                        <div class="col-sm-9">
+                                            <input  type="text" class="form-control" placeholder="Nama Proses" th:field="*{name}" th:required="true"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                                        </div>
+                                    </div>
+									<div class="form-group" id="fWorkflow">
+										<label class="col-sm-3 col-form-label required-label">Workflow</label>
+										<div class="col-sm-9">
+											<select class="form-control" th:field="*{workflow.id}" id="wfId" th:required="true">
+												<option th:each="wf : ${workflows}"
+														th:value="${wf.id}" th:text="${wf.name}"></option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group" id="fStatus">
+										<label class="col-sm-3 col-form-label required-label">Status Sebelumnya</label>
+										<div class="col-sm-9">
+											<select class="form-control" th:field="*{prevStatus.id}" id="cStatus" th:required="true">
+												<option th:each="stat : ${statuses}"
+														th:value="${stat.id}" th:text="${stat.name}"></option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group" id="fStatus2">
+										<label class="col-sm-3 col-form-label required-label">Menjadi Status (Saat Ini)</label>
+										<div class="col-sm-9">
+											<select class="form-control" th:field="*{status.id}" id="cStatus2" th:required="true">
+												<option th:each="stat : ${statuses}"
+														th:value="${stat.id}" th:text="${stat.name}"></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 col-form-label required-label">Role Pengguna</label>
+										<div class="col-sm-9" th:required="true">
+											<select class="form-control" th:field="*{role.id}" id="cStatus3" name="role" th:required="true">
+												<option value="">-Pilih Role</option>
+												<option th:each="role : ${userroles}"
+														th:value="${role.id}" th:text="${role.getName()}" ></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 col-form-label">Role Tembusan</label>
+										<div class="col-sm-9">
+											<select class="form-control" th:field="*{cc_role.id}" id="cStatus4" name="cc_role">
+												<option value="">TIDAK BUTUH KIRIM TEMBUSAN</option>
+												<option th:each="role : ${userroles}"
+														th:value="${role.id}" th:text="${role.getName()}"></option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 col-form-label required-label">Urutan</label>
+										<div class="col-sm-9">
+											<input class="form-control" type="number" id="orders" placeholder="Urutan Process Workflow" th:field="*{orders}"
+												   th:required="true"/>
+											<span class="help-block" th:if="${#fields.hasErrors('orders')}"
+												  th:errors="*{name}"></span>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 col-form-label">Keterangan</label>
+										<div class="col-sm-9">
+											<input class="form-control" placeholder="Keterangan Workflow Process" th:field="*{descriptions}"
+												   />
+											<span class="help-block" th:if="${#fields.hasErrors('descriptions')}"
+												  th:errors="*{name}"></span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<label class="col-form-label notice">*) Wajib Diisi</label>
+							<hr/>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+									<div class="col-sm-3"></div>
+										<div class="col-sm-9">
+											<a th:href="@{/layanan/list-workflow-process}" class="btn btn-danger"><i class="fas fa-times"></i> Batal</a>
+											<button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Proses </button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<br/>
+					<br/>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	$(document).ready(function(){
+		var wfId = $("#wfId");
+		var orders = $("#orders");
+
+		$.get("./layanan/order_number?wfId="+wfId.val(), function(number){
+			orders.val(number);
+		});
+
+		 $("#wfId").change(function(){
+			$.get("./layanan/order_number?wfId="+wfId.val(), function(number){
+				orders.val(number);
+			});
+		 });
+
+		$("#cStatus").combobox();
+		$("#cStatus2").combobox();
+		$("#cStatus3").combobox();
+		$("#cStatus4").combobox();
+		$('form').find(".custom-combobox-input").each(function(ev)
+        {
+            if(!$(this).val()) {
+                $(this).attr("placeholder", "-Pilih-");
+            }
+        });
+		$('form').validate({
+			messages:{
+				'name':{
+					required:/*[[#{field.error.required('Nama Workflow Process')}]]*/''
+				},
+				'cStatus':{
+					required:/*[[#{field.error.required('Status Sebelumnya')}]]*/''
+				},
+				'cStatus2':{
+					required:/*[[#{field.error.required('Menjadi Status (saat ini)')}]]*/''
+				},
+				'cStatus3':{
+					required:/*[[#{field.error.required('Role Pengguna')}]]*/''
+				},
+				'wfId' : {
+					required:/*[[#{field.error.required('Workflow/Dasar Hukum')}]]*/''
+				}
+			},
+			highlight: function(element) {
+				$(element).closest('.form-group').addClass('has-error');
+			},
+			unhighlight: function(element) {
+				$(element).closest('.form-group').removeClass('has-error');
+			},
+			errorElement: 'span',
+			errorClass: 'help-block',
+			errorPlacement: function(error, element) {
+				if(element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else {
+					error.insertAfter(element);
+				}
+			},
+	        submitHandler: function(form) {
+		        showLoading();
+		        $('form')[0].submit();
+	        }
+		});
+	});
+</script>
+</body>
+</html>

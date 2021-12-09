@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+	<p th:replace="fragment/header :: navbar"/>
+	<div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+	<div class="my-wrapper" id="my-wrapper">
+		<div class="my-wrapper--inner">
+			<!-- data pemohon -->
+			<div class="wrapper-content">
+				<div class="content--top border--bottom padding-content--left-right">
+					<div class="row">
+						<div class="col-md-12">
+							<h3 class="content--title text--bold">
+								<i class="fas fa-ban"></i> Akses Ditolak
+							</h3>
+						</div>
+					</div>
+				</div>
+				<div class="content--center padding-content--left-right">
+					<div class="wrapper--bg">
+						Anda tidak mempunyai akses ke halaman [[${url}]].
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+</body>
+</html>

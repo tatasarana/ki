@@ -1,0 +1,53 @@
+BACA INI DULU (UPDATE)
+
+Standarisasi Code KI
+1. Nama table vs nama Pojo
+   Nama table diawali dengan kode jenis table, M_ untuk master, TX_ untuk transaksi
+   Contoh M_USER
+   Nama Pojo untuk table mengikuti tata nama standard Java diawali kode jenis Pojo, disimpan pada package terkait jenis Pojo
+   Pojo untuk table master diawali M, berada di package master
+   Pojo untuk table transaksi diawali Tx, berada di package transaction
+   Contoh master.MUser
+   Nama field menyesuaikan
+   
+2. URL menggunakan bahasa indonesia per kata dipisah dengan dash (-)
+   Semua URL yg hanya dapat diakses setelah login mendapat tambahan prefix URL /layanan
+   Contoh URL untuk pelayanan teknis: /layanan/pelayanan-teknis
+   
+3. Controller Name bahasa indonesia
+   Semua controller inherit BaseController
+   
+4. Semua nama html bahasa indonesia
+   Semua CSS di load di bagian fragment/head.html
+   Semua CSS di letakan di bagian fragment/js.html, di load sesuai kebutuhan dengan default js selalu di load, lihat sample existing html
+   
+5. Nama Service dan Repo menyesuaikan dengan table terkait
+   Controller -> Service -> Repo
+   Service == transaction point cut
+   MUser -> MUserRepository
+         -> MUserCustomRepository
+
+TODO:
+
+mvn install:install-file -Dfile=_doc/repo/com/oracle/jdbc/ojdbc6/11.2.0/ojdbc6-11.2.0.jar -DgroupId=com.oracle.jdbc -DartifactId=ojdbc6 -Dversion=11.2.0 -Dpackaging=jar
+
+mvn install:install-file -Dfile=_doc/repo/com/drew/metadata-extractor/2.3.1/metadata-extractor-2.3.1.jar -DgroupId=net.semanticmetadata -DartifactId=lire -Dversion=1.0 -Dpackaging=jar
+
+mvn install:install-file -Dfile=_doc/repo/net/semanticmetadata/lire/1.0/lire-1.0.jar -DgroupId=net.semanticmetadata -DartifactId=lire -Dversion=1.0 -Dpackaging=jar
+
+mvn install:install-file -Dfile=_doc/repo/com/stromberglabs/jopensurf/1.0/jopensurf-1.0.jar -DgroupId=com.stromberglabs -DartifactId=jopensurf -Dversion=1.0 -Dpackaging=jar
+
+mvn install:install-file -Dfile=_doc/repo/net/sf/jasperreports/jasperreports-fonts-custom/1.0.0/jasperreports-fonts-custom-1.0.0.jar -DgroupId=net.sf.jasperreports -DartifactId=jasperreports-fonts-custom -Dversion=1.0.0 -Dpackaging=jar
+
+mvn install:install-file -Dfile=_doc/repo/nl/captcha/simplecaptcha/1.2.1/simplecaptcha-1.2.1.jar -DgroupId=nl.captcha -DartifactId=simplecaptcha -Dversion=1.2.1 -Dpackaging=jar
+
+mvn install:install-file -Dfile=_doc/repo/com/github/deividasstr/docx-word-replacer/0.4/docx-word-replacer-0.4.jar -DgroupId=com.github.deividasstr -DartifactId=docx-word-replacer -Dversion=0.4 -Dpackaging=jar
+
+mvn install:install-file -Dfile=_doc/repo/com/java4less/pdf/signature/1.0/signature-1.0.jar -DgroupId=com.java4less.pdf -DartifactId=signature -Dversion=1.0 -Dpackaging=jar
+
+mvn install:install-file -Dfile=_doc/repo/com/github/kenglxn/qrgen/javase/2.5.0/javase-2.5.0.jar -DgroupId=com.github.kenglxn.qrgen -DartifactId=javase -Dversion=2.5.0 -Dpackaging=jar
+
+mvn install:install-file -Dfile=_doc/repo/com/drew/metadata-extractor/2.3.1/metadata-extractor-2.3.1.jar -DgroupId=com.drew -DartifactId=metadata-extractor -Dversion=2.3.1 -Dpackaging=jar
+
+mvn install -P general,pq-merk-local,no-rebuild-db,simki
+mvn install -P admin,pq-merk-local,no-rebuild-db,simki

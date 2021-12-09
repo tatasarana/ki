@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<style>
+.field-icon {
+  float: right;
+  margin-left: -25px;
+  margin-top: -25px;
+  position: relative;
+  z-index: 2;
+}
+</style>
+<body th:inline="text">
+<div class="my-wrapper-body">
+	<nav class="navbar navbar-default navbar-fixed-top" th:fragment="navbar">
+		<div class="container-fluid">
+			<div class="navbar-header" style="display: flex; width: 45%;">
+				<a class="navbar-brand">
+					<img th:src="@{/img/logo.png}"/>
+				</a>
+
+				<img th:src="@{/img/temankita-left.png}" class="logoTemanKita" />
+				<img th:src="@{/img/temankita-right.png}" class="descTemanKita" />
+
+			</div>
+			<div class="navbar-collapse stick-bottom">
+				<!-- before login -->
+				<ul class="nav navbar-nav navbar-right navbar--menu">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" target="_blank">
+							<i class="icon-guide" aria-hidden="true"></i>
+							Panduan <span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<!--<li><a class="col-sm-8" th:href="@{/doc/AktivasiEfiling.pdf}" download="AktivasiEfiling.pdf" > Panduan Aktivasi Akun Efiling </a></li>-->
+							<li><a class="col-sm-8" th:href="@{/doc/Panduan.pdf}" download="Panduan.pdf" > Panduan Registrasi Akun - Permohonan </a></li>
+							<!--<li><a class="col-sm-8" th:href="@{/doc/RegistrasiAkun.mp4}" download="RegistrasiAkun.mp4"> Video Registrasi Akun </a></li>-->
+							<li><a class="col-sm-8" th:href="@{/doc/PermohonanOnline.mp4}" download="PermohonanOnline.mp4"> Video Tutorial Permohonan Online </a></li>
+							<li><a class="col-sm-8" th:href="@{/doc/PanduanAplikasiMerek-PascaPermohonanOnline.pdf}" download="PanduanAplikasiMerek-PascaPermohonanOnline.pdf" > Panduan Pasca Permohonan Online </a></li>
+							<li><a class="col-sm-8" th:href="@{/doc/PanduanAplikasiMerek-MadridOOOnline.pdf}" download="PanduanAplikasiMerek-MadridOOOnline.pdf" > Panduan Madrid Office of Origin Online </a></li>
+						</ul>
+					</li>
+
+					<li>
+						<a href="https://2vs7mwyf8y0.typeform.com/to/QkcaZRK8" target="_blank">
+							<i class="icon-guide" aria-hidden="true"></i>
+							Survey Layanan
+						</a>
+					</li>
+					<li>
+						<a href="https://webaccess.wipo.int/mgs/" target="_blank">
+							<i class="icon-guide" aria-hidden="true"></i>
+							WIPO MGS-Klasifikasi Kelas
+						</a>
+					</li>
+					<li>
+						<a th:href="@{/sertifikat-merek}" target="_blank">
+							Sertifikat Merek
+						</a>
+					</li>
+					<li>
+						<a th:href="@{/publikasi-merek}" target="_blank">
+							Publikasi Merek
+						</a>
+					</li>
+				</ul>
+				<!--<ul class="nav navbar-nav navbar-right navbar&#45;&#45;menu navbar-custom-menu" th:if="${@environment.getProperty('app.mode') == 'general' or @environment.getProperty('app.mode') == 'all'}">-->
+					<!--<li class="cursor&#45;&#45;pointer login">-->
+						<!--<a th:href="@{/aktivasi-efiling}">-->
+							<!--Aktivasi Efiling-->
+						<!--</a>-->
+					<!--</li>-->
+				<!--</ul>-->
+				<ul class="nav navbar-nav navbar-right navbar--menu stick-top" th:if="${@environment.getProperty('app.mode') == 'general' or @environment.getProperty('app.mode') == 'all'}">
+					<li class="cursor--pointer register">
+						<a th:href="@{/daftar-online}">
+							Daftar
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="my-wrapper full-layer" id="my-wrapper">
+		<div class="authentic-wrap display--flex" th:style="'background:url('+@{/img/bg-login.jpg}+') no-repeat center center fixed; background-size: cover'">
+			<form class="authentic-form authentic__login" th:action="@{/login}" method="post">
+				<div class="site-login">
+					<div th:if="${okMessage}" class="alert alert-success alert-block fade in">
+						<button data-dismiss="alert" class="close close-sm" type="button">
+							<i class="icon-remove"></i>
+						</button>
+						<p>[[${okMessage}]]</p>
+					</div>
+					<div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+						<button data-dismiss="alert" class="close close-sm" type="button">
+							<i class="icon-remove"></i>
+						</button>
+						<p>[[${errorMessage}]]</p>
+					</div>
+					<div class="form-group login__field--username">
+						<input type="text" id="username" class="form-control" name="username" placeholder="Username" th:autofocus="true" th:required="true"/>
+					</div>
+					<div class="form-group login__field--username">
+						<input type="password" id="password" class="form-control" name="password" placeholder="Password" th:required="true"/>
+						<span toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password" style="width: 2.25em"></span>
+					</div>
+					<div class="row offset-top--15">
+						<div class="col-md-6" style="padding-top:10px">
+							<a th:href="@{/lupa-password}">
+								<b>Lupa Password?</b>
+							</a>
+							<br th:if="${@environment.getProperty('app.mode') == 'general' or @environment.getProperty('app.mode') == 'all'}"/>
+							<a th:href="@{/kirim-ulang-aktivasi}" th:if="${@environment.getProperty('app.mode') == 'general' or @environment.getProperty('app.mode') == 'all'}">
+								<b>Kirim Ulang Email Aktivasi Akun</b>
+							</a>
+						</div>
+						<div class="col-md-6 text--right login__field--button">
+							<button type="submit" class="btn btn-primary" name="login-button">
+								Login
+								<i class="fa fa-sign-in-alt"></i>
+							</button>
+							<br/>
+							<label class="small">versi [[${version}]]</label>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div th:replace="fragment/js :: default"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	localStorage.clear();
+	$(document).ready(function(){
+		$('form').validate({
+			messages:{
+				'username':{
+					required:/*[[#{field.error.required('username')}]]*/''
+				},
+				'password':{
+					required:/*[[#{field.error.required('password')}]]*/''
+				}
+			},
+			highlight: function(element) {
+				$(element).closest('.form-group').addClass('has-error');
+			},
+			unhighlight: function(element) {
+				$(element).closest('.form-group').removeClass('has-error');
+			},
+			errorElement: 'span',
+			errorClass: 'help-block',
+			errorPlacement: function(error, element) {
+				if(element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else {
+					error.insertAfter(element);
+				}
+			},
+			submitHandler: function(form) {
+				showLoading();
+				$('form')[0].submit();
+			}
+		});
+		
+		$(".toggle-password").click(function() {
+			$(this).toggleClass("fa-eye fa-eye-slash");
+			var input = $($(this).attr("toggle"));
+			if (input.attr("type") == "password") {
+				input.attr("type", "text");
+			} else {
+				input.attr("type", "password");
+			}
+		});
+
+		var timeAlert = (5 * 60 * 1000);
+		$(".alert").delay(timeAlert).slideUp(200, function() {
+			$(this).alert('close');
+		});
+
+		var validator = $('form').validate();
+		// For handle validation field required
+		$('#username').focus().keyup(function(e) {
+			// Key Code 8 for "BackSpace"
+			if (e.keyCode === 8)
+				validator.resetForm();
+		})
+
+		// For handle validation field required
+		$('#password').keyup(function(e) {
+			// Key Code 8 for "BackSpace"
+			if (e.keyCode === 8)
+				validator.resetForm();
+		})
+	});
+</script>
+</body>
+</html>

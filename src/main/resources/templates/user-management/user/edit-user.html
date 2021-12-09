@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <form class="form-horizontal" th:object="${form}" th:action="@{/layanan/edit-user}" method="post">
+        <div class="my-wrapper" id="my-wrapper">
+            <div class="my-wrapper--inner">
+                <div class="wrapper-content">
+                    <div class="content--top border--bottom padding-content--left-right">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="content--title text--bold">
+                                    <i class="fas fa-users"></i> Data User - Ubah
+                                </h3>
+                                <small class="sub-header">User / Ubah</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content--center padding-content--left-right">
+                        <div class="wrapper--bg">
+                            <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                                <button data-dismiss="alert" class="close close-sm" type="button">
+                                    <i class="icon-remove"></i>
+                                </button>
+                                <p>[[${errorMessage}]]</p>
+                            </div>
+                            <div class="row">
+                                <input type="hidden" class="form-control" th:field="*{id}" th:required="true"/>
+                                <div class="col-md-12">
+                                    <!--                                    Jenis User-->
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Jenis User</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" th:field="*{userType}" th:value="*{userType}" th:required="true" id="userType"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('userType')}"
+                                                  th:errors="*{userType}"></span>
+                                        </div>
+                                    </div>
+
+                                    <!--                                    Asal Permohonan-->
+                                    <div class="form-group">
+                                        <label class="col-form-label required-label col-sm-3">Asal Permohonan</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control cDisable6" id="asalPermohonanId"
+                                                    th:field="*{asalPermohonanId}" th:required="true">
+                                                <option style="display: none" value="">-Pilih Asal Permohonan-</option>
+                                                <option th:each="listAsalPermohonan : ${listAsalPermohonan}"
+                                                        th:value="${listAsalPermohonan.id}"
+                                                        th:text="${listAsalPermohonan.desc}"></option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('asalPermohonanId')}"
+                                                  th:errors="*{asalPermohonanId}"></span>
+                                            <input class="form-control input_hidden" type="hidden" th:field="*{asalPermohonanId}" th:value="*{asalPermohonanId}"/>
+                                        </div>
+                                    </div>
+
+                                    <!--                                    Jenis Pemohon-->
+                                    <div class="form-group" th:if="*{userType == 'Registrasi Akun'}">
+                                        <label class="col-form-label col-sm-3">Jenis Pemohon</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="AppTypeSelect" id="applicantType" th:field="*{applicantType}">
+                                                <option style="display: none" value="">-Pilih Jenis Pemohon-</option>
+                                                <option th:each="mLookup : ${listApplicantType}" th:value="${mLookup.id}" th:text="${mLookup.name}" ></option>
+
+                                            </select>
+                                            <!--                                            <span class="help-block" th:if="${#fields.hasErrors('divisiId')}" th:errors="*{divisiId}"></span>-->
+                                            <input class="form-control" type="hidden"/>
+                                        </div>
+                                    </div>
+
+                                    <!--                                    NIP / Nomor KTP-->
+                                    <div class="form-group group_nip">
+                                        <label class="col-form-label col-sm-3">NIP</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control cDisable2" placeholder="Nomor Induk Pegawai" maxlength="500" th:field="*{nik}"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('nik')}" th:errors="*{nik}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" th:if="*{userType == 'Registrasi Akun' || userType == 'Konsultan'}">
+                                        <label class="col-form-label col-sm-3">Nomor KTP</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Nomor KTP" maxlength="16" th:field="*{nik}"/>
+                                        </div>
+                                    </div>
+
+                                    <!--                                    Nama-->
+                                    <div class="form-group">
+                                        <label class="col-form-label required-label col-sm-3">Nama</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Nama Lengkap" maxlength="50" th:field="*{namaKaryawan}" th:required="true"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('namaKaryawan')}" th:errors="*{namaKaryawan}"></span>
+                                        </div>
+                                    </div>
+
+                                    <!--                                    Tanggal Lahir-->
+                                    <div class="form-group" th:if="*{userType == 'Registrasi Akun'}">
+                                        <label class="col-form-label col-sm-3">Tanggal Lahir</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="birthDate" class="form-control datepicker" placeholder="Tanggal Lahir" th:field="*{birthDate}"/>
+                                        </div>
+                                    </div>
+
+                                    <!--                                    Direktorat, Subdit, & Seksi-->
+                                    <div class="form-group required" th:if="*{userType != 'Registrasi Akun'}">
+                                        <label class="col-form-label required-label col-sm-3">Direktorat</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control cDisable5" name="divSelect" th:required="true" id="divisiId" th:field="*{divisiId}">
+                                                <option style="display: none" value="">-Pilih Direktorat-</option>
+                                                <option th:each="mDivision : ${listDivision}" th:value="${mDivision.id}" th:text="${mDivision.name}" ></option>
+
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('divisiId')}" th:errors="*{divisiId}"></span>
+                                            <input class="form-control input_hidden" type="hidden" th:field="*{divisiId}" th:value="*{divisiId}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required" th:if="*{userType != 'Registrasi Akun'}">
+                                        <label class="col-form-label required-label col-sm-3">Subdit</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control cDisable5" th:required="true" id="departementId" th:field="*{departementId}">
+                                                <option style="display: none" value="">-Pilih Subdit-</option>
+                                                <option th:each="mDepartment : ${listDepartement}" th:value="${mDepartment.id}" th:text="${mDepartment.name}"
+                                                        th:attr="filetype=${mDepartment.mDivision.id}"></option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('departementId')}" th:errors="*{departementId}"></span>
+                                            <input class="form-control input_hidden" type="hidden" th:field="*{departementId}" th:value="*{departementId}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required" th:if="*{userType != 'Registrasi Akun'}">
+                                        <label class="col-form-label required-label col-sm-3">Seksi</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control cDisable5" th:required="true" id="bagianId" th:field="*{bagianId}">
+                                                <option style="display: none" value="">-Pilih Seksi-</option>
+                                                <option th:each="mSection : ${listSection}" th:value="${mSection.id}" th:text="${mSection.name}"
+                                                        th:attr="filetype=${mSection.mDepartment.id}"></option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('bagianId')}" th:errors="*{bagianId}"></span>
+                                            <input class="form-control input_hidden" type="hidden" th:field="*{bagianId}" th:value="*{bagianId}"/>
+                                        </div>
+                                    </div>
+
+                                    <!--                                    Negara-->
+                                    <div class="form-group" th:if="*{userType == 'Registrasi Akun'}">
+                                        <label class="col-form-label col-sm-3">Negara</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="CountrySelect" id="nationalityId" th:field="*{nationalityId}">
+                                                <option style="display: none" value="">-Pilih Negara-</option>
+                                                <option th:each="mCountry : ${listCountry}" th:value="${mCountry.id}" th:text="${mCountry.name}" ></option>
+
+                                            </select>
+                                            <!--                                            <span class="help-block" th:if="${#fields.hasErrors('divisiId')}" th:errors="*{divisiId}"></span>-->
+                                            <input class="form-control" type="hidden"/>
+                                        </div>
+                                    </div>
+
+                                    <!--                                    Provinsi-->
+                                    <div class="form-group" th:if="*{userType == 'Registrasi Akun'}">
+                                        <label class="col-form-label col-sm-3">Provinsi</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="provSelect" id="provinceId" th:field="*{provinceId}">
+                                                <option style="display: none" value="">-Pilih Provinsi-</option>
+                                                <option th:each="mProvince : ${listProvince}" th:value="${mProvince.id}" th:text="${mProvince.name}" ></option>
+
+                                            </select>
+                                            <!--                                            <span class="help-block" th:if="${#fields.hasErrors('divisiId')}" th:errors="*{divisiId}"></span>-->
+                                            <input class="form-control" type="hidden"/>
+                                        </div>
+                                    </div>
+
+                                    <!--                                    Kota / Kabupaten-->
+                                    <div class="form-group" th:if="*{userType == 'Registrasi Akun'}">
+                                        <label class="col-form-label col-sm-3">Kota / Kabupaten</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" id="cityId" th:field="*{cityId}">
+                                                <option style="display: none" value="">-Pilih Kota / Kabupaten-</option>
+                                                <option th:each="mCity : ${listCity}" th:value="${mCity.id}" th:text="${mCity.name}"
+                                                        th:attr="filetype=${mCity.mProvince.id}"></option>
+
+                                            </select>
+                                            <!--                                            <span class="help-block" th:if="${#fields.hasErrors('divisiId')}" th:errors="*{divisiId}"></span>-->
+                                            <input class="form-control" type="hidden"/>
+                                        </div>
+                                    </div>
+
+                                    <!--                                    Alamat-->
+                                    <div class="form-group" th:if="*{userType == 'Registrasi Akun'}">
+                                        <label class="col-form-label col-sm-3">Alamat</label>
+                                        <div class="col-sm-9">
+                                            <textarea class="form-control" placeholder="Alamat" maxlength="500" th:field="*{address}"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <!--                                    Kode Pos-->
+                                    <div class="form-group" th:if="*{userType == 'Registrasi Akun'}">
+                                        <label class="col-form-label col-sm-3">Kode Pos</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Kode Pos" maxlength="9" th:field="*{zipCode}"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}"></span>
+                                        </div>
+                                    </div>
+
+                                    <!--                                    Telepon-->
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-3">Telepon</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Telepon" maxlength="20" th:field="*{telp}"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('telp')}" th:errors="*{telp}"></span>
+                                        </div>
+                                    </div>
+
+                                    <!--                                    Email-->
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-3">Email</label>
+                                        <div class="col-sm-9">
+                                            <input type="email" class="form-control" placeholder="Email" maxlength="255" th:field="*{email}"/>
+                                            <!--                                            <span class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>-->
+                                        </div>
+                                    </div>
+
+                                    <!--                                    Username-->
+                                    <div class="form-group">
+                                        <label class="col-form-label required-label col-sm-3">Username</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control cDisable3" placeholder="Username" maxlength="255" th:field="*{username}" th:required="true"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+                                        </div>
+                                    </div>
+
+                                    <!--                                    No Konsultan-->
+                                    <div class="form-group" th:if="*{userType == 'Konsultan'}">
+                                        <label class="col-form-label col-sm-3">Nomor Konsultan</label>
+                                        <div class="col-sm-9">
+                                        <input type="text" class="form-control cDisable" placeholder="Nomor Konsultan" maxlength="255" th:field="*{konsultan}" id="konsultan"/>
+                                        </div>
+                                    </div>
+
+                                    <!--                                    Status-->
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Status</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:field="*{status}">
+                                                <option th:value="true">Aktif</option>
+                                                <option th:value="false">Tidak Aktif</option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('status')}"
+                                                  th:errors="*{statusFlag}"></span>
+                                        </div>
+                                    </div>
+
+                                    <!--&lt;!&ndash;                                    Konsultan&ndash;&gt;-->
+                                    <!--<div class="form-group grop_konsultan">-->
+                                        <!--<label class="col-sm-3 col-form-label">Nama Konsultan</label>-->
+                                        <!--<div class="col-sm-9">-->
+                                            <!--<input type="hidden" th:field="*{konsultan}" id="tempkonsultan"/>-->
+                                            <!--<select th:classappend="${'form-control' + (form.getUserType().equals('Konsultan') ? '' : ' cDisable')}" th:field="*{konsultan}" id="konsultan" >-->
+                                                <!--<option style="display: none" value="">-Pilih Konsultan-</option>-->
+                                                <!--<option th:each="listReprs : ${listReprs}"-->
+                                                        <!--th:value="${listReprs.id}"-->
+                                                        <!--th:text="${listReprs.name}"></option>-->
+                                            <!--</select>-->
+                                            <!--<span class="help-block" th:if="${#fields.hasErrors('konsultan')}"-->
+                                                  <!--th:errors="*{konsultan}"></span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <!--                                             <div class="col-sm-3"></div>                       -->
+                                                <div class="col-sm-offset-3 col-sm-9">
+                                                    <a class="btn btn-danger" th:href="@{/layanan/list-user}"><i class="fas fa-times"></i> Batal</a>
+                                                    <button type="submit" class="btn btn-primary cDisable4" id="btnSubmit" ><i class="fas fa-paper-plane"></i> Proses </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+</body>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    $(document).ready(function () {
+        /* $('#divisiId').change(function() {
+               $('#departementId').children('option[filetype!="'+$(this).val()+'"]').stop(true,true).hide();
+            $('#departementId').children('option[filetype!="'+$(this).val()+'"]').prop('selected',false);
+            $('#departementId').children('option[filetype="'+$(this).val()+'"]').stop(true,true).show();
+            $('#departementId').children('option[filetype="'+$(this).val()+'"]').first().prop('selected',true);
+
+            $('#departementId').change();
+
+            $('#bagianId').parent('option[filetype!="'+$(this).val()+'"]').stop(true,true).hide();
+            $('#bagianId').parent('option[filetype!="'+$(this).val()+'"]').prop('selected',false);
+            $('#bagianId').parent('option[filetype="'+$(this).val()+'"]').stop(true,true).show();
+            $('#bagianId').parent('option[filetype="'+$(this).val()+'"]').first().prop('selected',true);
+
+        });
+        $('#divisiId').change();
+
+        $('#departementId').change(function() {
+             $('#bagianId').children('option[filetype!="'+$(this).val()+'"]').stop(true,true).hide();
+            $('#bagianId').children('option[filetype!="'+$(this).val()+'"]').prop('selected',false);
+            $('#bagianId').children('option[filetype="'+$(this).val()+'"]').stop(true,true).show();
+            $('#bagianId').children('option[filetype="'+$(this).val()+'"]').first().prop('selected',true);
+
+        });
+        $('#departementId').change(); */
+
+        $('form').validate({
+            rules: {
+                'zipCode' : {
+                    digits: '#zipCode'
+                }
+            },
+            messages:{
+                'username':{
+                    required:/*[[#{field.error.required('username')}]]*/''
+                },
+                'zipCode': {
+                    digits: /*[[#{field.error.not.numeric('Kode Pos')}]]*/''
+                },
+                'nik':{
+                    required:/*[[#{field.error.required('NIK')}]]*/''
+                },
+                'namaKaryawan':{
+                    required:/*[[#{field.error.required('Nama Karyawan')}]]*/''
+                },
+                'divisiId':{
+                    required:/*[[#{field.error.required('Divisi')}]]*/''
+                },
+                'departementId':{
+                    required:/*[[#{field.error.required('Departement')}]]*/''
+                },
+                'bagianId':{
+                    required:/*[[#{field.error.required('Bagian')}]]*/''
+                },
+                'asalPermohonanId':{
+                    required:/*[[#{field.error.required('Asal Permohonan')}]]*/''
+                },
+                'telp':{
+                    required:/*[[#{field.error.required('Telepon')}]]*/''
+                },
+                'email':{
+                    required:/*[[#{field.error.required('Email')}]]*/''
+                    // ,email:/*[[#{field.error.invalid.format.email('Email')}]]*/''
+                },
+                'userType':{
+                    required:/*[[#{field.error.required('Jenis User')}]]*/''
+                },
+                'konsultan':{
+                    required:/*[[#{field.error.required('Konsultan')}]]*/''
+                }
+            },
+            highlight: function(element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function(error, element) {
+                if(element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function(form) {
+                showLoading();
+                $('form')[0].submit();
+            }
+        });
+
+        $('.cDisable').attr("readonly", true);
+        $('.cDisable2').attr("readonly", true);
+        $('.cDisable3').attr("readonly", true);
+        $('#userType').attr("readonly", true);
+        //$('.cDisable4').attr("disabled", true);
+        var kodeVal = $('#userType').val(); //this.value;
+        if(kodeVal=='Konsultan' || kodeVal=='konsultan'){
+            $('.cDisable2').css('pointer-events','none');
+            $('.cDisable2').prop('required',false);
+            $('.cDisable5').attr("disabled", true);
+            $('.cDisable6').attr("disabled", true);
+            $('.group_nip').attr("hidden", true);
+            $('.cDisable').attr("disabled", false);
+            //$('.cDisable2').attr("disabled", true);
+        } else if (kodeVal=='Registrasi Akun' || kodeVal=='registrasi akun') {
+            $('.cDisable2').css('pointer-events','none');
+            $('.cDisable2').prop('required',false);
+            $('.cDisable5').attr("disabled", true);
+            //$('.cDisable').attr("disabled", true);
+            $('.cDisable2').attr("disabled", true);
+            $('.group_nip').attr("hidden", true);
+            $('.cDisable6').attr("disabled", true);
+            $('.grop_konsultan').attr("hidden", true);
+        }else if (kodeVal == 'Kanwil' || kodeVal == 'kanwil') {
+            $('.cDisable5').attr("disabled", true);
+            $('.cDisable2').attr("disabled", true);
+            $('.cDisable6').attr("disabled", true);
+            $('.grop_konsultan').attr("hidden", true);
+        }else if (kodeVal == 'Karyawan' || kodeVal == 'karyawan') {
+            $('.cDisable2').prop('required',false);
+            $('.cDisable5').attr('disabled', false);
+            $('.cDisable2').attr("readOnly", false);
+            $('.input_hidden').remove();
+            $('.grop_konsultan').attr("hidden", true);
+        }else {
+            $('#konsultan').attr("disabled", true);
+            $('.cDisable2').attr("disabled", false);
+            $('.cDisable5').attr("disabled", false);
+        }
+    });
+
+    // End Document Ready Funtion
+
+    $('#form').submit(function(e) {
+        if($('#konsultan').val()=='') {
+            $('.cDisable4').attr("disabled", true);
+        } else {
+            e.preventDefault();
+            $('.cDisable4').attr("disabled", false);
+        }
+    });
+
+    $('#konsultan').change(function(e) {
+        if($('#konsultan').val()!='') {
+            $('.cDisable4').attr("disabled", false);
+        } else {
+            $('.cDisable4').attr("disabled", true);
+        }
+    });
+
+    $('#userType').change(function() {
+        var kodeVal = $('#userType').val(); //this.value;
+        if(kodeVal=='Konsultan' || kodeVal=='konsultan' || kodeVal=='Registrasi Akun' || kodeVal=='registrasi akun'){
+            $('.cDisable').attr("disabled", false);
+            $('.cDisable2').attr("disabled", true);
+            //$('.cDisable2').val('-');
+            $('#konsultan').val($('#tempkonsultan').val());
+            $('.cDisable4').attr("disabled", true);
+        } else {
+            $('#konsultan').attr("disabled", true);
+            $('.cDisable').val(null);
+            $('.cDisable2').attr("disabled", false);
+        }
+    });
+
+    /*
+   //Asal Permohonan value default = DJKI
+    if($('#asalPermohonan').val('00') != null) {
+        $('#asalPermohonanId option[value=00]').attr('selected','selected');
+    } else {
+        $('#asalPermohonanId').val($('#asalPermohonanId option:first').val());
+        //$('#asalPermohonanId option:first').attr('selected','selected');
+    }
+    */
+
+    $('#divisiId').change(function() {
+        $('#departementId').children('option[filetype!="'+$(this).val()+'"]').stop(true,true).hide();
+        $('#departementId').children('option[filetype!="'+$(this).val()+'"]').prop('selected',false);
+        $('#departementId').children('option[filetype="'+$(this).val()+'"]').stop(true,true).show();
+        $('#departementId').children('option[filetype="'+$(this).val()+'"]').first().prop('selected',true);
+
+        $('#departementId').change();
+
+        $('#bagianId').parent('option[filetype!="'+$(this).val()+'"]').stop(true,true).hide();
+        $('#bagianId').parent('option[filetype!="'+$(this).val()+'"]').prop('selected',false);
+        $('#bagianId').parent('option[filetype="'+$(this).val()+'"]').stop(true,true).show();
+        $('#bagianId').parent('option[filetype="'+$(this).val()+'"]').first().prop('selected',true);
+        $('#bagianId').change();
+    } );
+
+    $('#departementId').change(function() {
+        $('#bagianId').children('option[filetype!="'+$(this).val()+'"]').stop(true,true).hide();
+        $('#bagianId').children('option[filetype!="'+$(this).val()+'"]').prop('selected',false);
+        $('#bagianId').children('option[filetype="'+$(this).val()+'"]').stop(true,true).show();
+        $('#bagianId').children('option[filetype="'+$(this).val()+'"]').first().prop('selected',true);
+    } );
+
+    $('#provinceId').change(function() {
+        $('#cityId').children('option[filetype!="'+$(this).val()+'"]').stop(true,true).hide();
+        $('#cityId').children('option[filetype!="'+$(this).val()+'"]').prop('selected',false);
+        $('#cityId').children('option[filetype="'+$(this).val()+'"]').stop(true,true).show();
+        $('#cityId').children('option[filetype="'+$(this).val()+'"]').first().prop('selected',true);
+    } );
+
+    $('.datepicker').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        todayBtn: 'linked',
+        todayHighlight: true,
+        useCurrent: false,
+        endDate:'today'
+    });
+
+
+</script>
+</html>

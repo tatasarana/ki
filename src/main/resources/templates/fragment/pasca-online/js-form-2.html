@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="pemohon" th:remove="tag">
+	<script type="text/javascript" language="javascript" th:inline="javascript">
+	/*<![CDATA[*/
+		var csrf = /*[[${_csrf.token}]]*/'';
+		var header = "X-CSRF-TOKEN";
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, csrf);
+        });
+        
+        $(document).ready(function (){
+            $("#formPemohon").validate({
+            	rules: {
+    				'no' : {
+    					digits: '#no'
+    				},
+            		<!--'zipCode' : {-->
+						<!--digits: '#zipCode'					   -->
+					<!--},-->
+    				'phone':{
+    					digits: '#phone'
+                    }  				
+        		},
+                messages: {
+                	'no': {
+                    	digits: /*[[#{field.error.not.numeric('Nomor KTP')}]]*/''
+                  	},
+                  	'zipCode': {
+                		required: /*[[#{field.error.required('Kode Pos')}]]*/''
+                    	<!--,digits: /*[[#{field.error.not.numeric('Kode Pos')}]]*/''-->
+                  	},
+                    "name": {
+                        required: /*[[#{field.error.required('Nama Pemohon')}]]*/''
+                    },
+                    "nationality.id": {
+                        required: /*[[#{field.error.required('Kewarganegaraan')}]]*/''
+                    },
+                    "mCountry.id": {
+                        required: /*[[#{field.error.required('Negara')}]]*/''
+                    },
+                    'address': {
+                        required: /*[[#{field.error.required('Alamat')}]]*/''
+                    },
+                    'phone':{
+                        required: /*[[#{field.error.required('Nomor Telepon')}]]*/''
+                        ,digits: /*[[#{field.error.not.numeric('Nomor Telepon')}]]*/''
+                    },
+                    'email':{
+        				required:/*[[#{field.error.required('Email')}]]*/''
+        				,email:/*[[#{field.error.invalid.format.email('Email')}]]*/''        				
+        			}
+                },
+	            highlight: function (element) {
+	                $(element).closest('.form-group').addClass('has-error');
+	            },
+	            unhighlight: function (element) {
+	                $(element).closest('.form-group').removeClass('has-error');
+	            },
+	            errorElement: 'span',
+	            errorClass: 'help-block',
+	            errorPlacement: function (error, element) {
+	                if (element.parent('.input-group').length) {
+	                    error.insertAfter(element.parent());
+	                } else {
+	                    error.insertAfter(element);
+	                }
+	            }
+            });
+            
+            var indVal = "ID";
+            var tempOwnerProvince = $('#tempOwnerProvince').val();
+            var tempOwnerCity = $('#tempOwnerCity').val();
+            
+            $('.cDisable').attr("disabled", true);
+            $('.isChecked').attr("checked", true);            
+            
+            if ($('#tempOwnerType').val() === "Perorangan") {
+                $('#jp1').prop('checked', true)
+            } else if ($('#tempOwnerType').val() === "Badan Hukum") {
+                $('#jp2').prop('checked', true)
+            }
+            
+            if ($('#tempOwnerCountry').val() === indVal) {
+                $('.cDisable').attr("disabled", false);
+            }            
+            
+            getCity(tempOwnerProvince, tempOwnerCity);
+            
+            $('#ownerCountry').change(function () {
+                var kodeVal = this.value;
+                if (kodeVal === indVal) {
+                    $('.cDisable').attr("disabled", false);
+                } else {
+                    $('.cDisable').attr("disabled", true);
+                    $('.cDisable').val(null);
+                }
+            });
+            
+            $('#ownerProvince').change(function () {
+                var idProv = this.value;
+                getCity(idProv, null);
+            });
+            
+            $('#btnSaveFormPemohon').on('click', function (e) {
+        		var isValidForm = $("#formPemohon").valid();
+                if (isValidForm) {
+                	if ($('#mFileType').is(':disabled')) {
+                    	e.preventDefault();
+                    	
+                    	// var postId = /*[[${dataGeneral.id}]]*/'';
+                    	var postId = $('#noIPT').val();
+                    	var formData = {
+                    		id: /*[[${dataPemohon.id}]]*/'',
+                    		txPostReception: { id: postId },
+                    		no: $('#ownerNo').val(),
+                    		name: $('#ownerName').val(),
+                    		nationality: { id: $('#ownerNationality').val() },
+                    		ownerType: $('input[name=ownerType]:checked').val(),
+                    		mCountry: { id: $('#ownerCountry').val() },
+                    		mProvince: { id: $('#ownerProvince').val() },
+                    		mCity: { id: $('#ownerCity').val() },
+                    		address: $('#ownerAddress').val(),
+                    		zipCode: $('#ownerZipCode').val(),
+                    		phone: $('#ownerPhone').val(),
+                    		email: $('#ownerEmail').val()
+                    	};
+                    	
+                    	$.ajax({
+                            type: 'POST',
+                            contentType: "application/json",
+                            url: /*[[@{/layanan/save-pemohon-pasca-online}]]*/'',
+                            data: JSON.stringify(formData),
+                            dataType: 'json',
+                            beforeSend: function () {
+            					showLoading();
+            				},
+            				complete:function(){
+            					hideLoading();
+            				},
+                            success: function (data) {
+                            	$('#kuasa').trigger('click');
+                            },
+		                    error: function (xhr, status) {
+			                    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+		                    }
+                    	});
+                	} else {
+                		$('#general').trigger('click');
+                		swal("Informasi", "Silakan melengkapi data General dan klik Simpan.", "info");
+                	}
+                }
+            });
+    	});    
+            
+        function getCity(idProv, value) {
+        	$('.optCity').attr('hidden',true);
+        	$('.optCity').attr("disabled", true);
+        	$('.optCity.'+idProv).attr('hidden',false);
+        	$('.optCity.'+idProv).attr('disabled',false);
+        	$('#ownerCity').val($('#ownerProvince').val()==idProv ? value : null);
+        }
+		/*]]>*/
+	</script>
+</div>
+</html>

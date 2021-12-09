@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<link href="../static/css/bootstrap-multiselect.css" rel="stylesheet" th:href="@{/css/bootstrap-multiselect.css}"/>
+<div class="my-wrapper-body bghome panel-container">
+	<p th:replace="fragment/header :: navbar"/>
+	<div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+
+	<div class="my-wrapper" id="my-wrapper">
+		<div class="my-wrapper--inner">
+			<div class="wrapper-content">
+				<div class="content--top border--bottom padding-content--left-right">
+					<div class="row">
+						<div class="col-md-12">
+							<h3 class="content--title text--bold">
+								<i class="fas fa-check-square"></i> Penelusuran Merek
+							</h3>
+							<small class="sub-header">Home/ Pemeriksaan Substantif / Penelusuran Merek</small>
+							<small style="float:right;margin-left:13px"><a href="#" onclick="window.history.go(-1); return false;"><i class="fa fa-arrow-left"></i> Kembali</a></small>
+							<!--<small style="float:right;margin-left:13px" th:if="${isUser or isAdmin}"><a id="doSelesai" th:href="@{/}"><i class="far fa-check-circle"></i> Selesai</a></small>-->
+							<small style="float:right;margin-left:13px" th:if="${isP1 and (isUser or isAdmin)}"><a id="doValidasi" th:href="@{/}"><i class="far fa-share-square"></i> Pemeriksaan Lanjutan (P2)</a></small>
+							<small style="float:right;margin-left:13px" th:if="${isUser or isAdmin}"><a th:href="@{/layanan/list-monitor(no=${txTmGeneral.applicationNo})}" target="_blank"><i class="fas fa-desktop"></i> Penilaian/Update Status</a></small>
+							<small style="float:right;margin-left:13px" th:if="${isRole or isAdmin}"><a id="doReassign" th:href="@{/}"><i class="fas fa-exchange-alt"></i> Ganti Pemeriksa</a></small>
+							<small style="float:right;margin-left:13px" th:if="${isP1 and (isRole or isAdmin)}"><a id="doRelease" th:href="@{/}"><i class="fas fa-undo"></i> Kembalikan ke Yanis</a></small>
+							<small style="float:right;margin-left:13px" th:if="${!isP1 and (isUser or isAdmin)}"><a id="kembaliP1" th:href="@{/}"><i class="fas fa-undo"></i> Kembalikan ke P1</a></small>
+							<small style="float:right"><a th:href="@{/layanan/pratinjau-permohonan(no=${txTmGeneral.applicationNo})}" target="_blank"><i class="fa fa-search"></i> View</a></small>
+						</div>
+					</div>
+				</div>
+				<form class="form-horizontal">
+					<div class="content--center padding-content--left-right">
+						<div class="wrapper--bg">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="col-form-label col-sm-6">Nomor Permohonan</label>
+											<div class="col-sm-6">
+												<label th:text="${txTmGeneral.applicationNo}"></label>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-form-label col-sm-6">Merek</label>
+											<div class="col-sm-6">
+												<label th:text="${txTmGeneral.txTmBrand.name}"></label>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-form-label col-sm-6">Kelas</label>
+											<div class="col-sm-6">
+												<label th:text="${classNo}"></label>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="col-sm-6">Nama Pemohon</label>
+											<div class="col-sm-6">
+												<label th:each="owners : ${txTmGeneral.txTmOwner}" th:if="${owners.status == true}" th:value="${owners.id}" th:text="${owners.name}"></label>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-form-label col-sm-6">Status Permohonan</label>
+											<div class="col-sm-6">
+												<label th:text="${txTmGeneral.mStatus.name}"></label>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-form-label col-sm-6">Pemeriksa</label>
+											<div class="col-sm-6">
+												<label th:text="${txGroupDetail.mUserCurrent.username}"></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<br/>
+									<!-- Modal -->
+									<div class="modal fade" id="cekKesamaan" tabindex="-1" role="dialog"
+									     aria-labelledby="cekKesamaan">
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+													</button>
+													<h4 class="modal-title" id="myModalLabel">Penelusuran Merek</h4>
+												</div>
+												<div class="modal-body">
+													<form class="form-horizontal">
+														<div class="form-group">
+															<label class="col-sm-4 col-form-label">Merek</label>
+															<div class="col-sm-8">
+																<input type="text" class="form-control" id="brandName" placeholder="Nama Merek"/>
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="col-sm-4 col-form-label">Deskripsi Merek</label>
+															<div class="col-sm-8">
+																<textarea class="form-control" id="brandDesc" placeholder="Deskripsi Merek"></textarea>
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="col-sm-4 col-form-label" style="padding-right:200px">Kelas</label>
+															<select id="class" class="m-input" multiple="multiple">
+																<option th:each="mClass : ${listClass}" th:value="${mClass.id}" th:text="${mClass.no}"></option>
+															</select>
+														</div>
+														<div class="form-group">
+															<label class="col-sm-4 col-form-label">Nama Pemohon</label>
+															<div class="col-sm-8">
+																<input type="text" class="form-control" id="ownerName" placeholder="Nama Pemohon"/>
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="col-sm-4 col-form-label">Uraian Barang/Jasa</label>
+															<div class="col-sm-8">
+																<textarea class="form-control" id="classDesc" placeholder="Uraian Kelas/Jasa"></textarea>
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="col-sm-4 col-form-label">Nomor Permohonan</label>
+															<div class="col-sm-8">
+																<input type="text" class="form-control" id="applicationNo" placeholder="Nomor Permohonan, contoh: JID2012006054" maxlength="15"/>
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="col-sm-4 col-form-label">Nomor Registrasi</label>
+															<div class="col-sm-8">
+																<input type="text" class="form-control" id="regNo" placeholder="Nomor Registrasi, contoh: IDM000000019" maxlength="12"/>
+															</div>
+														</div>
+													</form>
+													<div id="divMsgError" hidden="true">
+														<label id="lblMsgError" style="color: red"></label>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-danger" id="batalCek"><i class="fas fa-times"></i> Batal</button>
+													<button type="button" class="btn btn-primary" id="simpanCek"><i class="fas fa-search"></i> Check</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<hr style="margin-top:0px"/>
+						<br/>
+						<div class="table-container">
+							<table class="table table-striped table-bordered table-responsive" id="table">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>No.</th>
+										<th>Merek</th>
+										<th>Deskripsi Merek</th>
+										<th>Kelas</th>
+										<th hidden="true">Kelas Id</th>
+										<th>Nama Pemohon</th>
+										<th>Uraian Kelas/Jasa</th>
+										<th>Nomor Permohonan</th>
+										<th>Nomor Registrasi</th>
+										<th>Pemeriksa</th>
+										<th></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="form-group">
+							<label id="lblCountSama" style="color: red"></label>
+						</div>
+						<hr/>
+						<div class="table-container">
+							<table class="table table-striped table-bordered table-responsive" id="tableResult">
+								<thead>
+									<tr>
+										<th>No.</th>
+										<th>Tanggal Penerimaan</th>
+										<th>Nomor Permohonan</th>
+										<th>Label Merek</th>
+										<th>Merek</th>
+										<th>Kelas</th>
+										<th>Nama Pemohon</th>
+										<th>Status</th>
+										<th>Tanggal Prioritas</th>
+                                        <th>Nomor Registrasi</th>
+                                        <th>Tandai Sama</th>
+										<th>&nbsp;</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="modalReassignValidasi" tabindex="-1" role="dialog"
+     aria-labelledby="cekKesamaan">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="labelReassignValidasi">Pemeriksa Substantif</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-4 col-form-label">Nama Pemeriksa</label>
+						<div class="col-sm-8">
+							<select id="namaPemeriksa" class="form-control m-input">
+								<option style="display:none" value="">-Pilih Pemeriksa- </option>
+								<option th:each="pemeriksa : ${userSubsList}" th:value="${pemeriksa.mEmployee.userId.id}"
+                              		th:text="${pemeriksa.mRoleSubstantif.name + ': ' + pemeriksa.mEmployee.employeeName}"></option>
+							</select>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i> Batal</button>
+				<button type="button" class="btn btn-primary" id="prosesReasssign"><i class="fas fa-paper-plane"></i> Proses</button>
+				<button type="button" class="btn btn-primary" id="prosesValidasi"><i class="fas fa-paper-plane"></i> Proses</button>
+			</div>
+		</div>
+	</div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<script th:src="@{/js/bootstrap-multiselect.min.js}"></script>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	$(document).ready(function () {
+
+		$('#class').multiselect({
+                selectAllValue: 'multiselect-all',
+                enableCaseInsensitiveFiltering: true,
+                enableFiltering: true,
+                maxHeight: '300',
+                buttonHeight: '34',
+                buttonWidth: '61%',
+                onChange: function(element, checked) {
+                    var brands = $('#class option:selected');
+                    var selected = [];
+                    $(brands).each(function(index, brand){
+                        selected.push([$(this).val()]);
+                    });
+                }
+            });
+
+		var csrf = /*[[${_csrf.token}]]*/'';
+		var table = $('#table');
+		var tableResult = $('#tableResult');
+		var searchByArr = [];
+		var keywordArr = [];
+		var searchByResultArr = [];
+		var keywordResultArr = [];
+		var excludeResultArr = [];
+		var appId = /*[[${txTmGeneral.id}]]*/ 'default';
+		var appNo = /*[[${txTmGeneral.applicationNo}]]*/ 'default';
+		var groupDetailId = /*[[${groupDetailId}]]*/ 'default';
+		var isAccess = /*[[${isUser or isAdmin}]]*/'';
+		var selectedFilterId = '';
+		var selectedRowIdx = 0;
+		var is_listTandai = false;
+
+		searchByArr.push('txTmGeneral.id');
+		keywordArr.push(appId);
+
+		table.data('searchByArr', searchByArr);
+		table.data('keywordArr', keywordArr);
+		table.data('orderBy', 'createdDate');
+		table.data('orderType', 'DESC');
+
+		/* Load DataTable */
+		var dataTable = table.DataTable({
+			select: {
+				info: false,
+				style: 'single'
+			},
+			"columnDefs": [
+				{
+					"targets": [0, 5],
+					"visible": false
+				}
+			],
+			ajax: {
+				data: function (d) {
+					d.searchByArr = table.data('searchByArr');
+					d.keywordArr = table.data('keywordArr');
+					d.orderBy = table.data('orderBy');
+					d.orderType = table.data('orderType');
+					d._csrf = csrf;
+				},
+				type: 'POST',
+				url: /*[[@{/layanan/cari-cek-kesamaan}]]*/''
+			},
+			initComplete: function (settings, json) {
+				var url = /*[[@{/layanan/list-cek-logo(no=${txTmGeneral.applicationNo})}]]*/'';
+
+				<!--if (json.data.length) {-->
+					<!--if (!json.data[0][9]) {-->
+						<!--table.DataTable().column(9).visible(false);-->
+					<!--}-->
+				<!--}-->
+
+				if (isAccess) {
+
+                    $('#table_length').parent().next().addClass("text-right");
+				    $('#table_length').parent().next().append(
+						'<a class="btn btn-warning" id="listTandai" style="margin-left: 5px;"><i class="icon-check"></i> List Tandai</a>'
+				    );
+				    $('#table_length').parent().parent().addClass('margin-bottom-8px');
+
+					$('#table_length').parent().next().addClass("text-right");
+					$('#table_length').parent().next().append(
+						'<a class="btn btn-info" href="#" data-toggle="modal" data-target="#cekKesamaan" style="margin-left: 5px;"><i class="fas fa-plus"></i> Pencarian</a>'
+					);
+					$('#table_length').parent().parent().addClass('margin-bottom-8px');
+
+					$('#table_length').parent().next().addClass("text-right");
+					$('#table_length').parent().next().append(
+						'<a class="btn btn-success" id="checkPhonetic" style="margin-left: 5px;"><i class="fas fa-search"></i> Pencarian Cepat</a>'+
+						'<a class="btn btn-primary" id="getPhonetic" style="margin-left: 5px;"><i class="fas fa-music"></i> Phonetic</a>'
+					);
+					$('#table_length').parent().parent().addClass('margin-bottom-8px');
+
+					<!--$('#table_length').parent().next().addClass("text-right");-->
+					<!--$('#table_length').parent().next().append(-->
+					<!--'<a class="btn btn-primary" href="' + url +'" target="_blank" style="margin-left: 5px;"><i class="fas fa-search"></i> Cek Logo</a>'-->
+					<!--);-->
+					<!--$('#table_length').parent().parent().addClass('margin-bottom-8px');-->
+
+				}
+
+				var data = dataTable.row(0).data();
+				if (data !== undefined) {
+					dataTable.row(0).select();
+				} /*else {
+					dataTableResult.clear().draw();
+				}*/
+
+				$("#checkPhonetic").click(function() {
+					checkPhonetic();
+				});
+				$("#getPhonetic").click(function() {
+					getPhonetic();
+				});
+
+				$("#listTandai").click(function () {
+					listTandai();
+				})
+			},
+			language: {
+				url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+			},
+			lengthMenu: [[10, 30, 90], [10, 30, 90]],
+			pageLength: 10,
+			processing: true,
+			searching: false,
+			serverSide: true
+		});
+		dataTable.on('error.dt',function(e,settings,techNote,message){
+			swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+		});
+
+
+		function getPhonetic(){
+			var appId = [[${txTmGeneral.id}]];
+			var brandName = [[${txTmGeneral.txTmBrand.name}]];
+			var classNo = [[${classNo}]];
+			var userRoleSubstantif = /*[[${userRoleSubstantif}]]*/ 'default';
+			var searchForPhonetic = []
+			var valueForPhonetic = []
+			searchForPhonetic.push("txTmBrand.name || c.txTmBrand.keywordMerek");
+			valueForPhonetic.push(brandName);
+			searchForPhonetic.push("mClassId");
+			var classID = ""
+			var classes = classNo.split(",")
+			for(var cid in classes){
+				if(classID == ""){
+					classID+= "class_"+classes[cid].trim();
+				}
+				else{
+					classID+= ",class_"+classes[cid].trim();
+				}
+			}
+			valueForPhonetic.push(classID);
+			//searchForPhonetic.push('txTmGeneral.id');
+			//valueForPhonetic.push(appId);
+			tableResult.data('searchByArr', searchForPhonetic);
+			tableResult.data('keywordArr', valueForPhonetic);
+			tableResult.DataTable().clear().destroy();
+
+			var dataTableResult = tableResult.DataTable({
+				ajax: {
+					data: function (d) {
+						d.searchByArr = tableResult.data('searchByArr');
+						d.keywordArr = tableResult.data('keywordArr');
+						d.excludeArr = tableResult.data('excludeArr');
+						d.appId = appId;
+						d.orderBy = tableResult.data('orderBy');
+						d.orderType = tableResult.data('orderType');
+						d._csrf = csrf;
+					},
+					type: 'POST',
+					url: /*[[@{/layanan/phonetic-result}]]*/''
+				},
+				initComplete: function (settings, json) {
+					var encAppId = window.btoa(selectedFilterId+ ";" + groupDetailId);
+					var url = /*[[@{/layanan/download-docx(no=)}]]*/;
+					$('#tableResult_length').parent().next().addClass("text-right");
+					$('#tableResult_length').parent().next().append(
+						'<a class="btn btn-primary" href="' + url + '=' + encAppId +'" style="margin-left: 5px;"><i class="fas fa-download"></i> Export to Word</a>'
+					);
+					$('#tableResult_length').parent().parent().addClass('margin-bottom-8px');
+				},
+				drawCallback: function (settings) {
+					if (dataTable.rows('.selected').any()) {
+						$("#lblCountSama").text('Terdapat kesamaan dengan merek lain sejumlah (' + dataTableResult.page.info().recordsDisplay + ') Merek');
+					} else {
+						$("#lblCountSama").text('Tidak ditemukan kesamaan dengan merek lain');
+					}
+				},
+				columnDefs: [
+					{
+						targets: [3],
+						data:"imageUrl",
+						render : function (url, type, data) {
+							return '<img style="height:100px;width:100px;" src="'+data[3]+'" />';
+						}
+					},
+					{
+						targets: -1,
+						visible: isAccess
+					},
+					{
+						targets: [0, 10],
+						orderable: false,
+					},
+				],
+				language: {
+					url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+				},
+				ordering: true,
+				order: [
+					[1, 'DESC']
+				],
+				lengthMenu: [[10, 30, 90], [10, 30, 90]],
+				pageLength: 10,
+				processing: true,
+				searching: false,
+				serverSide: true
+			});
+			dataTableResult.on('error.dt',function(e,settings,techNote,message){
+				swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+			});
+		}
+
+		function checkPhonetic(){
+			var appId = /*[[${txTmGeneral.id}]]*/ 'default';
+			var brandName = /*[[${txTmGeneral.txTmBrand.name}]]*/'';
+			var classNo = /*[[${classNo}]]*/'';
+			var userRoleSubstantif = /*[[${userRoleSubstantif}]]*/ 'default';
+
+			$.ajax({
+				type: 'POST',
+				url: /*[[@{/layanan/phonetic-check"}]]*/'',
+				datatype: "jsonp",
+				data: {
+					appId: appId,
+					userRoleSubstantif: userRoleSubstantif,
+					brandName: brandName,
+                    classNo: classNo,
+					_csrf: csrf
+				},
+				beforeSend:function(){
+					showLoading();
+				},
+				complete:function(){
+					hideLoading();
+				},
+				success: function (data) {
+					if (data == 'Success') {
+						dataTable.ajax.reload(function () {
+							var data = dataTable.row(0).data();
+							if (data !== undefined) {
+								dataTable.row(0).select();
+							}
+						});
+					} else {
+						//alert (data);
+						$('#divMsgError').show();
+						$('#lblMsgError').text(data);
+					}
+				},
+				error: function (xhr, status) {
+					swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+				}
+			});
+		}
+
+		searchByResultArr.push('id');
+		keywordResultArr.push('undefined');
+		excludeResultArr.push(appId);
+
+		tableResult.data('searchByArr', searchByResultArr);
+		tableResult.data('keywordArr', keywordResultArr);
+		tableResult.data('excludeArr', excludeResultArr);
+		tableResult.data('orderBy', 'createdDate');
+		tableResult.data('orderType', 'DESC');
+
+		dataTable.on('select', function (e, dt, type, indexes) {
+			var data = dataTable.row(indexes).data();
+			var searchByArr = [];
+			var keywordArr = [];
+			var excludeArr = [];
+
+			selectedRowIdx = indexes;
+
+			selectedFilterId = data[0];
+			searchByArr.push('txTmBrand.name || c.txTmBrand.keywordMerek');
+			keywordArr.push(data[2]);
+			searchByArr.push('txTmBrand.description');
+			keywordArr.push(data[3]);
+			searchByArr.push('mClassId');
+			keywordArr.push(data[5]);
+			searchByArr.push('txTmOwnerName');
+			keywordArr.push(data[6]);
+			searchByArr.push('mClassDetailDesc');
+			keywordArr.push(data[7]);
+			searchByArr.push('applicationNo');
+			keywordArr.push(data[8]);
+			searchByArr.push('txRegistration.no');
+			keywordArr.push(data[9]);
+			excludeArr.push(appId);
+
+			tableResult.data('searchByArr', searchByArr);
+			tableResult.data('keywordArr', keywordArr);
+			tableResult.data('excludeArr', excludeArr);
+
+			tableResult.DataTable().clear().destroy();
+
+			var dataTableResult = tableResult.DataTable({
+				ajax: {
+					data: function (d) {
+						d.searchByArr = tableResult.data('searchByArr');
+						d.keywordArr = tableResult.data('keywordArr');
+						d.excludeArr = tableResult.data('excludeArr');
+						d.appId = appId;
+						d.orderBy = tableResult.data('orderBy');
+						d.orderType = tableResult.data('orderType');
+						d._csrf = csrf;
+					},
+					type: 'POST',
+					url: /*[[@{/layanan/cari-result-kesamaan}]]*/''
+				},
+				initComplete: function (settings, json) {
+					var encAppId = window.btoa(selectedFilterId+ ";" + groupDetailId);
+					var url = /*[[@{/layanan/download-docx(no=)}]]*/;
+					$('#tableResult_length').parent().next().addClass("text-right");
+					$('#tableResult_length').parent().next().append(
+						'<a class="btn btn-primary" href="' + url + '=' + encAppId +'" style="margin-left: 5px;"><i class="fas fa-download"></i> Export to Word</a>'
+					);
+					$('#tableResult_length').parent().parent().addClass('margin-bottom-8px');
+				},
+				drawCallback: function (settings) {
+					if (dataTable.rows('.selected').any()) {
+						$("#lblCountSama").text('Terdapat kesamaan dengan merek lain sejumlah (' + dataTableResult.page.info().recordsDisplay + ') Merek');
+					} else {
+						$("#lblCountSama").text('Tidak ditemukan kesamaan dengan merek lain');
+					}
+				},
+				columnDefs: [
+					{
+						targets: [3],
+						data:"imageUrl",
+						render : function (url, type, data) {
+							return '<img style="height:100px;width:100px;" src="'+data[3]+'" />';
+						}
+					},
+					{
+						targets: -1,
+						visible: isAccess
+					},
+					{
+						targets: [0, 10],
+						orderable: false,
+					},
+				],
+				language: {
+					url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+				},
+				ordering: true,
+				order: [
+					[1, 'DESC']
+				],
+				lengthMenu: [[10, 30, 90], [10, 30, 90]],
+				pageLength: 10,
+				processing: true,
+				searching: false,
+				serverSide: true
+			});
+			dataTableResult.on('error.dt',function(e,settings,techNote,message){
+				swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+			});
+		});
+
+		function listTandai(){
+
+			var data = dataTable.row(selectedRowIdx).data();
+			var searchByArr = [];
+			var keywordArr = [];
+			var excludeArr = [];
+
+			selectedFilterId = data[0];
+			is_listTandai = true;
+			searchByArr.push('similar');
+			keywordArr.push(true);
+			excludeArr.push(appId);
+
+			tableResult.data('searchByArr', searchByArr);
+			tableResult.data('keywordArr', keywordArr);
+			tableResult.data('excludeArr', excludeArr);
+
+			tableResult.DataTable().clear().destroy();
+
+			var dataTableResult = tableResult.DataTable({
+				ajax: {
+					data: function (d) {
+						d.searchByArr = tableResult.data('searchByArr');
+						d.keywordArr = tableResult.data('keywordArr');
+						d.excludeArr = tableResult.data('excludeArr');
+						d.appId = appId;
+						d.orderBy = tableResult.data('orderBy');
+						d.orderType = tableResult.data('orderType');
+						d._csrf = csrf;
+					},
+					type: 'POST',
+					url: /*[[@{/layanan/cari-result-kesamaan}]]*/''
+				},
+				initComplete: function (settings, json) {
+					console.log(selectedFilterId);
+					var encAppId = window.btoa(selectedFilterId+ ";" + groupDetailId + ";" + is_listTandai);
+					var url = /*[[@{/layanan/download-docx(no=)}]]*/;
+					$('#tableResult_length').parent().next().addClass("text-right");
+					$('#tableResult_length').parent().next().append(
+							'<a class="btn btn-primary" href="' + url + '=' + encAppId +'" style="margin-left: 5px;"><i class="fas fa-download"></i> Export to Word</a>'
+					);
+					$('#tableResult_length').parent().parent().addClass('margin-bottom-8px');
+				},
+				drawCallback: function (settings) {
+					if (dataTable.rows('.selected').any()) {
+						$("#lblCountSama").text('Terdapat kesamaan dengan merek lain sejumlah (' + dataTableResult.page.info().recordsDisplay + ') Merek');
+					} else {
+						$("#lblCountSama").text('Tidak ditemukan kesamaan dengan merek lain');
+					}
+				},
+				columnDefs: [
+					{
+						targets: [3],
+						data:"imageUrl",
+						render : function (url, type, data) {
+							return '<img style="height:100px;width:100px;" src="'+data[3]+'" />';
+						}
+					},
+					{
+						targets: -1,
+						visible: isAccess
+					},
+					{
+						targets: [0, 10],
+						orderable: false
+					}
+				],
+				language: {
+					url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+				},
+				order: [
+					[1, 'DESC']
+				],
+				lengthMenu: [[10, 30, 90], [10, 30, 90]],
+				ordering: true,
+				pageLength: 10,
+				processing: true,
+				searching: false,
+				serverSide: true
+			});
+			dataTableResult.on('error.dt',function(e,settings,techNote,message){
+				swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+			});
+		}
+
+		$('#kembaliP1').click(function (event){
+			event.preventDefault();
+
+			swal("Konfirmasi", "Apakah Anda yakin akan mengembalikan ke Pemeriksa 1 (P1)?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+					.then((value) => {
+						if (value) {
+							$.ajax({
+								type: 'POST',
+								url:/*[[@{/layanan/reassign-p1}]]*/'',
+								dataType:'json',
+								data : {
+									id : /*[[${groupDetailId}]]*/'',
+									_csrf: csrf
+								},
+								beforeSend: function () {
+									showLoading();
+								},
+								complete:function(){
+									hideLoading();
+								},
+								success:function(data){
+									var redirect = /*[[@{/layanan/pemeriksaan-substantif}]]*/'';
+									window.location.replace(redirect);
+								},
+								error: function (xhr, status) {
+									swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+								}
+							});
+						}
+					});
+		});
+
+		$('#simpanCek').click(function (event) {
+			event.preventDefault();
+			var csrf = /*[[${_csrf.token}]]*/'';
+			var appId = /*[[${txTmGeneral.id}]]*/ 'default';
+			var userRoleSubstantif = /*[[${userRoleSubstantif}]]*/ 'default';
+			var brandName = $("#brandName").val();
+			var brandDesc = $("#brandDesc").val();
+			var ownerName = $("#ownerName").val();
+			var classId = $('#class').val().toString();
+			var classDesc = $("#classDesc").val();
+			var applicationNo = $("#applicationNo").val();
+			var regNo = $("#regNo").val();
+
+			$.ajax({
+				type: 'POST',
+				url: /*[[@{/layanan/tambah-cek-kesamaan"}]]*/'',
+				datatype: "jsonp",
+				data: {
+					appId: appId,
+					userRoleSubstantif: userRoleSubstantif,
+					brandName: brandName,
+					brandDesc: brandDesc,
+					ownerName: ownerName,
+					classId: classId,
+					classDesc: classDesc,
+					applicationNo:applicationNo,
+					regNo:regNo,
+					_csrf: csrf
+				},
+				beforeSend:function(){
+					showLoading();
+				},
+				complete:function(){
+					hideLoading();
+				},
+				success: function (data) {
+					if (data == 'Success') {
+						batalCek();
+						dataTable.ajax.reload(function () {
+							var data = dataTable.row(0).data();
+							if (data) {
+								dataTable.row(0).select();
+							} else {
+								tableResult.DataTable().clear().draw();
+							}
+						});
+					} else {
+						//alert (data);
+						$('#divMsgError').show();
+						$('#lblMsgError').text(data);
+					}
+				},
+				error: function (xhr, status) {
+					swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+				}
+			});
+		});
+
+		$('#batalCek').click(function (event) {
+			batalCek();
+		});
+
+		function batalCek() {
+			$("#cekKesamaan").modal('hide');
+			$("#brandName").val('');
+			$("#brandDesc").val('');
+			$("#ownerName").val('');
+			$("#classDesc").val('');
+			$("#classId").val('');
+			$("#applicationNo").val('');
+			$("#regNo").val('')
+			$('#divMsgError').hide();
+			$('#lblMsgError').text('');
+
+			$('#class option:selected').each(function() {
+                $(this).prop('selected', false);
+            });
+
+            $('#class').multiselect('refresh');
+		}
+
+		$('body').on('click', '.add-mark', function() {
+			var button = $(this);
+			var similarId = button.attr("appId");
+			$.ajax({
+				type : "POST",
+				url:/*[[@{/layanan/tandai-kesamaan}]]*/'',
+				dataType:'json',
+				data : {
+					originId : appId,
+					similarId : similarId,
+					selectedFilterId,
+				},
+				beforeSend:function() {
+					showLoading();
+				},
+				complete:function() {
+					hideLoading();
+				},
+				success:function(result) {
+					if (result.success) {
+						button.removeClass("btn-success add-mark").addClass("btn-danger remove-mark");
+						button.html("Hilangkan Tanda");
+						button.parents('td').prev().html('Ya');
+					} else {
+						swal("Error", result.message, "error");
+					}
+				},
+				error: function (xhr, status) {
+					swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+				}
+			});
+		});
+
+		$('body').on('click', '.remove-mark', function() {
+			var button = $(this);
+			var similarId = button.attr("appId");
+			$.ajax({
+				type : "POST",
+				url:/*[[@{/layanan/hapus-tanda-kesamaan}]]*/'',
+				dataType:'json',
+				data : {
+					originId : appId,
+					similarId : similarId,
+					selectedFilterId,
+				},
+				beforeSend:function() {
+					showLoading();
+				},
+				complete:function() {
+					hideLoading();
+				},
+				success:function(result) {
+					if (result.success) {
+						button.removeClass("btn-danger remove-mark").addClass("btn-success add-mark");
+						button.html("Tandai");
+						button.parents('td').prev().html('Tidak');
+					} else {
+						swal("Error", result.message, "error");
+					}
+				},
+				error: function (xhr, status) {
+					swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+				}
+			});
+		});
+
+		$('#doRelease').on('click', function(event){
+			event.preventDefault();
+
+			swal("Konfirmasi", "Apakah Anda yakin akan Release permohonan ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+      		.then((value) => {
+      			if (value) {
+      				$.ajax({
+      					type: 'POST',
+      					url:/*[[@{/layanan/release-pemeriksaan-substantif}]]*/'',
+      					dataType:'json',
+      					data : {
+      						id : /*[[${groupDetailId}]]*/'',
+      						_csrf: csrf
+      					},
+      					beforeSend: function () {
+      						showLoading();
+      					},
+      					complete:function(){
+      						hideLoading();
+      					},
+      					success:function(data){
+      						var redirect = /*[[@{/layanan/pemeriksaan-substantif}]]*/'';
+      						window.location.replace(redirect);
+      					},
+      					error: function (xhr, status) {
+      	                	swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+      	                }
+      				});
+      		  	}
+      		});
+		});
+		$('#doReassign').on('click', function(event){
+			event.preventDefault();
+			$('#prosesReasssign').show();
+			$('#prosesValidasi').hide();
+			$('#namaPemeriksa').val('');
+			$('#labelReassignValidasi').text('Ganti Pemeriksa');
+			$('#modalReassignValidasi').modal('show');
+		});
+		$('#doValidasi').on('click', function(event){
+			event.preventDefault();
+			$('#prosesValidasi').show();
+			$('#prosesReasssign').hide();
+			$('#namaPemeriksa').val('');
+			$('#labelReassignValidasi').text('Validasi Pemeriksaan P2');
+			$('#modalReassignValidasi').modal('show');
+		});
+		$('#doSelesai').on('click', function(event){
+			event.preventDefault();
+			swal("Konfirmasi", "Apakah penelusuran ini sudah selesai?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+      		.then((value) => {
+      			if (value) {
+      				$.ajax({
+      					type: 'POST',
+      					url:/*[[@{/layanan/selesai-pemeriksaan-substantif}]]*/'',
+      					datatype:'jsonp',
+      					data : {
+      						id : /*[[${groupDetailId}]]*/'',
+      						_csrf: csrf
+      					},
+      					beforeSend: function () {
+      						showLoading();
+      					},
+      					complete:function(){
+      						hideLoading();
+      					},
+      					success:function(data){
+      						window.location.reload();
+      					},
+      					error: function (xhr, status) {
+      	                	swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+      	                }
+      				});
+      		  	}
+      		});
+		});
+		$('#prosesReasssign').on('click', function(event){
+			swal("Konfirmasi", "Apakah Anda yakin akan Reassign permohonan ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+      		.then((value) => {
+      			if (value) {
+      				$.ajax({
+      					type: 'POST',
+      					url:/*[[@{/layanan/reassign-pemeriksaan-substantif}]]*/'',
+      					datatype:'jsonp',
+      					data : {
+      						id : /*[[${groupDetailId}]]*/'',
+      						pemeriksa : $('#namaPemeriksa').val(),
+      						_csrf: csrf
+      					},
+      					beforeSend: function () {
+      						showLoading();
+      					},
+      					complete:function(){
+      						hideLoading();
+      					},
+      					success:function(data){
+      						$('#modalReassignValidasi').modal('hide');
+      						window.location.reload();
+      					},
+      					error: function (xhr, status) {
+      	                	swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+      	                }
+      				});
+      		  	}
+      		});
+		});
+		$('#prosesValidasi').on('click', function(event){
+			swal("Konfirmasi", "Apakah Anda yakin akan melakukan validasi lanjutan ke Pemeriksa 2 (P2)?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+      		.then((value) => {
+      			if (value) {
+      				$.ajax({
+      					type: 'POST',
+      					url:/*[[@{/layanan/validasi-pemeriksaan-substantif}]]*/'',
+      					datatype:'jsonp',
+      					data : {
+      						id : /*[[${groupDetailId}]]*/'',
+      						pemeriksa : $('#namaPemeriksa').val(),
+      						_csrf: csrf
+      					},
+      					beforeSend: function () {
+      						showLoading();
+      					},
+      					complete:function(){
+      						hideLoading();
+      					},
+      					success:function(data){
+      						$('#modalReassignValidasi').modal('hide');
+      						window.location.reload();
+      					},
+      					error: function (xhr, status) {
+      	                	swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+      	                }
+      				});
+      		  	}
+      		});
+		});
+	});
+	function deleteSubsCheck(idSubsCheck) {
+		swal("Konfirmasi", "Apakah Anda yakin akan menghapus data ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+			.then((value) => {
+				if (value) {
+					$.ajax({
+						type: 'POST',
+						url:/*[[@{/layanan/delete-subscheck}]]*/'',
+						data: {
+							idSubsCheck,
+						},
+						beforeSend: function () {
+							showLoading();
+						},
+						success: function(data){
+							if (!data) {
+								swal("Error", "Data ini tidak dapat dihapus karena ada permohonan yang ditandai", "error");
+								hideLoading();
+								return
+							}
+							$('#table').DataTable().ajax.reload();
+							hideLoading();
+						},
+						error: function (xhr, status) {
+							swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+						}
+					});
+				}
+			});
+	}
+	/*]]>*/
+</script>
+<style type="text/css">
+    span.multiselect {
+        padding: 15px 0;
+    }
+</style>
+</body>
+</html>

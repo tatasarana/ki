@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="3" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5074e2f0-89f8-4eb6-b3ef-03243fdf7c9f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ownerCount" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="regCount" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="priorList" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="contractContinues" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="listContract" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="classContinues" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="listClass" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="brandLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start1" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end1" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start3" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end3" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start4" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end4" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ttdp" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ttEmployee" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logoKI" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<parameter name="endFees" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="endFees2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="startFees" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="startFees2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="feeContinues" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="mm17" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+A.TM_OWNER_ID,
+A.APPLICATION_ID,
+H.APPLICATION_NO,
+I.APPLICANT_NOTES,
+A.TM_OWNER_ADDRESS AS TM_OWNER_ADDRESS,
+F.CITY_NAME AS TM_OWNER_CITY,
+D.PROV_NAME,
+A.TM_OWNER_ZIP_CODE AS TM_OWNER_ZIP_CODE,
+E.PROV_NAME AS PROV_NAME_POST,
+A.TM_OWNER_NAME AS TM_OWNER_NAME,
+A.TM_OWNER_PHONE AS TM_OWNER_PHONE,
+A.TM_OWNER_EMAIL AS TM_OWNER_EMAIL,
+B.COUNTRY_NAME,
+C.COUNTRY_NAME AS OWNER_NATIONALITY,
+A.TM_OWNER_POST_ADDRESS AS TM_OWNER_POST_ADDRESS,
+G.CITY_NAME AS TM_OWNER_POST_CITY,
+A.TM_OWNER_POST_ZIP_CODE AS TM_OWNER_POST_ZIP_CODE,
+A.TM_OWNER_TYPE, a.tm_legal_entity,
+J.COUNTRY_NAME AS POST_COUNTRY,
+H.LANGUAGE_2 AS LANGUAGE_2,
+H.STATUS_ID,H.UPDATED_BY,
+COALESCE(to_char(H.APPROVED_DATE,'DD/MM/YYYY'),' ') AS APPROVED_DATE,
+K.EMPLOYEE_NAME,
+COALESCE(K.EMPLOYEE_EMAIL,' ') AS EMPLOYEE_EMAIL
+FROM TX_TM_OWNER A
+LEFT JOIN M_COUNTRY B ON A.TM_OWNER_COUNTRY = B.COUNTRY_CODE
+LEFT JOIN M_COUNTRY C ON C.COUNTRY_ID = A.TM_OWNER_NATIONALITY
+LEFT JOIN M_PROVINCE D ON D.PROV_ID = A.TM_OWNER_PROVINCE
+inner join TX_TM_GENERAL H ON A.APPLICATION_ID = H.APPLICATION_ID
+LEFT JOIN M_PROVINCE E ON E.PROV_ID = A.TM_OWNER_POST_PROVINCE
+LEFT JOIN M_CITY F ON A.TM_OWNER_CITY = F.CITY_ID
+LEFT JOIN M_CITY G ON A.TM_OWNER_POST_CITY = G.CITY_ID
+LEFT JOIN TX_RECEPTION I ON I.RECEPTION_ID=H.RECEPTION_ID
+LEFT JOIN M_COUNTRY J ON J.COUNTRY_ID=A.TM_OWNER_POST_COUNTRY
+LEFT JOIN M_EMPLOYEE K ON H.APPROVED_BY = K.EMPLOYEE_ID
+WHERE A.APPLICATION_ID = $P{applicationId}]]>
+	</queryString>
+	<field name="TM_OWNER_ID" class="java.lang.String"/>
+	<field name="APPLICATION_ID" class="java.lang.String"/>
+	<field name="APPLICATION_NO" class="java.lang.String"/>
+	<field name="APPLICANT_NOTES" class="java.lang.String"/>
+	<field name="TM_OWNER_ADDRESS" class="java.lang.String"/>
+	<field name="TM_OWNER_CITY" class="java.lang.String"/>
+	<field name="PROV_NAME" class="java.lang.String"/>
+	<field name="TM_OWNER_ZIP_CODE" class="java.lang.String"/>
+	<field name="PROV_NAME_POST" class="java.lang.String"/>
+	<field name="TM_OWNER_NAME" class="java.lang.String"/>
+	<field name="TM_OWNER_PHONE" class="java.lang.String"/>
+	<field name="TM_OWNER_EMAIL" class="java.lang.String"/>
+	<field name="COUNTRY_NAME" class="java.lang.String"/>
+	<field name="OWNER_NATIONALITY" class="java.lang.String"/>
+	<field name="TM_OWNER_POST_ADDRESS" class="java.lang.String"/>
+	<field name="TM_OWNER_POST_CITY" class="java.lang.String"/>
+	<field name="TM_OWNER_POST_ZIP_CODE" class="java.lang.String"/>
+	<field name="TM_OWNER_TYPE" class="java.lang.String"/>
+	<field name="TM_LEGAL_ENTITY" class="java.lang.String"/>
+	<field name="POST_COUNTRY" class="java.lang.String"/>
+	<field name="LANGUAGE_2" class="java.lang.String"/>
+	<field name="STATUS_ID" class="java.lang.String"/>
+	<field name="UPDATED_BY" class="java.lang.String"/>
+	<field name="APPROVED_DATE" class="java.lang.String"/>
+	<field name="EMPLOYEE_NAME" class="java.lang.String"/>
+	<field name="EMPLOYEE_EMAIL" class="java.lang.String"/>
+	<variable name="totalContinuation" class="java.lang.Integer"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="100" y="25" width="225" height="224" uuid="8016c2f4-8165-4cb1-829b-94e4b34c8dda">
+					<printWhenExpression><![CDATA[$P{approve}!=null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="802" splitType="Stretch">
+			<staticText>
+				<reportElement x="440" y="0" width="70" height="15" uuid="6d69f93d-14c3-4b22-a274-da79a9f1098a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[MM2(E), page 2]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="15" y="783" width="100" height="17" uuid="5a225c0e-afa2-4ac2-a95a-240f9c5a0952"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="82" y="60" width="340" height="20" forecolor="#003366" uuid="563a012e-4b50-41bd-a45c-6057d5a2f4d3"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nationality or legal nature and State of organization :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="52" y="60" width="20" height="20" forecolor="#003366" uuid="ac520f8f-721c-49ba-ab8a-0841c34d8ee8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(e)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="82" y="90" width="13" height="18" uuid="2ef72257-5745-4417-bf84-c1318a4f5493"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(i)]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="112" y="94" width="10" height="10" backcolor="#808080" uuid="e746af1c-bdc9-4573-aa42-9167992f502a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TM_OWNER_TYPE}==null?"":$F{TM_OWNER_TYPE}.equalsIgnoreCase("PERORANGAN") ? ($F{OWNER_NATIONALITY}==null?"":"X"):"")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="142" y="90" width="368" height="18" uuid="8840f463-14dc-4db5-965d-9a3d1f90d070"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[If the applicant is a natural person, indicate the nationality of the applicant:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="142" y="108" width="108" height="31" uuid="c4b83c41-0813-439a-bc1b-f10b46b97ded"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Legal nature of the legal entity:  ]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="112" y="157" width="10" height="10" backcolor="#808080" uuid="e0b3c0a8-ecbb-476d-8015-24aa620a829c"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TM_OWNER_TYPE}==null?"":$F{TM_OWNER_TYPE}.equalsIgnoreCase("PERORANGAN") ?"": "X")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="82" y="152" width="13" height="18" uuid="e50b3e5a-15f5-45f9-b6af-485fca2bf1f0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(ii)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="153" width="368" height="18" uuid="261ef78b-0074-4bd7-82e0-70c33c134191"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[If the applicant is a legal entity, provide both of the following indications:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="170" width="110" height="31" uuid="1eccbddd-a1dd-4941-8274-a8bfc99425da"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Nationality of the applicant:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="201" width="110" height="110" uuid="bc28902c-4c68-4e07-a1fe-6bf8c3b651cb"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[State (country) and, where applicable, territorial unit within that State (canton, province, state, etc.), under the law of which the said legal entity has been organized:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="52" y="320" width="240" height="20" forecolor="#003366" uuid="78d00122-070c-40af-8cfd-0562a5cef18d"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Correspondence details (optional):  ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="52" y="350" width="20" height="20" forecolor="#003366" uuid="b70033d3-1859-4960-90b4-cafbec96a02c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(f)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="82" y="350" width="119" height="30" forecolor="#003366" uuid="c08d433e-7e69-472a-8de8-52d6544bb6f1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Preferred language  for correspondence : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="232" y="350" width="74" height="18" uuid="847377fe-eb36-4444-8175-7c6f4aa25736"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[English]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="212" y="355" width="10" height="10" backcolor="#808080" uuid="a62c515e-2630-4614-8ff0-e72711fa241a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="321" y="355" width="10" height="10" backcolor="#808080" uuid="473a9037-105a-4f27-9e2a-e40988ec7920"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="342" y="351" width="80" height="18" uuid="5ad90a7b-f694-490c-989e-5b80cd908c50"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[French]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="431" y="354" width="10" height="10" backcolor="#808080" uuid="c4bc364c-8454-4169-b209-9be681a193d5"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="452" y="350" width="60" height="18" uuid="5a40a54e-d353-4f9a-bc45-f0ec282f3a2a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Spanish]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="52" y="391" width="20" height="20" forecolor="#003366" uuid="1a7b1556-1749-4277-81ea-24f085ae1b8b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(g)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="82" y="391" width="239" height="20" forecolor="#003366" uuid="44d83d7b-c25f-446c-ab59-d1c09ae3893b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Alternative address and e-mail address for correspondence :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="82" y="421" width="13" height="18" uuid="4de33c9a-0a10-4116-9a34-8e548fb1ae9a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(i)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="421" width="90" height="18" uuid="7db4b99c-133c-4000-bf2d-f81827244b80"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Postal address:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Opaque" x="102" y="439" width="410" height="68" forecolor="#FFFFFF" uuid="f31bc992-a1c7-4496-b7ef-4c67fbe5dc22"/>
+				<graphicElement>
+					<pen lineColor="#CCCCFF"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="80" y="520" width="13" height="18" uuid="eeb124dc-a39e-4c68-a294-3a17a43ced35"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(ii)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="520" width="90" height="18" uuid="2c221966-21ef-4ee2-8ae9-de6abf055784"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[E-mail address:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Opaque" x="190" y="520" width="320" height="18" forecolor="#FFFFFF" uuid="fbd6b7ee-90f9-46e1-97cc-290eb7f7edc5"/>
+				<graphicElement>
+					<pen lineColor="#CCCCFF"/>
+				</graphicElement>
+			</rectangle>
+			<line>
+				<reportElement x="52" y="696" width="160" height="1" uuid="b43b7b35-d634-4d7e-b0c1-109f623c5dfd"/>
+			</line>
+			<staticText>
+				<reportElement x="52" y="700" width="458" height="82" uuid="9c092762-6bb4-438d-b436-4678399b6164"/>
+				<textElement>
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[	Certain designated Contracting Parties may require these indications;  only provide indications in either item (i) or item (ii) but not in both items.  
+  	If you do not indicate your preferred language, WIPO will send all communications concerning this international application and the resulting international registration in the language of the international application.  
+  	Use this only if you want WIPO to send all communications concerning this international application and the resulting international registration to an address and e mail address different from those indicated in item 2 (b) and (c).
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="250" y="108" width="260" height="31" uuid="fa74ced5-c925-4b38-8db1-1024529cd11e"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($F{TM_OWNER_TYPE}==null?"":$F{TM_OWNER_TYPE}.equalsIgnoreCase("PERORANGAN") ? ($F{OWNER_NATIONALITY}==null?"":$F{OWNER_NATIONALITY}):"")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="170" width="258" height="31" uuid="5bedbdf4-f600-47a5-bef1-1b3170902477"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($F{TM_OWNER_TYPE}==null?"":$F{TM_OWNER_TYPE}.equalsIgnoreCase("PERORANGAN") ?"": $F{TM_LEGAL_ENTITY})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="200" width="258" height="111" uuid="29773457-6af3-4ba3-af94-f5de9d621b48"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA["INDONESIA"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

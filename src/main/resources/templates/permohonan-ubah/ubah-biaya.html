@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+        <span id="position"></span>
+        <p th:replace="fragment/sidebar :: left"/>
+    </div>
+    <div id="myDragBar" class="splitter"></div>
+    <div id="myMain" class="panel-right">
+        <div class="my-wrapper" id="my-wrapper">
+            <div class="my-wrapper--inner">
+                <div class="wrapper-content">
+                    <div class="content--top border--bottom padding-content--left-right">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="content--title text--bold">
+                                    <i class="fas fa-edit"></i> Biaya dan Negara - Ubah
+                                </h3>
+                                <small class="sub-header">Pratinjau / Biaya dan Negara</small>
+<!--                                <small style="float:right;margin-left:13px"><a th:href="@{/layanan/pratinjau-permohonan(no=${noGeneral})}"><i class="fa fa-arrow-left"></i> Kembali</a></small>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content--center padding-content--left-right">
+                        <div class="wrapper--bg">
+                            <form class="form-horizontal" id="idFormBiaya" th:object="${txTmMadridFee}" method="POST" enctype="multipart/form-data">
+                                <input type="hidden" value="isEdit" id="isEdit"/>
+
+                                <div class="row col-md-12" style="margin-bottom: 15px">
+                                    <div class="col-md-4">
+                                        <h3>Perhitungan Biaya</h3>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-primary" id="btnSaveFormBiaya"><i class="fas fa-save"></i>
+                                                Simpan
+                                            </button>
+                                            <button type="button" class="btn btn-danger" onclick="window.history.go(-1); return false;"><i class="fa fa-arrow-left"></i>
+                                                Kembali
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Form-->
+
+                                <div class="row col-md-12">
+                                    <div class="col-md-12">
+                                        <div class="form-group m-form__group row">
+                                            <label class="col-sm-7 col-form-label">Untuk pendaftaran di negara Uni Eropa wajib memilih bahasa kedua
+                                            </label>
+                                            <div class="col-sm-5">
+                                                <select class="form-control" th:field="*{tmpLanguage2}" id="language2">
+                                                    <option style="display: none" value="">-Pilih Bahasa-</option>
+                                                    <option th:each="listLanguage2 : ${listLanguage2}" th:value="${listLanguage2.id}"
+                                                            th:text="${listLanguage2.name}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                        </div>
+                                        <div class="form-group m-form__group row">
+                                            <label class="col-md-10 col-form-label">Klik di sini untuk perhitungan biaya <br/>
+                                                <a href="https://www.wipo.int/madrid/en/fees/calculator.jsp?Lang=EForDate=20191012Origin=IDClasses=1ServCd=EN" target="_blank">https://www.wipo.int/madrid/en/fees/calculator.jsp?Lang=EForDate=20191012Origin=IDClasses=1ServCd=EN</a>
+                                            </label>
+                                        </div>
+                                        <div class="form-group m-form__group row">
+                                            <label class="col-md-10 col-form-label">Basic Fee
+                                            </label>
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" placeholder="" th:field="*{basicFee}"
+                                                       id="basicFee" maxlength="100" onkeyup="calculateFee()" />
+<!--                                                <span class="help-block" th:if="${#fields.hasErrors('basicFee')}"-->
+<!--                                                      th:errors="*{basicFee}"></span>-->
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row">
+                                            <label class="col-md-5 col-form-label">Jumlah negara terkait dengan "Complementary Fee"
+                                            </label>
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" placeholder="" th:field="*{complentaryFeeVolume}"
+                                                       id="volComp" maxlength="150" value="0"/>
+                                            </div>
+                                            <label class="col-md-3 col-form-label">x Complementary Fee (100 Swiss Franc)
+                                            </label>
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" placeholder="" th:field="*{complentaryFeeTotal}"
+                                                       id="totalComp" maxlength="150" value="0" onkeyup="calculateFee()"  />
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row">
+                                            <label class="col-md-5 col-form-label">Jumlah kelas jika lebih dari 3 kelas barang/jasa
+                                            </label>
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" placeholder="" th:field="*{suplementaryFeeVolume}"
+                                                       id="volSup" maxlength="150" value="0"/>
+                                            </div>
+                                            <label class="col-md-3 col-form-label">x Suplementary Fee (100 Swiss Franc)
+                                            </label>
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" placeholder="" th:field="*{suplementaryFeeTotal}"
+                                                       id="totalSup" maxlength="150" value="0" onkeyup="calculateFee()" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row col-md-12">
+                                    <input type="hidden" id="appNoGeneral" value=""/>
+                                    <div class="col-md-12">
+                                        <div style="margin-bottom: 15px;">
+                                            <a class="btn btn-info" id="btnAddDocBiaya">
+                                                <i class="fas fa-plus"></i>
+                                                Tambah
+                                            </a>
+                                        </div>
+                                        <div class="table-container">
+                                            <table class="table table-striped table-bordered table-responsive" id="tableBiaya">
+                                                <thead>
+                                                <tr>
+                                                    <th hidden="true"></th>
+                                                    <th>No</th>
+                                                    <th>Negara yang dituju</th>
+                                                    <th>Biaya</th>
+                                                    <th hidden="true"></th>
+                                                    <th></th>
+<!--                                                    <th><button type="button" class="btn btn-danger btn-xs" id="btnHapusCountryAll">Hapus Semua</button></th>-->
+<!--                                                    <th hidden="true"></th>-->
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="txTmMadridFeeDetail,iter : ${txTmMadridFeeDetails}">
+                                                    <td hidden="true" th:text="${txTmMadridFeeDetail.mCountry == null ? '' : txTmMadridFeeDetail.mCountry.id}">></td>
+                                                    <td align="center" th:text="${iter.index}+1"></td>
+                                                    <td th:text="${txTmMadridFeeDetail.mCountry == null ? '' : txTmMadridFeeDetail.mCountry.name}"></td>
+                                                    <td align="right" th:text="${txTmMadridFeeDetail.totalFee == null ? '' : txTmMadridFeeDetail.totalFee}"></td>
+                                                    <td align="center"> 
+                                                    	<div class="btn-actions"> 
+                                                      		<button type="button"   th:id="${'Line'+iter.index}+1"  onclick="deleteCountryForm(this.id)" class="btn btn-danger btn-xs">Hapus</button>
+                                                    	</div>
+                                                    </td>                                            
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="modalDocBiaya" tabindex="-1" role="dialog" aria-labelledby="modalDocBiaya">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <form id="formAddDoc">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title" id="myModalLabel">Biaya per Negara</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group required">
+                                                                <label class="col-sm-4 col-form-label required-label">Negara</label>
+                                                                <div class="col-sm-8">
+                                                                    <select class="form-control" id="biayaNegara"
+                                                                            th:required="true">
+                                                                        <option style="display: none" value="">-Pilih Negara-</option>
+                                                                        <option th:each="country : ${listCountry}" th:value="${country.id}"
+                                                                                th:text="${country.name}"></option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-4 col-form-label">Perhitungan Biaya</label>
+                                                                <div class="col-sm-8">
+                                                                    <input type="text" class="form-control" id="biayaPerNegara" onkeyup="checkIntegerBiaya()" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger"
+                                                                    data-dismiss="modal"><i class="fas fa-times"></i>
+                                                                Batal
+                                                            </button>
+                                                            <button type="button" class="btn btn-primary" id="btnAddBiaya"><i class="fas fa-save"></i>
+                                                                Simpan
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Modal -->
+                                        
+                                        
+                                        <div class="form-group m-form__group row">
+                                            <label class="col-md-10 col-form-label">Total
+                                            </label>
+                                            <div class="col-md-2">
+                                                <input readonly="" type="text" class="form-control" placeholder="" th:field="*{grandFeeTotal}"
+                                                       id="totalBiaya" th:required="true" maxlength="100" value="0" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <input type="hidden"  id="JumlahBiaya" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var csrf = /*[[${_csrf.token}]]*/'';
+    var header = "X-CSRF-TOKEN";
+    var redirect = /*[[@{/layanan/pratinjau-permohonan(no=${noGeneral})}]]*/'';
+    var noGeneral = /*[[${noGeneral}]]*/'';
+    var isNew = /*[[${isNew}]]*/'';
+    var isEdit = /*[[${isEdit}]]*/'';
+    var tableBiaya = $('#tableBiaya');
+    var classStatusEnum = JSON.parse(/*[[${classStatusEnum}]]*/'');
+
+    var searchByArr6 = [];
+    var keywordArr6 = [];
+    var selectedClass = [];
+    var actionType = "none" ;
+    var idxBiaya = tableBiaya.children('tbody').children('tr').length + 1;
+
+    // console.log("idx "+idxBiaya);
+
+    $(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(header, csrf);
+    });
+    $(document).ready(function () {
+        // noGeneral = isEdit ? noGeneral : $("#form8NoPermohonan").text();
+        actionType = "none";
+
+        var initTotal = $('#totalBiaya').val();
+        var initBasicFee = $('#basicFee').val();
+        var initCompFee = $('#totalComp').val();
+        var initSupFee = $('#totalSup').val();
+
+        // alert('Initial Total Biaya Negara : '+ sumnya);
+
+        // jumlah biaya negara $('#JumlahBiaya') mesti di-initialisasi pertama kali
+        var sumnya = initTotal - initBasicFee - initCompFee - initSupFee ;
+        $('#JumlahBiaya').val(sumnya) ;
+
+
+        // Langsung isi Table Biaya
+        var basicfeeIn = $('#basicFee').val();
+        if (basicfeeIn == "")
+            basicfeeIn = 0 ;
+        $('#form8basicFee').html(basicfeeIn);
+
+        var totalSupIn = $('#totalSup').val();
+        if (totalSupIn == "")
+            totalSupIn = 0;
+        $('#form8suplementaryFeeTotal').html(totalSupIn);
+
+        var totalCompIn = $('#totalComp').val();
+        if (totalCompIn == "")
+            totalCompIn = 0;
+        $('#form8complentaryFeeTotal').html(totalCompIn);
+
+
+        $('#btnAddDocBiaya').click(function () {
+            $('#docType').val('');
+            $('#docDesc').val('');
+            $('#docFile').val('');
+
+            $('.required-input').closest('.form-group').removeClass('has-error');
+            $('.required-input').next().remove();
+
+            $('#modalDocBiaya').modal('show');
+        });
+        
+ 
+
+        $('#tableBiaya tbody').on('click', 'button', function () {
+ 
+           // var row = tableBiaya.row($(this).parents('tr'));
+           // var data = row.data(); 
+
+            // http://jsbin.com/eyeyu/edit?html,js,output
+            var colIndex = $(this).parent().children().index($(this));
+            var rowIndex = $(this).parent().parent().children().index($(this).parent());
+            var kurangibiaya = parseInt( $(this).closest('td').prev('td').text());
+
+
+            var jumlahbiaya = parseInt($('#JumlahBiaya').val()) ;
+            $('#JumlahBiaya').val(jumlahbiaya - kurangibiaya) ;
+            // var t = $('#JumlahBiaya').val();
+            // alert('Jumlah Biaya: '+ t);
+            calculateFee();
+
+            $(this).closest("tr").remove();
+
+        });
+
+        $('#btnHapusCountryAll').click(function () {
+            swal("Konfirmasi", "Apakah Anda yakin akan menghapus semua data negara?", "warning", {
+                buttons: {
+                    cancel:'Tidak',
+                    confirm:'Ya'
+                }
+            })
+                .then((value) => {
+                    if (value) {
+                        $.each(tableClass.rows().nodes(), function (index, value) {
+                            var data = tableBiaya.row(index).data();
+                            console.log(data);
+                            // tableForm6.cell("#"+data[0], 7).data('show').draw();
+                        });
+                        tableBiaya.clear().draw();
+                    }
+                });
+        });
+
+        $('#btnAddBiaya').click(function () {
+            biaya = $("#biayaPerNegara").val();
+            biayaNegara = $("#biayaNegara option:selected" ).text();
+            idNegara = $("#biayaNegara").val();
+
+            if ((biaya != '')&&(idNegara != '')) {
+                var checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'record';
+                var markup = "<tr>" +
+                    "<td hidden=\"true\">"+idNegara+"</td>" +
+                    "<td align=\"center\">"+idxBiaya+"</td>" +
+                    "<td>" + biayaNegara + "</td>" +
+                    "<td align=\"right\">" + biaya + "</td>" +
+                    "<td align=\"center\"><button id=\"Line"+idxBiaya+"\" onclick=\"deleteCountryForm(this.id)\" type=\"button\" class=\"btn btn-danger btn-xs\">Hapus</button></td>" +
+                    "</tr>";
+                $("#tableBiaya tbody").append(markup);
+                $("#tableBiaya tbody tr td span").html('');
+                $("#tableBiaya tbody tr td span").append(checkbox);
+
+                // Lakukan juga untuk form8TableBiaya
+                var markup2 = "<tr id=\"BiayaLine"+idxBiaya+"\" ><td>" + biayaNegara + "</td><td align=\"left\">" + biaya + "</td></tr>";
+                $("#form8TableBiaya tbody").append(markup2);
+                $("#form8TableBiaya tbody tr td span").html('');
+                $("#form8TableBiaya tbody tr td span").append(checkbox);
+
+
+
+
+// 	                $("#nationality").val('');
+                var tambahanbiaya = parseInt(biaya)
+                var jumlahbiaya = parseInt($('#JumlahBiaya').val()) ;
+                $('#JumlahBiaya').val(jumlahbiaya + tambahanbiaya) ;
+                // var t = $('#JumlahBiaya').val();
+                // alert('Jumlah Biaya: '+ t);
+                calculateFee();
+                idxBiaya++;
+            }
+            $("#biayaNegara").val('');
+            $("#biayaPerNegara").val('');
+            $('#modalDocBiaya').modal('hide');
+
+        });
+        
+    
+ 
+
+        //PUSH TO TXTMMADRIDFEE
+        $('#btnSaveFormBiaya').on('click', function (e) {
+            // noGeneral = isEdit ? noGeneral : $("#form8NoPermohonan").text();
+            if (noGeneral != '') {
+                e.preventDefault();
+                // yang seharusnya diisi angka, TIDAK BOLEH String kosong
+                var basicFee = $("#basicFee").val();
+                if (basicFee == "")
+                    basicFee = 0;
+                var volComp = $("#volComp").val();
+                if (volComp == "")
+                    volComp = 0;
+                var totalComp = $("#totalComp").val();
+                if (totalComp == "")
+                    totalComp = 0;
+                var volSup = $("#volSup").val();
+                if (volSup == "")
+                    volSup = 0;
+                var totalSup = $("#totalSup").val();
+                if (totalSup == "")
+                    totalSup = 0;
+                var language2 = $("#language2").val();
+
+                var totalBiaya = $("#totalBiaya").val();
+                if (totalBiaya == "")
+                    totalBiaya = 0;
+                var listBiayaNegara = [];
+                $('#tableBiaya > tbody > tr').each(function() {
+                    listBiayaNegara.push($(this).find('td:nth-child(1)').html() + ";" + $(this).find('td:nth-child(4)').html());
+                });
+
+                var formData = new FormData;
+                formData.append('basicFee', basicFee);
+                formData.append('volComp', volComp);
+                formData.append('totalComp', totalComp);
+                formData.append('volSup', volSup);
+                formData.append('totalSup', totalSup);
+                formData.append('listBiayaNegara', listBiayaNegara);
+                formData.append('appNo', noGeneral);
+                formData.append('language2', language2);
+                formData.append('totalBiaya', totalBiaya);
+
+                $.ajax({
+                    type: 'POST',
+                    url: /*[[@{/layanan/save-biaya}]]*/'',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    beforeSend: function () {
+                        showLoading();
+                    },
+                    complete:function(){
+                        hideLoading();
+                    },
+                    success: function (result) {
+                        hideLoading();
+                        if (isEdit){
+                            window.location.replace(redirect);
+                        }else {
+                            var listNo = [];
+                            var jsonObj = {};
+
+                            $('#form8basicFee').html(basicFee);
+                            $('#form8suplementaryFeeTotal').html(totalSup);
+                            $('#form8complentaryFeeTotal').html(totalComp);
+
+                            // $('#form8basicFee').text($('#basicFee').val());
+                            // $('#form8suplementaryFeeTotal').text($('#totalComp').val());
+                            // $('#form8complentaryFeeTotal').text($('#totalSup').val());
+                            // $("#form8TableBiaya tbody").empty();
+                            //  $.each( listNo, function( index, value ){
+                            //  $("#form8TableBiaya tbody").append("<tr><td>" + value + "</td><td>" + jsonObj[[value, "idNegara"]] + "</td><td>" + jsonObj[[value, "idxBiaya"]] + "</td></tr>");
+                            // });
+                            <!-- End set value form 8 -->
+                            $('#dokumen').trigger("click");
+                        }
+                    },
+                    error: function (xhr, status) {
+                        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                    }
+                });
+            } else {
+                $("#general").trigger("click");
+                swal("Informasi", "Silakan melengkapi data General dan klik Simpan.", "info");
+            }
+        });
+
+        $('#basicFee').change('input',function () {
+            calculateFee();
+        });
+        $('#supFee').change('input',function () {
+            calculateFee();
+        });
+        $('#compFee').change('input',function () {
+            calculateFee();
+        });
+
+
+    });
+
+    function deleteCountryForm(x){
+        $('#Biaya'+x).remove();
+    }
+
+    function checkIntegerBiaya(){
+
+        var basicFee = $('#biayaPerNegara').val();
+        if (basicFee != ""){
+            if ( Math.floor(basicFee) == basicFee && $.isNumeric(basicFee) ){
+                $('#btnAddBiaya').show() ;
+            }
+            else{
+                alert("Hanya boleh mengisi Angka");
+                $('#btnAddBiaya').hide() ;
+            }
+        }
+        else{
+            $('#btnAddBiaya').show() ;
+        }
+
+    }
+
+
+    function calculateFee() {
+        var lanjut = true ;
+        var grandTotal = 0;
+        var basicFee = $('#basicFee').val();
+        var biayaNegara = $('#JumlahBiaya').val() ;
+
+
+        if (biayaNegara == ""){
+            biayaNegara = 0;
+        }
+
+
+        if (basicFee != ""){
+            if ( Math.floor(basicFee) == basicFee && $.isNumeric(basicFee) ){
+
+            }
+            else{
+                alert("Hanya boleh mengisi Angka");
+                lanjut = false ;
+            }
+        }
+        else
+            basicFee = 0;
+
+        var supFee = $('#totalSup').val();
+        if (supFee != ""){
+            if ( Math.floor(supFee) == supFee && $.isNumeric(supFee) ){
+
+            }
+            else{
+                alert("Hanya boleh mengisi Angka");
+                lanjut = false ;
+            }
+        }
+        else
+            supFee = 0;
+
+        var compFee = $('#totalComp').val();
+        if (compFee != ""){
+            if ( Math.floor(compFee) == compFee && $.isNumeric(compFee) ){
+
+            }
+            else{
+                alert("Hanya boleh mengisi Angka");
+                lanjut = false ;
+            }
+        }
+        else
+            compFee = 0;
+
+
+        if (lanjut == true){
+            grandTotal = parseInt(basicFee) + parseInt(supFee)+parseInt(compFee) + parseInt(biayaNegara) ;
+            // alert(grandTotal) ;
+
+            $('#form8basicFee').val(basicFee);
+            $('#form8suplementaryFeeTotal').val(supFee);
+            $('#form8complentaryFeeTotal').val(compFee);
+        }
+
+        $('#totalBiaya').val(grandTotal);
+        $('#totalBiaya1').val(grandTotal);
+    }
+
+
+
+    /*]]>*/
+</script>
+</body>
+</html>

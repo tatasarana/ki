@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="3" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5074e2f0-89f8-4eb6-b3ef-03243fdf7c9f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+COALESCE(B.TM_BRAND_DESC_CHAR,' ') AS TM_BRAND_DESC_CHAR,
+COALESCE(B.TM_BRAND_TRANSLATION,' ') AS TM_BRAND_TRANSLATION,
+COALESCE(B.TM_TRANSLATION_FR,' ') AS TM_TRANSLATION_FR,
+COALESCE(B.TM_TRANSLATION_SP,' ') AS TM_TRANSLATION_SP,
+COALESCE(B.TM_TYPE_3D,0) AS TM_TYPE_3D,
+COALESCE(B.TM_TYPE_SOUND,0) AS TM_TYPE_SOUND,
+COALESCE(B.TM_TYPE_COLLECTIVE,0) AS TM_TYPE_COLLECTIVE,
+COALESCE(B.TM_BRAND_NAME,' ') AS TM_BRAND_NAME,
+COALESCE(B.TM_BRAND_DESCRIPTION,' ') AS TM_BRAND_DESCRIPTION,
+COALESCE(B.TM_BRAND_DISCLAIMER,' ') AS TM_BRAND_DISCLAIMER
+FROM TX_TM_GENERAL A
+LEFT JOIN TX_TM_BRAND B ON A.APPLICATION_ID = B.APPLICATION_ID
+WHERE A.APPLICATION_ID = $P{applicationId}]]>
+	</queryString>
+	<field name="TM_BRAND_DESC_CHAR" class="java.lang.String"/>
+	<field name="TM_BRAND_TRANSLATION" class="java.lang.String"/>
+	<field name="TM_TRANSLATION_FR" class="java.lang.String"/>
+	<field name="TM_TRANSLATION_SP" class="java.lang.String"/>
+	<field name="TM_TYPE_3D" class="java.math.BigDecimal"/>
+	<field name="TM_TYPE_SOUND" class="java.math.BigDecimal"/>
+	<field name="TM_TYPE_COLLECTIVE" class="java.math.BigDecimal"/>
+	<field name="TM_BRAND_NAME" class="java.lang.String"/>
+	<field name="TM_BRAND_DESCRIPTION" class="java.lang.String"/>
+	<field name="TM_BRAND_DISCLAIMER" class="java.lang.String"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="100" y="25" width="225" height="224" uuid="8016c2f4-8165-4cb1-829b-94e4b34c8dda">
+					<printWhenExpression><![CDATA[$P{approve}!=null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="800" splitType="Stretch">
+			<staticText>
+				<reportElement x="440" y="0" width="70" height="15" uuid="6d69f93d-14c3-4b22-a274-da79a9f1098a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[MM2(E), page 7]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="15" y="783" width="100" height="17" uuid="5a225c0e-afa2-4ac2-a95a-240f9c5a0952"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="52" y="60" width="20" height="20" forecolor="#003366" uuid="cdbd0605-c658-4bcb-a1c4-be183ecac105"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(e)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="90" width="22" height="18" uuid="0eb30d59-6a40-4f3a-a1c2-c4cdfc317aab"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(i)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="90" width="390" height="60" uuid="2232641a-971b-4ba6-978a-beda7a39b169"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Description of the mark contained in the basic application or basic registration, where applicable (only use this item if the Office of origin requires to include  this description in the international application for the purposes of item 13(a)(ii) of this form):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="200" width="22" height="18" uuid="92b9fdd0-6635-4991-bd80-76c44141fce4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(ii)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="200" width="390" height="40" uuid="04fe37dd-9edf-437c-9e9b-c6d30f3d474a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Voluntary description of the mark (any description of the mark by words, including the description contained in the basic application or registration, if you were not required to provide this description in item (e)(i) above):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="300" width="20" height="20" forecolor="#003366" uuid="bd911728-2fb9-43e1-bee9-efb95544395d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(f)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="300" width="340" height="20" forecolor="#003366" uuid="aa8301aa-8d9f-4303-8ab0-9425ab74c51b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Verbal elements of the mark (where applicable):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="390" width="20" height="20" forecolor="#003366" uuid="9e3282f6-d95e-463d-983e-a3a8046a00f2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(g)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="390" width="400" height="30" forecolor="#003366" uuid="172cb995-1c1a-4720-a431-12ca352cb6f8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[The applicant wishes to disclaim protection for the following element(s) of the mark:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="111" y="420" width="399" height="40" uuid="d8cd9f22-c431-45c4-b272-3f0ef0d326bf"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($F{TM_BRAND_DISCLAIMER}==null?"":$F{TM_BRAND_DISCLAIMER})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="320" width="399" height="40" uuid="88add01d-b9a0-4b20-975f-532fad47aa2d"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($F{TM_BRAND_NAME}==null?"":$F{TM_BRAND_NAME})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="240" width="399" height="40" uuid="5eb02013-e850-4817-8bc2-e48f7a647504"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[($F{TM_BRAND_DESCRIPTION}==null?"":$F{TM_BRAND_DESCRIPTION})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="150" width="399" height="40" uuid="726e43bb-69b7-41e4-9b15-da5b9af345f3"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="81" y="60" width="429" height="30" forecolor="#003366" uuid="ebc48d61-3c1a-4af2-9980-27ad34855a20"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>Description of the mark</b> (as may be required by certain designated Contracting Parties, such as, for example, the United States of America)"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

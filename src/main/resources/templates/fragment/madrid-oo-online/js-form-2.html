@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="form-2" th:remove="tag" th:if="${form=='pemohon'} or ${isEdit == false}">
+    <script type="text/javascript" language="javascript" th:inline="javascript">
+        var csrf = /*[[${_csrf.token}]]*/'';
+        var redirect = /*[[@{/layanan/pratinjau-permohonan-online(no=${eFilingNo})}]]*/'';
+        var noGeneral = /*[[${noGeneral}]]*/'';
+        var isNew = /*[[${isNew}]]*/'';
+        var isEdit = /*[[${isEdit}]]*/'';
+        var idPemohon = /*[[${txTmOwner.id}]]*/'';
+        var header = "X-CSRF-TOKEN";
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, csrf);
+        });
+		
+        var name = null;
+        var indVal = "ID";
+        var temp_mProvince = $('#temp_mProvince').val();
+        var temp_mCity = $('#temp_mCity').val();
+        <!--var temp_mRegion = $('#temp_mRegion').val();-->
+        var temp_postProvince = $('#temp_postProvince').val();
+        var temp_postCity = $('#temp_postCity').val();
+        <!--var temp_postRegion = $('#temp_postRegion').val();-->
+        var temp_country = $('#temp_mCountry').val();
+
+        var table2 = $('#table2');
+        var datatable2 = null;
+        var searchByArr2 = [];
+        var keywordArr2 = [];
+
+        $(document).ready(function (){
+        	if($('#jp2:checked').val() == 'Badan Hukum') {
+        		$('#badanHukum').show();
+        	} else {
+        		$('#badanHukum').hide();
+        	}
+        	if($('#entitlement').val() == 'HakPengajuan3') {
+        		$('#commAddress').show();
+        	} else {
+        		$('#commAddress').hide();
+        	}
+        	
+            $("#idForm2").validate({
+            	rules: {
+    				'no' : {
+    					digits: '#no'
+    				},
+            		'zipCode' : {
+						digits: '#zipCode'					   
+					},
+					'postZipCode' : {
+						digits: '#postZipCode'					   
+					},
+    				<!--'phone':{-->
+    					<!--digits: '#phone'-->
+                    <!--},-->
+                    <!--'postPhone':{-->
+    					<!--digits: '#postPhone'-->
+                    <!--},-->
+                    'whatsapp':{
+                        digits: '#whatsapp'
+                    }
+        		},
+                messages: {
+                	'no': {
+                    	digits: /*[[#{field.error.not.numeric('Nomor KTP')}]]*/''
+                  	},
+                  	'legalEntity': {
+                		required: /*[[#{field.error.required('Jenis Badan Hukum')}]]*/''
+                  	},
+                  	'zipCode': {
+                		required: /*[[#{field.error.required('Kode Pos')}]]*/'',
+                    	digits: /*[[#{field.error.not.numeric('Kode Pos')}]]*/''
+                  	},
+                  	'postZipCode': {
+                		required: /*[[#{field.error.required('Kode Pos')}]]*/'',
+                    	digits: /*[[#{field.error.not.numeric('Kode Pos')}]]*/''
+                  	},
+                    'name': {
+                        required: /*[[#{field.error.required('Nama Pemohon')}]]*/''
+                    },
+                    'nationality.id': {
+                        required: /*[[#{field.error.required('Kewarganegaraan')}]]*/''
+                    },
+                    'ownerType': {
+                        required: /*[[#{field.error.required('Jenis Pemohon')}]]*/''
+                    },
+                    'mCountry.id': {
+                        required: /*[[#{field.error.required('Negara')}]]*/''
+                    },
+                    'postCountry.id': {
+                        required: /*[[#{field.error.required('Negara')}]]*/''
+                    },
+                    'address': {
+                        required: /*[[#{field.error.required('Alamat')}]]*/''
+                    },
+                    'postAddress': {
+                        required: /*[[#{field.error.required('Alamat')}]]*/''
+                    },
+                    'phone':{
+                        required: /*[[#{field.error.required('Nomor Telepon')}]]*/''
+
+                    },
+                    'email':{
+        				required:/*[[#{field.error.required('Email')}]]*/'',
+        				email:/*[[#{field.error.invalid.format.email('Email')}]]*/''        				
+        			},
+                    'postPhone':{
+                        required: /*[[#{field.error.required('Nomor HP')}]]*/''
+
+                    },
+                    'postEmail':{
+        				 email:/*[[#{field.error.invalid.format.email('Email')}]]*/''
+        			},
+        			'whatsapp':{
+        			    required:/*[[#{field.error.required('Whatsapp')}]]*/'',
+        			    digits: /*[[#{field.error.not.numeric('Whatsapp')}]]*/''
+        			}
+                },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+            });
+            //$('#btnCheckIdentitas').remove();
+            $('.ckIsDisable').attr("disabled", true);
+            $('.cDisable').attr("disabled", true);
+            $('.isChecked').attr("checked", true);
+            $('.cDisable2').attr("disabled", true);
+            if ($('#temp_ownerType').val() === "Perorangan") {
+                $('#jp1').prop('checked', true)
+            } else if ($('#temp_ownerType').val() === "Badan Hukum") {
+                $('#jp2').prop('checked', true)
+            }
+            if ($('#temp_mCountry').val() === indVal) {
+                $('.cDisable').attr("disabled", false);
+            }
+            if ($('#temp_postCountry').val() === indVal) {
+                $('.cDisable2').attr("disabled", false);
+            }
+            getCity(temp_mProvince, temp_mCity);
+            getCity2(temp_postProvince, temp_postCity);
+            <!--getRegion(temp_mCity, temp_mRegion);-->
+            <!--getRegion2(temp_postCity, temp_postRegion);-->
+            if ($('#ckIdentitasSama').is(':checked')) {
+                $('.ckIsDisable').attr("disabled", false);
+            }
+            
+            $('textarea').on('keyup keypress', function(e) {
+			  	  var keyCode = e.keyCode || e.which;
+				  if (keyCode === 13) { 
+				    e.preventDefault();
+				    return false;
+				  }
+			});
+			
+			$(document).ajaxSend(function (e, xhr, options) {
+                xhr.setRequestHeader(header, csrf);
+            });
+            var searchByArr = [];
+            var keywordArr = [];
+
+            searchByArr.push('no');
+            keywordArr.push($('#cariNo').val());
+            searchByArr.push('name');
+            keywordArr.push($('#cariNama').val());
+
+            table.data('searchByArr', searchByArr);
+            table.data('keywordArr', keywordArr);
+            table.data('orderBy', 'no');
+
+            dataTable3 = $('#table3').DataTable({
+                ajax: {
+                    data: function (d) {
+                        d.searchByArr = table.data('searchByArr');
+                        d.keywordArr = table.data('keywordArr');
+                        d.orderBy = table.data('orderBy');
+                    },
+                    type: 'GET',
+                    url: /*[[@{/layanan/list-kuasa}]]*/''
+                },
+                language: {
+                    url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+                }
+            });
+	        dataTable3.on('error.dt',function(e,settings,techNote,message){
+		        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	        });
+        });
+        // End Document Ready Funtion
+		
+        $('#ckIdentitasSama').change(function () {
+            if (this.checked) {
+                $('.ckIsDisable').attr("disabled", false);
+            } else {
+            	$('.ckIsDisable').closest('.form-group').removeClass('has-error');
+            	$('.ckIsDisable').next().remove();
+                $('.ckIsDisable').attr("disabled", true);
+                $('.ckIsDisable').val(null);
+                $('.cDisable2').attr("disabled", true);
+                $('.cDisable2').val(null);
+            }
+        });
+//         if ($("input[name='gender']:checked").val();)
+        $('#jp1').change(function () {
+            $('#badanHukum').hide();
+        });
+        $('#jp2').change(function () {
+            $('#badanHukum').show();
+        });
+        $('#entitlement').change(function () {
+            var kodeVal = this.value;
+            if (kodeVal === 'HakPengajuan3') {
+                $('#commAddress').show();
+            } else {
+                $('#commAddress').hide();
+            }
+        });
+        $('#idCountry').change(function () {
+            var kodeVal = this.value;
+            if (kodeVal === 'ID') {
+                $('.cDisable').attr("disabled", false);
+            } else {
+                $('.cDisable').attr("disabled", true);
+                $('.cDisable').val(null);
+            }
+        });
+        $('#idCountry2').change(function () {
+            var kodeVal = this.value;
+            if (kodeVal === 'ID') {
+                $('.cDisable2').attr("disabled", false);
+            } else {
+                $('.cDisable2').attr("disabled", true);
+                $('.cDisable2').val(null);
+            }
+        });
+        $('#btnAddOwnerDetail').click(function () {
+            name = $("#idAddName").val();
+            if (name) {
+                var checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'record';
+                var markup = "<tr><td><span></span></td><td>" + name + "</td></tr>";
+                $("#tblOwnerDetail tbody").append(markup);
+                $("#tblOwnerDetail tbody tr td span").html('');
+                $("#tblOwnerDetail tbody tr td span").append(checkbox);
+                $("#idAddName").val('');
+            }
+        });
+        $('#btnHapusOwnerDetail').click(function () {
+            $("#tblOwnerDetail tbody").find('input[name="record"]').each(function () {
+                if ($(this).is(":checked")) {
+                    $(this).parents("tr").remove();
+                }
+            });
+        });
+        $('#idProvinsi').change(function () {
+            var idProv = this.value;
+            getCity(idProv, null);
+        });
+        $('#idProvinsi2').change(function () {
+            var idProv = this.value;
+            getCity2(idProv, null);
+        });
+
+        function getCity(idProv, value) {
+        	$('.optCity').attr('hidden',true);
+        	$('.optCity').attr("disabled", true);
+        	$('.optCity.'+idProv).attr('hidden',false);
+        	$('.optCity.'+idProv).attr('disabled',false);
+        	$('#idKota').val($('#idProvinsi').val()==idProv ? value : null);
+        }
+
+        function getCity2(idProv, value) {
+        	$('.optPostCity').attr('hidden',true);
+        	$('.optPostCity').attr('disabled',true);
+        	$('.optPostCity.'+idProv).attr('hidden',false);
+        	$('.optPostCity.'+idProv).attr('disabled',false);
+        	$('#idKota2').val($('#idProvinsi2').val()==idProv ? value : null);            
+        }
+        
+        <!--$('#idKota').change(function () {-->
+            <!--var idKota = this.value;-->
+            <!--getRegion(idKota, null);-->
+        <!--});-->
+        <!--$('#idKota2').change(function () {-->
+            <!--var idKota = this.value;-->
+            <!--getRegion2(idKota, null);-->
+        <!--});-->
+
+        <!--function getRegion(idKota, value) {-->
+        	<!--$('.optRegion').attr('hidden',true);-->
+        	<!--$('.optRegion').attr('disabled',true);-->
+        	<!--$('.optRegion.'+idKota).attr('hidden',false);-->
+        	<!--$('.optRegion.'+idKota).attr('disabled',false);-->
+        	<!--$('#idRegion').val($('#idKota').val()==idKota ? value : null);-->
+        <!--}-->
+
+        <!--function getRegion2(idKota, value) {-->
+        	<!--$('.optPostRegion').attr('hidden',true);-->
+        	<!--$('.optPostRegion').attr('disabled',true);-->
+        	<!--$('.optPostRegion.'+idKota).attr('hidden',false);-->
+        	<!--$('.optPostRegion.'+idKota).attr('disabled',false);-->
+        	<!--$('#idRegion').val($('#idKota2').val()==idKota ? value : null);            -->
+        <!--}-->
+
+        $('#btnSaveForm2').on('click', function (e) {
+        	var isValidForm2 = $("#idForm2").valid();
+            if (isValidForm2) {
+            	noGeneral = isEdit ? noGeneral : $("#form8NoPermohonan").text();  
+            	if (noGeneral != '') {
+            	    e.preventDefault();
+	                doSaveForm2();
+            	} else {
+            		$("#general").trigger("click");
+            		swal("Informasi", "Silakan melengkapi data General dan klik Simpan.", "info");
+            	}
+            }
+        });
+
+        function doSaveForm2() {
+        	var txTmGeneral = {
+                applicationNo: noGeneral
+            };
+            var no = $('#noKtp').val();
+            var name = $('#idName').val();
+            var nationality = {
+                id: $('#nationality').val()
+            };
+            var ownerType = $('input[name=ownerType]:checked').val();
+            var mCountry = {
+                id: $('#idCountry').val()
+            };
+            var mProvince = {
+                id: $('#idProvinsi').val()
+            };
+            var mCity = {
+                id: $('#idKota').val()
+            };
+            <!--var mRegion = {-->
+            	<!--id: $('#idRegion').val()-->
+            <!--};-->
+            var address = $('#idAddress').val() ; 
+            var zipCode = $('#zipCode').val();
+            var phone = $('#idPhone').val();
+            var email = $('#idEmail').val();
+            var addressFlag = $("#ckIdentitasSama").is(":checked");
+            var postCountry = {
+                id: $('#idCountry2').val()
+            };
+            var postProvince = {
+                id: $('#idProvinsi2').val()
+            };
+            var postCity = {
+                id: $('#idKota2').val()
+            };
+            <!--var postRegion = {-->
+           		<!--id: $('#idRegion2').val()-->
+        	<!--};-->
+            var postAddress = $('#postAddress').val();
+            var postZipCode = $('#postZipCode').val();
+            var postPhone = $('#postPhone').val();
+            var postEmail = $('#postEmail').val();
+            var txTmOwnerDetails = [];
+
+            var whatsapp = $('#whatsapp').val();
+            var telegram = $('#telegram').val();
+            var instagram = $('#instagram').val();
+            var twitter = $('#twitter').val();
+            var facebook = $('#facebook').val();
+            
+            var legalEntity = $('#legalEntity').val();
+            var entitlement = $('#entitlement').val();
+            var commAddr = $('#commercialAddress').val();
+
+            var reprsNo = $('#noKonsultan').val();
+
+            $("#tblOwnerDetail tbody tr").each(function (i) {
+                var x = $(this);
+                var cells = x.find('td');
+                $(cells).each(function (i) {
+                    var IsNotNull = $(this).text();
+                    if (IsNotNull !== "") {
+                        txTmOwnerDetails.push({
+                            name: $(this).text()
+                        })
+                    }
+                });
+            });
+
+            var formData2 = {
+                id: idPemohon,
+                txTmGeneral: txTmGeneral,
+                name: name,
+                no: no,
+                nationality: nationality,
+                ownerType: ownerType,
+                mCountry: mCountry,
+                mProvince: mProvince,
+                mCity: mCity,
+                <!--mRegion: mRegion,-->
+                address: address,
+                zipCode: zipCode,
+                phone: phone,
+                email: email,
+                addressFlag: addressFlag,
+                postCountry: postCountry,
+                postProvince: postProvince,
+                postCity: postCity,
+                <!--postRegion: postRegion,-->
+                postAddress: postAddress,
+                postZipCode: postZipCode,
+                postPhone: postPhone,
+                postEmail: postEmail,
+                txTmOwnerDetails: txTmOwnerDetails,
+                noReps: reprsNo,
+                whatsapp: whatsapp,
+                telegram: telegram,
+                instagram: instagram,
+                twitter: twitter,
+                facebook: facebook,
+                entitlement: entitlement,
+                commercialAddress: commAddr,
+                legalEntity: legalEntity
+            };
+
+            $.ajax({
+                type: 'POST',
+                contentType: "application/json",
+                url: /*[[@{/layanan/save-madrid-oo-form-pemohon}]]*/'',
+                data: JSON.stringify(formData2),
+                dataType: 'json',
+	            beforeSend:function(){
+		            showLoading();
+	            },
+	            complete:function(){
+		            hideLoading();
+	            },
+                success: function (data) {
+                	console.log("Sukses Save Form Permohonan");
+                    if (isEdit) {
+                        window.location.replace(redirect);
+                    } else {
+                        <!--$('#pemohon').addClass('yet');-->
+                        <!-- Start set value form 8 -->
+                        var nama = $('#idName').val();
+                        var negara = $('#idCountry option:selected').text();
+                        var alamat = $('#idAddress').val();
+                        var telp = $('#idPhone').val();
+                        var email = $('#idEmail').val();
+                        var whatsapp = $('#whatsapp').val();
+                        var tableRowData = "<tr><td>" + nama + "</td><td>" + negara + "</td><td>" + alamat + "</td><td>" + telp + "</td><td>" + email + "</td></tr>";
+						
+                        $("#form8TablePemohon tbody").empty()
+                        $("#form8TablePemohon tbody").append(tableRowData);
+
+                        $('#tblOwnerDetail > tbody  > tr').each(function () {
+                            nama = $.trim($(this).find('td:eq(1)').html());
+                            tableRowData = "<tr><td>" + nama + "</td><td></td><td></td><td></td><td></td><td></td></tr>";
+                            $("#form8TablePemohon tbody").append(tableRowData);
+                        });
+                        <!-- end set value form 8 -->
+                        if ($("#pemohon").attr("class")=="current") {
+                        	$("#prior").trigger("click");
+                        }
+                    }
+                },
+	            error: function (xhr, status) {
+		            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	            }
+            });
+        }
+        $('#cariBtn').click(function () {
+            var searchByArr = [];
+            var keywordArr = [];
+
+            searchByArr.push('no');
+            keywordArr.push($('#cariNo').val());
+            searchByArr.push('name');
+            keywordArr.push($('#cariNama').val());
+
+            table.data('searchByArr', searchByArr);
+            table.data('keywordArr', keywordArr);
+            dataTable3.ajax.reload();
+        });
+
+        $('body').on('click', '.btn-kuasa', function() {
+			var param1=$(this).attr('idkuasa');
+			$.ajax({
+				beforeSend: function () {
+					showLoading();
+				},
+				complete:function(){
+					hideLoading();
+				},
+				url: /*[[@{/layanan/kuasa}]]*/'',
+				datatype: 'jsonp',
+				data: {
+					target: param1
+				},
+				success: function (result) {
+					var data = result;
+                    $('#namaKonsultan').val(data.name);
+                    $('#reprsId').val(data.id);
+                    $('#noKonsultan').val(data.no);
+                    $('#namaKantor').val(data.office);
+                    if (data.mCountry != null) {
+                        $('#negara').val(data.mCountry.name);
+                    }
+                    if (data.mProvince != null) {
+                        $('#provinsi').val(data.mProvince.name);
+                    }
+                    if (data.mCity != null) {
+                        $('#kabKota').val(data.mCity.name);
+                    }
+                    $('#alamat').val(data.address);
+                    $('#kodePos').val(data.zipCode);
+                    $('#noTelp').val(data.phone);
+                    $('#mail').val(data.email);
+				},
+				error: function (xhr, status) {
+					swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+				}
+			});
+		});
+
+        $('#btnSaveForm3').click(function () {        	
+       		noGeneral = isEdit ? noGeneral : $("#form8NoPermohonan").text();
+       		if (noGeneral != '') {
+                id = $("#txTmReprsId").val();
+                reprsId = $("#reprsId").val();
+                $.ajax({
+                    data: {
+                        reprsId: $("#reprsId").val(),
+                        txTmReprsId: $("#txTmReprsId").val(),
+                        appNo: noGeneral
+                    },
+                    type: 'POST',
+                    url: /*[[@{/layanan/save-madrid-oo-form-3}]]*/'',
+	                beforeSend:function(){
+		                showLoading();
+	                },
+	                complete:function(){
+		                hideLoading();
+	                },
+                    success: function (data) {
+                        console.log("Sukses Save Form Kuasa");
+                        if (isEdit) {
+                            window.location.replace(redirect);
+                        } else {
+                            <!-- Start set value form 8 -->
+                            var no = $('#noKonsultan').val();
+                            var nama = $('#namaKonsultan').val();
+                            var alamat = $('#alamat').val();
+                            var telp = $('#noTelp').val();
+                            var email = $('#mail').val();
+                            var tableRowData = "<tr><td>" + no + "</td><td>" + nama + "</td><td>" + alamat + "</td><td>" + telp + "</td><td>" + email + "</td></tr>";
+                            $("#form8TableKuasa tbody").empty()
+                            $("#form8TableKuasa tbody").append(tableRowData);
+                            <!-- end set value form 8 -->
+                            if ($("#kuasa").attr("class")=="current") {
+                            	$("#prior").trigger("click");
+                            }
+                        }
+                    },
+	                error: function (xhr, status) {
+		                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	                }
+                });
+           	} else {
+           		$("#general").trigger("click");
+           		swal("Informasi", "Silakan melengkapi data General dan klik Simpan.", "info");
+           	}
+        });
+
+        $('#btnHapus3').click(function () {
+        	$('.form-control.kuasa').val(null); //hanya dihapus di UI
+        });
+    </script>
+</div>
+</html>

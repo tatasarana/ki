@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="form-3" th:remove="tag">
+    <script type="text/javascript" language="javascript" th:inline="javascript">
+        /*---------------FORM 3---------------*/
+        var csrf = /*[[${_csrf.token}]]*/'';
+        var redirect = /*[[@{/layanan/pratinjau-permohonan-online(no=${eFilingNo})}]]*/'';
+        var isNew = /*[[${isNew}]]*/'';
+        var isEdit = /*[[${isEdit}]]*/'';
+        var table = $('#table3');
+        var dataTable3 = null;
+        var noGeneral = /*[[${noGeneral}]]*/'';
+        var header = "X-CSRF-TOKEN";
+        $(document).ready(function () {
+
+            $(document).ajaxSend(function (e, xhr, options) {
+                xhr.setRequestHeader(header, csrf);
+            });
+            var searchByArr = [];
+            var keywordArr = [];
+
+            searchByArr.push('no');
+            keywordArr.push($('#cariNo').val());
+            searchByArr.push('name');
+            keywordArr.push($('#cariNama').val());
+
+            table.data('searchByArr', searchByArr);
+            table.data('keywordArr', keywordArr);
+            table.data('orderBy', 'no');
+
+            dataTable3 = $('#table3').DataTable({
+                ajax: {
+                    data: function (d) {
+                        d.searchByArr = table.data('searchByArr');
+                        d.keywordArr = table.data('keywordArr');
+                        d.orderBy = table.data('orderBy');
+                    },
+                    type: 'GET',
+                    url: /*[[@{/layanan/list-kuasa}]]*/''
+                },
+                language: {
+                    url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+                }
+            });
+	        dataTable3.on('error.dt',function(e,settings,techNote,message){
+		        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	        });
+        });
+        
+        $('#cariBtn').click(function () {
+            var searchByArr = [];
+            var keywordArr = [];
+
+            searchByArr.push('no');
+            keywordArr.push($('#cariNo').val());
+            searchByArr.push('name');
+            keywordArr.push($('#cariNama').val());
+
+            table.data('searchByArr', searchByArr);
+            table.data('keywordArr', keywordArr);
+            dataTable3.ajax.reload();
+        });
+
+        $('body').on('click', '.btn-kuasa', function() {
+			var param1=$(this).attr('idkuasa');
+			$.ajax({
+				beforeSend: function () {
+					showLoading();
+				},
+				complete:function(){
+					hideLoading();
+				},
+				url: /*[[@{/layanan/kuasa}]]*/'',
+				datatype: 'jsonp',
+				data: {
+					target: param1
+				},
+				success: function (result) {
+					var data = result;
+                    $('#namaKonsultan').val(data.name);
+                    $('#reprsId').val(data.id);
+                    $('#noKonsultan').val(data.no);
+                    $('#namaKantor').val(data.office);
+                    if (data.mCountry != null) {
+                        $('#negara').val(data.mCountry.name);
+                    }
+                    if (data.mProvince != null) {
+                        $('#provinsi').val(data.mProvince.name);
+                    }
+                    if (data.mCity != null) {
+                        $('#kabKota').val(data.mCity.name);
+                    }
+                    $('#alamat').val(data.address);
+                    $('#kodePos').val(data.zipCode);
+                    $('#noTelp').val(data.phone);
+                    $('#mail').val(data.email);
+				},
+				error: function (xhr, status) {
+					swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+				}
+			});
+		});
+
+        $('#btnSaveForm3').click(function () {        	
+       		noGeneral = isEdit ? noGeneral : $("#form8NoPermohonan").text();
+       		if (noGeneral != '') {
+                id = $("#txTmReprsId").val();
+                reprsId = $("#reprsId").val();
+                $.ajax({
+                    data: {
+                        reprsId: $("#reprsId").val(),
+                        txTmReprsId: $("#txTmReprsId").val(),
+                        appNo: noGeneral
+                    },
+                    type: 'POST',
+                    url: /*[[@{/layanan/save-online-form-3}]]*/'',
+	                beforeSend:function(){
+		                showLoading();
+	                },
+	                complete:function(){
+		                hideLoading();
+	                },
+                    success: function (data) {
+                        console.log("Sukses Save Form Kuasa");
+                        if (isEdit) {
+                            window.location.replace(redirect);
+                        } else {
+                            <!-- Start set value form 8 -->
+                            var no = $('#noKonsultan').val();
+                            var nama = $('#namaKonsultan').val();
+                            var alamat = $('#alamat').val();
+                            var telp = $('#noTelp').val();
+                            var email = $('#mail').val();
+                            var tableRowData = "<tr><td>" + no + "</td><td>" + nama + "</td><td>" + alamat + "</td><td>" + telp + "</td><td>" + email + "</td></tr>";
+                            $("#form8TableKuasa tbody").empty()
+                            $("#form8TableKuasa tbody").append(tableRowData);
+                            <!-- end set value form 8 -->
+                            if ($("#kuasa").attr("class")=="current") {
+                            	$("#prior").trigger("click");
+                            }
+                        }
+                    },
+	                error: function (xhr, status) {
+		                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	                }
+                });
+           	} else {
+           		$("#general").trigger("click");
+           		swal("Informasi", "Silakan melengkapi data General dan klik Simpan.", "info");
+           	}
+        });
+
+        $('#btnHapus3').click(function () {
+        	$('.form-control.kuasa').val(null); //hanya dihapus di UI
+        });
+    </script>
+</div>
+</html>

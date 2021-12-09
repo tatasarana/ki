@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="class_continuation" pageWidth="523" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="523" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="12e33e45-ea8b-4bfb-aa07-255962c97973">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="listClass" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("1")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT *
+FROM(
+SELECT ROWNUM AS R, A.*
+FROM(
+SELECT B.CLASS_NO,
+TO_CLOB(SUBSTR(RTRIM(XMLAGG(XMLELEMENT(E,C.CLASS_DESC_EN,';').EXTRACT('//text()') ORDER BY B.CLASS_NO,C.CLASS_DESC_EN).GetClobVal(),','),0,4000)) AS CLASS_DESC_EN1,
+TO_CLOB(SUBSTR(RTRIM(XMLAGG(XMLELEMENT(E,C.CLASS_DESC_EN,';').EXTRACT('//text()') ORDER BY B.CLASS_NO,C.CLASS_DESC_EN).GetClobVal(),','),4001,8000)) AS CLASS_DESC_EN2,
+TO_CLOB(SUBSTR(RTRIM(XMLAGG(XMLELEMENT(E,C.CLASS_DESC_EN,';').EXTRACT('//text()') ORDER BY B.CLASS_NO,C.CLASS_DESC_EN).GetClobVal(),','),8001,12000)) AS CLASS_DESC_EN3,
+TO_CLOB(SUBSTR(RTRIM(XMLAGG(XMLELEMENT(E,C.CLASS_DESC_EN,';').EXTRACT('//text()') ORDER BY B.CLASS_NO,C.CLASS_DESC_EN).GetClobVal(),','),12001,16000)) AS CLASS_DESC_EN4,
+TO_CLOB(SUBSTR(RTRIM(XMLAGG(XMLELEMENT(E,C.CLASS_DESC_EN,';').EXTRACT('//text()') ORDER BY B.CLASS_NO,C.CLASS_DESC_EN).GetClobVal(),','),16001,20000)) AS CLASS_DESC_EN5
+FROM TX_TM_CLASS A
+INNER JOIN TX_TM_GENERAL GEN ON GEN.APPLICATION_ID=A.APPLICATION_ID
+LEFT JOIN M_CLASS B ON A.CLASS_ID = B.CLASS_ID
+LEFT JOIN M_CLASS_DETAIL C ON A.CLASS_DETAIL_ID=C.CLASS_DETAIL_ID
+WHERE A.APPLICATION_ID = $P{applicationId}
+GROUP BY B.CLASS_NO) A
+)
+WHERE R>$P{listClass}]]>
+	</queryString>
+	<field name="R" class="java.math.BigDecimal"/>
+	<field name="CLASS_NO" class="java.math.BigDecimal"/>
+	<field name="CLASS_DESC_EN1" class="java.lang.String"/>
+	<field name="CLASS_DESC_EN2" class="java.lang.String"/>
+	<field name="CLASS_DESC_EN3" class="java.lang.String"/>
+	<field name="CLASS_DESC_EN4" class="java.lang.String"/>
+	<field name="CLASS_DESC_EN5" class="java.lang.String"/>
+	<columnHeader>
+		<band height="45">
+			<rectangle>
+				<reportElement x="18" y="0" width="20" height="20" backcolor="#000000" uuid="588367b7-76e6-4616-98ce-6d5398c3cb2c"/>
+			</rectangle>
+			<textField>
+				<reportElement x="0" y="25" width="70" height="20" uuid="9b1fa100-4a8c-47f1-bf4f-f69355219279"/>
+				<textElement textAlignment="Center">
+					<font fontName="Courier New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Class"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="70" y="25" width="453" height="20" uuid="5a238ea6-6b8d-44a4-a76b-8a15ac6be49f"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Center">
+					<font fontName="Courier New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Good and Services"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="18" y="0" width="20" height="19" forecolor="#FFFFFF" uuid="3c3317ec-a8ce-4f03-bf37-06f82aa41a62"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[10]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="43" y="0" width="307" height="20" uuid="e107301e-fd99-44ca-a4c6-11bedd97a3a4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GOODS AND SERVICES]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="70" height="20" uuid="04c4ed57-d3f1-4818-bb16-676142b6c354"/>
+				<textElement textAlignment="Center">
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLASS_NO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="70" y="0" width="453" height="20" uuid="13fc7098-5f43-48a6-88c8-df3107d5d106"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLASS_DESC_EN1}+($F{CLASS_DESC_EN2}==null?"":$F{CLASS_DESC_EN2})+($F{CLASS_DESC_EN3}==null?"":$F{CLASS_DESC_EN3})+($F{CLASS_DESC_EN4}==null?"":$F{CLASS_DESC_EN4})+($F{CLASS_DESC_EN5}==null?"":$F{CLASS_DESC_EN5})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

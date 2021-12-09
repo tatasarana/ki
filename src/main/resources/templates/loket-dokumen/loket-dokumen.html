@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+	<p th:replace="fragment/header :: navbar"/>
+	<div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+	<div class="my-wrapper" id="my-wrapper">
+		<div class="my-wrapper--inner">
+			<div class="wrapper-content" id="dokumen-baru">
+				<div class="content--top border--bottom padding-content--left-right">
+					<div class="row">
+						<div class="col-md-12">
+							<h3 class="content--title text--bold">
+								<i class="fas fa-file-alt"></i> Loket Penerimaan Dokumen
+							</h3>
+							<small class="sub-header">Loket Penerimaan / Dokumen Baru</small>
+						</div>
+					</div>
+				</div>
+				<div class="content--center padding-content--left-right">
+					<div class="wrapper--bg">
+						<div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+							<button data-dismiss="alert" class="close close-sm" type="button">
+								<i class="icon-remove"></i>
+							</button>
+							<p>[[${errorMessage}]]</p>
+						</div>
+						<div class="jumbotron filterSearch">
+							<form>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Tanggal Pengajuan</label>
+											<input type="text" id="applicationDate" class="form-control datepicker" placeholder="Tanggal Pengajuan"/>
+										</div>
+										<div class="form-group">
+											<label>Asal Permohonan</label>
+											<select id="fileSequence" class="form-control">
+												<option value="">Semua</option>
+												<option th:each="mFileSequence :${fileSequenceList}" th:value="${mFileSequence.id}" th:text="${mFileSequence.desc} "/>
+											</select>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Tipe Permohonan</label>
+											<select id="mfileType" class="form-control">
+												<option value="">Semua</option>
+												<option th:each="mFileType :${fileTypeList}"
+														th:value="${mFileType.id}"
+														th:text="${mFileType.desc}"/>
+											</select>
+										</div>
+										<div class="form-group">
+											<label>Kode Billing</label>
+											<input type="text" id="billingCode" class="form-control" placeholder="Kode Billing"/>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<button type="submit" id="search" class="btn btn-primary"><i class="fas fa-search"></i>
+											Filter
+										</button>
+										<button type="submit" class="btn btn-info"
+												onClick="window.location.reload()"
+												style="margin-left:15px;">
+											<i class="fas fa-sync-alt"></i>
+											Refresh
+										</button>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="table-container">
+					        <table id="table" class="table table-striped table-bordered table-responsive">
+						        <thead>
+							        <tr>
+								        <th>No.</th>
+								        <th>Nomor Permohonan</th>
+								        <th>Tanggal Pengajuan</th>
+								        <th>Asal Permohonan</th>
+								        <th>Tipe Permohonan</th>
+								        <th>Kode Bank</th>
+										<th>Nomor Reception</th>
+								        <th>Tanggal Pembayaran</th>
+								        <th>Jml Pembayaran</th>
+								        <th class="not-export-col"></th>
+							        </tr>
+						        </thead>
+                                <tfoot>
+                                <tr>
+                                    <th colspan="9" style="text-align:right">Total :</th>
+                                    <th></th>
+                                </tr>
+                                </tfoot>
+					        </table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<div th:replace="fragment/loket-dokumen/js-list-dokumen :: list-dokumen"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	$(document).ready(function(){
+		
+	
+		var csrf=/*[[${_csrf.token}]]*/'';
+		var table=$('#table');
+		var searchByArr=[];
+		var keywordArr=[];
+
+		searchByArr.push('applicationDate');
+		keywordArr.push($('#applicationDate').val());
+		searchByArr.push('mFileSequence.id');
+		keywordArr.push($('#fileSequence').val());
+		searchByArr.push('mFileType.id');
+		keywordArr.push($('#mfileType').val());
+		searchByArr.push('billingCode');
+		keywordArr.push($('#billingCode').val());
+
+		table.data('searchByArr', searchByArr);
+		table.data('keywordArr', keywordArr);
+		table.data('orderBy', 'createdDate');
+		table.data('orderType', 'DESC');
+
+		$('.datepicker').datepicker({
+			format: 'dd/mm/yyyy',
+			autoclose: true,
+			todayBtn: 'linked',
+			todayHighlight: true
+		});
+
+		/* Load DataTable */
+		var dataTable=table.DataTable({
+			dom: 'lBfrtip',
+			buttons: [
+		        { 
+		            extend: 'excel',
+		            title:'Loket Dokumen',
+		            exportOptions: {
+		            	columns: ':visible:not(.not-export-col)'
+		            }
+		        }
+		    ],
+			ajax:{
+				data:function(d){
+					d.searchByArr=table.data('searchByArr');
+					d.keywordArr=table.data('keywordArr');
+					d.orderBy=table.data('orderBy');
+					d.orderType=table.data('orderType');
+					d._csrf=csrf;
+				},
+				type:'POST',
+				url:/*[[@{/layanan/cari-dokumen-baru}]]*/''
+			},
+			columnDefs: [
+				    { targets: [0], orderable: false}
+			    ],
+			ordering: true,
+			order:[[2,'desc']],
+			initComplete:function(settings,json){
+				var url=/*[[@{/layanan/tambah-dokumen-baru}]]*/'';
+
+				$('.dt-buttons').prepend('<a class="btn btn-info" href="' + url + '"><i class="fas fa-plus"></i> Tambah</a> ');
+				$('.dt-buttons').addClass("dataTables_filter margin-bottom-8px").removeClass("dt-buttons");
+				$('.buttons-excel').empty();
+				$('.buttons-excel').append('<i class="fas fa-file-excel"></i> Export to Excel');
+				$('.buttons-excel').addClass('btn btn-success').removeClass('dt-button buttons-excel buttons-html5');
+			},
+			language:{
+				url:/*[[@{/js/i18n/datatables.in.json}]]*/''
+			},
+			lengthMenu:[[10,30,90],[10,30,90]],
+			pageLength:10,
+			processing:true,
+			searching:false,
+			serverSide:true,
+            "footerCallback" : function ( row, data, start, end, display ) {
+                var api = this.api(), data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\Rp.,]/g, '')*1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+
+                // Total over all pages
+                /*total = api
+                    .column( 8 )
+                    .data()
+                    .reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0 );*/
+
+                // Total over this page
+                pageTotal = api
+                    .column( 8, { page: 'current'} )
+                    .data()
+                    .reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0 );
+
+                // Update footer
+                $( api.column( 8 ).footer() ).html(
+                    'Rp.'+pageTotal.toLocaleString() +''
+                );                
+                
+            }
+		});
+		dataTable.on('error.dt',function(e,settings,techNote,message){
+			swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+		});
+
+		/* Search */
+		$("#search").click(function(event){
+			event.preventDefault();
+			var searchByArr=[];
+			var keywordArr=[];
+
+			searchByArr.push('applicationDate');
+			keywordArr.push($('#applicationDate').val());
+			searchByArr.push('mFileSequence.id');
+			keywordArr.push($('#fileSequence').val());
+			searchByArr.push('mFileType.id');
+			keywordArr.push($('#mfileType').val());
+			searchByArr.push('billingCode');
+			keywordArr.push($('#billingCode').val());
+
+			table.data('searchByArr', searchByArr);
+			table.data('keywordArr', keywordArr);
+			dataTable.ajax.reload();
+		});
+		
+	});
+		
+		/*]]>*/
+</script>
+
+</body>
+</html>

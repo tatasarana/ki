@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="continuation" pageWidth="523" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="523" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="92642826-053e-4bc8-8b26-6186981b10b2">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="classContinues" class="java.lang.Integer"/>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="listClass" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("1")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="listContract" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("1")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="contractContinues" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ownerCount" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="regCount" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="priorList" class="java.lang.Integer"/>
+	<parameter name="feeContinues" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT APPLICATION_ID,APPLICATION_NO
+FROM TX_TM_GENERAL
+WHERE APPLICATION_ID = $P{applicationId}]]>
+	</queryString>
+	<field name="APPLICATION_ID" class="java.lang.String"/>
+	<field name="APPLICATION_NO" class="java.lang.String"/>
+	<columnHeader>
+		<band height="52">
+			<textField>
+				<reportElement x="1" y="20" width="239" height="25" uuid="26975533-68a5-457e-a096-626930283284"/>
+				<box leftPadding="5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["OFFICE'S REFERENCE : "+$F{APPLICATION_NO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="1" y="0" width="523" height="20" uuid="b4086ad6-9e40-4e60-94da-1436589cc3f9"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CONTINUATION SHEET "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="398" y="20" width="86" height="25" uuid="a42b571a-ee2c-446e-bd72-00666e874e7a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="485" y="20" width="39" height="25" uuid="3b27a141-906f-4644-bf46-dc4cc0d41556"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="44" width="522" height="1" uuid="bac71282-127c-4f48-b977-c428e3f52075"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{ownerCount}.intValue() > 1]]></printWhenExpression>
+			<subreport>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="524" height="20" uuid="74043741-d7ca-47db-88e3-4301910df0a9">
+					<printWhenExpression><![CDATA[$P{ownerCount}.intValue() > 1]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "owner_continuation.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="20" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{regCount}.intValue() > 1]]></printWhenExpression>
+			<subreport>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="524" height="20" uuid="74043741-d7ca-47db-88e3-4301910df0a9">
+					<printWhenExpression><![CDATA[$P{regCount}.intValue() > 1]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "basic_continuation.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="20" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{priorList}.intValue() > 1]]></printWhenExpression>
+			<subreport>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="524" height="20" uuid="5595f640-c9ff-4c98-8398-4568186ded01">
+					<printWhenExpression><![CDATA[$P{priorList}.intValue() > 1]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "prior_continuation.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="20" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{contractContinues}!=null && $P{contractContinues}.intValue() == 1]]></printWhenExpression>
+			<subreport>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="523" height="20" isPrintWhenDetailOverflows="true" uuid="d7a77d56-2ebf-4e0d-9b4a-7f89ffbfcf7e">
+					<printWhenExpression><![CDATA[$P{contractContinues}!=null && $P{contractContinues}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="listContract">
+					<subreportParameterExpression><![CDATA[$P{listContract}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "limit_continuation.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="28">
+			<subreport>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="523" height="28" uuid="bd3d8cf3-ffd2-49b6-9675-0f58318e9dbf">
+					<printWhenExpression><![CDATA[$P{feeContinues} != null && $P{feeContinues}.intValue()>0]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "fee_continuation.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="20" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{listClass}.intValue() > 1]]></printWhenExpression>
+			<subreport>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="524" height="20" uuid="74043741-d7ca-47db-88e3-4301910df0a9">
+					<printWhenExpression><![CDATA[$P{listClass}.intValue() > 1]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "class_continuation.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

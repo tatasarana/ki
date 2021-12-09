@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="form-7" th:remove="tag" th:if="${form=='dokumen'} or ${isEdit == false}">
+    <script type="text/javascript" language="javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var csrf = /*[[${_csrf.token}]]*/'';
+        var redirect = /*[[@{/layanan/pratinjau-permohonan-online(no=${eFilingNo})}]]*/'';
+        var noGeneral = /*[[${noGeneral}]]*/'';
+        var isNew = /*[[${isNew}]]*/'';
+        var isEdit = /*[[${isEdit}]]*/'';
+        var docUploadDate = /*[[${docUploadDate}]]*/'';
+        var tableDoc = $('#tableDoc');
+        var files; // files lampiran
+
+        $(document).ready(function () {
+            var header = "X-CSRF-TOKEN";
+            $(document).ajaxSend(function (e, xhr, options) {
+                xhr.setRequestHeader(header, csrf);
+            });
+            $('#docFile').change(function (event) {
+                files = event.target.files;
+            });
+
+            $("#formAddDoc").validate({
+                messages: {
+                    "docType": {
+                        required: /*[[#{field.error.required('Jenis Dokumen')}]]*/''
+                    },
+                    "docFile": {
+                        required: /*[[#{field.error.required('Upload File Dokumen')}]]*/''
+                    }
+                },
+                highlight: function (element) {
+                    $(element).closest('.form-group').addClass('has-error');
+                },
+                unhighlight: function (element) {
+                    $(element).closest('.form-group').removeClass('has-error');
+                },
+                errorElement: 'span',
+                errorClass: 'help-block',
+                errorPlacement: function (error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    } else {
+                        error.insertAfter(element);
+                    }
+                }
+            });
+
+            noGeneral = isEdit ? noGeneral : $("#form8NoPermohonan").text();
+            var url = /*[[@{/layanan/download-dokumen-online?id=}]]*/'';
+            tableDoc = $('#tableDoc').DataTable({
+                'createdRow': function( row, data, dataIndex ) {
+                    $(row).attr('id', 'doc-'+data[0]);
+                },
+                'columnDefs': [
+                    {
+                        'targets': 0,
+                        'visible': false
+                    },
+                    {
+                        'targets': 8,
+                        'visible': false
+                    },
+                    {
+                        'targets': -2,
+                        'searchable': false,
+                        'orderable': false,
+                        'render': function ( data, type, full, meta ) {
+                            return '<div class="btn-actions">' +
+                                '<a href="' + url + full[8] +'" class="btn btn-primary btn-xs" target="_blank">Download</a> ' +
+                                '<br/>' +
+                                '<button type="button" class="btn btn-danger btn-xs" onclick="deleteDoc(\'' + full[8] + '\')">Hapus</button>'+
+                                '</div>';
+                        }
+                    }
+                ],
+                ajax: {
+                    type: 'POST',
+                    data: function (d) {
+                        d.appNo = noGeneral == null ? $('#appNoGeneral').val() : noGeneral;
+                    },
+                    url: /*[[@{/layanan/list-dokumen-online}]]*/'',
+                    complete: function() {
+                        hideLoading();
+                    }
+
+                },
+                language: {
+                    url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+                }
+            });
+            tableDoc.on('error.dt',function(e,settings,techNote,message){
+                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+            });
+
+            $('#btnAddDoc').click(function () {
+                $('#docType').val('');
+                $('#docDesc').val('');
+                $('#docFile').val('');
+
+                $('.required-input').closest('.form-group').removeClass('has-error');
+                $('.required-input').next().remove();
+
+                $('#modalDoc').modal('show');
+            });
+
+            $('#docType').on("change", function(e) {
+                if($('#docType').val() == 'TTDP' || $('#docType').val() == 'TTDK') {
+                    $('#docFile').attr("accept","image/jpeg,image/jpg");
+                } else {
+                    $('#docFile').attr("accept","application/pdf");
+                }
+            });
+
+            $('#docFile').click(function (e) {
+                if($('#docType').val() == '') {
+                    swal("Informasi", "Silahkan memilih Jenis Dokumen terlebih dahulu", "info");
+                    e.preventDefault();
+                }
+
+            });
+
+            var docFileName;
+            var docFileType;
+            var docFileSize;
+            var docFileSrc;
+
+            $('#docFile').change(function () {
+                var error = '';
+                docFileName = this.files[0].name;
+                docFileType = this.files[0].type;
+                docFileSize = this.files[0].size;
+
+                $('#docFile').closest('.form-group').removeClass('has-error');
+                $('#docFile').next().remove();
+
+                if (docFileSize > 15728640) {
+                    error = 'Ukuran File Diatas 15 MB!';
+                    this.value = "";
+                }
+                if($('#docType').val() == 'TTDP' || $('#docType').val() == 'TTDK') {
+                    if(docFileType != 'image/jpeg') {
+                        error = 'File yang dipilih bukan jpg/jpeg!';
+                        this.value = "";
+                    }
+                } else if(docFileType != 'application/pdf') {
+                    error = 'File yang dipilih bukan pdf!';
+                    this.value = "";
+                }
+                if(error.length > 0){
+                    $('#docFile').closest('.form-group').addClass('has-error');
+                    $('#docFile').after('<span for="docFile" class="help-block">' + error + '</span>');
+                }
+                if (this.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        docFileSrc = e.target.result;
+                    }
+
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            $('#btnSaveDoc').click(function() {
+                var isValidForm = $("#formAddDoc").valid();
+
+                noGeneral = isEdit ? noGeneral : $("#form8NoPermohonan").text();
+                if (noGeneral != '') {
+                    if (isValidForm) {
+                        var formData = new FormData;
+                        var docList = [];
+                        var item = {}
+                        item["docId"] = $('#docType option:selected').val();
+                        item["docDate"] = docUploadDate;
+                        item["docType"] = $('#docType option:selected').text();
+                        item["docFileName"] = docFileName;
+                        item["docDesc"] = $('#docDesc').val();
+                        item["docFileSize"] = docFileSize;
+                        docList.push(item);
+                        formData.append('file-' + $('#docType option:selected').val(), docFileSrc);
+
+                        var postId = /*[[${noGeneral}]]*/ '';
+                        formData.append('postId', postId);
+                        formData.append('docList', JSON.stringify(docList));
+
+                        if (docFileName.indexOf(".pdf") != -1) {
+                            //validasi pdf is secure?
+                            $.ajax({
+                                type: 'POST',
+                                url: /*[[@{/layanan/validasi-dokumen-pasca-online"}]]*/ '',
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                cache: false,
+                                beforeSend: function() {
+                                    showLoading();
+                                },
+                                complete: function() {
+                                    hideLoading();
+                                },
+                                success: function(data) {
+                                    saveToServer();
+                                },
+                                error: function(xhr, status) {
+                                    swal("Error", "File PDF yang Anda upload terkunci oleh sandi pribadi, silakan hilangkan sandi atau upload file PDF lain.", "error");
+                                    return;
+                                }
+                            });
+                        } else {
+                            saveToServer();
+                        }
+
+                        async function saveToServer() {
+                            var dt = docUploadDate;
+                            var docId = $('#docType option:selected').val();
+                            var docType = $('#docType option:selected').text();
+                            var docDesc = $('#docDesc').val();
+                            if ($("#doc-" + docId).length == 0) {
+                                $('#modalDoc').modal('hide');
+                                var formData = new FormData;
+                                var docList = [];
+                                var item = {}
+                                item["docId"] = docId;
+                                item["docDate"] = dt;
+                                item["docType"] = docType;
+                                item["docFileName"] = docFileName;
+                                item["docDesc"] = docDesc;
+                                item["docFileSize"] = docFileSize;
+                                docList.push(item);
+                                formData.append('file-' + docId, docFileSrc);
+                                if (files) {
+                                    var values = await convertToJPGBlob(files[0])
+                                    console.log(values);
+                                    formData.append('docFiles', values);
+                                }
+                                formData.append('appNo', noGeneral);
+                                formData.append('docList', JSON.stringify(docList));
+
+                                $.ajax({
+                                    type: 'POST',
+                                    url: /*[[@{/layanan/save-online-form-7"}]]*/ '',
+                                    data: formData,
+                                    processData: false,
+                                    contentType: false,
+                                    cache: false,
+                                    beforeSend: function() {
+                                        showLoading();
+                                    },
+                                    complete: function() {
+                                        hideLoading();
+                                    },
+                                    success: function(data) {
+                                        try {
+                                            var result = JSON.parse(data);
+                                            console.log("Sukses Save Form Dokumen");
+                                            if (result.key === "fileTypeError") {
+                                                if (result.value === "notMatchFileTypeImage") {
+                                                    swal("Error", "Untuk file Jenis Dokumen Tanda Tangan harus JPG/JPEG.", "error");
+                                                    $("#dokumen").trigger("click");
+                                                } else if (result.value === "notMatchFileTypePdf") {
+                                                    swal("Error", "Untuk file Jenis Dokumen selain Tanda Tangan harus PDF.", "error");
+                                                    $('#dokumen').trigger("click");
+                                                }
+                                            } else {
+                                                tableDoc.ajax.reload();
+                                            }
+                                        } catch (exception) {
+                                            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                                            hideLoading();
+                                        }
+                                    },
+                                    error: function(xhr, status) {
+                                        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                                    }
+                                });
+                            } else {
+                                swal("Informasi", "Data Jenis Dokumen '" + docType + "' Sudah Ada", "info");
+                            }
+                        }
+                    }
+                } else {
+                    $('#modalDoc').modal('hide');
+                    $("#general").trigger("click");
+                    swal("Informasi", "Silakan melengkapi data General dan klik Simpan.", "info");
+                }
+            });
+
+            $('#btnSaveForm7').click(function () {
+                var formData = new FormData();
+                var docList = [];
+
+                noGeneral = isEdit ? noGeneral : $("#form8NoPermohonan").text();
+                if (noGeneral != '') {
+                    <!--if ($('#tableTxTmClass').DataTable().page.info().recordsDisplay == 0) {-->
+                        <!--swal("Error", "Silakan melengkapi data Kelas, kemudian klik Simpan dan Lanjutkan.", "error");-->
+                        <!--$("#kelas").trigger("click");-->
+                    <!--} else -->
+                    if ($("#doc-"+'TTDP').length == 0) {
+                        swal("Informasi", "Wajib Melampirkan Dokumen Tanda Tangan Pemohon.", "info");
+                    } else {
+                        $.each(tableDoc.rows().nodes(), function (index, value) {
+                            var row = tableDoc.row( index );
+                            var data = row.data();
+                            var item = {}
+
+                            item ["docId"] = data[0];
+                            item ["docDate"] = data[2];
+                            item ["docType"] = data[3];
+                            item ["docFileName"] = data[4];
+                            item ["docDesc"] = data[5];
+                            item ["docFileSize"] = data[6];
+
+                            docList.push(item);
+                            formData.append('file-'+data[0], data[7]);
+                        });
+
+                        formData.append('appNo', noGeneral);
+                        formData.append('docList', JSON.stringify(docList));
+
+                        $.ajax({
+                            type: 'POST',
+                            url: /*[[@{/layanan/simpan-lanjutkan-online-form-7"}]]*/'',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            beforeSend: function () {
+                                showLoading();
+                            },
+                            complete:function(){
+                                hideLoading();
+                            },
+                            success: function (data) {
+                                var result = JSON.parse(data);
+                                console.log("Sukses Save Form Dokumen");
+                                if (result.key === "Error") {
+                                    <!--if (result.value === "kelasError") {-->
+                                        <!--swal("Error", "Silakan melengkapi data Kelas, kemudian klik Simpan dan Lanjutkan.", "error");-->
+                                        <!--$("#kelas").trigger("click");-->
+                                    <!--} else -->
+                                    if (result.value === "countDagangDanJasa") {
+                                        swal("Error", "Untuk Tipe Permohonan: Dagang dan Jasa, Pilihan Kelas harus meliputi kelas Barang (Kelas : 1-34) dan kelas Jasa (Kelas : 35-45).", "error");
+                                        $('#kelas').trigger("click");
+                                    }
+                                } else if(result.key === "fileTypeError") {
+                                    if (result.value === "notMatchFileTypeImage") {
+                                        swal("Error", "Untuk file Jenis Dokumen Tanda Tangan harus JPG/JPEG.", "error");
+                                        $("#dokumen").trigger("click");
+                                    } else if (result.value === "notMatchFileTypePdf") {
+                                        swal("Error", "Untuk file Jenis Dokumen selain Tanda Tangan harus PDF.", "error");
+                                        $('#dokumen').trigger("click");
+                                    } else if(result.value === "requiredTTDK") {
+                                        swal("Error", "Dokumen Tanda Tangan Kuasa Belum Dilampirkan.", "error");
+                                        $('#dokumen').trigger("click");
+                                    } else if (result.value === "requiredDocTypeDP") {
+                                        swal("Error", "Untuk Jenis Permohonan UMKM, Wajib Melampirkan Jenis Dokumen: Surat UMKM Asli dan Surat Pernyataan UKM.", "error");
+                                        $('#dokumen').trigger("click");
+                                    }
+                                } else {
+                                    if (isEdit){
+                                        window.location.replace(redirect);
+                                    }else {
+                                        <!--$('#dokumen').addClass('yet');-->
+                                        $("#preview").trigger("click");
+                                    }
+                                }
+                            },
+                            error: function (xhr, status) {
+                                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                            }
+                        });
+                    }
+                } else {
+                    $("#general").trigger("click");
+                    swal("Informasi", "Silakan melengkapi data General dan klik Simpan.", "info");
+                }
+            });
+
+        });
+        // End documen ready
+
+        //Delete Dokumen
+        function deleteDoc(deleteRowDoc){
+            swal("Konfirmasi", "Apakah Anda yakin akan menghapus data dokumen ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+                .then((value) => {
+                    if (value) {
+                        $.ajax({
+                            type : "POST",
+                            url:/*[[@{/layanan/delete-dokumen-online}]]*/'',
+                            datatype:'jsonp',
+                            data : {
+                                idDoc : deleteRowDoc,
+                            },
+                            beforeSend: function () {
+                                showLoading();
+                            },
+                            success:function(result){
+                                tableDoc.ajax.reload();
+                            },
+                            error: function (xhr, status) {
+                                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                            }
+                        });
+                    }
+                });
+        }
+        /*]]>*/
+    </script>
+</div>
+</html>

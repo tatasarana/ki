@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="class_continuation" pageWidth="523" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="523" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="12e33e45-ea8b-4bfb-aa07-255962c97973">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT *
+FROM(
+SELECT
+ROWNUM AS R,
+COALESCE(C.COUNTRY_NAME,' ') AS COUNTRY_NAME,
+COALESCE(B.TM_PRIOR_NO,' ') AS TM_PRIOR_NO,
+COALESCE(to_char(B.TM_PRIOR_DATE,'DD/MM/YY'),' ') AS TM_PRIOR_DATE
+FROM TX_TM_GENERAL A
+LEFT JOIN TX_TM_PRIOR B ON A.APPLICATION_ID=B.APPLICATION_ID
+LEFT JOIN M_COUNTRY C ON C.COUNTRY_CODE=B.TM_PRIOR_COUNTRY
+WHERE A.APPLICATION_ID = $P{applicationId}
+ORDER BY B.TM_PRIOR_NO ASC) A
+WHERE R > 1]]>
+	</queryString>
+	<field name="R" class="java.math.BigDecimal"/>
+	<field name="COUNTRY_NAME" class="java.lang.String"/>
+	<field name="TM_PRIOR_NO" class="java.lang.String"/>
+	<field name="TM_PRIOR_DATE" class="java.lang.String"/>
+	<columnHeader>
+		<band height="27">
+			<rectangle>
+				<reportElement x="18" y="0" width="20" height="20" backcolor="#000000" uuid="588367b7-76e6-4616-98ce-6d5398c3cb2c"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="18" y="0" width="20" height="19" forecolor="#FFFFFF" uuid="3c3317ec-a8ce-4f03-bf37-06f82aa41a62"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[6]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="43" y="0" width="307" height="20" uuid="e107301e-fd99-44ca-a4c6-11bedd97a3a4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRIORITY CLAIMED]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="61" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="34" width="443" height="18" uuid="31670bb6-b5af-4385-b218-834e66fd4172"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Date of earlier filing : "+($F{TM_PRIOR_DATE}!=null?$F{TM_PRIOR_DATE}:"-")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="83" y="36" width="365" height="18" uuid="3b43815c-fc52-46b7-85d7-9825467070a2"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["...................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="16" width="503" height="18" uuid="ce85f748-32a6-4e01-99a8-8dca6d375902"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Number of earlier filing (if available) : "+($F{TM_PRIOR_NO}!=null?$F{TM_PRIOR_NO}:"-")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="89" y="2" width="414" height="18" uuid="c3f435c9-a341-48ab-a1d7-b2bd6f3699ca"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["...................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="448" y="34" width="55" height="18" uuid="355f7f2f-e837-4a53-b0db-f837b0934cf4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(dd/mm/yyyy)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="147" y="18" width="356" height="18" uuid="38f1eb48-6f93-46ae-8e57-5d6cb748a91c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["...................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="503" height="18" uuid="a141e667-932c-44e5-a315-991c4e975a25"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Office of earlier filing : "+($F{COUNTRY_NAME}!=null ?$F{COUNTRY_NAME}:"-")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

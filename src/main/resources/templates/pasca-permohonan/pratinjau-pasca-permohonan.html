@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <div class="my-wrapper" id="my-wrapper">
+		<div class="my-wrapper--inner">
+			<div class="wrapper-content">
+				<div class="content--top border--bottom padding-content--left-right">
+	            	<div class="row">
+	                	<div class="col-md-12">
+	                    	<h3 class="content--title text--bold">
+	                      		<i class="fas fa-search"></i> Pasca Permohonan - <span th:text="${dataGeneral.postNo}"></span>
+	                     	</h3>
+	                     	<small class="sub-header">Permohonan Merek / <a th:href="@{/layanan/list-pasca-permohonan}">Pasca Permohonan</a>
+	                         / Pratinjau
+	                    	</small>
+	                     	<small style="float:right;margin-left:13px"><a th:href="@{/layanan/list-pasca-permohonan}"><i class="fa fa-arrow-left"></i> Kembali</a></small>
+							<small style="float:right;margin-left:16px"><a th:if="${#authentication.getPrincipal().hasAccessMenu('T-UPCTKPASCA')}" th:href="@{/layanan/cetak-pasca-permohonan-rebuild(no=${dataGeneral.id})}"><i class="fas fa-print"></i> Update Tanda Terima</a></small>
+	                     	<small style="float:right;margin-left:13px"><a th:if="${paramCetak}!=null" th:href="@{__'/layanan/download-dokumen/' + ${paramCetak}__}"><i class="fa fa-laptop"></i> Cetak Surat Perpanjangan</a></small>
+	            		</div>
+	         		</div>
+	        	</div>
+	        	<div class="content--center padding-content--left-right">
+	        		<div class="wrapper--bg">
+	        			<div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+	                   		<button data-dismiss="alert" class="close close-sm" type="button">
+	                       		<i class="icon-remove"></i>
+	                   		</button>
+	                   		<p>[[${errorMessage}]]</p>
+	               		</div>
+	               		<div class="panel-group">
+	               			<ul class="nav nav-pills" role="tablist" style="margin-bottom: 15px">
+	                        	<li class="nav-item active">
+	                            	<a class="nav-link" data-toggle="tab" href="#panel1">
+	                                	Data Pasca Online
+	                            	</a>
+	                        	</li>
+		                	</ul>
+		                	<div class="tab-content">
+		                		<div class="tab-pane active" id="panel1" role="tabpanel">
+		                			<!-- GENERAL -->
+	                           		<div class="panel panel-primary">
+	                                	<div class="panel-heading">
+	                                    	General
+	                                 	</div>
+	                                 	<div class="panel-body">
+	                                 		<div class="form form-horizontal">
+	                                 			<div class="row" th:object="${dataGeneral}">
+                                                	<div class="col-md-12">
+                                                		<div class="col-md-6">
+                                                			<div class="form-group">
+	                                                            <label class="col-form-label col-sm-5">Nomor Transaksi</label>
+	                                                            <div class="col-sm-7">
+	                                                                <input type="text" class="form-control" disabled="disabled"
+	                                                                       th:value="*{eFilingNo}"/>
+	                                                            </div>
+                                                        	</div>
+                                                			
+                                                			<div class="form-group">
+	                                                            <label class="col-form-label col-sm-5">Nomor Dokumen</label>
+	                                                            <div class="col-sm-7">
+	                                                                <input type="text" class="form-control" disabled="disabled"
+	                                                                       th:value="*{postNo}"/>
+	                                                            </div>
+                                                        	</div>
+                                                			<div class="form-group">
+	                                                            <label class="col-form-label col-sm-5">Tanggal Pengajuan</label>
+	                                                            <div class="col-sm-7">
+	                                                                <input type="text" class="form-control" disabled="disabled"
+	                                                                       th:value="*{postDateTemp}"/>
+	                                                            </div>
+                                                        	</div>
+                                                        	<div class="form-group">
+	                                                            <label class="col-form-label col-sm-5">Asal Permohonan</label>
+	                                                            <div class="col-sm-7">
+																	<input type="text" class="form-control" disabled="disabled"
+																		   th:value="*{mFileSequence.desc}"/>
+	                                                            </div>
+                                                        	</div>
+                                                        	  <div class="form-group"> 
+	                                                        <label class="col-form-label col-sm-5">Catatan</label>
+	                                                            <div class="col-sm-7">
+	                                                                <textarea class="form-control" disabled="disabled" th:text="*{note}" th:value="*{note}"> </textarea>
+	                                                            </div>
+	                                                        </div>                                                    	
+                                                		</div>
+                                                		<div class="col-md-6">
+                                                			<div class="form-group">
+	                                                            <label class="col-form-label col-sm-5">Kode Billing</label>
+	                                                            <div class="col-sm-7">
+	                                                                <input type="text" class="form-control" disabled="disabled"
+	                                                                       th:value="*{billingCode == null ? '-' : billingCode}"/>
+	                                                            </div>
+                                                        	</div>
+                                                        	<div class="form-group">
+	                                                            <label class="col-form-label col-sm-5">Tipe Permohonan</label>
+	                                                            <div class="col-sm-7">
+																	<input type="text" class="form-control" disabled="disabled"
+																		   th:value="*{mFileType == null ? '-' : mFileType.desc}"/>
+	                                                            </div>
+	                                                        </div>
+															<div class="form-group">
+																<label class="col-form-label col-sm-5">Jenis Permohonan</label>
+																<div class="col-sm-7">
+																	<input type="text" class="form-control" disabled="disabled"
+																		   th:value="*{mFileTypeDetail == null ? '-' : mFileTypeDetail.desc}"/>
+																</div>
+															</div>
+	                                                        <div class="form-group">
+	                                                            <label class="col-form-label col-sm-5">Jumlah Pembayaran</label>
+	                                                            <div class="col-sm-7">
+	                                                                <input type="text" class="form-control" disabled="disabled" th:value="*{totalPaymentTemp}"/>
+	                                                            </div>
+	                                                        </div>
+	                                                        <div class="form-group">
+	                                                            <label class="col-form-label col-sm-5">Tanggal Pembayaran</label>
+	                                                            <div class="col-sm-7">
+	                                                                <input type="text" class="form-control" disabled="disabled"
+	                                                                       th:value="*{paymentDateTemp == null ? '-' : paymentDateTemp}"/>
+	                                                            </div>
+                                                        	</div>
+                                                        	<div class="form-group">
+	                                                            <label class="col-form-label col-sm-5">Username</label>
+	                                                            <div class="col-sm-7">
+	                                                                <input type="text" class="form-control" disabled="disabled"
+	                                                                       th:value="*{createdBy.username}"/>
+	                                                            </div>
+	                                                        </div>
+                                                		</div>
+                                                	</div>
+                                                </div>
+	                                 		</div>
+	                            		</div>
+	                            	</div>
+	                            	
+	                            	<!-- DETAIL -->
+	                           		<div class="panel panel-primary">
+	                                	<div class="panel-heading">
+	                                    	Referensi Permohonan
+	                                 	</div>
+	                                 	<div class="panel-body">
+                                        	<div class="table-container">
+               							 		<table class="table table-striped table-bordered table-responsive">
+                   									<thead>
+			                       						<tr>
+			                       	    					<th hidden="true"></th>
+			                            		 			<th>Nomor Permohonan</th>
+			                            					<th>Merek</th>
+			                            					<th>Nomor Registrasi</th>	
+			                            					<th>Status</th>		                            					
+			                        					</tr>
+                    								</thead>
+                    								<tbody>
+                    									<tr th:each="detailList : *{dataGeneralDetail}">
+															<td> <a th:text="${detailList.txTmGeneral.applicationNo}" th:href="@{/layanan/pratinjau-permohonan(no=${detailList.txTmGeneral.applicationNo})}" target="_blank"></a></td>
+	                                                        <td th:text="${detailList.txTmGeneral.txTmBrand == null ? '-' : detailList.txTmGeneral.txTmBrand.name}"></td>
+	                                                        <td th:text="${detailList.txTmGeneral.txRegistration == null ? '-' : detailList.txTmGeneral.txRegistration.no}"></td>
+	                                                        <td th:text="${detailList.txTmGeneral.mStatus.name}"></td>	                                                        
+                                             			</tr>
+                    								</tbody>
+                    							</table>
+                    						</div>
+                    					</div>
+	                              	</div>
+	                              	
+	                            	<!-- PEMOHON -->
+	                           		<div class="panel panel-primary">
+	                                	<div class="panel-heading">
+	                                    	Pemohon
+	                                 	</div>
+	                                 	<div class="panel-body">
+                                            <div class="table-container">
+                                                <table class="table table-striped table-bordered table-responsive">
+                                                    <thead>
+                                                    <tr>
+                                                        <td>Nama Pemohon</td>
+                                                        <td>Alamat</td>
+                                                        <td>Telepon/Email</td>
+														<td>Kab/Kota</td>
+														<td>Provinsi</td>
+														<td>Kode Pos</td>
+                                                        <td>Negara</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody th:object="${dataPemohon}">
+                                                    <tr>
+                                                        <td th:text="*{name}"></td>
+                                                        <td th:text="*{address}"></td>
+                                                        <td th:text="*{phone+'/'+email}"></td>
+														<td th:text="*{mCity.name}"></td>
+														<td th:text="*{mProvince.name}"></td>
+														<td th:text="*{zipCode}"></td>
+														<td th:text="*{mCountry.name}"></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+	                           		</div>
+	                           		<!-- KUASA -->
+	                           		<div class="panel panel-primary">
+	                                	<div class="panel-heading">
+	                                    	Kuasa
+	                                 	</div>
+	                                 	<div class="panel-body">
+                                            <div class="table-container">
+                                                <table class="table table-striped table-bordered table-responsive">
+                                                    <thead>
+                                                    <tr>
+                                                        <td>Nomor Konsultan</td>
+                                                        <td>Nama Konsultan</td>
+                                                        <td>Alamat</td>
+                                                        <td>Telepon/Email</td>
+														<td>Kab/Kota</td>
+														<td>Provinsi</td>
+														<td>Kode Pos</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody th:object="${dataKuasa}">
+                                                    <tr>
+                                                        <td th:text="*{mRepresentative.no}"></td>
+                                                        <td th:text="*{mRepresentative.name}"></td>
+                                                        <td th:text="*{mRepresentative.address}"></td>
+                                                        <td th:text="*{mRepresentative.phone + '/'+mRepresentative.email}"></td>
+														<td th:text="*{mRepresentative.mCity.name}"></td>
+														<td th:text="*{mRepresentative.mProvince.name}"></td>
+														<td th:text="*{mRepresentative.zipCode}"></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+	                              	</div>
+	                              	<!-- DOKUMEN -->
+	                           		<div class="panel panel-primary">
+	                                	<div class="panel-heading">
+	                                    	Dokumen Lampiran
+											<a th:href="@{/layanan/form-edit-dokumen-pasca-permohonan(no=${dataGeneral.id})}" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PUD')}" style="margin: 0px 2px;">
+												<button type="button" class="btn btn-xs btn-default  pull-right">Detail</button>
+											</a>
+	                                 	</div>
+	                                 	<div class="panel-body">
+                                        	<div class="table-container">
+               							 		<table class="table table-striped table-bordered table-responsive" id="tableDokumen">
+                   									<thead>
+			                       						<tr>
+			                       							<th></th>
+			                       							<th></th>
+			                       	    					<th>No.</th>
+			                            		 			<th>Tanggal Upload</th>
+			                            					<th>Jenis Dokumen</th>
+			                            					<th>Nama File</th>
+			                            					<th>Keterangan</th>
+			                            					<th>Ukuran File</th>
+			                            					<th></th>
+			                        					</tr>
+                    								</thead>
+                    							</table>
+                    						</div>
+                    					</div>
+	                              	</div>
+		                		</div>
+		                	</div>
+	               		</div>
+	        		</div>
+	        	</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<div th:replace="fragment/js :: main"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	 $(document).ready(function () {
+		 var dataTableDokumen = $('#tableDokumen').DataTable({
+         	'createdRow': function( row, data, dataIndex ) {
+      	      	$(row).attr('id', 'idDoc-'+data[0]);
+    	    },
+        	'columnDefs': [
+        		{
+                    'targets': [0,1,-1],
+                    'visible': false
+                },
+        		{
+                    'targets': 5,
+                    'searchable': false,
+	                'orderable': false,
+                    'render': function ( data, type, full, meta ) {
+	                	//return '<a href="'+full[8]+'" download="'+full[5]+'" class="downloads">'+full[5]+'</a>';
+						var fileURL = full[9];
+						if(fileURL.indexOf("application/pdf")!=-1){ //limit hanya pdf
+							//convert to blob before download to support big file!!!
+							var arr = fileURL.split(','), mime = 'application/pdf', bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+							while(n--){
+								u8arr[n] = bstr.charCodeAt(n);
+							}
+							let newFile = new Blob([u8arr], {type:mime});
+							fileURL = window.URL.createObjectURL(newFile);
+						}
+						return '<a target="_blank" href="'+fileURL+'" class="downloads">'+full[5]+'</a>';
+
+					}
+                }
+            ],
+            ajax: {
+                type: 'GET',
+                data: {
+                    postId: /*[[${dataGeneral.id}]]*/''
+                },
+                url: /*[[@{/layanan/cari-dokumen-pasca-permohonan}]]*/''
+
+            },
+        	language: {
+                url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+            }
+        });
+		dataTableDokumen.on('error.dt',function(e,settings,techNote,message){
+	        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+        });
+		
+		// Set status = true when download dokumen pasca
+		$('#tableDokumen').on('click', '.downloads', function(){
+        	var cell_clicked    = dataTableDokumen.cell(this).data();
+            var row_clicked     = $(this).closest('tr');
+            var row_data = dataTableDokumen.row(row_clicked).data();
+            var data = row_data;
+            var item = {}
+		
+      	    var formData = new FormData;
+    		var docList = [];
+        	
+    			item ["txPostDocId"] = data[0];
+      	    	item ["docId"] = data[1];
+                item ["docDate"] = data[3];
+                item ["docType"] = data[4];
+                item ["docFileName"] = data[5];
+                item ["docDesc"] = (data[6]==null?"":data[6]);
+                item ["docFileSize"] = data[7];
+                
+            docList.push(item);
+            formData.append('file-'+data[1], data[8]);
+                
+        	var postId = /*[[${dataGeneral.id}]]*/'';
+			formData.append('postId', postId);
+			formData.append('txPostDocId', data[0]);
+			formData.append('docList', JSON.stringify(docList));
+        	    	
+            $.ajax({
+                type: 'POST',
+                url: /*[[@{/layanan/update-data-download-dokumen-pasca"}]]*/'',
+                data: formData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                complete:function(){
+                	hideLoading();
+                },
+                success: function (data) {
+               	},
+                error: function (xhr, status) {
+	                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                }
+            });
+		});
+	 }); 
+	/*]]>*/
+</script>
+</body>
+</html>

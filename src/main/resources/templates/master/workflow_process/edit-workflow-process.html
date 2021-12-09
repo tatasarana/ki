@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+	<p th:replace="fragment/header :: navbar"/>
+	<div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+	<form class="form-horizontal" th:object="${form}" th:action="@{/layanan/edit-workflow-process}" method="post">
+		<div class="my-wrapper" id="my-wrapper">
+			<div class="my-wrapper--inner">
+
+				<div class="wrapper-content" id="workflow-baru">
+					<div class="content--top border--bottom padding-content--left-right">
+						<div class="row">
+							<div class="col-md-12">
+								<h3 class="content--title text--bold">
+									<i class="fas fa-chart-line"></i> Workflow Process - Ubah
+								</h3>
+								<small class="sub-header">Workflow Process / Ubah</small>
+							</div>
+						</div>
+					</div>
+					<div class="content--center padding-content--left-right">
+						<div class="wrapper--bg">
+							<div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+								<button data-dismiss="alert" class="close close-sm" type="button">
+									<i class="icon-remove"></i>
+								</button>
+								<p>[[${errorMessage}]]</p>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Nama Process</label>
+                                        <div class="col-sm-9">
+                                            <input  type="text" class="form-control" placeholder="Nama Process" th:field="*{name}" th:required="true"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                                        </div>
+                                    </div>
+									<div class="form-group" id="fWorkflow">
+										<label class="col-sm-3 col-form-label required-label">Pilih Workflow</label>
+										<div class="col-sm-9">
+											<select class="form-control" th:field="*{workflow.id}">
+												<option th:each="wf : ${workflows}"
+														th:value="${wf.id}" th:text="${wf.name}"></option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group" id="fStatus">
+										<label class="col-sm-3 col-form-label required-label">Status Sebelumnya</label>
+										<div class="col-sm-9">
+											<select class="form-control" th:field="*{prevStatus.id}" id="cStatus">
+												<option th:each="stat : ${statuses}"
+														th:value="${stat.id}" th:text="${stat.name}"></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group" id="fStatus">
+										<label class="col-sm-3 col-form-label required-label">Status Saat Ini (Menjadi)</label>
+										<div class="col-sm-9">
+											<select class="form-control" th:field="*{status.id}" id="cStatus2">
+												<option th:each="stat : ${statuses}"
+														th:value="${stat.id}" th:text="${stat.name}"></option>
+											</select>
+										</div>
+									</div>
+
+									<!--<div class="form-group">-->
+										<!--<label class="col-sm-3 col-form-label required-label">Mandatory</label>-->
+										<!--<div class="col-sm-9">-->
+											<!--<select class="form-control" th:field="*{mandatory}">-->
+												<!--<option value="false">Tidak</option>-->
+												<!--<option value="true">Ya</option>-->
+											<!--</select>-->
+										<!--</div>-->
+									<!--</div>-->
+									<div class="form-group">
+										<label class="col-sm-3 col-form-label required-label">Role Pengguna</label>
+										<div class="col-sm-9">
+											<select class="form-control" th:field="*{role.id}" id="cStatus3" th:required="true">
+												<option value="">BELUM ADA ROLE</option>
+												<option th:each="role : ${userroles}"
+														th:value="${role.id}" th:text="${role.getName()}"></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 col-form-label">Role Tembusan</label>
+										<div class="col-sm-9">
+											<select class="form-control" th:field="*{cc_role.id}" id="cStatus4">
+												<option value="">TIDAK BUTUH KIRIM TEMBUSAN</option>
+												<option th:each="role : ${userroles}"
+														th:value="${role.id}" th:text="${role.getName()}"></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 col-form-label required-label">Urutan</label>
+										<div class="col-sm-9">
+											<input class="form-control" type="number" placeholder="Urutan Process Workflow" th:field="*{orders}"
+												   th:required="true"/>
+											<span class="help-block" th:if="${#fields.hasErrors('orders')}"
+												  th:errors="*{name}"></span>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 col-form-label">Status</label>
+										<div class="col-sm-9">
+											<select class="form-control" th:field="*{statusFlag}"
+													th:required="true" th:autofocus="true">
+												<option value="1">Aktif</option>
+												<option value="0">Tidak Aktif</option>
+											</select>
+											<span class="help-block" th:if="${#fields.hasErrors('statusFlag')}"
+												  th:errors="*{statusFlag}"></span>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 col-form-label">Keterangan</label>
+										<div class="col-sm-9">
+											<input class="form-control" placeholder="Keterangan Workflow Process" th:field="*{descriptions}"
+												   />
+											<span class="help-block" th:if="${#fields.hasErrors('descriptions')}"
+												  th:errors="*{name}"></span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<label class="col-form-label notice">*) Wajib Diisi</label>
+							<hr/>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+									<div class="col-sm-3"></div>
+										<div class="col-sm-9">
+											<input type="hidden" th:field="*{id}" />
+											<a th:href="@{/layanan/list-workflow-process}" class="btn btn-danger"><i class="fas fa-times"></i> Batal</a>
+											<button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Proses </button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<hr/>
+					<div class="content--bottom padding-content--left-right">
+						<p><h3>Daftar Aksi</h3></p><br/>
+						<p class="pull-left">
+							<a th:href="@{'/layanan/tambah-workflow-process-action?id='+${form.id}}" class="btn btn-info" th:if="${#authentication.getPrincipal().hasAccessMenu('T-WPA')}"><i class="fas fa-plus"></i> Tambah</a>
+						</p>
+						<br/><br/>
+						<table id="table" class="table table-striped table-bordered table-responsive">
+							<thead>
+							<tr>
+								<th>Nama Aksi</th>
+								<th>Tipe</th>
+								<th>File Dokumen</th>
+								<th style="width: 80px"></th>
+							</tr>
+							</thead>
+							<tbody>
+								<tr th:each="wpactoin: ${pactions}">
+									<td th:text="${wpactoin.action == null ? '' : wpactoin.action.name}"></td>
+									<td th:text="${wpactoin.action == null ? '' : wpactoin.action.type}"></td>
+									<td th:text="${wpactoin.action == null or wpactoin.action.document == null ? '' : wpactoin.action.document.filePath}"></td>
+									<td>
+										<a class="btn btn-xs btn-danger" th:href="@{/layanan/remove-workflow-process-action(id=${wpactoin.id},no=${form.id})}">Hapus</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<br/>
+					<br/>
+				</div>
+
+			</div>
+		</div>
+	</form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	$(document).ready(function(){
+	    $("#cStatus").combobox();
+		$("#cStatus2").combobox();
+		$("#cStatus3").combobox();
+		$("#cStatus4").combobox();
+		$('form').find(".custom-combobox-input").each(function(ev)
+        {
+            if(!$(this).val()) {
+                $(this).attr("placeholder", "-Pilih-");
+            }
+        });
+		$('form').validate({
+			messages:{
+				'name':{
+					required:/*[[#{field.error.required('nama workflow')}]]*/''
+				},
+				'code':{
+					required:/*[[#{field.error.required('code workflow')}]]*/''
+				}
+			},
+			highlight: function(element) {
+				$(element).closest('.form-group').addClass('has-error');
+			},
+			unhighlight: function(element) {
+				$(element).closest('.form-group').removeClass('has-error');
+			},
+			errorElement: 'span',
+			errorClass: 'help-block',
+			errorPlacement: function(error, element) {
+				if(element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else {
+					error.insertAfter(element);
+				}
+			},
+	        submitHandler: function(form) {
+		        showLoading();
+		        $('form')[0].submit();
+	        }
+		});
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<style>
+	.custom-combobox-toggle {
+		position: absolute;
+		top: 173px;
+		bottom: auto;
+		height: 33px;
+		margin-left: -1px;
+		padding: 0;
+	}
+	.custom-combobox-input {
+			width: 95%;
+	}
+	.btn {
+		margin-right: 15px;
+	}
+</style>
+<body th:inline="text">
+	<link href="../static/css/bootstrap-multiselect.css" rel="stylesheet" th:href="@{/css/bootstrap-multiselect.css}"/>
+	<script src="text/javascript" th:src="@{/js/highcharts.js}"></script>
+
+	<div class="my-wrapper-body bghome panel-container">
+		<p th:replace="fragment/header :: navbar"/>
+		<div id="mySideBar" class="panel-left">
+			<span id="position"></span>
+			<p th:replace="fragment/sidebar :: left"/>
+		</div>
+		<div id="myDragBar" class="splitter"></div>
+		<div id="myMain" class="panel-right">
+		<div class="my-wrapper" id="my-wrapper">
+			<div class="my-wrapper--inner">
+
+				<!-- dahboard permohonan start -->
+				<div class="wrapper-content">
+
+					<div class="content--top border--bottom padding-content--left-right">
+							<div class="row">
+								<div class="col-md-12">
+									<h3 class="content--title text--bold">
+										<i class="fas fa-tachometer-alt"></i> Dashboard Permohonan
+									</h3>
+								</div>
+							</div>
+					</div>
+
+					<div class="content--center padding-content--left-right">
+											<div class="wrapper--bg">
+							<div class="jumbotron filterSearch">
+								<form>
+									<div class="row">
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Tanggal Penerimaan</label>
+												<div class="row">
+													<div class="col-md-6">
+														<input type="text" id="startDate" class="form-control datepicker" placeholder="Dari"/>
+													</div>
+													<div class="col-md-6 no-left-padding">
+														<input type="text" id="endDate" class="form-control datepicker" placeholder="Sampai"/>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label>Tipe Permohonan</label>
+												<select id="mfileType" class="form-control">
+													<option value="">Semua</option>
+													<option th:each="mFileType :${fileTypeList}" th:value="${mFileType.id}" th:text="${mFileType.desc}"/>
+												</select>
+											</div>
+											<div class="form-group">
+												<label>Kelas</label>
+												<select id="mClass" multiple="multiple">
+													<option th:each="mClass : ${classList}" th:value="${mClass.id}" th:text="${mClass.no}"></option>
+												</select>
+											</div>
+											<div class="form-group">
+												<label>Tanggal Proses</label>
+												<div class="row">
+													<div class="col-md-6">
+														<input type="text" id="tglProsesStartDate" class="form-control datepicker" placeholder="Dari"/>
+													</div>
+													<div class="col-md-6 no-left-padding">
+														<input type="text" id="tglProsesEndDate" class="form-control datepicker" placeholder="Sampai"/>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Tipe Merek</label>
+												<select id="mListBrandType" class="form-control">
+													<option value="">Semua</option>
+													<option th:each="mListBrandType : ${listBrandType}" th:value="${mListBrandType.id}" th:text="${mListBrandType.name}"/>
+												</select>
+											</div>
+											<div class="form-group">
+												<label>Jenis Permohonan</label>
+												<select id="mFileTypeDetail" class="form-control">
+													<option value="">Semua</option>
+													<option th:each="mFileTypeDetail : ${fileTypeDetailList}" th:value="${mFileTypeDetail.id}" th:text="${mFileTypeDetail.desc}"></option>
+												</select>
+											</div>
+											<div class="form-group">
+												<label>Status</label>
+												<select id="mStatus" class="form-control">
+													<option value="">Semua</option>
+													<option th:each="mStatus : ${statusList}" th:value="${mStatus.id}" th:text="${mStatus.name}"/>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Negara</label>
+												<select id="mListCountry" name="mListCountry" class="form-control">
+													<option value="">Semua</option>
+													<option th:each="mListCountry : ${listCountry}"
+															th:value="${mListCountry.id}"
+															th:text="${mListCountry.name}">
+													</option>
+												</select>
+											</div>
+											<div class="form-group">
+												<label>Provinsi</label>
+												<select id="mListProvince" class="form-control">
+													<option value="">Semua</option>
+													<option th:each="mListProvince : ${listProvince}" th:value="${mListProvince.id}" th:text="${mListProvince.name}"></option>
+												</select>
+											</div>
+											<div class="form-group">
+												<label>Kab/Kota</label>
+												<select id="mListCity" class="form-control">
+													<option value="">Semua</option>
+													<option class="optCity" th:each="mListCity : ${listCity}" th:value="${mListCity.id}" th:text="${mListCity.name}" th:classappend="${mListCity.mProvince.id}"></option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<button type="button" class="btn btn-primary" id="btnCari">
+												<i class="fas fa-search"></i>
+												Filter
+											</button>
+											<button type="submit" class="btn btn-info" onClick="window.location.reload()">
+												<i class="fas fa-sync-alt"></i>
+												Refresh
+											</button>
+											<button id="btnExport" type="button" class="btn btn-success"><i class="fas fa-file-excel"></i> Export to Excel</button>
+										</div>
+									</div>
+
+									<br></br>
+
+									<div class="row">
+										<figure class="highcharts-figure">
+											<div class="form-group">
+												<div id="grafikPermohonan" class="col-lg-push-1"></div>
+												<p class="highcharts-description">
+												</p>
+											</div>
+										</figure>
+									</div>
+
+									<div class="row">
+										<div class="col-md-6">
+											<figure class="highcharts-figure">
+												<div class="form-group">
+													<div id="grafikJenisPermohonan" class="col-lg-push-1"></div>
+													<p class="highcharts-description">
+													</p>
+												</div>
+											</figure>
+										</div>
+										<div class="col-md-6">
+											<figure class="highcharts-figure">
+												<div class="form-group">
+													<div id="grafikTipeMerek" class="col-lg-push-1"></div>
+													<p class="highcharts-description">
+													</p>
+												</div>
+											</figure>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-md-6">
+											<figure class="highcharts-figure">
+												<div class="form-group">
+													<div id="grafikKelas" class="col-lg-push-1"></div>
+													<p class="highcharts-description">
+													</p>
+												</div>
+											</figure>
+										</div>
+										<div class="col-md-6">
+											<figure class="highcharts-figure">
+												<div class="form-group">
+													<div id="grafikAsalPemohon" class="col-lg-push-1"></div>
+													<p class="highcharts-description">
+													</p>
+												</div>
+											</figure>
+										</div>
+									</div>
+
+								</form>
+
+									<div class="row">
+										<div class="col-md-6">
+											<label>Detail Status dan Jumlah</label>
+											<div class="form-group" style="max-height:300px; overflow:auto;">
+												<table id="table" class="table" style="width: 405px; background-color:#FFFFFF">
+													<tbody id="pemohonStatus">
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<label>Detail Pemohon Madrid dan Jumlah</label>
+											<div class="form-group" style="max-height:300px; overflow:auto;">
+												<table id="table" class="table" style="width: 405px; background-color:#FFFFFF">
+													<tbody id="pemohonMadrid">
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-md-6">
+											<label>Detail Pemohon Indonesia dan Jumlah</label>
+											<div class="form-group" style="max-height:300px; overflow:auto;">
+												<table id="table" class="table" style="width: 405px; background-color:#FFFFFF">
+													<tbody id="pemohonIndonesia">
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<label>Detail Pemohon Asing dan Jumlah</label>
+											<div class="form-group" style="max-height:300px; overflow:auto;">
+												<table id="table" class="table" style="width: 405px; background-color:#FFFFFF">
+													<tbody id="pemohonAsing">
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-md-6">
+											<label>Detail Tipe Permohonan</label>
+											<div class="form-group" style="max-height:300px; overflow:auto;">
+												<table id="table" class="table" style="width: 405px; background-color:#FFFFFF">
+													<tbody id="tipePermohonan">
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+	</div><div th:replace="fragment/js :: default"></div>
+	<div th:replace="fragment/js :: main"></div>
+	<div th:replace="fragment/js :: datatables"></div>
+	<div th:replace="fragment/js :: datepicker"></div>
+	<script th:src="@{/js/bootstrap-multiselect.min.js}"></script>
+	<script type="text/javascript" language="javascript" th:inline="javascript">
+		/*<![CDATA[*/
+		$(document).ready(function() {
+			initializeUI();
+			reloadTable();
+
+			$("#btnCari").click(function(){
+				reloadTable();
+			});
+
+			$("#btnExport").click(function() {
+				var url = /*[[@{/layanan/cetak-dashboard-permohonan"}]]*/
+				$.ajax({
+					type: 'POST',
+					url,
+					data: getFormData(),
+					processData: false,
+					contentType: false,
+					cache: false,
+					xhrFields: {
+						responseType: 'blob',
+					},
+					beforeSend: function () {
+						showLoading();
+					},
+					complete:function(){
+						hideLoading();
+					},
+					success: function (response) {
+						var downloadUrl = URL.createObjectURL(response);
+						var a = document.createElement("a");
+						a.href = downloadUrl;
+						a.download = "dashboard-permohonan.xls";
+						document.body.appendChild(a);
+						a.click();
+					},
+				})
+			});
+
+			function reloadTable() {
+				var nama = $('#mfileType').val() == '' ? 'Semua' : $('#mfileType').val()
+				
+				$.ajax({
+					type: 'POST',
+					url: /*[[@{/layanan/ajax-dashboard-permohonan"}]]*/'',
+					data: getFormData(),
+					processData: false,
+					contentType: false,
+					dataType: 'JSON',
+					cache: false,
+					beforeSend: function () {
+						showLoading();
+					},
+					complete:function(){
+						hideLoading();
+					},
+					success: function (data) {
+						grafikPermohonan(data.grafikTipe, nama);
+						grafikJenis(data.grafikJenis);
+						grafikTipeMerek(data.grafikTipeMerek);
+						grafikAsal(data.grafikAsal);
+						grafikKelas(data.grafikKelas);
+
+						var ahtml = ''
+						for (a = 0; a < data.pemohonStatus.length; a++) {
+							var pemohonStatus = data.pemohonStatus[a]
+							ahtml += '<tr>'
+							ahtml += '<td>'+pemohonStatus.nama+'</td>'
+							ahtml += '<td>'+pemohonStatus.total+'</td>'
+							ahtml += '</tr>'
+						}
+						$('#pemohonStatus').html(ahtml)
+
+						var bhtml = ''
+						for (b = 0; b < data.pemohonMadrid.length; b++) {
+							var pemohonMadrid = data.pemohonMadrid[b]
+							bhtml += '<tr>'
+							bhtml += '<td>'+pemohonMadrid.nama+'</td>'
+							bhtml += '<td>'+pemohonMadrid.total+'</td>'
+							bhtml += '</tr>'
+						}
+						$('#pemohonMadrid').html(bhtml)
+
+						var chtml = ''
+						for (c = 0; c < data.pemohonIndonesia.length; c++) {
+							var pemohonIndonesia = data.pemohonIndonesia[c]
+							chtml += '<tr>'
+							chtml += '<td>'+pemohonIndonesia.nama+'</td>'
+							chtml += '<td>'+pemohonIndonesia.total+'</td>'
+							chtml += '</tr>'
+						}
+						$('#pemohonIndonesia').html(chtml)
+
+						var dhtml = ''
+						for (d = 0; d < data.pemohonAsing.length; d++) {
+							var pemohonAsing = data.pemohonAsing[d]
+							dhtml += '<tr>'
+							dhtml += '<td>'+pemohonAsing.nama+'</td>'
+							dhtml += '<td>'+pemohonAsing.total+'</td>'
+							dhtml += '</tr>'
+						}
+						$('#pemohonAsing').html(dhtml)
+						var ehtml = ''
+						for (e = 0; e < data.tipePermohonan.length; e++) {
+							var tipePermohonan = data.tipePermohonan[e]
+							ehtml += '<tr>'
+							ehtml += '<td>'+tipePermohonan.nama+'</td>'
+							ehtml += '<td>'+tipePermohonan.total+'</td>'
+							ehtml += '</tr>'
+						}
+						$('#tipePermohonan').html(ehtml)
+					},
+					error: function (xhr, status) {
+						swal("Error", "error", "error");
+					}
+				});
+			}
+
+			function getFormData() {
+				var formData = new FormData;
+				var data = {}
+				data.tipe = $('#mfileType').val()
+				data.jenis = $('#mFileTypeDetail').val()
+				data.kelas = $('#mClass').val()
+				data.status = $('#mStatus').val()
+				data.merek = $('#mListBrandType').val()
+				data.country = $('#mListCountry').val()
+				data.city = $('#mListCity').val()
+				data.province = $('#mListProvince').val()
+				data.start = $('#startDate').val()
+				data.end = $('#endDate').val()
+				data.start = $('#startDate').val()
+				data.end = $('#endDate').val()
+				data.tglProsesStartDate = $('#tglProsesStartDate').val()
+				data.tglProsesEndDate = $('#tglProsesEndDate').val()
+				formData.append('data', JSON.stringify(data));
+				return formData;
+			}
+			//grafik permohonan
+			function grafikPermohonan(data, nama) {
+				Highcharts.chart('grafikPermohonan', {
+					chart: {
+						type: 'column'
+					},
+
+					title: {
+						text: 'Grafik Tipe Permohonan'
+					},
+
+					legend: {
+						align: 'right',
+						verticalAlign: 'middle',
+						layout: 'vertical'
+					},
+
+					xAxis: {
+						categories: data.bulan,
+						labels: {
+							x: -10
+						}
+					},
+
+					series: [{
+						name: nama,
+						data: data.value
+					}]
+				});
+			}
+
+			function grafikJenis(datas){
+				Highcharts.chart('grafikJenisPermohonan', {
+					chart: {
+						plotBackgroundColor: null,
+						plotBorderWidth: null,
+						plotShadow: false,
+						type: 'pie'
+					},
+					title: {
+						text: 'Pie Diagram Jenis Permohonan'
+					},
+					tooltip: {
+						pointFormat: '{series.name}: <b>{point.y:.0f}</b>'
+					},
+					plotOptions: {
+						pie: {
+							allowPointSelect: true,
+							cursor: 'pointer',
+							dataLabels: {
+								enabled: true,
+								format: '<b>{point.name}</b>: {point.y:.0f}'
+							}
+						}
+					},
+					series: [{
+						name: 'Permohonan',
+						colorByPoint: true,
+						data: datas
+					}]
+				});
+			}
+
+			function grafikTipeMerek(datas) {
+				Highcharts.chart('grafikTipeMerek', {
+					chart: {
+						plotBackgroundColor: null,
+						plotBorderWidth: null,
+						plotShadow: false,
+						type: 'pie'
+					},
+					title: {
+						text: 'Pie Diagram Tipe Merek'
+					},
+					tooltip: {
+						pointFormat: '{series.name}: <b>{point.y:.0f}</b>'
+					},
+					plotOptions: {
+						pie: {
+							allowPointSelect: true,
+							cursor: 'pointer',
+							dataLabels: {
+								enabled: true,
+								format: '<b>{point.name}</b>: {point.y:.0f} '
+							}
+						}
+					},
+					series: [{
+						name: 'Permohonan',
+						colorByPoint: true,
+						data: datas
+					}]
+				});
+			}
+
+			function grafikKelas(data) {
+				Highcharts.chart('grafikKelas', {
+					chart: {
+						type: 'column'
+					},
+
+					title: {
+						text: 'Grafik Kelas Permohonan'
+					},
+
+					legend: {
+						align: 'right',
+						verticalAlign: 'middle',
+						layout: 'vertical'
+					},
+
+					xAxis: {
+						categories: data.kelasList,
+						labels: {
+							x: -10
+						}
+					},
+
+					yAxis: {
+						title: {
+							text: 'Jumlah',
+						},
+					},
+
+					series: [{
+						name: 'Permohonan',
+						data: data.pemohonCountList,
+					}]
+				});
+			}
+
+			function grafikAsal(data) {
+				Highcharts.chart('grafikAsalPemohon', {
+					chart: {
+						type: 'column',
+					},
+
+					title: {
+						text: 'Grafik Kategori Negara Pemohon'
+					},
+
+					legend: {
+						align: 'right',
+						verticalAlign: 'middle',
+						layout: 'vertical'
+					},
+
+					xAxis: {
+						type: 'category',
+						labels: {
+							align: 'center',
+						}
+					},
+
+					yAxis: {
+						title: {
+							text: 'Jumlah',
+						},
+					},
+
+					plotOptions: {
+						series: {
+							minPointLength: 3,
+						},
+					},
+
+					series: [
+						{
+							name: 'Pemohon',
+							data: [
+								{ name: 'Nasional', x: 0, y: data.asalN },
+								{ name: 'Luar Negeri', x: 1, y: data.asalLN },
+								{ name: 'Madrid', x: 2, y: data.asalMadrid }
+							]
+						},
+					],
+				});
+			}
+
+			function initializeUI() {
+				var lastMonthDate = new Date();
+				lastMonthDate.setDate(0);
+				var defaultStartDate = `${lastMonthDate.getFullYear()}/${String(lastMonthDate.getMonth() + 1).padStart(2, '0')}/01`;
+				var defaultEndDate = `${lastMonthDate.getFullYear()}/${String(lastMonthDate.getMonth() + 1).padStart(2, '0')}/${String(lastMonthDate.getDate()).padStart(2, '0')}`;
+				var datepickerOptions = {
+					format: 'yyyy/mm/dd',
+					autoclose: true,
+					todayBtn: 'linked',
+					endDate: 'today',
+					todayHighlight: true,
+					orientation: "bottom"
+				};
+
+				$('#startDate').val(defaultStartDate);
+				$('#endDate').val(defaultEndDate);
+				$('.datepicker').datepicker(datepickerOptions);
+
+				$('#mClass').multiselect({
+					selectAllValue: 'multiselect-all',
+					enableCaseInsensitiveFiltering: true,
+					enableFiltering: true,
+					maxHeight: '300',
+					buttonHeight: '34',
+					buttonWidth: '100%',
+					onChange: function(element, checked) {
+						var brands = $('#mClass option:selected');
+						var selected = [];
+						$(brands).each(function(index, brand){
+							selected.push([$(this).val()]);
+						});
+					}
+				});
+
+				$('#mStatus').combobox();
+				$(".custom-combobox-input").attr("placeholder", "Semua");
+			}
+		});
+		/*]]>*/
+	</script>
+</body>
+</html>

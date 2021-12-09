@@ -1,0 +1,11 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper" id="my-wrapper">
+		<div class="my-wrapper--inner">
+			<h1>Program Error (Akses tidak diijinkan), Kembali ke Home atau Silakan hubungi Administrator</h1>
+			<a class="navbar-brand" href="javascript:history.back()">Kembali ke Halaman Sebelumnya<img th:src="@{/img/logo.png}"/></a>
+		</div> 
+	</div>
+</body>
+</html>

@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+        <span id="position"></span>
+        <p th:replace="fragment/sidebar :: left"/>
+    </div>
+    <div id="myDragBar" class="splitter"></div>
+    <div id="myMain" class="panel-right">
+        <div class="my-wrapper" id="my-wrapper">
+            <div class="my-wrapper--inner">
+                <div class="wrapper-content">
+                    <div class="content--top border--bottom padding-content--left-right">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="content--title text--bold">
+                                    <i class="fas fa-search"></i> Permohonan - <span id="appNo" th:text="${dataLoketPenerimaan.applicationNo}"></span>
+                                </h3>
+
+                                <small class="sub-header">Permohonan Merek / Permohonan / Pratinjau</small>
+                                <small style="float:right;margin-left:13px"><a href="#" onclick="location.href = document.referrer; return false;"><i class="fa fa-arrow-left"></i> Kembali</a></small>
+
+                                <small style="float:right;margin-left:13px"><a th:href="@{/layanan/list-monitor(no=${appNo})}" target="_blank"><i class="fa fa-laptop"></i> Monitor</a></small>
+                                <small style="float:right;margin-left:16px"><a th:if="${ (#authentication.getPrincipal().hasAccessMenu('T-UPSURAT')) AND (no_madrid != '') }" th:href="@{/layanan/edit-madrid(no=${no_madrid})}"><i class="fas fa-globe"></i> Madrid</a></small>
+                                <small style="float:right;margin-left:16px"><a th:if="${#authentication.getPrincipal().hasAccessMenu('T-UPCETAK')}" th:href="@{/layanan/cetak-merek-pratinjau(no=${appNo})}"><i class="fas fa-print"></i> Update Tanda Terima</a></small>
+                                <small style="float:right;margin-left:16px"><a th:if="${#authentication.getPrincipal().hasAccessMenu('T-UPSURAT')}" th:href="@{/layanan/cetak-surat-pernyataan-pratinjau(no=${appNo})}"><i class="fas fa-print"></i> Update Surat Pernyataan</a></small>
+                                <small style="float:right;margin-left:16px"><a th:if="${#authentication.getPrincipal().hasAccessMenu('T-UPCTKMDR')}" th:href="@{/layanan/cetak-madrid-pratinjau(no=${appNo})}"><i class="fas fa-print"></i> Update Madrid</a></small>
+
+                                <h4>
+                                    <small style="float:right;margin-left:16px"><a th:if="${#authentication.getPrincipal().hasAccessMenu('T-PCST')}" th:href="@{/}" id="doGnrtCetakSertifikat" th:style="${txRegistration.no == null ? 'display: none;' : ''}"><i class="fas fa-print"></i> Cetak Sertifikat</a></small>
+                                    <!--<small style="float:right;margin-left:16px"><a th:if="${#authentication.getPrincipal().hasAccessMenu('T-PCSTP')}" th:href="@{/}" id="doGnrtCetakSertifikatPolos" th:style="${txRegistration.no == null ? 'display: none;' : ''}"><i class="fas fa-print"></i> Cetak Sertifikat Polos</a></small>-->
+                                    <!--<small style="float:right;margin-left:16px"><a th:if="${#authentication.getPrincipal().hasAccessMenu('T-PCSTM')}" th:href="@{/}" id="doGnrtCetakSertifikatMadrid" th:style="${txRegistration.no == null ? 'display: none;' : ''}"><i class="fas fa-print"></i> Cetak Sertifikat Madrid</a></small>-->
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="content--center padding-content--left-right">
+                        <div class="wrapper--bg">
+                            <div class="panel-group">
+                                <ul class="nav nav-pills" role="tablist" style="margin-bottom: 15px">
+                                    <li class="nav-item active">
+                                        <a class="nav-link" data-toggle="tab" href="#panel1">
+                                            Data Awal
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#panel2">
+                                            Publikasi
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#panel3">
+                                            Registrasi
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#panel4">
+                                            Lisensi
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="panel1" role="tabpanel">
+                                        <!-- GENERAL -->
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                General
+                                                <a th:href="@{/layanan/form-edit-general(no=${appNo})}" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PUG')}" style="margin: 0px 2px;">
+                                                    <button type="button" class="btn btn-xs btn-default  pull-right"> Detail </button></a>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="form form-horizontal">
+                                                    <div class="row" th:object="${dataLoketPenerimaan}">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-5">Nomor Transaksi</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" disabled="disabled"
+                                                                               th:value="*{eFilingNo == null ? '-' : eFilingNo}"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-5">Tanggal Pengajuan</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" disabled="disabled"
+                                                                               th:value="*{#dates.format(applicationDate, 'dd/MM/yyyy HH:mm:ss')}"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-5">Tanggal Penerimaan</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" disabled="disabled"
+                                                                               th:value="${#dates.format(dataGeneral.filingDate, 'dd/MM/yyyy HH:mm:ss')}"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-5">Asal Permohonan</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" disabled="disabled"
+                                                                               th:value="${dataGeneral.txReception.mFileSequence==null} ? '-' : ${dataGeneral.txReception.mFileSequence.desc}"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-5">Status</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" disabled="disabled"
+                                                                               th:value="${dataGeneral.mStatus==null} ? '-' : ${dataGeneral.mStatus.name}"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-5">Aksi</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" disabled="disabled"
+                                                                               th:value="${dataGeneral.mAction.name}"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-5">Workflow</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" disabled="disabled"
+                                                                               th:value="${dataGeneral.txReception.mWorkflow!=null } ? ${dataGeneral.txReception.mWorkflow.name} : '-' " />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-5">Catatan</label>
+                                                                    <div class="col-sm-7">
+                                                                        <textarea class="form-control" disabled="disabled" th:text="${dataGeneral.txReception.notesIpas!=null } ? ${dataGeneral.txReception.notesIpas} : '-' "></textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-5">Kode Billing</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" disabled="disabled"
+                                                                               th:value="*{bankCode}"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-5">Tipe Permohonan</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" disabled="disabled"
+                                                                               th:value="*{mFileType.desc==null} ? '-' : *{mFileType.desc}"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-md-5">Jenis Permohonan</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" disabled="disabled"
+                                                                               th:value="*{mFileTypeDetail.desc}"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-5">Jumlah Pembayaran</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" disabled="disabled"
+                                                                               th:value="*{totalPaymentTemp}"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-5">Jumlah Kelas</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" disabled="disabled"
+                                                                               th:value="*{totalClass}"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-5">Tanggal Pembayaran</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" disabled="disabled" th:value="*{#dates.format(paymentDate, 'dd/MM/yyyy  HH:mm:ss')}"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-5">Dasar Hukum</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" disabled="disabled"
+                                                                               th:value="${dataGeneral.mLaw!=null } ? ${dataGeneral.mLaw.desc} : '-' " />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-5">Nomor Madrid</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" disabled="disabled"
+                                                                               th:value="${searchRefId}" />
+                                                                    </div>
+                                                                </div>
+                                                                <!--<div class="form-group">-->
+                                                                <!--<label class="col-form-label col-sm-5">Username</label>-->
+                                                                <!--<div class="col-sm-7">-->
+                                                                <!--<input type="text" class="form-control" disabled="disabled"-->
+                                                                <!--th:value="*{createdBy.username}"/>-->
+                                                                <!--</div>-->
+                                                                <!--</div>-->
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- PEMOHON -->
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Pemohon
+                                                <a th:href="@{/layanan/tambah-pemohon(no=${appNo})}" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PTP')}" style="margin: 0px 2px;">
+                                                    <button type="button" class="btn btn-xs btn-default  pull-right"> Perubahan Pemohon</button></a>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped table-bordered table-responsive">
+                                                        <thead>
+                                                        <tr>
+                                                            <td>Nama Pemohon Utama</td>
+                                                            <td>Nama Pemohon Tambahan</td>
+                                                            <td>Alamat</td>
+                                                            <td>Email</td>
+                                                            <td>Negara</td>
+                                                            <td>Status</td>
+                                                            <td style="width: 75px;">Username</td>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr th:each="owner : *{pemohon}">
+                                                            <td> <a th:text="${owner.ownerName}" th:href="@{/layanan/form-edit-pemohon(id=${owner.id},no=${appNo})}"></a></td>
+                                                            <td th:text="${owner.ownerDetailName}"></td>
+                                                            <td th:text="${owner.ownerAddress}"></td>
+                                                            <td th:text="${owner.ownerEmail}"></td>
+                                                            <td th:text="${owner.ownerCountry}"></td>
+                                                            <td th:text="${owner.ownerStatus} ? 'Aktif' : 'Tidak Aktif'"></td>
+                                                            <td th:text="${owner.ownerUpdatedBy}"></td>
+                                                        </tr>
+                                                        <tr th:each="child : *{txTmOwnerDetails}">
+                                                            <td th:text="${child.name}"></td>
+                                                            <td>-</td>
+                                                            <td>-</td>
+                                                            <td>-</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- KUASA -->
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Kuasa
+                                                <a th:href="@{/layanan/tambah-kuasa(no=${appNo})}" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PTK')}" style="margin: 0px 2px;">
+                                                    <button type="button" class="btn btn-xs btn-default  pull-right"> Perubahan Kuasa </button></a>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped table-bordered table-responsive">
+                                                        <thead>
+                                                        <tr>
+                                                            <td>Nomor Konsultan</td>
+                                                            <td>Nama Konsultan</td>
+                                                            <td>Alamat</td>
+                                                            <td>Email</td>
+                                                            <td>Status</td>
+                                                            <td style="width: 75px;">Username</td>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr th:each="kuasa : *{txTmReprs}">
+                                                            <td th:text="*{kuasa.mRepresentative.no}"></td>
+                                                            <td> <a th:href="@{/layanan/form-edit-kuasa(id=${kuasa.id},no=${appNo})}" th:text="*{kuasa.mRepresentative.name}"></a></td>
+                                                            <td th:text="*{kuasa.address}"></td>
+                                                            <td th:text="*{kuasa.email}"></td>
+                                                            <td th:text="*{kuasa.status} ? 'Aktif' : 'Tidak Aktif'"></td>
+                                                            <!--<td th:text="*{kuasa.createdBy.username}"></td>-->
+                                                            <td th:text="*{kuasa.updatedBy.username}"></td>
+
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- PRIORITAS -->
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Prioritas
+                                                <a th:href="@{/layanan/form-edit-prioritas(no=${appNo})}" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PUPR')}" style="margin: 0px 2px;">
+                                                    <button type="button" class="btn btn-xs btn-default  pull-right"> Detail </button></a>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="table-container">
+                                                    <table class="table table-striped table-bordered table-responsive">
+                                                        <thead>
+                                                        <tr>
+                                                            <td>Tanggal Prioritas</td>
+                                                            <td>Negara/Kantor Merek</td>
+                                                            <td>Nomor Prioritas</td>
+                                                            <td>Status</td>
+                                                            <td style="width: 200px;">Username</td>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr th:each="prior : *{txTmPrior}">
+                                                            <td th:text="${#dates.format(prior.priorDate, 'dd/MM/yyyy')}"></td>
+                                                            <td th:text="${prior.mCountry.name}"></td>
+                                                            <td th:text="${prior.no}"></td>
+                                                            <td th:text="${prior.status}"></td>
+                                                            <!--<td th:text="${prior.createdBy.username}"></td>-->
+                                                            <td th:text="${prior.updatedBy.username}"></td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- MEREK -->
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Merek
+                                                <a th:href="@{/layanan/form-edit-merek(no=${appNo})}" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PUM')}" style="margin: 0px 2px;">
+                                                    <button type="button" class="btn btn-xs btn-default  pull-right"> Detail </button></a>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="form form-horizontal">
+                                                    <div class="row" th:object="${txTmBrand}">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label col-sm-3">Tipe Merek</label>
+                                                                <div class="col-sm-9">
+                                                                    <select class="form-control" disabled="disabled">
+                                                                        <!-- <option th:text="*{mBrandType.name}"></option> -->
+                                                                        <option th:text="${txTmBrand.mBrandType!=null } ? *{mBrandType.name} : '-' " />
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label col-sm-3">Merek</label>
+                                                                <div class="col-sm-9">
+                                                                    <input type="text" class="form-control" th:value="*{name}" disabled="disabled" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label col-md-3">Keyword Pemeriksa</label>
+                                                                <div class="col-sm-9">
+                                                                    <textarea class="form-control" disabled="disabled" th:text="*{keywordMerek}"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label col-sm-3">Label Merek</label>
+                                                                <div class="col-sm-9">
+                                                                    <img th:src="${imgMerek}"
+                                                                         class="img-fluid img-thumbnail"
+                                                                         alt="Responsive image"
+                                                                         style="max-width: 50%;"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label col-md-3">Deskripsi Merek</label>
+                                                                <div class="col-sm-9">
+                                                                    <textarea class="form-control" disabled="disabled" th:text="*{description}"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label col-sm-3">Warna Merek</label>
+                                                                <div class="col-sm-9">
+                                                        <textarea class="form-control" disabled="disabled"
+                                                                  th:text="*{color}"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label col-sm-3">Terjemahan Bahasa
+                                                                    Asing</label>
+                                                                <div class="col-sm-9">
+                                                                    <textarea class="form-control" disabled="disabled" th:text="*{translation}"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label col-sm-3">Terjemahan Huruf Latin</label>
+                                                                <div class="col-sm-9">
+                                                                    <textarea class="form-control" disabled="disabled" th:text="*{descChar}"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label col-sm-3">Disclaimer</label>
+                                                                <div class="col-sm-9">
+                                                                    <textarea class="form-control" disabled="disabled" th:text="*{disclaimer}"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <img id="cobaImge"/>
+                                                <div class="table-container">
+                                                    <table id="tableImageDetail" class="table table-striped table-bordered table-responsive">
+                                                        <thead>
+                                                        <tr>
+                                                            <th hidden="true"></th>
+                                                            <th>No.</th>
+                                                            <th>Tanggal Upload</th>
+                                                            <th>Nama File</th>
+                                                            <th>Ukuran</th>
+                                                            <th>Deskripsi</th>
+                                                            <th>Gambar</th>
+                                                            <!-- <th></th> -->
+                                                        </tr>
+                                                        </thead>
+                                                    </table>
+                                                    <ul>
+                                                        <li th:each="item : ${listMBrandType}">
+                                                            <input type="checkbox" th:text="${item.name}"/>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- KELAS -->
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Kelas
+                                                <a th:href="@{/layanan/form-edit-kelas(no=${appNo})}" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PUKS')}" style="margin: 0px 2px;">
+                                                    <button type="button" class="btn btn-xs btn-default  pull-right"> Detail </button></a>
+                                            </div>
+                                            <div class="panel-body">
+                                                <label>DITERIMA/ACCEPTED</label>
+                                                <div id="accordion" style="margin-bottom:20px;">
+                                                    <th:block th:each="listTxTmClassAccept : ${listTxTmClassAccept}">
+                                                        <h3 th:text="'Detail Kelas ' + ${listTxTmClassAccept.key}"></h3>
+                                                        <div class="table-responsive">
+                                                            <table class="table table-striped table-bordered table-responsive">
+                                                                <thead>
+                                                                <tr>
+                                                                    <td>Kelas</td>
+                                                                    <td>Uraian Barang / Jasa</td>
+                                                                    <td>Uraian Barang / Jasa (E)</td>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td th:text="${listTxTmClassAccept.key}"></td>
+                                                                    <td th:text="${listTxTmClassAccept.value[0]}"></td>
+                                                                    <td th:text="${listTxTmClassAccept.value[1]}"></td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </th:block>
+                                                </div>
+                                                <label>DITOLAK/REJECTED</label>
+                                                <div id="accordion2" style="margin-bottom:20px;">
+                                                    <th:block th:each="listTxTmClassReject : ${listTxTmClassReject}">
+                                                        <h3 th:text="'Detail Kelas ' + ${listTxTmClassReject.key}"></h3>
+                                                        <div class="table-responsive">
+                                                            <table class="table table-striped table-bordered table-responsive">
+                                                                <thead>
+                                                                <tr>
+                                                                    <td>Kelas</td>
+                                                                    <td>Uraian Barang / Jasa</td>
+                                                                    <td>Uraian Barang / Jasa (E)</td>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td th:text="${listTxTmClassReject.key}"></td>
+                                                                    <td th:text="${listTxTmClassReject.value[0]}"></td>
+                                                                    <td th:text="${listTxTmClassReject.value[1]}"></td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </th:block>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Dokumen Lampiran -->
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Dokumen Lampiran
+                                                <a th:href="@{/layanan/form-edit-dokumen-lampiran(no=${appNo})}" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PUD')}" style="margin: 0px 2px;">
+                                                    <button type="button" class="btn btn-xs btn-default  pull-right"> Detail </button></a>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="table-container">
+                                                  <!--  <span class="pull-right" style="color:red;" th:text="${is_migrated}"></span> -->
+                                                    <table
+                                                            class="table table-striped table-bordered table-responsive"
+                                                            id="tableDokumen1">
+                                                        <thead>
+                                                        <tr>
+                                                            <th hidden="true"></th>
+                                                            <th hidden="true"></th>
+                                                            <th>No.</th>
+                                                            <th>Tanggal Upload</th>
+                                                            <th>Jenis Dokumen</th>
+                                                            <th>Nama File</th>
+                                                            <th>Keterangan</th>
+                                                            <th>Ukuran File</th>
+                                                            <th style="width: 150px;">Username</th>
+                                                            <th>Folder</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr th:each=" item, iter : ${listDocType}">
+                                                            <td><span th:text="${iter.index+1}"></span></td>
+                                                            <td><span th:text="${#dates.format(item?.createdDate, 'dd/MM/yyyy HH:mm:ss')}"></span></td>
+                                                            <td><span th:text="${item?.mDocType?.name}"></span></td>
+                                                            <td><a th:href="@{__${item?.fileName}__}" th:target="_blank" ><span th:text="${item?.fileNameTemp}"></span></a></td>
+                                                            <td><span th:text="${item?.description}"></span></td>
+                                                            <td><span th:text="${item?.fileSize}"></span></td>
+                                                            <td><span th:text="${item?.createdBy?.username}"></span></td>
+                                                            <td><span th:text="${item?.xmlFileId}"></span></td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                         <!-- Referensi -->
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Referensi Permohonan
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="table-container">
+                                                  <!--  <span class="pull-right" style="color:red;" th:text="${is_migrated}"></span> -->
+                                                    <table
+                                                            class="table table-striped table-bordered table-responsive"
+                                                            id="tableReferensi1">
+                                                        <thead>
+                                                        <tr>
+                                                            <th hidden="true"></th>
+                                                            <th hidden="true"></th>
+                                                            <th>No.</th>
+                                                            <th>Nomor Permohonan</th>
+                                                            <th>Nama Merek</th>
+                                                            <th>Nomor Registrasi</th>
+                                                            <th>Tanggal Penerimaan</th>
+                                                            <th>Tanggal Registrasi</th>
+                                                          <!--   <th style="width: 150px;">Username</th>
+                                                            <th>Folder</th> -->
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr th:each=" item, iter : ${listReference}">
+                                                            <td><span th:text="${iter.index+1}"></span></td>
+                                                            <td> <a th:text="${item?.refApplicationId?.applicationNo}" th:href="@{/layanan/pratinjau-permohonan(no=${item?.refApplicationId?.applicationNo})}" target="_blank"></a></td>
+                                                            <td><span th:text="${item?.refApplicationId?.txTmBrand?.name}"></span></td> 
+                                                            <td><span th:text="${item?.refApplicationId?.txRegistration?.no == null ? '-' : item?.refApplicationId?.txRegistration?.no}"></span></td>
+                                                            <td><span th:text="${#dates.format(item?.refApplicationId?.filingDate, 'dd/MM/yyyy HH:mm:ss')}"></span></td>
+                                                            <td><span th:text="${item?.refApplicationId?.txRegistration?.startDate == null ? '-' : #dates.format(item?.refApplicationId?.txRegistration?.startDate, 'dd/MM/yyyy HH:mm:ss')}"></span></td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- BIAYA & NEGARA -->
+                                        <!--                                    <div class="panel panel-primary" th:if="*{dataLoketPenerimaan.mFileTypeDetail.id=='MO'}" >-->
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Biaya dan Negara
+                                                <a th:href="@{/layanan/form-edit-biaya(no=${appNo})}" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PUD')}" style="margin: 0px 2px;">
+                                                    <button type="button" class="btn btn-xs btn-default  pull-right"> Detail </button></a>
+                                            </div>
+                                            <div class="panel-body">
+                                                <table class="table table-striped table-bordered table-responsive">
+                                                    <thead>
+                                                    <tr>
+                                                        <td>Basic Fee</td>
+                                                        <td>Total Complementary Fee</td>
+                                                        <td>Total Suplementary Fee</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td th:text="*{txTmMadridFee.basicFee == null ? '-' : txTmMadridFee.basicFee}"></td>
+                                                        <td th:text="*{txTmMadridFee.complentaryFeeTotal == null ? '-' : txTmMadridFee.complentaryFeeTotal}"></td>
+                                                        <td th:text="*{txTmMadridFee.suplementaryFeeTotal == null ? '-' : txTmMadridFee.suplementaryFeeTotal}"></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped table-bordered table-responsive">
+                                                        <thead>
+                                                        <tr>
+                                                            <td>Negara yang dituju</td>
+                                                            <td>Biaya</td>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr th:each="fee,iter : *{txTmMadridFee == null ? '' : txTmMadridFee.txTmMadridFeeDetails}"  th:id="${'BiayaLine'+iter.index}+1">
+                                                            <td th:text="${fee.mCountry.name}"></td>
+                                                            <td th:text="${fee.totalFee}"></td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- PUBLIKASI -->
+                                    <div class="tab-pane" id="panel2" role="tabpanel">
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Publikasi
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="form form-horizontal">
+                                                    <div class="row" th:object="${txPubsJournal}">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label col-sm-3">Nomor BRM</label>
+                                                                <div class="col-sm-9">
+                                                                    <input type="text" class="form-control" th:value="*{journalNo}" disabled="disabled"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label col-sm-3">Nama Grup</label>
+                                                                <div class="col-sm-9">
+                                                                    <input type="text" class="form-control" th:value="*{txGroup==null} ? '' : *{txGroup.name}" disabled="disabled"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label col-sm-3">Tanggal Publikasi</label>
+                                                                <div class="col-sm-9">
+                                                                    <input type="text" class="form-control" th:if="*{journalStart}" th:value="*{#dates.format(journalStart, 'dd/MM/yyyy')}" disabled="disabled"/>
+                                                                    <input type="text" class="form-control" th:if="!*{journalStart}" disabled="disabled"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label col-md-3">Tanggal Berakhir</label>
+                                                                <div class="col-sm-9">
+                                                                    <input type="text" class="form-control" th:if="*{journalEnd}" th:value="*{#dates.format(journalEnd, 'dd/MM/yyyy')}" disabled="disabled"/>
+                                                                    <input type="text" class="form-control" th:if="!*{journalEnd}" disabled="disabled"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label col-sm-3">Catatan Publikasi</label>
+                                                                <div class="col-sm-9">
+                                                                    <textarea class="form-control" disabled="disabled" th:text="*{journalNotes}"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- REGISTRASI -->
+                                    <div class="tab-pane" id="panel3" role="tabpanel">
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading" th:object="${txRegistration}">
+                                                Registrasi
+                                                <a th:href="@{/}" id="doRegCncl" style="margin: 0px 2px; display: none;" class="btn btn-xs btn-danger  pull-right"><i class="fas fa-times"></i> Batal </a>
+                                                <a th:href="@{/}" id="doRegSave" style="margin: 0px 2px; display: none;" class="btn btn-xs btn-primary  pull-right"> Simpan </a>
+                                                <a th:href="@{/}" id="doRegDel"		th:if="${#authentication.getPrincipal().hasAccessMenu('T-HPSST')}"	style="margin: 0px 2px;" th:styleappend="*{no == null ? 'display: none;' : ''}"  class="btn btn-xs btn-default  pull-right"> Hapus </a>
+                                                <a th:href="@{/}" id="doRegEdit"	th:if="${#authentication.getPrincipal().hasAccessMenu('T-PUST')}"	style="margin: 0px 2px;" th:styleappend="*{no == null ? 'display: none;' : ''}"  class="btn btn-xs btn-default  pull-right"> Ubah </a>
+                                                <a th:href="@{/}" id="doRegGnrt"	th:if="${#authentication.getPrincipal().hasAccessMenu('T-PGST')}"	style="margin: 0px 2px;" th:styleappend="${txRegistration.no != null or dataGeneral.mStatus.id!='130' or txRegistration.downloadFlag or notFirstRegistration ? 'display: none;' : ''}" class="btn btn-xs btn-default  pull-right"> Generate </a>
+                                                <a th:href="@{/}" id="doRegGnrt2"	th:if="${#authentication.getPrincipal().hasAccessMenu('T-PGST')}"	style="margin: 0px 2px;" th:styleappend="${txRegistration.no != null or dataGeneral.mStatus.id!='125' or txRegistration.downloadFlag or notFirstRegistration ? 'display: none;' : ''}" class="btn btn-xs btn-default  pull-right"> Generate UU Lama</a>
+                                                <a th:href="@{/}" id="doRegGnrtMan"	th:if="${#authentication.getPrincipal().hasAccessMenu('T-PGST')}"	style="margin: 0px 2px;" th:styleappend="${txRegistration.no != null or dataGeneral.mStatus.id!='130' or txRegistration.downloadFlag or notFirstRegistration ? 'display: none;' : ''}" class="btn btn-xs btn-default  pull-right"> Generate Manual </a>
+                                                <a th:href="@{/}" id="doRegReGnrt"	th:if="${#authentication.getPrincipal().hasAccessMenu('T-RGRTS')}"	style="margin: 0px 2px;" th:styleappend="${!txRegistration.downloadFlag ? 'display: none;' : ''}" class="btn btn-xs btn-default  pull-right"> Regenerate </a>
+                                                <a th:href="@{/}" id="doRegExtd"	th:if="${#authentication.getPrincipal().hasAccessMenu('T-EXT')}"	style="margin: 0px 2px;" th:styleappend="*{no == null ? 'display: none;' : ''}"  class="btn btn-xs btn-default  pull-right"> Extend </a>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="form form-horizontal">
+                                                    <div class="row">
+                                                        <form id="formReg" th:object="${txRegistration}">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-3">Nomor Registrasi</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="hidden" id="idReg" th:value="*{id}"/>
+                                                                        <input type="hidden" id="noRegTemp"/>
+                                                                        <input type="text" class="form-control" th:value="*{no}" disabled="disabled" id="noReg" name="noReg" th:required="true"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                               
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-sm-3">Tanggal Registrasi</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="text" id="startDateReg" class="form-control datepicker"  th:value="*{startDateTemp}" disabled="disabled"/> 
+                                                                    </div> 																		 
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label col-md-3">Tanggal Perlindungan Berakhir</label>
+                                                                    <div class="col-sm-9">
+                                                                      <input type="text" class="form-control datepicker" id="endDateReg" disabled="disabled" th:value="*{endDateTemp}" /> 
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <div class="table-container">
+                                                    <table id="tableReg" class="table table-striped table-bordered table-responsive">
+                                                        <thead>
+                                                        <tr>
+                                                            <td>No</td>
+                                                            <td>Nomor Registrasi</td>
+                                                            <td>Tanggal Registrasi</td>
+                                                            <td>Tanggal Perlindungan Berakhir</td>
+                                                            <td>Status</td>
+                                                            <td style="width: 75px;">Username</td>
+                                                        </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            
+                                                                
+                                                        <!-- Modal Input No Registrasi-->
+									            <div class="modal fade" id="inputNoReg" tabindex="-1" role="dialog" aria-labelledby="inputNoReg">
+									                <div class="modal-dialog" role="document" style="width:500px; height:1000px;">
+									                    <div class="modal-content">
+									                        <div class="modal-header">
+									                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									                                <span aria-hidden="true">&times;</span></button>
+									                            <h4 class="modal-title" id="myModalLabel">Masukkan No Registrasi</h4>
+									                        </div>
+									                        <div class="modal-body"> 
+									                           <form id="formSearch6" method="post" class="form-horizontal">    
+									                                <div class="form-group">
+									                                    <label class="col-sm-4 col-form-label">No Registrasi</label>
+									                                    <div class="col-sm-8">  
+                                                                        <input type="text" class="form-control"   id="manualNoReg" name="manualNoReg" th:required="true"/> 
+									                                    </div>
+									                                </div>
+									                            </form>
+									                            
+									                            <div class="modal-footer">  
+										                                <button type="button" class="btn btn-primary" id="btnOk"> <i class="fas fa-check"></i>
+										                                    Ok
+										                                </button> 
+									                            </div> 
+									                         </div>
+									                    </div>
+									                </div>
+									            </div>
+									          <!-- Modal Input No Registrasi Ends here-->
+						          
+						          
+                                        </div>
+                                    </div>
+
+                                    <!-- LISENSI -->
+                                    <div class="tab-pane" id="panel4" role="tabpanel">
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                <input type="hidden" id="idReg" th:value="*{txRegistration.no}"/>
+                                                Lisensi
+                                                <a th:href="@{/layanan/tambah-lisensi(no=${appNo})}" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PTLS')}" id="doAddLicense" style="margin: 0px 2px;" th:styleappend="*{txRegistration.no == null ? 'display: none;' : ''}">
+                                                    <button type="button" class="btn btn-xs btn-default  pull-right"> Tambah </button></a>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="table-container">
+                                                    <table id="tableLicense" class="table table-striped table-bordered table-responsive">
+                                                        <thead>
+                                                        <tr>
+                                                            <td>No</td>
+                                                            <td>Nama</td>
+                                                            <td>Parent</td>
+                                                            <td>Alamat</td>
+                                                            <td>Telepon</td>
+                                                            <td>Negara</td>
+                                                            <td>Tanggal Mulai</td>
+                                                            <td>Tanggal Berakhir</td>
+                                                            <td>Status</td>
+                                                            <td style="width: 75px;">Username</td>
+                                                        </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div> 
+<div th:replace="fragment/js :: datepicker"></div>  
+<div th:replace="fragment/js :: datatables"></div>
+<div th:replace="fragment/permohonan/js-form-5 :: form-5"></div>
+<div th:replace="fragment/permohonan/js-form-7 :: form-7"></div>
+
+</body>
+<!-- <script type="text/javascript" th:src="@{/js/jquery-ui.js}"></script>  -->
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	/*<![CDATA[*/
+		var csrf = /*[[${_csrf.token}]]*/'';
+		var header = "X-CSRF-TOKEN";
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, csrf);
+        });
+
+        $(document).ready(function () {
+            $(function() {
+                $( "#accordion" ).accordion({
+                    active: false,
+                    heightStyle: "content",
+                    collapsible: true,
+                });
+            });
+            $(function() {
+                $( "#accordion2" ).accordion({
+                    active: false,
+                    heightStyle: "content",
+                    collapsible: true,
+                });
+            });
+        	var tableReg=$('#tableReg');
+    		var searchByArr=[];
+    		var keywordArr=[];
+
+    		searchByArr.push('txRegistration.txTmGeneral.id');
+    		keywordArr.push(/*[[${dataGeneral.id}]]*/'');
+    		
+    		tableReg.data('searchByArr', searchByArr);
+    		tableReg.data('keywordArr', keywordArr);
+    		tableReg.data('orderBy', 'startDate');
+    		tableReg.data('orderType', 'ASC'); 
+    		
+    		var dataTableReg=tableReg.DataTable({
+    			ajax:{
+    				data:function(d){
+    					d.searchByArr=tableReg.data('searchByArr');
+    					d.keywordArr=tableReg.data('keywordArr');
+    					d.orderBy=tableReg.data('orderBy');
+    					d.orderType=tableReg.data('orderType');
+    					d._csrf=csrf;
+    				},
+    				type:'POST',
+    				url:/*[[@{/layanan/cari-data-registration}]]*/''
+    			},
+    			language:{
+    				url:/*[[@{/js/i18n/datatables.in.json}]]*/''
+    			},
+    			lengthMenu:[[10,30,90],[10,30,90]],
+    			pageLength:10,
+    			processing:true,
+    			searching:false,
+    			serverSide:true
+    		});
+    		
+    		var tableLicense=$('#tableLicense');
+    		var searchByArr=[];
+    		var keywordArr=[];
+
+    		searchByArr.push('txTmGeneral.id');
+    		keywordArr.push(/*[[${dataGeneral.id}]]*/'');
+    		
+    		tableLicense.data('searchByArr', searchByArr);
+    		tableLicense.data('keywordArr', keywordArr);
+    		tableLicense.data('orderBy', 'startDate');
+    		tableLicense.data('orderType', 'ASC');
+    		
+    		var dataTableLicense=tableLicense.DataTable({
+    			ajax:{
+    				data:function(d){
+    					d.searchByArr=tableLicense.data('searchByArr');
+    					d.keywordArr=tableLicense.data('keywordArr');
+    					d.orderBy=tableLicense.data('orderBy');
+    					d.orderType=tableLicense.data('orderType');
+    					d._csrf=csrf;
+    				},
+    				type:'POST',
+    				url:/*[[@{/layanan/cari-data-license}]]*/''
+    			},
+    			language:{
+    				url:/*[[@{/js/i18n/datatables.in.json}]]*/''
+    			},
+    			lengthMenu:[[10,30,90],[10,30,90]],
+    			pageLength:10,
+    			processing:true,
+    			searching:false,
+    			serverSide:true
+    		});
+    		
+	        $("#formReg").validate({
+	    		messages: {
+	    			'noReg': {
+						required:/*[[#{field.error.required('Nomor Registrasi')}]]*/''
+					},
+	    		},
+				highlight: function(element) {
+					$(element).closest('.form-group').addClass('has-error');
+				},
+				unhighlight: function(element) {
+					$(element).closest('.form-group').removeClass('has-error');
+				},
+				errorElement: 'span',
+				errorClass: 'help-block',
+				errorPlacement: function(error, element) {
+					if(element.parent('.input-group').length) {
+						error.insertAfter(element.parent());
+					} else {
+						error.insertAfter(element);
+					}
+				}
+	    	});
+	        
+			$('#doRegGnrt').on('click', function(event){
+				event.preventDefault();
+				swal("Konfirmasi", "Apakah Anda yakin akan generate data Registrasi?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+	      		.then((value) => {
+	      			if (value) {
+						var formData = {
+							id: /*[[${dataGeneral.id}]]*/'',
+							filingDate: /*[[${dataGeneral.filingDate}]]*/'',
+							txRegistration: { id: $('#idReg').val() }
+						};
+						
+						$.ajax({
+							type: 'POST',
+							contentType: "application/json",
+			                url:/*[[@{/layanan/generate-registrasi-sertifikat}]]*/'',
+			                data: JSON.stringify(formData),
+			                datatype:'json',
+							beforeSend: function () {
+								showLoading();
+							},
+							complete:function(){
+								hideLoading();
+							},
+							success:function(data){
+								$('#idReg').val(data.id);
+								$('#noReg').val(data.no);
+								$('#startDateReg').val(data.startDateTemp);
+								$('#endDateReg').val(data.endDateTemp);								
+								$('#doRegGnrt').hide();
+								$('#doRegEdit').show();
+								$('#doRegDel').show();
+								$('#doGnrtCetakSertifikat').show();
+								$('#doAddLicense').show();								
+								dataTableReg.ajax.reload();
+								swal("Informasi", "Data Registrasi telah berhasil digenerate.", "info");
+							},
+							error: function (xhr, status) {
+			                	swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+			                }
+						});
+	      			}
+	      		});
+			});
+			$('#doRegGnrt2').on('click', function(event){
+				event.preventDefault();
+				swal("Konfirmasi", "Apakah Anda yakin akan generate data Registrasi?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+	      		.then((value) => {
+	      			if (value) {
+						var formData = {
+							id: /*[[${dataGeneral.id}]]*/'',
+							filingDate: /*[[${dataGeneral.filingDate}]]*/'',
+							txRegistration: { id: $('#idReg').val() }
+						};
+
+						$.ajax({
+							type: 'POST',
+							contentType: "application/json",
+			                url:/*[[@{/layanan/generate-registrasi-sertifikat}]]*/'',
+			                data: JSON.stringify(formData),
+			                datatype:'json',
+							beforeSend: function () {
+								showLoading();
+							},
+							complete:function(){
+								hideLoading();
+							},
+							success:function(data){
+								$('#idReg').val(data.id);
+								$('#noReg').val(data.no);
+								$('#startDateReg').val(data.startDateTemp);
+								$('#endDateReg').val(data.endDateTemp);
+								$('#doRegGnrt2').hide();
+								$('#doRegEdit').show();
+								$('#doRegDel').show();
+								$('#doGnrtCetakSertifikat').show();
+								$('#doAddLicense').show();
+								dataTableReg.ajax.reload();
+								swal("Informasi", "Data Registrasi telah berhasil digenerate.", "info");
+							},
+							error: function (xhr, status) {
+			                	swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+			                }
+						});
+	      			}
+	      		});
+			});
+
+			$('#doRegExtd').on('click', function(event){
+				event.preventDefault();
+				swal("Konfirmasi", "Apakah Anda yakin akan memperpanjang data Registrasi ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+	      		.then((value) => {
+	      			if (value) {
+						var formData = {
+							id: /*[[${dataGeneral.id}]]*/'',
+							txRegistration: { 
+								id: $('#idReg').val(),
+								no: $('#noReg').val(),
+								endDateTemp: $('#endDateReg').val()
+							}
+						};
+						
+						$.ajax({
+							type: 'POST',
+							contentType: "application/json",
+			                url:/*[[@{/layanan/extend-registrasi-sertifikat}]]*/'',
+			                data: JSON.stringify(formData),
+			                datatype:'json',
+							beforeSend: function () {
+								showLoading();
+							},
+							complete:function(){
+								hideLoading();
+							},
+							success:function(data){
+								$('#noReg').val(data.no);
+								$('#startDateReg').val(data.startDateTemp);
+								$('#endDateReg').val(data.endDateTemp);
+								<!--$('#doRegExtd').hide();-->
+								$('#doRegReGnrt').hide();
+								downloadFlag = false;						
+								dataTableReg.ajax.reload();
+								swal("Informasi", "Data Registrasi telah berhasil diperpanjang.", "info");
+							},
+							error: function (xhr, status) {
+			                	swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+			                }
+						});
+	      			}
+	      		});
+			});
+			var isEditReg = false;
+			$('#doRegEdit').on('click', function(event){
+				event.preventDefault();
+				isEditReg = true;
+				$('#doRegEdit').hide();
+				$('#doRegDel').hide();
+				$('#doRegCncl').show();
+				$('#doRegSave').show();
+				$('#noReg').prop('disabled', false);
+				$('#noRegTemp').val($('#noReg').val());
+				$('#startDateReg').prop('disabled', false);
+				$('#endDateReg').prop('disabled', false);
+			});
+			$('#doRegCncl').on('click', function(event){
+				event.preventDefault();
+				isEditReg = false;
+				$('#doRegEdit').show();
+				$('#doRegDel').show();
+				$('#doRegCncl').hide();
+				$('#doRegSave').hide();
+				$('#noReg').prop('disabled', true);
+				$('#startDateReg').prop('disabled', true);
+				$('#endDateReg').prop('disabled', true);
+				$('#noReg').val($('#noRegTemp').val());
+				$('#noReg').closest('.form-group').removeClass('has-error');
+				$('#noReg').next().remove();
+			});
+			$('#doRegSave').on('click', function(event){
+				event.preventDefault();
+				if ($('#formReg').valid()) {
+					swal("Konfirmasi", "Apakah Anda yakin akan merubah Data Registrasi?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+		      		.then((value) => {
+		      			if (value) {
+		      				$.ajax({
+								type : "POST",
+								url:/*[[@{/layanan/edit-registrasi-sertifikat}]]*/'',
+								dataType:'json',
+								data : {
+									id: /*[[${dataGeneral.id}]]*/'',
+			   						no : $('#noReg').val(),
+			   						startDateReg : $('#startDateReg').val(),
+			   						endDateReg : $('#endDateReg').val()
+								},
+								beforeSend: function () {
+									showLoading();
+								},
+								complete:function(){
+									hideLoading();
+								},
+								success:function(data){
+									<!--if (data == "EXIST") {-->
+										<!--swal("Error", "Nomor Registrasi " + $('#noReg').val() + " sudah ada. Silakan pilih Nomor Registrasi yang lain", "error");-->
+									<!--} else {-->
+										isEditReg = false;
+										$('#doRegEdit').show();
+										$('#doRegDel').show();
+										$('#doRegCncl').hide();
+										$('#doRegSave').hide();
+										$('#noReg').prop('disabled', true);
+										$('#startDateReg').prop('disabled', true);
+										$('#endDateReg').prop('disabled', true);
+										dataTableReg.ajax.reload();
+										swal("Informasi", "Nomor Registrasi telah berhasil dirubah.", "info");
+									<!--}-->
+								},
+								error: function (xhr, status) {
+				                	swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+				                }
+							});
+		      			} 
+		      		});	
+				}
+			});
+			
+			$('#doRegDel').on('click', function(event){
+				event.preventDefault();
+				if ($('#formReg').valid()) {
+					swal("Konfirmasi", "Apakah Anda yakin akan menghapus data terakhir?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+		      		.then((value) => {
+		      			if (value) {
+		      				var formData = {
+	      						id: /*[[${dataGeneral.id}]]*/'',
+	      						txRegistration: { id: $('#idReg').val() }
+	      					};
+		      				
+		      				$.ajax({
+								type : "POST",
+								contentType: "application/json",
+								url:/*[[@{/layanan/remove-registrasi-sertifikat}]]*/'',
+								data: JSON.stringify(formData),
+		    	                datatype:'json',
+								beforeSend: function () {
+									showLoading();
+								},
+								complete:function(){
+									hideLoading();
+								},
+								success:function(data){
+									if (data == null) {
+										$('#noReg').val(null);
+										$('#startDateReg').val(null);
+										$('#endDateReg').val(null);
+										$('#doRegGnrt').show();
+										$('#doRegGnrt2').show();
+										$('#doRegGnrtMan').show();
+										$('#doRegDel').hide();
+										$('#doRegReGnrt').hide();
+										$('#doRegExtd').hide();
+										$('#doGnrtCetakSertifikat').hide();
+									} else {
+										$('#doRegReGnrt').show();
+										$('#doRegExtd').show();
+										$('#noReg').val(data.no);
+										$('#startDateReg').val(data.startDateTemp);
+										$('#endDateReg').val(data.endDateTemp);
+									}
+									$('#doRegEdit').hide();
+									dataTableReg.ajax.reload();
+									swal("Informasi", "Data terakhir telah berhasil dihapus.", "info");
+								},
+								error: function (xhr, status) {
+				                	swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+				                }
+							});
+		      			} 
+		      		});	
+				}
+			});
+			
+			$('#doRegReGnrt').on('click', function(event){
+				event.preventDefault();
+				if ($('#formReg').valid()) {
+					swal("Konfirmasi", "Apakah Anda yakin akan generate ulang sertifikat ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+		      		.then((value) => {
+		      			if (value) {
+		      				$.ajax({
+								type : "POST",
+								url:/*[[@{/layanan/regenerate-sertifikat}]]*/'',
+								dataType:'json',
+								data : {
+									no : /*[[${dataGeneral.applicationNo}]]*/'',
+								},
+								beforeSend: function () {
+									showLoading();
+								},
+								complete:function(){
+									hideLoading();
+								},
+								success:function(data){
+									swal("Informasi", "Process generate ulang sertifikat telah berhasil dilakukan.", "info");
+								},
+								error: function (xhr, status) {
+				                	swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+				                }
+							});
+		      			} 
+		      		});	
+				}
+			});
+			
+			var downloadFlag = /*[[${txRegistration.downloadFlag}]]*/'';
+			
+			$('#doGnrtCetakSertifikat').on('click', function(event){
+				event.preventDefault();				
+				
+				if (!isEditReg){
+					$.ajax({
+						type: 'POST',
+						url:/*[[@{/layanan/generate-sertifikat}]]*/'',
+						dataType:'json',
+						data : {
+							no : /*[[${dataGeneral.applicationNo}]]*/'',
+							downloadFlag: downloadFlag
+						},
+						beforeSend: function () {
+							showLoading();
+						},
+						complete:function(){
+							hideLoading();
+						},
+						success:function(data){
+							$('#doRegEdit').hide();
+							$('#doRegExtd').show();
+							$('#doRegReGnrt').show();
+							downloadFlag = true;
+							window.open(/*[[@{/layanan/cetak-sertifikat(no=${appNo})}]]*/'', '_blank');
+						},
+						error: function (xhr, status) {
+		                	swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+		                }
+					});
+				}
+			});
+			
+			
+			$('#doRegGnrtMan').on('click', function(event){ 
+				event.preventDefault();
+				$("#inputNoReg").modal('show');
+			});
+			
+		    $('#btnOk').click(function () { 
+					$("#inputNoReg").modal('hide');
+		                   swal("Konfirmasi", "Apakah Anda yakin akan generate data Registrasi?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+		                   .then((value) => {
+		                       if (value) { 
+		                           $.ajax({
+		                               type: 'POST', 
+		                               url:/*[[@{/layanan/manual-generate-registrasi-sertifikat}]]*/'', 
+		                               datatype:'json', 
+									   data : {
+											 id: /*[[${dataGeneral.id}]]*/'',
+											 noReg: $('#manualNoReg').val() 
+										},
+		                               beforeSend: function () {
+		                                   showLoading();
+		                               },
+		                               complete:function(){
+		                                   hideLoading();
+		                               },
+		                               success:function(data){
+		                                   $('#idReg').val(data.id);
+		                                   $('#noReg').val(data.no);
+		                                   $('#startDateReg').val(data.startDateTemp);
+		                                   $('#endDateReg').val(data.endDateTemp);                             
+		                                   $('#doRegGnrt').hide();
+		                                   $('#doRegEdit').show();
+		                                   $('#doRegDel').show();
+		                                   $('#doGnrtCetakSertifikat').show();
+		                                   $('#doAddLicense').show();                              
+		                                   dataTableReg.ajax.reload();
+		                                   swal("Informasi", "Data Registrasi telah berhasil digenerate.", "info");
+		                               },
+		                               error: function (xhr, status) {
+		                                   swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+		                               }
+		                           });
+		                       }
+		                   }); 
+		        });
+				
+        });
+		/*]]>*/
+        
+		$('.datepicker').datepicker({
+          format: 'dd/mm/yyyy',
+          autoclose: true,  
+          useCurrent: true
+        });
+ 	 
+</script>
+</html>

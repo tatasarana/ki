@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="6_class" pageWidth="460" pageHeight="200" whenNoDataType="AllSectionsNoDetail" columnWidth="460" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="92642826-053e-4bc8-8b26-6186981b10b2">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab Data Text" hTextAlign="Center" hImageAlign="Center"/>
+	<parameter name="classContinues" class="java.lang.Integer"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="listClass" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<queryString language="plsql">
+		<![CDATA[SELECT *
+FROM(
+SELECT ROWNUM AS R, A.*
+FROM(
+SELECT B.CLASS_NO,
+TO_CLOB(SUBSTR(RTRIM(XMLAGG(XMLELEMENT(E,C.CLASS_DESC_EN,';').EXTRACT('//text()') ORDER BY B.CLASS_NO,C.CLASS_DESC_EN).GetClobVal(),','),0,4000)) AS CLASS_DESC_EN1,
+TO_CLOB(SUBSTR(RTRIM(XMLAGG(XMLELEMENT(E,C.CLASS_DESC_EN,';').EXTRACT('//text()') ORDER BY B.CLASS_NO,C.CLASS_DESC_EN).GetClobVal(),','),4001,8000)) AS CLASS_DESC_EN2,
+TO_CLOB(SUBSTR(RTRIM(XMLAGG(XMLELEMENT(E,C.CLASS_DESC_EN,';').EXTRACT('//text()') ORDER BY B.CLASS_NO,C.CLASS_DESC_EN).GetClobVal(),','),8001,12000)) AS CLASS_DESC_EN3,
+TO_CLOB(SUBSTR(RTRIM(XMLAGG(XMLELEMENT(E,C.CLASS_DESC_EN,';').EXTRACT('//text()') ORDER BY B.CLASS_NO,C.CLASS_DESC_EN).GetClobVal(),','),12001,16000)) AS CLASS_DESC_EN4,
+TO_CLOB(SUBSTR(RTRIM(XMLAGG(XMLELEMENT(E,C.CLASS_DESC_EN,';').EXTRACT('//text()') ORDER BY B.CLASS_NO,C.CLASS_DESC_EN).GetClobVal(),','),16001,20000)) AS CLASS_DESC_EN5
+FROM TX_TM_CLASS A
+INNER JOIN TX_TM_GENERAL GEN ON GEN.APPLICATION_ID=A.APPLICATION_ID
+LEFT JOIN M_CLASS B ON A.CLASS_ID = B.CLASS_ID
+LEFT JOIN M_CLASS_DETAIL C ON A.CLASS_DETAIL_ID=C.CLASS_DETAIL_ID
+WHERE A.APPLICATION_ID = $P{applicationId}
+GROUP BY B.CLASS_NO) A
+)
+WHERE R <= $P{listClass}]]>
+	</queryString>
+	<field name="R" class="java.math.BigDecimal"/>
+	<field name="CLASS_NO" class="java.math.BigDecimal"/>
+	<field name="CLASS_DESC_EN1" class="java.lang.String"/>
+	<field name="CLASS_DESC_EN2" class="java.lang.String"/>
+	<field name="CLASS_DESC_EN3" class="java.lang.String"/>
+	<field name="CLASS_DESC_EN4" class="java.lang.String"/>
+	<field name="CLASS_DESC_EN5" class="java.lang.String"/>
+	<detail>
+		<band height="40" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="0" y="0" width="50" height="24" isRemoveLineWhenBlank="true" uuid="a730bfa8-6438-42f7-aa25-af35494da0e0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLASS_NO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="50" y="0" width="409" height="24" isRemoveLineWhenBlank="true" uuid="2a014f39-d268-4576-8f34-ab2594c99ce1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box rightPadding="2">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textElement textAlignment="Justified">
+					<font fontName="Courier New" size="12"/>
+					<paragraph lineSpacingSize="0.5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLASS_DESC_EN1}+($F{CLASS_DESC_EN2}==null?"":$F{CLASS_DESC_EN2})+($F{CLASS_DESC_EN3}==null?"":$F{CLASS_DESC_EN3})+($F{CLASS_DESC_EN4}==null?"":$F{CLASS_DESC_EN4})+($F{CLASS_DESC_EN5}==null?"":$F{CLASS_DESC_EN5})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

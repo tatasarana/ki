@@ -1,0 +1,238 @@
+<div class="row display--none" js-direction="step-form-place" js-id="5" xmlns:th="http://www.w3.org/1999/xhtml">
+    <form class="form-horizontal" id="idForm5" th:object="${txTmBrand}" method="POST" enctype="multipart/form-data">
+        <!--Header Judul-->
+        <div class="row col-md-12" style="margin-bottom: 15px">
+            <div class="col-md-4">
+                <h3>Data Merek</h3>
+            </div>
+            <div class="col-md-8">
+                <div class="pull-right">
+                    <li js-direction="step-form" class="current" js-id="4"
+                        style="list-style-type: none; float: left">
+                        <button type="button" class="btn btn-warning">
+                            Sebelumnya
+                        </button>
+                    </li>
+                    <li style="list-style-type:none; float: right; margin-left:5px;">
+                        <button type="button" class="btn btn-primary" id="form5push">
+                            Simpan dan Lanjutkan
+                        </button>
+                    </li>
+                </div>
+            </div>
+            <div class="pull-right">
+                <label class="col-form-label notice">*) Wajib Diisi</label>
+            </div>
+        </div>
+        <!--Form-->
+        <div class="row col-md-12">
+            <div class="col-md-12">
+                <div class="m-portlet__body">
+                    <div class="form-group m-form__group row required">
+                        <label class="col-form-label required-label col-md-4">
+                            Tipe Merek
+                        </label>
+                        <div class="col-md-8">
+                            <select class="form-control" th:field="*{mBrandType.id}" id="mBrandType" th:required="true">
+                                <option th:each="item,iterationStatus : ${listBrandType}" th:value="${item.id}"
+                                        th:text="${item.name}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                        <div class="form-group m-form__group row required">
+                            <div class="col-sm-4 col-form-label required-label">
+                                <label>Label Merek </label>
+                                <span style="color: red;font-size:12px">(Format File : Hanya JPG)</span>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="custom-file input-group">
+                                    <input type="file" style="display:none;" accept="image/jpeg,image/jpg" th:field="*{fileMerek}"/>
+                                    <input type="text" class="form-control" placeholder="Tidak ada berkas dipilih" th:field="*{fileName}" readonly="true"/>
+                                    <img th:src="${imgMerek}" id="prevForm5" style="max-width: 100%;"/>
+                                    <span id="file_error" style="color: red"></span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary"
+                                    onclick="$('#fileMerek').trigger('click')">Pilih File
+                            </button>
+                        </div>
+                            <div class="form-group m-form__group row">
+                                <label class="col-md-4 col-form-label required-label">
+                                    Merek
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" placeholder="Nama Merek" 
+                                    	    th:field="*{name}" id="nama" th:required="true" maxlength="255"/>
+									<span class="help-block" th:if="${#fields.hasErrors('name')}"
+                                          th:errors="*{name}"></span>
+                                </div>
+                            </div>
+                        	<input type="hidden" th:value="*{keywordMerek}" id="keyMerek" />
+                            <div class="form-group m-form__group row">
+                                <label class="col-md-4 col-form-label">
+                                    Deskripsi Label Merek
+                                </label>
+                                <div class="col-md-8">
+                                    <textarea placeholder="Penjelasan Label Merek" class="form-control"
+                                              th:field="*{description}" id="deskripsi" maxlength="1000"></textarea>
+                                    <span class="help-block" th:if="${#fields.hasErrors('description')}"
+                                          th:errors="*{description}"></span>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <label class="col-md-4 col-form-label">
+                                    Unsur warna dalam Label Merek
+                                </label>
+                                <div class="col-md-8">
+                                                <textarea placeholder="Unsur warna dalam Merek"
+                                                          class="form-control"
+                                                          id="warna" th:field="*{color}" maxlength="300">
+                                                </textarea>
+                                    <span class="help-block" th:if="${#fields.hasErrors('color')}"
+                                          th:errors="*{color}">
+                                                </span>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <label class="col-md-4 col-form-label">
+
+                                </label>
+                                <div class="col-md-8">
+                                    <div class="m-checkbox-inline ">
+                                        <label class="m-checkbox">
+                                            <input type="radio" class="btnRadio" name="adaRadio" value="enable"
+                                                   id="terjmh1"/>
+                                            Ada Terjemahan
+                                        </label>
+                                        <label class="m-checkbox">
+                                            <input type="radio" class="btnRadio" name="adaRadio" value="disable"
+                                                   id="terjmh2"/>
+                                            Tidak Ada Terjemahan
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <label class="col-md-4 col-form-label">
+                                    Terjemahan jika Merek menggunakan istilah asing
+                                </label>
+                                <div class="col-md-8">
+                                                <textarea id="terjemahanAsing"
+                                                          placeholder="Terjemahan jika Merek menggunakan istilah asing"
+                                                          class="form-control"
+                                                          th:field="*{translation}" maxlength="500">
+                                                </textarea>
+                                    <span class="help-block" th:if="${#fields.hasErrors('translation')}"
+                                    th:errors="*{translation}"> Tidak Ada Terjemahan</span>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <label class="col-md-4 col-form-label">
+                                    Pengucapan jika Merek menggunakan karakter huruf non-latin
+                                </label>
+                                <div class="col-md-8">
+                                                <textarea id="pengucapanNonLatin"
+                                                          placeholder="Pengucapan jika Merek menggunakan karakter huruf non-latin"
+                                                          class="form-control"
+                                                          th:field="*{descChar}" maxlength="500">
+                                                </textarea>
+                                    <span class="help-block" th:if="${#fields.hasErrors('descChar')}"
+                                    th:errors="*{descChar}"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group m-form__group row">
+                                <div class="col-md-4" >
+                                    <label class="col-form-label">
+                                        Disclaimer
+                                    </label>
+                                    <br/>
+                                    <span style="color: red;font-size:12px">(Tidak dilindungi sebagai Merek)</span>
+
+                                </div>
+                                <div class="col-md-8">
+                                                <textarea placeholder="Disclaimer" class="form-control" id="disclaimer"
+                                                          th:field="*{disclaimer}" maxlength="500">
+                                                </textarea>
+                                    <span class="help-block" th:if="${#fields.hasErrors('disclaimer')}"
+                                    th:errors="*{disclaimer}"></span>
+                                </div>
+                            </div>
+                    <!-- Garis pembatas horizontal -->
+					<div class="form-group">
+                          <div class="col-md-7">
+                              <hr width="175%"></hr>
+                          </div>
+                        <div class="col-md-12">
+                            <h3>Data Merek Tambahan</h3>
+                        </div>
+                    </div>
+                    <!-- <div class="tab-pane" id="uploadmerekpanel" role="tabpanel"> -->
+                        <div class="m-portlet__body"><br/>
+                            <div class="form-group m-form__group row">
+                                <label class="col-md-4 col-form-label">
+                                    Upload Label Tambahan
+                                </label>
+                                <div class="col-md-4">
+                                    <div class="custom-file">
+                                        <input type="file" class="btnUpload custom-file-input demoInputBox"
+                                               id="customFileImageForm52"/>
+                                        <img id="prevForm5Detail" style="max-width: 100%;"/>
+                                        <span id="file_error_detail" style="color: red"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <label class="col-md-4">
+                                    Deskripsi Label Tambahan
+                                </label>
+                                <div class="col-md-8">
+                                    <textarea placeholder="Deskripsi File" class="form-control"
+                                              id="deskripsiDetail"
+                                              th:field="${txTmBrandDetail.fileDescription}" maxlength="255"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <label class="col-md-4 col-form-label"></label>
+                                <div class="col-md-7">
+                                    <a id="cancelImgDetail"
+                                       class="btn btn-danger"><i class="fas fa-times"></i>
+                                        Batal
+                                    </a>
+                                    <a id="addImgDetail"
+                                       class="btn btn-info">
+                                        Tambah
+                                    </a>
+                                </div>
+                            </div> 
+                        <!-- </div> -->
+                        <img id="cobaImge"/>
+                        <div class="table-container">
+                            <table id="tableImageDetail" class="table table-striped table-bordered">
+                                <thead>
+                                <tr>
+                                    <th hidden="true"></th>
+                                    <th>No.</th>
+                                    <th>Tanggal Upload</th>
+                                    <th>Nama File</th>
+                                    <th>Ukuran</th>
+                                    <th>Deskripsi</th>
+                                    <th>Gambar</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                            </table>
+                            <ul>
+                                <li th:each="item : ${listMBrandType}">
+                                    <input type="checkbox" th:text="${item.name}"/>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                <!-- </div> -->
+            </div>
+        </div>
+    </form>
+</div>

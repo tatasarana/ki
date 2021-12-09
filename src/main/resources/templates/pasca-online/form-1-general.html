@@ -1,0 +1,210 @@
+<div class="row display--none" js-direction="step-form-place" js-id="1" xmlns:th="http://www.w3.org/1999/xhtml">
+	<form id="formGeneral" th:object="${dataGeneral}">
+		<!--Header Judul-->
+        <div class="row col-md-12" style="margin-bottom: 15px">
+            <div class="col-md-4">
+                <h3>General Info</h3>
+
+            </div>
+            <div class="col-md-8">
+                <div class="pull-right">
+
+                    <li style="list-style-type:none; float:right; margin-left:5px;">
+                        <button type="button" class="btn btn-primary" id="btnSaveFormGeneral">
+                            Simpan dan Lanjutkan
+                        </button>
+                    </li>
+                </div>
+            </div>
+            <div class="pull-right">
+                <label class="col-form-label notice">*) Wajib Diisi</label>
+            </div>
+        </div>
+        
+        <!--Form-->
+        <div class="row col-md-12">
+            <div class="col-md-12">
+            	<div class="form-group">
+                    <label class="col-sm-3 col-form-label">Tanggal Pengajuan</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="postDate"
+                               placeholder="Tanggal Pengajuan"
+                               th:value="*{#dates.format(postDate, 'dd/MM/yyyy HH:mm:ss')}"
+                               disabled="false"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-form-label required-label">Tipe Permohonan</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" th:field="*{mFileType.id}" th:required="true"
+                                id="mFileType" th:disabled="${isNew == false}">
+                            <option style="display: none" value="">-Pilih Tipe Permohonan-</option>
+                            <option th:each="mFileType :${fileTypeList}" th:value="${mFileType.id}"
+                                    th:text="${mFileType.desc}" th:attr="flagPaid= ${mFileType.statusPaid == true ? 'Y' : 'N' }"/>                          
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-form-label required-label">Kode Billing</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control col-md-1" placeholder="Kode Billing"
+                               th:required="true" th:autofocus="true" maxlength="20"
+                               id="billingCode" name="billingCode" th:disabled="${isNew == false}"
+                               th:value="*{billingCode}"/>
+                        <!--<a href="http://simpaki.dgip.go.id/" style="color: blue;font-size:12px" target="_blank"> Klik disini untuk membuat Kode Billing Simpaki. </a>-->
+                    </div>
+                    <div class="col-offset-sm-1">
+                        <button type="button" class="btn btn-primary" id="btnCheckBillingCode" th:disabled="${isNew == false}">Check</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-form-label">Asal Permohonan</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" th:field="*{mFileSequence.id}" th:required="true" 
+                        		id="mFileseq" disabled="false">
+                        	<option style="display: none" value="">Asal Permohonan</option>
+                            <option th:each="mFileSequence :${fileSequenceList}" th:value="${mFileSequence.id}"
+                                    th:text="${mFileSequence.desc}"/>
+                        </select>
+                    </div>
+                </div>                
+                <div class="form-group">
+                    <label class="col-sm-3 col-form-label">Jenis Permohonan</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" th:field="*{mFileTypeDetail.id}" th:required="true"
+                                id="mFileTypeDetail" disabled="false">
+                            <option style="display: none" value="">Jenis Permohonan</option>
+                            <option th:each="mFileTypeDetail :${fileTypeDetailList}"
+                                    th:value="${mFileTypeDetail.id}"
+                                    th:text="${mFileTypeDetail.desc}"/>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-form-label">Tanggal Pembayaran</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="paymentDate"
+                               placeholder="Tanggal Pembayaran"
+                               th:value="*{paymentDate != null} ? *{#dates.format(paymentDate, 'dd/MM/yyyy HH:mm:ss')} : ''"
+                               disabled="false"/>
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label class="col-sm-3 col-form-label">Jumlah Pembayaran</label>
+                    <div class="col-sm-9">
+                        <input type="hidden" id="totalPayment" th:value="*{totalPayment}"/>
+                        <input type="text" class="form-control col-md-1" placeholder="Jumlah Pembayaran"
+                               id="totalPaymentTemp" disabled="false" th:value="*{totalPaymentTemp}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+					<label class="col-sm-3 col-form-label">Jumlah</label>
+					<div class="col-sm-3">
+						<input type="text" class="form-control col-md-1" th:value="*{totalClassTemp}"						
+							placeholder="Jumlah" id="totalClassTemp" readonly="true"/>
+					</div>
+					<div class="col-offset-sm-1"> 
+                    <label class="col-offset-sm-1 col-form-label"></label>
+                    <label class="col-offset-sm-1 col-form-label" id="label-unit" readonly="true"/>
+                    </div>
+				</div>				
+				<!--<div class="form-group">-->
+					<!--<label class="col-sm-3 col-form-label">Nomor Input Simpaki</label>-->
+					<!--<div class="col-sm-9">-->
+						<!--<input type="text" class="form-control col-md-1" th:value="*{transactionNoTemp!=null} ? *{transactionNoTemp} : ''  " -->
+							<!--placeholder="Nomor dari Simpaki (hanya ditampilkan ketika Tambah Pasca)" id="transactionNoTemp" readonly="true"/>-->
+					<!--</div>-->
+				<!--</div>                -->
+                <div class="form-group">
+                	<div class="col-md-12">
+                 		<button type="button" class="btn btn-primary" id="btnModalReferensi" data-toggle="modal" data-target="#pilihPermohonan">
+                            <i class="fas fa-plus"></i> Tambah Permohonan
+                 		</button>                 
+                  		<button type="button" class="btn btn-danger" id="btnHapusTxPostReceptionDetail">
+                            <i class="fas fa-minus"></i> Hapus Permohonan
+                  		</button>
+            		</div>
+             		<div class="col-md-12">
+                   	</div>
+          		</div>
+            	<div class="table-responsive">                   		
+                	<table class="table table-bordered table-striped" id="tblPostReceptionDetail">
+                  		<thead>
+            				<tr>
+                				<th></th>	                                                                   	
+                 				<th>Nomor Permohonan</th>                                                                                 
+            					<th>Merek</th>
+            					<th>Nomor Registrasi</th>
+                			</tr>
+                		</thead> 
+                   		<tbody>
+							<tr th:each="detailList : ${dataGeneralDetail}">
+	                            <td align="center"><input type="checkbox" name="record"/></td>
+	                            <td th:text="${detailList.txTmGeneral.applicationNo}"></td>
+	                            <td th:text="${detailList.txTmGeneral.txTmBrand == null ? '' : detailList.txTmGeneral.txTmBrand.name}"></td>
+	                            <td th:text="${detailList.txTmGeneral.txRegistration == null ? '' : detailList.txTmGeneral.txRegistration.no}"></td>
+                       		</tr>	                                                        
+                    	</tbody>            								
+                	</table>
+            	</div>
+            </div>
+        </div>
+	</form>
+</div>
+<div class="modal fade" id="pilihPermohonan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">                     
+	<div class="modal-dialog" role="document">
+    	<div class="modal-content">
+        	<div class="modal-header">
+            	<h5 class="modal-title" id="exampleModalLabel">
+                	Cari Data Referensi Permohonan
+            	</h5>
+            	<button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                	<span aria-hidden="true">&times;</span>
+            	</button>
+        	</div>
+        	<div class="modal-body">
+            	<form id="formSearch" method="post">
+                	<div class="form-group" style="padding-left: 15px">
+                    	<div class="col-lg-4" style="padding-left: 0px">
+                        	<input type="text" id="searchAppNo" class="form-control"
+                            	placeholder="Nomor Permohonan"/>
+                    	</div>
+                    	<div class="col-lg-4" style="padding-left: 0px">
+                        	<input type="text" id="searchRegNo" class="form-control"
+                            	placeholder="Nomor Registrasi"/>
+                    	</div>
+                    	<div class="col-lg-4">
+                        	<button type="button" id="btnSearchReferensi" class="btn btn-primary btn-Merek"><i class="fas fa-search"></i>
+                            	Cari
+                        	</button>
+                    	</div>
+                	</div>
+            	</form>
+            	<div class="table-container">
+                	<table id="tableReferensi" class="table table-striped table-bordered table-responsive">
+                    	<thead>
+                    		<tr>
+                        		<th class="text-center">No.</th>
+                         		<th>Nomor Permohonan</th>
+                                <th>Nomor Registrasi</th>
+                    			<th></th>
+                        	</tr>
+                        </thead>
+                    </table>
+                    <hr/>
+                    <ul class="nav nav-pills">
+                        <li class="nav-item">
+                            <a href="#"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>
+                    Batal
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

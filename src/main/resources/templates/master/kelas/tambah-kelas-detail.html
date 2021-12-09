@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecur34ity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <form class="form-horizontal" th:object="${form}" th:action="@{/layanan/tambah-kelas-detail-baru}" method="post">
+        <div class="my-wrapper" id="my-wrapper">
+            <div class="my-wrapper--inner">
+
+                <div class="wrapper-content" id="permohonan-baru">
+                    <div class="content--top border--bottom padding-content--left-right">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="content--title text--bold">
+                                    <i class="far fa-clone"></i> Data Kelas Detail - Tambah
+                                </h3>
+                                <small class="sub-header">Kelas Detail / Tambah</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content--center padding-content--left-right">
+                        <div class="wrapper--bg">
+                            <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                                <button data-dismiss="alert" class="close close-sm" type="button">
+                                    <i class="icon-remove"></i>
+                                </button>
+                                <p>[[${errorMessage}]]</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Nomor Kelas</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" th:value="${mClass.no}" disabled="disabled"/>
+                                            <input type="hidden" name="parentClass.id" th:value="${mClass.id}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Uraian Barang/Jasa</label>
+                                        <div class="col-sm-9">
+                                            <textarea class="form-control" placeholder="Uraian Barang/Jasa" th:field="*{desc}" th:required="true" th:autofocus="true"
+                                            maxlength="4000"></textarea>
+                                            <span class="help-block" th:if="${#fields.hasErrors('desc')}" th:errors="*{desc}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Uraian Barang/Jasa (E)</label>
+                                        <div class="col-sm-9">
+                                            <textarea class="form-control" placeholder="Uraian Barang/Jasa (E)" th:field="*{descEn}"
+                                            maxlength="4000"></textarea>
+                                            <!--<span class="help-block" th:if="${#fields.hasErrors('descEn')}" th:errors="*{descEn}"></span>-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Serial E</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control col-md-1" placeholder="Edisi" th:field="*{serial1}"
+                                            maxlength="255"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('serial1')}" th:errors="*{serial1}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Serial F</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control col-md-1" placeholder="Versi" th:field="*{serial2}"
+                                            maxlength="255"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('serial2')}" th:errors="*{serial2}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Nomor Dasar</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control col-md-1" placeholder="Edisi" th:field="*{classBaseNo}"  th:autofocus="true"
+                                            maxlength="255"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('classBaseNo')}" th:errors="*{classBaseNo}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <label class="col-form-label notice">*) Wajib Diisi</label>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                    <div class="col-sm-3"></div>
+                                        <div class="col-sm-9">
+                                            <button type="button" class="btn btn-danger" onclick="window.history.go(-1); return false;">
+                                                <i class="fas fa-times"></i> Batal
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-paper-plane"></i> Proses
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    $(document).ready(function () {
+        $('form').validate({
+            messages: {
+                'desc': {
+                    required: /*[[#{field.error.required('Uraian Barang/Jasa')}]]*/''
+                },
+                'descEn': {
+                    required: /*[[#{field.error.required('Uraian Barang/Jasa (E)')}]]*/''
+                }
+                 
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function(form) {
+                swal({
+                    title: "Tambah Kelas Detail",
+                    text: "Apakah Anda Yakin akan menyimpan data ini?",
+                    icon: "warning",
+                    buttons: [
+                        'Batal',
+                        'Lanjutkan'
+                    ],
+                    dangerMode: true,
+                }).then(function (isConfirm) {
+                    if (isConfirm) {
+                        $('form')[0].submit();
+                        showLoading();
+                    }
+                })
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

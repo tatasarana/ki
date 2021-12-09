@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="1" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="33b5c32c-c8b5-418e-a3cd-c327b8956676">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement x="100" y="25" width="225" height="224" uuid="8f7df89e-53a9-42de-b997-adbd5138cb43">
+					<printWhenExpression><![CDATA[$P{approve}!=null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="802" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Transparent" x="15" y="15" width="525" height="750" uuid="1838cf22-3232-4e7d-b3ae-69f4a39a590c"/>
+			</rectangle>
+			<textField>
+				<reportElement x="15" y="785" width="100" height="17" uuid="215a4ffa-62de-4e6d-bd49-a3cef8d5b399"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="453" y="29" width="87" height="26" uuid="0459c8bc-11c9-4c83-b60c-be5fc66ab688"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MM2(E)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="91" width="525" height="25" uuid="dc2786c2-a032-480a-98bd-bda4701f85e0"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[MADRID PROTOCOL CONCERNING THE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="116" width="525" height="25" uuid="f1d449ce-3ea1-450e-a2be-cc365cb888e5"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[INTERNATIONAL REGISTRATION OF MARKS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="228" width="525" height="20" uuid="9e954443-b970-4bad-9e76-ff17a4047ef4"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[APPLICATION FOR INTERNATIONAL REGISTRATION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="248" width="525" height="20" uuid="6dcb6eb1-1d84-4820-982d-9313578a5d92"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GOVERNED BY THE MADRID PROTOCOL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="268" width="525" height="20" uuid="ba707fbf-7a87-4ac2-8491-0d2f333b5c2d"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(Rule 9 of the Common Regulations)]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Opaque" x="71" y="312" width="415" height="116" backcolor="#CCCCCC" uuid="795a98cd-6a7a-4598-969a-065da3317348"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="71" y="325" width="415" height="25" uuid="b10c0c2f-c05d-43e9-bb90-5b970df76a07"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[IMPORTANT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="76" y="362" width="10" height="20" uuid="e5cdab4b-1a49-49e9-a693-ef57da384e81"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[1.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="76" y="382" width="10" height="20" uuid="71851310-05cd-455a-8f88-6c8c86b4a95d"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[2.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="86" y="362" width="395" height="20" uuid="8304a92a-a275-422a-9d20-317ffccb27c8"/>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["This form must be used to file an international application under <b>the Madrid Protocol</b>."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="86" y="382" width="395" height="30" uuid="c66872fe-ce3e-4888-8c9d-9445116ee214"/>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["This form <b>must be sent to the Office of origin</b>.  It must <b>not</b> be sent directly to the International Bureau."]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="71" y="443" width="415" height="20" backcolor="#CCCCCC" uuid="e2edde72-06b7-485e-8e74-c35cd9fb5cd9"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="71" y="443" width="415" height="20" uuid="6c52d575-5960-4d40-9db2-5d6daa03a24d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[This cover page must not be sent to the International Bureau.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="71" y="612" width="130" height="25" uuid="05e126f2-232c-45f2-a389-5465088dfefd"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Madrid System – Contacts]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="313" y="612" width="130" height="25" uuid="d9ee4191-b1a0-4389-8264-8a27c7ecf86a"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mailing address]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="71" y="637" width="223" height="15" uuid="492e95e1-d9cf-4f5b-a460-a0ee73f88625"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Madrid Customer Service opening hours:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="71" y="652" width="223" height="15" uuid="2f0e1ab1-9d7f-49e2-88bb-f2228923d89f"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Monday – Friday, 9:00 a.m. to 6:00 p.m. (Geneva time)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="71" y="667" width="223" height="15" uuid="bb552b96-f7eb-45ee-b3cc-374be9db96dc"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Telephone:  <b>+ 41 22 338 86 86</b>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="313" y="637" width="182" height="15" uuid="ac952790-5722-4c82-8ec3-57bff5fc22fc"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Madrid Operations Division"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="313" y="652" width="182" height="15" uuid="c7b8d170-f0b9-4ea1-97f0-92bf09ee629b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Madrid Registry"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="313" y="667" width="182" height="15" uuid="8de0603a-93c5-4086-8a84-202707eab482"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Brands and Designs Sector"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="313" y="682" width="182" height="15" uuid="00b4025e-405a-4d8f-a76d-01bf0c90509b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["World Intellectual Property Organization"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="313" y="697" width="182" height="15" uuid="caf2a73c-2795-4c04-bc3d-edd7056dc8d4"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(WIPO)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="313" y="712" width="182" height="15" uuid="5b9f796f-0672-4b2f-a438-681fdff3eaee"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["34, Chemin des Colombettes"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="313" y="727" width="182" height="15" uuid="e6786597-4cbe-4e91-a29c-35cb8162296a"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1211 Geneva 20"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="313" y="742" width="182" height="15" uuid="79f2d745-814f-42df-9309-4a759db3117c"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Switzerland"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="71" y="697" width="223" height="15" uuid="033a726d-a9f1-4903-993f-7fee7ba70240"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Inquiries / submitting forms:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="71" y="712" width="223" height="15" forecolor="#0000FF" uuid="63bdab31-2b2b-43af-a6dc-3c107da6f32e"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font size="9" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["http://www.wipo.int/madrid/en/contact/"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

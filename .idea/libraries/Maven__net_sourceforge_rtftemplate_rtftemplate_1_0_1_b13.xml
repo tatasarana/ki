@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: net.sourceforge.rtftemplate:rtftemplate:1.0.1-b13">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/rtftemplate/rtftemplate/1.0.1-b13/rtftemplate-1.0.1-b13.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/rtftemplate/rtftemplate/1.0.1-b13/rtftemplate-1.0.1-b13-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/rtftemplate/rtftemplate/1.0.1-b13/rtftemplate-1.0.1-b13-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

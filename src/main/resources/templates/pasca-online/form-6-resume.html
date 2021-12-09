@@ -1,0 +1,37 @@
+<div class="row display--none" js-direction="step-form-place" js-id="6" xmlns:th="http://www.w3.org/1999/xhtml">
+	<form id="formGeneral" th:object="${dataGeneral}">
+		<!--Header Judul-->
+		<div class="row col-md-12" style="margin-bottom: 15px">
+			<div class="col-md-4">
+				<h3>Pasca Notes</h3>
+			</div>
+			<div class="col-md-8">
+				<div class="pull-right">
+					<li js-direction="step-form" js-id="5" style="list-style-type:none; float:left">
+						<button type="button" class="btn btn-warning">
+							Sebelumnya
+						</button>
+					</li>
+					<li style="list-style-type:none; float:right; margin-left:5px;">
+					<button type="button" class="btn btn-primary" id="btnSelesai">
+						Selesai
+					</button>
+					</li>
+				</div>
+			</div>
+		</div>
+		<!--Form-->
+		<div class="row col-md-12">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label class="col-form-label col-sm-3">Catatan</label>
+					<div class="col-sm-9">
+	                	<textarea placeholder="Catatan untuk petugas jika ada (maksimal 1000 karakter)" class="form-control"
+								  th:field="*{note}" id="postNote" th:required="true"
+								  maxlength="1000"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

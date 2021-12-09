@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="4" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5074e2f0-89f8-4eb6-b3ef-03243fdf7c9f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="regCount" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("1")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="classContinues" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="listContract" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("1")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="listClass" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="contractContinues" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("1")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+OWN.APPLICATION_ID,
+COALESCE(OWN.TM_ENTITLEMENT,'0') AS TM_ENTITLEMENT,
+OWN.TM_COMMERCIAL_ADDRESS AS TM_COMMERCIAL_ADDRESS,
+A.REPRS_NAME AS REPRS_NAME,
+A.REPRS_ADDRESS AS REPRS_ADDRESS,
+A.REPRS_PHONE AS REPRS_PHONE,
+A.REPRS_EMAIL AS REPRS_EMAIL,
+C.PROV_NAME AS REPRS_PROV,
+COALESCE(E.APPLICATION_NO,' ') AS APPLICATION_NO,
+COALESCE(to_char(E.FILING_DATE,'DD/MM/YYYY'),' ') AS FILING_DATE,
+COALESCE(F.REG_NO,' ') AS REG_NO,
+COALESCE(to_char(F.REG_START_DATE,'DD/MM/YYYY'),' ') AS REG_START_DATE
+FROM TX_TM_OWNER OWN
+LEFT JOIN TX_TM_REPRS A ON A.APPLICATION_ID = OWN.APPLICATION_ID
+LEFT JOIN M_REPRS B ON B.REPRS_ID=A.REPRS_ID
+LEFT JOIN M_PROVINCE C ON C.PROV_ID=A.PROV_ID
+LEFT JOIN TX_TM_REFERENCE d ON D.APPLICATION_ID = OWN.APPLICATION_ID
+left join TX_TM_GENERAL e on e.APPLICATION_ID=D.REF_APPLICATION_ID
+left join TX_REGISTRATION F on F.APPLICATION_ID = E.APPLICATION_ID
+WHERE OWN.APPLICATION_ID=$P{applicationId}]]>
+	</queryString>
+	<field name="APPLICATION_ID" class="java.lang.String"/>
+	<field name="TM_ENTITLEMENT" class="java.lang.String"/>
+	<field name="TM_COMMERCIAL_ADDRESS" class="java.lang.String"/>
+	<field name="REPRS_NAME" class="java.lang.String"/>
+	<field name="REPRS_ADDRESS" class="java.lang.String"/>
+	<field name="REPRS_PHONE" class="java.lang.String"/>
+	<field name="REPRS_EMAIL" class="java.lang.String"/>
+	<field name="REPRS_PROV" class="java.lang.String"/>
+	<field name="APPLICATION_NO" class="java.lang.String"/>
+	<field name="FILING_DATE" class="java.lang.String"/>
+	<field name="REG_NO" class="java.lang.String"/>
+	<field name="REG_START_DATE" class="java.lang.String"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="100" y="25" width="225" height="224" uuid="8016c2f4-8165-4cb1-829b-94e4b34c8dda">
+					<printWhenExpression><![CDATA[$P{approve}!=null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="802" splitType="Stretch">
+			<staticText>
+				<reportElement x="440" y="0" width="70" height="15" uuid="6d69f93d-14c3-4b22-a274-da79a9f1098a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[MM2(E), page 4]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="15" y="783" width="100" height="17" uuid="5a225c0e-afa2-4ac2-a95a-240f9c5a0952"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="52" y="705" width="160" height="1" uuid="b43b7b35-d634-4d7e-b0c1-109f623c5dfd"/>
+			</line>
+			<staticText>
+				<reportElement x="52" y="710" width="468" height="70" uuid="9c092762-6bb4-438d-b436-4678399b6164"/>
+				<textElement>
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[	You must indicate the name, address and e mail address of the representative; otherwise, WIPO cannot record the appointment.  
+  	When a representative is appointed, WIPO will send all communications concerning this international application and the resulting international registration only to the e mail address of the representative.  The applicant and the representative must ensure that the e mail address indicated here is accurate and kept up to date.  
+  	Indicating a phone number is not required, but it will allow WIPO to reach your representative if needed.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="47" y="60" width="232" height="20" forecolor="#FF0000" uuid="0627fa87-3ba2-4671-83af-3914291626cb"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[4. APPOINTMENT OF A REPRESENTATIVE ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="310" width="110" height="40" forecolor="#003366" uuid="9f8766d0-05de-407a-b770-e83ac5003d36"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Basic application number: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="90" width="20" height="20" forecolor="#003366" uuid="e975b28b-22a2-45dc-a4a5-98357926abfd"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(a)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="120" width="20" height="20" forecolor="#003366" uuid="b6eb2519-275e-4fe3-826f-3758200c76e5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(b)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="90" width="140" height="20" forecolor="#003366" uuid="cea5d3ee-ba22-4cde-9ff2-5123abd31ece"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="120" width="140" height="20" forecolor="#003366" uuid="97bded88-5e9f-4e4c-b71f-7f2a3f350c94"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Address:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="209" width="20" height="20" forecolor="#003366" uuid="814e3456-ccb7-4f21-8b97-802d3af8f76a"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(c)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="209" width="140" height="20" forecolor="#003366" uuid="547b1026-c38f-4688-b647-fff63e8e43c4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[E-mail address :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="239" width="20" height="20" forecolor="#003366" uuid="83361fcf-5dff-4083-bf4d-6e77eaf3af1f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(d)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="239" width="140" height="20" forecolor="#003366" uuid="76e4cbd6-6ca8-4bba-86a7-ac43fb8abf30"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telephone number :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="280" width="330" height="20" forecolor="#FF0000" uuid="9650c179-a60f-442b-a9ed-6248db6c74be"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[5. BASIC APPLICATION OR BASIC REGISTRATION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="360" width="110" height="40" forecolor="#003366" uuid="c5ac13d5-48ba-46f9-a916-61c0fe8c27c0"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Basic registration number: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="281" y="310" width="110" height="40" forecolor="#000000" uuid="7bd78ec9-02fc-48fc-b6fe-13c8a6c1e7b2"/>
+				<box padding="4"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Date of the basic application (dd/mm/yyyy): ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="281" y="360" width="110" height="40" forecolor="#000000" uuid="ca048a28-ddaf-439b-8813-dcda5caab614"/>
+				<box padding="4"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Date of the basic application (dd/mm/yyyy): ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="220" y="90" width="290" height="20" uuid="792c10a1-f7a1-4f9c-acee-1e3d833910d3"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($F{REPRS_NAME}==null?"":$F{REPRS_NAME})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="79" y="140" width="429" height="60" uuid="81efe8e9-79fc-465a-af62-1b5765f611ca"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[(($F{REPRS_ADDRESS}==null ?"":$F{REPRS_ADDRESS}.trim()+", ")+($F{REPRS_PROV}==null?"":$F{REPRS_PROV}))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="209" width="290" height="20" uuid="9aecc6a5-7b9a-472e-95b3-54835636d3c1"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($F{REPRS_EMAIL}==null?"":$F{REPRS_EMAIL})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="239" width="290" height="20" uuid="380957da-04d3-4347-a578-8f606080db3c"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($F{REPRS_PHONE}==null?"":$F{REPRS_PHONE}.contains(";") ? $F{REPRS_PHONE}.split(";")[0]:$F{REPRS_PHONE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="310" width="121" height="40" uuid="7cbef5be-c67b-4531-9990-4aaf2cee43a7"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($P{regCount}==null?"":$P{regCount}.intValue() > 1 ? "" : $F{APPLICATION_NO})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="360" width="121" height="40" uuid="0d3dc586-d73d-4e1f-a810-0c2d29909d6e"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($P{regCount}==null?"":$P{regCount}.intValue() > 1 ? "" : $F{REG_NO})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="310" width="121" height="40" uuid="f1c563bf-55c0-42a3-96e7-16eefcfa3b53"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($P{regCount}==null?"":$P{regCount}.intValue() > 1 ? "" : $F{FILING_DATE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="360" width="121" height="40" uuid="a2479017-5370-4942-819d-2cd10ea76f45"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($P{regCount}==null?"":$P{regCount}.intValue() > 1 ? "" : $F{REG_START_DATE})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="52" y="420" width="330" height="20" forecolor="#FF0000" uuid="20d9419e-678f-4521-aea4-91caffe39247"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[6. PRIORITY CLAIMED]]></text>
+			</staticText>
+			<subreport isUsingCache="false" runToBottom="false" overflowType="NoStretch">
+				<reportElement isPrintRepeatedValues="false" x="52" y="450" width="478" height="150" isRemoveLineWhenBlank="true" uuid="94af89b2-e197-45d2-9712-fbe97d1ad2a0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="listClass">
+					<subreportParameterExpression><![CDATA[$P{listClass}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="classContinues">
+					<subreportParameterExpression><![CDATA[$P{classContinues}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"4-2.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

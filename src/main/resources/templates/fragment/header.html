@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<nav class="navbar navbar-default navbar-fixed-top" th:fragment="navbar">
+	<div class="container-fluid">
+		<div class="navbar-header" style="display: flex;">
+			<a class="navbar-brand" th:href="@{/layanan/home}">
+				<img th:src="@{/img/logo.png}"/>
+			</a>
+			<img th:src="@{/img/temankita-left.png}" class="logoTemanKita" />
+			<img th:src="@{/img/temankita-right.png}" class="descTemanKita" />
+
+		</div>
+		<div>
+			<!-- before login -->
+			<ul class="nav navbar-nav navbar-right navbar--menu">
+				<li th:if="${#authentication.getPrincipal().hasAccessMenu('P-INBOX') and (@environment.getProperty('app.mode') == 'general' or @environment.getProperty('app.mode') == 'all')}"
+					th:classappend="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" target="_blank">
+						<i class="fas fa-bell" aria-hidden="true"><span class="badge badge-light"></span></i>
+					</a>
+					<ul id="notification-list" class="notification dropdown-menu" style="max-height:300px;overflow-x: hidden;">
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" target="_blank">
+						<i class="icon-guide" aria-hidden="true"></i>
+						Panduan <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a class="col-sm-8" th:href="@{/doc/AktivasiEfiling.pdf}" download="AktivasiEfiling.pdf" > Panduan Aktivasi Akun Efiling </a></li>
+						<li><a class="col-sm-8" th:href="@{/doc/Panduan.pdf}" download="Panduan.pdf" > Panduan Registrasi Akun - Permohonan </a></li>
+						<!--<li><a class="col-sm-8" th:href="@{/doc/RegistrasiAkun.mp4}" download="RegistrasiAkun.mp4"> Video Registrasi Akun </a></li>-->
+						<li><a class="col-sm-8" th:href="@{/doc/PermohonanOnline.mp4}" download="PermohonanOnline.mp4"> Video Tutorial Permohonan Online </a></li>
+						<li><a class="col-sm-8" th:href="@{/doc/PanduanAplikasiMerek-PascaPermohonanOnline.pdf}" download="PanduanAplikasiMerek-PascaPermohonanOnline.pdf" > Panduan Pasca Permohonan Online </a></li>
+						<li><a class="col-sm-8" th:href="@{/doc/PanduanAplikasiMerek-MadridOOOnline.pdf}" download="PanduanAplikasiMerek-MadridOOOnline.pdf" > Panduan Madrid Office of Origin Online </a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Halo, [[${#authentication.getPrincipal().getUsername()}]] <span th:text="${typeuser}"></span> <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a th:href="@{/layanan/change-password}">Change Password</a></li>
+						<li><a th:href="@{/logout}">Logout</a></li>
+
+					</ul>
+				</li>
+				<!--<li class="on-mobile">-->
+					<!--<a href="#">-->
+						<!--<i class="icon-dot-3" aria-hidden="true"></i>-->
+						<!--More-->
+					<!--</a>-->
+				<!--</li>-->
+			</ul>
+			<ul class="nav navbar-nav navbar-right navbar--menu stick-top">
+				<li class="cursor--pointer menu">
+					<a>
+						<i class="icon-dot-3" js-direction="sidebar-wrap"/>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<script th:src="@{/js/jquery.js}"></script>
+	<script type="text/javascript" language="javascript" th:inline="javascript">
+		var csrf =/*[[${_csrf.token}]]*/'';
+		var searchByArr = [];
+		var keywordArr = [];
+
+		$(document).ready(function () {
+
+			searchByArr.push('startDate');
+			keywordArr.push("");
+			searchByArr.push('endDate');
+			keywordArr.push("");
+			searchByArr.push('txTmGeneral.applicationNo');
+			keywordArr.push("");
+			searchByArr.push('txPostReception');
+			keywordArr.push("");
+
+			$.ajax({
+				url:/*[[@{/layanan/notification-list-inbox-surat}]]*/'',
+				type: 'GET',
+				success:function(data){
+					var link = /*[[@{/layanan/inbox-surat-role}]]*/'';
+					data.data.forEach(function (element) {
+						$(".notification").append(element[4]);
+					});
+					$(".badge").text(data.data.length);
+
+					$("#notification-list li").click(function() {
+						$.ajax({
+							url: /*[[@{/layanan/update-status-notification}]]*/'',
+							data: {
+								monitorId: this.id,
+							},
+							type: 'POST',
+							success: function(data){
+
+							},
+							error: function (xhr, status) {
+								swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+							}
+
+						});
+					});
+
+				},
+				error: function (xhr, status) {
+					swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+				}
+			});
+
+		});
+	</script>
+</nav>
+
+</html>

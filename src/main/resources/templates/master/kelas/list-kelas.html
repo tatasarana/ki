@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <div class="my-wrapper" id="my-wrapper">
+        <div class="my-wrapper--inner">
+            <div class="wrapper-content" id="permohonan-baru">
+                <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="far fa-copy"></i> Data Klasifikasi Kelas
+                            </h3>
+                            <small class="sub-header">Master / Kelas</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="content--center padding-content--left-right">
+                    <div class="wrapper--bg">
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                            <button data-dismiss="alert" class="close close-sm" type="button">
+                                <i class="icon-remove"></i>
+                            </button>
+                            <p>[[${errorMessage}]]</p>
+                        </div>
+                        <div class="jumbotron filterSearch">
+                            <form>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label>Kelas</label>
+                                            <select id="kelasFilter" class="form-control">
+                                                <option value="">Semua</option>
+                                                <option th:each="listKelas : ${listKelas}" th:value="${listKelas.id}" th:text="${listKelas.no}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label>Uraian Barang/Jasa</label>
+                                            <textarea type="text" id="ub" class="form-control"
+                                                      placeholder="Uraian Barang/Jasa"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <button type="button" id="btnCari" class="btn btn-primary">
+                                            <i class="fas fa-search"></i>
+                                            Filter
+                                        </button>
+                                        <button type="button" class="btn btn-info"
+                                                onClick="window.location.reload()"
+                                                style="margin-left:15px;">
+                                            <i class="fas fa-sync-alt"></i>
+                                            Refresh
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-container">
+                            <table id="table" class="table table-striped table-bordered table-responsive">
+                                <thead>
+	                                <tr>
+	                                    <th>No.</th>
+		                                <th>Kelas</th>
+                                        <th>Uraian Barang/Jasa</th>
+                                        <th width="3%">Edisi</th>
+	                                    <th>Versi</th>
+	                                    <th width="10%">Tipe</th>
+		                                <th>Status</th>
+	                                    <th width="10%">User</th>
+		                                <th width="10%">Tanggal</th>
+	                                    <th class="not-export-col"></th>
+	                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            &times;
+                                        </button>
+                                        <h4 class="modal-title" id="myModalLabel">Konfirmasi</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        Apakah Anda yakin untuk non-aktif kelas ini?
+                                        <input id="modal-delete-id" type="hidden" name="id"/>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a class="btn btn-default" data-dismiss="modal" id="deleteGrup">Ya</a>
+                                        <a class="btn btn-primary" data-dismiss="modal">Tidak</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="uploadClassDetail" tabindex="-1" role="dialog" aria-labelledby="lblUpload" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="lblUpload">Update by Batch Kelas Detail</h4>
+				</div>
+				<form id="frmUpload" action="post" enctype="multipart/form-data">
+					<div class="modal-body">
+						<div class="row form-group">
+							<label class="col-sm-4 col-form-label required-label">Nama File</label>
+							<div class="col-sm-8">
+								<input type="file" class="form-control-file" placeholder="File Excel Data Kelas Detail" name="file" required="required" autofocus="autofocus" accept=".xls,application/vnd.ms-excel"/>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-4 col-form-label required-label">Penerjemah Bahasa</label>
+							<div class="col-sm-8">
+								<div class="radio" th:each="translator : ${translatorList}">
+									<label><input type="radio" name="translator" th:value="${translator.name()}" th:checked="${translator.isDefaultTranslator()}"/>[[${translator.label()}]]</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Proses</button>
+						<a class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i> Batal</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function () {
+        var csrf = /*[[${_csrf.token}]]*/'';
+        var table = $('#table');
+        var searchByArr = [];
+        var keywordArr = [];
+        var buttonRole = /*[[${#authentication.getPrincipal().hasAccessMenu('T-TDKLS')}]]*/'';
+        var buttonUpload = /*[[${#authentication.getPrincipal().hasAccessMenu('T-UPKLSD')}]]*/'';
+        
+        searchByArr.push('id')
+        keywordArr.push($('#kelasFilter').val());
+        searchByArr.push('desc');
+        keywordArr.push($('#ub').val());
+
+        table.data('searchByArr', searchByArr);
+	    table.data('keywordArr', keywordArr);
+
+	    /* Load DataTable */
+	    var dataTable = table.DataTable({
+		    ajax: {
+			    data: function (d) {
+				    d.searchByArr = table.data('searchByArr');
+				    d.keywordArr = table.data('keywordArr');
+				    d._csrf = csrf;
+			    },
+			    type: 'POST',
+			    url: /*[[@{/layanan/cari-kelas}]]*/''
+		    },
+		    columnDefs: [
+			    { targets: [0, 9], orderable: false}
+		    ],
+		    initComplete: function (settings, json) {
+			    var url = /*[[@{/layanan/tambah-kelas}]]*/'';
+			    var urlDownload = /*[[@{/doc/template-impor-kelas-detail.xls}]]*/'';
+			    
+			    $('#table_length').parent().parent().addClass('margin-bottom-8px');
+                $('#table_length').parent().next().addClass("text-right");
+                
+                $('#table_length').parent().next().append('<div id="divUpload" class="text-right col-sm-offset-13 margin-bottom-8px"></div>');
+			    $('#divUpload').append('<a class="btn btn-default" href="' + urlDownload + '" download="template-impor-kelas-detail.xls"><i class="fas fa-download"></i> Download Template</a> ');
+			    if(buttonUpload) {
+                	$('#divUpload').append(
+                		'<button id="btnUpload" class="btn btn-primary" data-toggle="modal" data-target="#uploadClassDetail"><i class="fas fa-upload"></i> Update By Batch</button>'
+        	        );
+                }
+                
+			    if(buttonRole) {
+			    	$('#table_length').parent().next().append(
+						    '<a class="btn btn-info" href="' + url + '"><i class="fas fa-plus"></i> Tambah</a> '
+					    );
+			    }
+			    $('#table_length').parent().next().append('<a id="btnExport" class="btn btn-success" href="javascript:void(0)"><i class="fas fa-file-excel"></i> Export to Excel</a>');    
+		    },
+		    language: {
+			    url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+		    },
+		    lengthMenu: [[10, 30, 90], [10, 30, 90]],
+		    ordering: true,
+		    order:[[1,'asc']],
+		    pageLength: 10,
+		    processing: true,
+		    serverSide: true
+	    });
+	    dataTable.on('error.dt',function(e,settings,techNote,message){
+		    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	    });
+
+        /* Search */
+        $("#btnCari").click(function (event) {
+            event.preventDefault();
+            var searchByArr = [];
+            var keywordArr = [];
+
+            searchByArr.push('id')
+            keywordArr.push($('#kelasFilter').val());
+            searchByArr.push('desc');
+            keywordArr.push($('#ub').val());
+
+            table.data('searchByArr', searchByArr);
+            table.data('keywordArr', keywordArr);
+            dataTable.ajax.reload();
+        });
+
+	    $('body').on('click','#btnExport',function(e){
+        	var urlExport = /*[[@{/layanan/ekspor-kelas}]]*/'';
+	        var searchByArr = table.data('searchByArr');
+			var keywordArr = table.data('keywordArr');
+			var order = dataTable.order();
+			var orderBy = (order[0][0] === undefined ? 1: order[0][0]);
+			var orderType = (order[0][1] === undefined ? 'asc': order[0][1]);
+			urlExport += "?searchByArr=" + searchByArr;
+			urlExport += "&keywordArr=" + keywordArr;
+			urlExport += "&orderBy=" + orderBy;
+			urlExport += "&orderType=" + orderType;
+			window.open(urlExport, '_blank');
+        });
+	    
+	    $('form#frmUpload').validate({
+		    messages:{
+			    'file':{
+				    required:/*[[#{field.error.required('file')}]]*/''
+			    },
+			    'translator':{
+				    required:/*[[#{field.error.required('translator')}]]*/''
+			    }
+		    },
+		    highlight: function(element) {
+			    $(element).closest('.form-group').addClass('has-error');
+		    },
+		    unhighlight: function(element) {
+			    $(element).closest('.form-group').removeClass('has-error');
+		    },
+		    errorElement: 'span',
+		    errorClass: 'help-block',
+		    errorPlacement: function(error, element) {
+			    if(element.parent('.input-group').length) {
+				    error.insertAfter(element.parent());
+			    } else {
+				    error.insertAfter(element);
+			    }
+		    },
+		    submitHandler: function(form) {
+			    var formData = new FormData(form);
+			    console.log(formData);
+			    $.ajax({
+				    url: /*[[@{/layanan/upload-list-kelas-detail}]]*/'',
+				    type: 'POST',
+				    data: formData,
+				    dataType:'json',
+				    cache: false,
+				    contentType: false,
+				    processData: false,
+				    beforeSend:function(){
+					    showLoading();
+				    },
+				    complete:function(){
+				    	$('#uploadClassDetail').modal('hide');
+					    hideLoading();
+				    },
+				    success: function(result){
+					    if (result.success) {
+						    swal("Informasi", "Update file kelas detail selesai", "info");
+						    dataTable.ajax.reload();
+					    } else {
+						    swal("Error", result.message, "error");
+					    }
+				    },
+				    error: function (xhr, status) {
+					    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+				    }
+			    });
+		    }
+	    });
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

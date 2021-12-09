@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="form-5" th:remove="tag">
+    <script type="text/javascript" language="javascript" th:inline="javascript">
+    /*<![CDATA[*/
+        var csrf = /*[[${_csrf.token}]]*/'';
+        var header = "X-CSRF-TOKEN";
+        var files;
+        var redirect = /*[[@{/layanan/pratinjau-permohonan(no=${noGeneral})}]]*/'';
+        var isEdit = $("#isEdit").val();
+        var noGeneral = /*[[${noGeneral}]]*/'';
+        var tableImage = $('#tableImageDetail');
+        var listDelete = [];
+        
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, csrf);
+        });
+        $(document).ready(function () {
+            if ($('#terjemahanAsing').val() == '') {
+                $("#terjmh1").prop('checked', false);
+                $("#terjmh2").prop('checked', true);
+                $('#terjemahanAsing').attr('disabled', true);
+                $('#translationFr').attr('disabled', true);
+                $('#translationSp').attr('disabled', true);
+            } else {
+                $("#terjmh1").prop('checked', true);
+                $("#terjmh2").prop('checked', false);
+                $('#terjemahanAsing').attr('disabled', false);
+                $('#translationFr').attr('disabled', false);
+                $('#translationSp').attr('disabled', false);
+            }
+
+            $("#fileMerek").on('change',prepareLoad);
+            function prepareLoad(event)
+            {
+                files = event.target.files;
+            }
+
+            $("#idForm5").validate({
+                ignore : [],
+                rules: {
+            		"fileMerek": {
+            			required: /*[[${txTmBrand.fileName==null}]]*/''
+                    }
+            	},
+                messages: {
+                	 "name": {
+                         required: /*[[#{field.error.required('Nama Merek')}]]*/''
+                     },
+                    "mBrandType.id": {
+                        required: /*[[#{field.error.required('Tipe Merek')}]]*/''
+                    },
+                    "fileMerek": {
+                    	required: /*[[#{field.error.required('Upload Label Merek')}]]*/'',
+                        accept: /*[[#{field.error.invalid.format.file('Upload Label Merek','JPEG, JPG')}]]*/''
+                    }
+                },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+            });
+
+            /*---------------------------------FORM 5---------------------------------*/
+            /* Button Limit Upload Label*/
+             $('#fileMerek').change(function () {
+                var imageFile = this.files[0];
+                if($("#fileName").val() !== imageFile.name) {
+                	$("#checkFileMerek").val("1");
+                }
+                $("#fileName").val(imageFile.name);
+
+            	$("#fileMerek").focus();
+            	$("#fileMerek").blur();
+                $("#file_error").html("");
+
+                if (imageFile.size > 5242880) {
+	            	        swal("Error", "Ukuran Label/Logo Merek Diatas 5 MB!", "warning");
+		                    $("#file_error").html("Ukuran File Diatas 5 MB!");
+		                    $(".demoInputBox").css("border-color","#FF0000");
+		                    this.value = "";
+                                $('#fileMerek').val("");
+                                 $('#fileName').val("");
+                                $('#prevForm5').attr('src',"");
+	            }else{
+                    //load img file to image
+                     var reader = new FileReader();
+                    reader.readAsDataURL(imageFile);
+                    reader.onload = function (e) {
+                        var image = new Image();
+                        image.src = e.target.result;
+                        image.onload = function () {
+                            var height = this.height;
+                            var width = this.width;
+                            console.log(width)
+                           if (width > 1024 || height > 1024) {
+                               swal("Error", "Ukuran Label/Logo Merek lebih dari 1024 x 1024 pixel! Silakan lakukan resize atau crop ulang Label/Logo Merek Anda terlebih dahulu.", "warning");
+                                $("#file_error").html("Ukuran Label/Logo Merek lebih dari 1024 x 1024 pixel!");
+                                $(".demoInputBox").css("border-color","#FF0000");
+                                 $('#fileMerek').val("");
+                                 $('#fileName').val("");
+                                $('#prevForm5').attr('src',"");
+                            }else{
+                                 //render correct one here!
+                                    var reader = new FileReader();
+                                    reader.onload = function(e) {
+                                      $('#prevForm5').attr('src', e.target.result);
+                                    }
+                                    reader.readAsDataURL( imageFile );
+                            }
+                        };
+                    }
+                }
+            });
+            /* Button Limit Upload Label*/ 
+
+            $('#mBrandType').change(function () {
+            	var kodeVal = this.value;
+
+            	/* if (kodeVal === 'MEREK_SUARA') {
+            		$('#warna').val('');
+               		$('#warna').attr('readonly', true);
+	          		$('#deskripsi').attr('readonly', false);
+	       		} else if (kodeVal === 'MEREK_KATA') {
+	       			$('#deskripsi').val('');
+	           		$('#deskripsi').attr('readonly', true);
+	           		$('#warna').attr('readonly', false); 
+	          	} else {
+	      	 	   	$('#warna').attr('readonly', false);
+	               	$('#deskripsi').attr('readonly', false);
+	      	 	}
+            	*/
+            	
+            	if (kodeVal==='MEREK_TIGA_DIMENSI' || kodeVal=== 'MEREK_HOLOGRAM' || kodeVal=== 'MEREK_SUARA') {            		
+            		document.getElementById("idlbltambahan").innerHTML = "<label class='required-label'>Upload Label Tambahan </label>";
+            		document.getElementById("iddesctambahan").innerHTML = "<label class='required-label'>Deskripsi Label Tambahan </label>";            		
+            	} else {            		
+            		document.getElementById("idlbltambahan").innerHTML = "<label>Upload Label Tambahan</label>";
+                	document.getElementById("iddesctambahan").innerHTML = "<label>Deskripsi Label Tambahan</label>";                	
+            	}
+
+        	});
+
+            $('#mBrandType').change();
+
+            $('.btnRadio').change(function() {
+                if (this.id == 'terjmh1'){
+                    $('#terjemahanAsing').attr('disabled',false);
+                    $('#translationFr').attr('disabled',false);
+                    $('#translationSp').attr('disabled',false);
+                    $('#terjemahanAsing').val($('#terjemahanAsing').attr('temp') == 'undefined' ? '' : $('#terjemahanAsing').attr('temp'));
+                    $('#translationFr').val($('#translationFr').attr('temp') == 'undefined' ? '' : $('#translationFr').attr('temp'));
+                    $('#translationSp').val($('#translationSp').attr('temp') == 'undefined' ? '' : $('#translationSp').attr('temp'));
+                    $('#terjemahanAsing').removeAttr('temp');
+                    $('#translationFr').removeAttr('temp');
+                    $('#translationSp').removeAttr('temp');
+                }
+                else {
+                    $('#terjemahanAsing').attr('temp', $('#terjemahanAsing').val());
+                    $('#translationFr').attr('temp', $('#translationFr').val());
+                    $('#translationSp').attr('temp', $('#translationSp').val());
+                    $('#terjemahanAsing').attr('disabled', true);
+                    $('#translationFr').attr('disabled', true);
+                    $('#translationSp').attr('disabled', true);
+                    $('#terjemahanAsing').val('');
+                    $('#translationFr').val('');
+                    $('#translationSp').val('');
+                }
+            });
+            
+            var subFileName;
+            var subFileSize;
+            
+            var tableImageDetail = $('#tableImageDetail').DataTable({
+            	'columnDefs': [
+            		{
+                        'targets': 0,
+                        'visible': false
+                    },
+                	{
+    	                'targets': 6,
+    	                'searchable': false,
+    	                'orderable': false,
+    	                'className': 'dt-body-center',
+    	                'render': function ( data, type, full, meta ) {
+    	                	return '<img src="'+full[6]+'" style="max-width: 50%;"/>';
+    	                }
+                	},
+                	{
+                        'targets': -1,
+                        'searchable': false,
+    	                'orderable': false,
+                        'render': function ( data, type, full, meta ) {
+    	                	return '<div class="btn-actions">' +'<a href="'+full[6]+'" class="btn btn-primary btn-xs" download="'+full[3]+'">Download</a> '+
+							  	  	'<br/>' +
+							  	   '<button type="button" class="btn btn-danger btn-xs">Hapus</button>'+
+							  	    '</div>';;
+    	                }
+                    }
+                ],
+                ajax:{
+    				data:function(d){
+    					d.appNo = isEdit ? noGeneral : $("#appNo").text();
+    					d._csrf = csrf;
+    				},
+    				type:'POST',
+    				url:/*[[@{/layanan/list-image}]]*/''
+    			},
+                language: {
+                    url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+                }
+            });
+	        tableImageDetail.on('error.dt',function(e,settings,techNote,message){
+		        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	        });
+            
+            $('#tableImageDetail tbody').on( 'click', 'button', function () {
+            	swal("Konfirmasi", "Apakah Anda yakin akan menghapus label merek tambahan ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+          		.then((value) => {
+          			if (value) {
+		            	var row = tableImageDetail.row( $(this).parents('tr') );
+		        	    var data = row.data();
+		        	    
+		        	    if(data[0]!=''){
+		        	    	listDelete.push(data[0]);
+		        	    }
+		            	
+		           		tableImageDetail.row( $(this).parents('tr') ).remove().draw();
+		                
+		           		tableImageDetail.column(0).nodes().each( function (cell, i) {
+		            		cell.innerHTML = i + 1;
+		                });
+          			} 
+          		});     
+            });
+
+			$('#uraian').keydown( function(e) {
+	            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+	            if(key == 13) {
+	                e.preventDefault();
+	                var inputs = $(this).closest('formSearch6').find('#uraian:visible');
+	                inputs.eq( inputs.index(this)+ 1 ).focus();
+	            }
+	        });
+            
+            $('#customFileImageForm52').change(function () {
+            	subFileName = this.files[0].name;
+        		subFileSize = this.files[0].size;
+        
+            	$("#file_error_detail").html("");
+                if (this.files[0].size > 5242880) {
+                    $("#file_error_detail").html("Ukuran File Diatas 5 MB!");
+                    $(".demoInputBox").css("border-color","#FF0000");
+                    this.value = "";
+                }    
+            	if (this.files[0]) {
+            		var reader = new FileReader();
+
+                    reader.onload = function(e) {
+                      $('#prevForm5Detail').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(this.files[0]);
+            	}
+            });
+            
+            $.fn.hasExtension = function(exts) {
+                return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test($(this).val());
+            }
+            
+            $('#addImgDetail').on('click', function(){
+            	if ((!$('#customFileImageForm52').hasExtension(['.jpg', '.JPG', '.mp3', '.MP3', '.docx', '.DOCX', '.doc', '.DOC', '.pdf', '.PDF'])) && $('#customFileImageForm52').val() != '') {
+					swal("Error", "Hanya boleh upload file dengan extensi .jpg, .mp3, .doc, .docx atau .pdf.", "error");
+				} else if($('#customFileImageForm52').val() == '' || $('#deskripsiDetail').val() == '') {
+					swal("Informasi", "Upload dan Deskripsi Label Merek wajib diisi.", "info");
+				}
+            	else if (5242880 >= subFileSize) {
+            		var dt = new Date().toLocaleDateString();
+            		
+            		tableImageDetail
+					.row.add( [ '', 0, dt, subFileName, subFileSize, $('#deskripsiDetail').val(), $('#prevForm5Detail').attr('src'), 'aksi' ] )
+         			.draw()
+         			.node();
+                	
+            		tableImageDetail.column(1).nodes().each( function (cell, i) {
+		        		cell.innerHTML = i + 1;
+		            });
+                	
+                	$('#cancelImgDetail').click();    
+                }
+            });
+            
+            $('#cancelImgDetail').on('click', function(){
+            	subFileName = undefined;
+                subFileSize = undefined;
+                
+            	$('#customFileImageForm52').val('');
+            	$('#deskripsiDetail').val('');
+            	$('#prevForm5Detail').attr('src', ''); 
+            });
+        });
+
+          $('#form5push').click(function (e) {
+            var isValidForm5 = $("#idForm5").valid();
+            if (isValidForm5) {
+            	noGeneral = isEdit ? noGeneral : $("#form8NoPermohonan").text();
+            	if (noGeneral != '') {
+            		var brandType = $('#mBrandType').val();
+            	    var info = tableImage.DataTable().page.info();
+            	    
+            	    if((brandType == 'MEREK_SUARA' || brandType == 'MEREK_HOLOGRAM' || brandType == 'MEREK_TIGA_DIMENSI') && info.recordsDisplay == 0){
+                        swal("Informasi", "Silakan melengkapi Upload Label Merek Tambahan.", "info");
+	               	} else{
+	               		e.preventDefault();
+	                    //stop submit the form, we will post it manually.
+	                    doSave5();
+	                }
+            	} 
+            } else {
+            	$("#navMerek").click();
+            }
+          }); 
+
+        function doSave5() {
+            var formData = new FormData;
+
+            var txTmGeneral = noGeneral;
+            var mBrandType = $('#mBrandType').val();
+            var name = $('#nama').val();
+            var keywordMerek = $('#keyMerek').val();
+            var description = $('#deskripsi').val();
+            var translation = $('#terjemahanAsing').val();
+            var descChar = $('#pengucapanNonLatin').val();
+            var color = $('#warna').val();
+            var disclaimer = $('#disclaimer').val();
+            var file = $('#fileMerek')[0];
+			var listImageDetail = [];
+            var standardChar = $('#standardChar').is(":checked");
+            var typeCollective = $('#typeCollective').is(":checked");
+            var colorCombination = $('#colorCombination').is(":checked");
+            var colorIndication = $('#colorIndication').val();
+            var translationFr = $('#translationFr').val();
+            var translationSp = $('#translationSp').val();
+			
+			var tableImageDetail = $('#tableImageDetail').DataTable();
+        	$.each(tableImageDetail.rows().nodes(), function (index, value) {
+        		var row = tableImageDetail.row( index );
+        	    var data = row.data();
+        	    
+        	    listImageDetail.push(data);
+        	});
+        	
+            var dataForm = {
+                txTmGeneral:txTmGeneral,
+                mBrandType: mBrandType,
+                name: name,
+                keywordMerek: keywordMerek,
+                description: description,
+                translation: translation,
+                descChar: descChar,
+                color: color,
+                disclaimer: disclaimer,
+                standardChar: standardChar,
+                typeCollective: typeCollective,
+                colorIndication: colorIndication,
+                translationFr: translationFr,
+                translationSp: translationSp,
+                colorCombination: colorCombination
+            };
+            
+            if(files){
+            	formData.append('fileMerek', files[0]);
+            }
+            formData.append('listImageDetail', JSON.stringify(listImageDetail));
+            formData.append('listDelete', listDelete);
+            formData.append('txTmBrand', JSON.stringify(dataForm));
+            
+            $.ajax({
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                url: /*[[@{/layanan/save-form-5}]]*/'',
+                data: formData,
+                processData: false,
+                contentType: false,
+                cache: false,
+	            beforeSend:function(){
+		            showLoading();
+	            },
+	            complete:function(){
+		            hideLoading();
+	            },
+                success: function (data) {
+	                if (data.success) {
+		                console.log("Sukses Save Form Brand");
+		                if (isEdit != undefined) {
+			                window.location.replace(redirect);
+		                } else {
+			                tableImage.DataTable().ajax.reload();
+			                listDelete = [];
+			                <!--$('#merek').addClass('yet');-->
+			                <!-- Start set value form 8 -->
+			                $('#form8TipeMerek').text($('#mBrandType option:selected').text());
+			                $('#form8NamaMerek').text($('#nama').val());
+			                $('#form8KeywordMerek').text($('#keyMerek').val());
+			                $('#form8Preview').attr('src', $('#prevForm5').attr('src'));
+			                $('#form8DeskripsiMerek').text($('#deskripsi').val());
+			                $('#form8WarnaMerek').text($('#warna').val());
+			                $('#form8Disclaimer').text($('#disclaimer').val());
+			                $('#form8BahasaAsing').text($('#terjemahanAsing').val());
+			                $('#form8HurufLatin').text($('#pengucapanNonLatin').val());
+                            $('#form8IndikasiWarnaMerek').text($('#colorIndication').val());
+                            $('#form8BahasaAsingFr').text($('#translationFr').val());
+                            $('#form8BahasaAsingSp').text($('#translationSp').val());
+			                <!-- End set value form 8 -->
+			                $("#kelas").trigger("click");
+		                }
+	                } else {
+		                swal("Error", data.message, "error");
+	                }
+                },
+	            error: function (xhr, status) {
+		            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	            }
+            });
+        }
+        /*]]>*/
+    </script>
+</div>
+</html>

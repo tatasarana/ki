@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="form-penerimaan-dokumen" th:remove="tag">
+    <script type="text/javascript" language="javascript" th:inline="javascript">
+        /*---------------FORM 3---------------*/
+        var csrf = /*[[${_csrf.token}]]*/'';        
+        
+        var redirect = /*[[@{/layanan/cetak-dokumen-baru?no=} ]]*/'';
+        var redirect_table = /*[[@{/layanan/loket-dokumen} ]]*/'';
+        var isEdit = $("#isEdit").val();
+        var table = $('#table3');
+        var dataTable3 = null;      
+        var header = "X-CSRF-TOKEN";               
+        var noGeneral = /*[[${applicationNo}]]*/'';
+        $(document).ready(function () {        	
+            $(document).ajaxSend(function (e, xhr, options) {
+                xhr.setRequestHeader(header, csrf);
+            });
+            var searchByArr = [];
+            var keywordArr = [];
+
+/*             searchByArr.push('no');
+            keywordArr.push($('#cariNo').val()); 
+            searchByArr.push('permohonan');
+            keywordArr.push($('#caripermohonan').val());*/
+
+            table.data('searchByArr', searchByArr);
+            table.data('keywordArr', keywordArr);
+            table.data('orderBy', 'applicationNo');
+
+            dataTable3 = $('#table3').DataTable({
+                ajax: {
+                    data: function (d) {
+                        d.searchByArr = table.data('searchByArr');
+                        d.keywordArr = table.data('keywordArr');
+                        d.orderBy = table.data('orderBy');
+                    },
+                    type: 'GET',
+                    url: /*[[@{/layanan/list-registration-permohonan}]]*/''
+                },
+                language: {
+                    url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+                }
+            });
+	        dataTable3.on('error.dt',function(e,settings,techNote,message){
+		        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	        });
+        });
+
+        $('#cariBtn').click(function () {
+        	//alert('cariBtn');
+            var searchByArr = [];
+            var keywordArr = [];
+            
+            searchByArr.push('applicationNo');
+            keywordArr.push($('#cariNo').val());
+            searchByArr.push('no');
+            keywordArr.push($('#cariPermohonan').val());
+
+            table.data('searchByArr', searchByArr);
+            table.data('keywordArr', keywordArr);
+            dataTable3.ajax.reload();
+        });
+
+        function pilihDokumen(param1) {
+        	//alert('pilihDokumen');
+            $.ajax({
+                url: /*[[@{/layanan/registrasi-dokumen}]]*/'',
+                datatype: 'json',
+                data: {
+                    target: param1
+                },
+	            beforeSend: function () {
+		            showLoading();
+	            },
+	            complete:function(){
+		            hideLoading();
+	            },
+                success: function (result) {
+                	//console.log(result);
+	                var data = JSON.parse(result);  	            	                
+	                $.each(JSON.parse(result), function (key, value) {	  
+	                	$('#reprsId').val(JSON.parse(result).id);    
+	                	$('#noPendaftaran').val(JSON.parse(result).noPendaftaran);
+                        $('#noPermohonan').val(JSON.parse(result).noPermohonan);
+                        $('#merek').val(JSON.parse(result).merek);                                     
+                    });
+                },
+	            error: function (xhr, status) {
+		            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	            }
+            });
+        }    
+        
+        
+        $('#btnSaveFormDokumen').click(function () {        	
+        	var codeBilling = $('#codeBilling').val();
+        	var mFileType2 = $('#mFileType').val();
+        	var noPermohonan = $('#noPermohonan').val();
+        	
+        	if( codeBilling.trim().length>0 ) {
+        		if( mFileType2.trim().length>0 ) {
+        			if( noPermohonan.trim().length>0 ) {
+        				swal("Konfirmasi", "Apakah Anda yakin akan proses data ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+        		  		.then((value) => {
+        		  			if(value) {
+        		  				$.ajax({
+    			                    data: {                      
+    			                        codeBilling: $("#codeBilling").val(),
+    			                        fileseq: $("#fileseq").val(),
+    			                        noPermohonan: $("#noPermohonan").val(),
+    			                        noPendaftaran: $("#noPendaftaran").val(),
+    			                        merek: $("#merek").val(),
+    			                        mFileType: $('#mFileType').val(),
+    			                        mFileTypeDetail: $("#mFileTypeDetail").val(),    
+    			                        applicationDate: $("#tglPengajuan").val(),
+    			                        paymentDate: $("#tglPembayaran").val(),
+    			                        totalPayment: $("#totalPayment").val(),
+    			                    },
+    			                    type: 'POST',
+    			                    url: /*[[@{/layanan/simpan-dokumen}]]*/'',
+						            beforeSend: function () {
+							            showLoading();
+						            },
+						            complete:function(){
+							            hideLoading();
+						            },
+    			                    success: function (data) {
+    			                    	console.log(data);
+    			                    	if (data == 'Success') {
+    			                    		window.location.replace(redirect_table);
+    			                    		$('#table3').DataTable().ajax.reload();    			                    		
+    			                    	} else {
+    			                    		//alert (data);  
+    			                    		$('#divMsgError').show();
+    			                    		$('#lblMsgError').text(data);
+    			                    	}
+    			                    },
+						            error: function (xhr, status) {
+							            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+						            }
+    			                });
+        		  			}
+        		  		});
+        			}
+        		}
+        	}
+        }); 
+       
+        
+       
+    </script>
+</div>
+</html>

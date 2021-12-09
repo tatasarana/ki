@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+
+
+<div class="my-wrapper-body bghome panel-container">
+	<p th:replace="fragment/header :: navbar"/>
+	<div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+	
+	<div class="my-wrapper" id="my-wrapper">
+		<div class="my-wrapper--inner">
+			<div class="wrapper-content">
+				<div class="content--top border--bottom padding-content--left-right">
+					<div class="row">
+						<div class="col-md-12">
+							<h3 class="content--title text--bold">
+								<i class="fas fa-bullhorn"></i> Berita Resmi Merek -Detail
+							</h3>
+							<small class="sub-header">Publikasi / Detail Berita Resmi Merek (BRM)</small>
+
+							<small style="float:right;margin-left:13px"><a th:href="@{/layanan/publikasi}"><i class="fa fa-arrow-left"></i> Kembali</a></small>
+							<small style="float:right"><a th:href="@{'/layanan/publikasi/publikasi-cetak?no=' + ${form.journalNo}}" target="_blank"><i class="fas fa-print"></i> Cetak BRM</a></small>
+							<!--small style="float:right"><a id="btnCetakBRM"><i class="fas fa-print"></i> Cetak BRM</a></small-->
+
+						</div>
+					</div>
+				</div>
+				<form class="form-horizontal" th:object="${form}" method="GET"> 
+				<div class="content--center padding-content--left-right">
+					<div class="wrapper--bg">
+					<div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+							<button data-dismiss="alert" class="close close-sm" type="button">
+								<i class="icon-remove"></i>
+							</button>
+							<p>[[${errorMessage}]]</p>
+						</div>
+
+								<div class="row">
+									<div class="col-md-12 ">
+										<div class="col-md-7">
+										 <div class="form-group">
+											<label class="col-form-label col-sm-4">Nomor BRM</label>
+											<div class="col-sm-8">
+											    <label th:text="*{JournalNo}"></label>
+											    <input type="hidden" th:value="*{JournalNo}" id="JournalNo" />
+										 	</div>
+										 </div>
+											<div class="form-group">
+												<label class="col-form-label col-sm-4">Dasar Hukum</label>
+												<div class="col-md-8">
+													<label th:text="*{mLaw.desc}"></label>
+												</div>
+											</div>
+
+										</div>
+										<div class="col-md-5">
+											<div class="form-group">
+												<label class="col-form-label col-sm-6">Tanggal Publikasi</label>
+												<div class="col-md-6">
+													<label th:text="*{JournalStartTemp}"></label>
+												</div>
+											</div>
+										 <div class="form-group">
+											<label class="col-form-label col-sm-6">Tanggal Berakhir</label>
+											<div class="col-md-6">
+												<label th:text="*{JournalEndTemp}"></label>
+											</div>
+										 </div>
+
+										</div>
+									</div>	
+								</div>
+
+                        <br/>
+                        </div>
+						 <div class="table-container">
+		                    <table class="table table-striped table-bordered table-responsive" id="table">
+		                    	<thead>
+			                        <tr>
+			                        	<th>No.</th>
+								<th>Nomor Permohonan</th>
+								<th>Tanggal Penerimaan</th>								
+								<th>Tipe Permohonan</th>
+								<th>Jenis Permohonan</th>
+								<th>Merek</th>
+								<th>Kelas</th>
+								<th>Nama Pemohon</th>
+			                        </tr>
+		                        </thead>
+		                    </table>
+                   		 </div>
+
+					</div>
+					</form>
+				</div>
+
+				
+			</div>
+		</div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var csrf=/*[[${_csrf.token}]]*/'';		
+    var tableDetail = $('#table');    
+    
+    $(document).ready(function () {            	
+        var searchByArr = [];
+        var keywordArr = [];      
+       
+        searchByArr.push('JournalNo');
+        keywordArr.push( $('#JournalNo').val() );
+        
+        tableDetail.data('searchByArr', searchByArr);
+        tableDetail.data('keywordArr', keywordArr);
+        
+        //alert($('#JournalNo').val());
+        /* Load DataTable */
+		var dataTableDetail=tableDetail.DataTable({
+			"scrollY":        "1000px",
+	        "scrollCollapse": true,
+	        "paging":         true,
+            ajax:{
+				data:function(d){					
+					d.searchByArr = tableDetail.data('searchByArr');
+	                d.keywordArr = tableDetail.data('keywordArr');
+					d.orderBy=tableDetail.data('orderBy');
+					d.orderType=tableDetail.data('orderType');
+					d._csrf=csrf;
+				},
+				type:'POST',
+				url:/*[[@{/layanan/cari-publikasi-detail-opt}]]*/''
+			},
+			//ordering: true,
+			//order:[[2,'asc']],
+			searching:true,
+			language:{
+				url:/*[[@{/js/i18n/datatables.in.json}]]*/''
+			}
+		});
+	    dataTableDetail.on('error.dt',function(e,settings,techNote,message){
+		    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	    });
+    });
+	
+  
+	
+	$('#btnCetakBRM').click(function () {
+        $.ajax({
+            type: 'GET',
+            url: /*[[@{/layanan/publikasi/publikasi-cetak}]]*/'',
+            datatype: "jsonp",
+			cache: false,
+			timeout: 3000000,
+            data: {
+                //csrf: csrf,
+                no: $('#JournalNo').val(),
+            },
+	        beforeSend:function(){
+		        showLoading();
+	        },
+	        complete:function(){
+		        hideLoading();
+	        },
+            success: function (response) {
+                //alert('sukses menyimpan data');
+                var blob = new Blob([response], { type: 'application/pdf' });
+
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveOrOpenBlob(blob); // for IE
+                }
+                else {
+                    var fileURL = URL.createObjectURL(blob);
+                    var newWin = window.open(fileURL);
+                    newWin.focus();
+                    newWin.reload();
+                }
+            },
+	        error: function (xhr, status) {
+		        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	        }
+        });
+    });
+	/*]]>*/
+</script>
+
+</body>
+</html>

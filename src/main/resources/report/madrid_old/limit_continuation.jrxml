@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="limit_continuation" pageWidth="523" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="523" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="12e33e45-ea8b-4bfb-aa07-255962c97973">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="listContract" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("1")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT *
+FROM(
+SELECT ROWNUM AS R, C.COUNTRY_NAME, B.CLASS_DESC_EN,  A.APPLICATION_ID
+     FROM TX_TM_CLASS_LIMITATION A
+     INNER JOIN M_CLASS_DETAIL B ON A.CLASS_DETAIL_ID = B.CLASS_DETAIL_ID
+     INNER JOIN M_COUNTRY C ON A.TM_CLASS_LIMITATION_COUNTRY=C.COUNTRY_ID
+     WHERE 1=1
+     ORDER BY C.COUNTRY_NAME,A.TM_CLASS_LIMITATION_ID ASC)
+WHERE R <100]]>
+	</queryString>
+	<field name="R" class="java.math.BigDecimal"/>
+	<field name="COUNTRY_NAME" class="java.lang.String"/>
+	<field name="CLASS_DESC_EN" class="java.lang.String"/>
+	<field name="APPLICATION_ID" class="java.lang.String"/>
+	<columnHeader>
+		<band height="57">
+			<textField>
+				<reportElement x="0" y="23" width="140" height="34" uuid="9b1fa100-4a8c-47f1-bf4f-f69355219279"/>
+				<box leftPadding="3"/>
+				<textElement>
+					<font fontName="Courier New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Contracting Party"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="140" y="23" width="383" height="34" uuid="5a238ea6-6b8d-44a4-a76b-8a15ac6be49f"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Courier New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Class(es) or list of goods and services for which protection is sought in this Contracting Party"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="18" y="0" width="20" height="20" backcolor="#000000" uuid="dcce2dcc-01a8-4df7-9225-68c9ef0d3e49"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Transparent" x="43" y="0" width="307" height="20" uuid="6bd7bd71-5b1d-458d-b970-8b2e9628a6e9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GOODS AND SERVICES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="18" y="0" width="20" height="19" forecolor="#FFFFFF" uuid="672e12d2-e102-48d9-8be1-16919c243802"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[10]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="140" height="20" uuid="04c4ed57-d3f1-4818-bb16-676142b6c354"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COUNTRY_NAME}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="140" y="0" width="383" height="20" uuid="13fc7098-5f43-48a6-88c8-df3107d5d106"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLASS_DESC_EN}.toUpperCase()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

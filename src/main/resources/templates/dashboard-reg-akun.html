@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<style>
+	.btn {
+		margin-right: 15px;
+	}
+</style>
+<body th:inline="text">
+	<script src="text/javascript" th:src="@{/js/highcharts.js}"></script>
+
+	<div class="my-wrapper-body bghome panel-container">
+		<p th:replace="fragment/header :: navbar"/>
+		<div id="mySideBar" class="panel-left">
+			<span id="position"></span>
+			<p th:replace="fragment/sidebar :: left"/>
+		</div>
+		<div id="myDragBar" class="splitter"></div>
+		<div id="myMain" class="panel-right">
+		<div class="my-wrapper" id="my-wrapper">
+			<div class="my-wrapper--inner">
+				<!-- dahboard permohonan start -->
+				<div class="wrapper-content">
+					<div class="content--top border--bottom padding-content--left-right">
+							<div class="row">
+								<div class="col-md-12">
+									<h3 class="content--title text--bold">
+										<i class="fas fa-tachometer-alt"></i> Dashboard Registrasi Akun
+									</h3>
+								</div>
+							</div>
+					</div>
+
+					<div class="content--center padding-content--left-right">
+											<div class="wrapper--bg">
+							<div class="jumbotron filterSearch">
+								<form>
+									<div class="row">
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Tanggal Registrasi Akun</label>
+												<div class="row">
+													<div class="col-md-6">
+														<input type="text" id="startDate" class="form-control datepicker" placeholder="Dari"/>
+													</div>
+													<div class="col-md-6 no-left-padding">
+														<input type="text" id="endDate" class="form-control datepicker" placeholder="Sampai"/>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Approval Status</label>
+												<select id="mStatus" class="form-control">
+													<option value="">Semua</option>
+													<option value="APPROVE">Approve</option>
+													<option value="EXPIRE">Expire</option>
+													<option value="PREPARE">Prepare</option>
+													<option value="REJECT">Reject</option>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Jenis Pemohon</label>
+												<select id="mLookup" class="form-control">
+													<option value="">Semua</option>
+													<option th:each="mLookup : ${lookupList}" th:value="${mLookup.name}" th:text="${mLookup.name}"></option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<button type="button" class="btn btn-primary" id="btnCari">
+												<i class="fas fa-search"></i>
+												Filter
+											</button>
+											<button type="submit" class="btn btn-info" onClick="window.location.reload()">
+												<i class="fas fa-sync-alt"></i>
+												Refresh
+											</button>
+											<button id="btnExport" type="button" class="btn btn-success"><i class="fas fa-file-excel"></i> Export to Excel</button>
+										</div>
+									</div>
+
+									<br></br>
+
+									<div class="row">
+										<figure class="highcharts-figure">
+											<div class="form-group">
+												<div id="grafikRegistrasi" class="col-lg-push-1"></div>
+												<p class="highcharts-description">
+												</p>
+											</div>
+										</figure>
+									</div>
+
+									<div class="row">
+										<div class="col-md-6">
+											<figure class="highcharts-figure">
+												<div class="form-group">
+													<div id="grafikStatus" class="col-lg-push-1"></div>
+													<p class="highcharts-description">
+													</p>
+												</div>
+											</figure>
+										</div>
+									</div>
+
+								</form>
+
+									<br></br>
+
+									<div class="row" id="regAkun">
+
+									</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	<div th:replace="fragment/js :: default"></div>
+	<div th:replace="fragment/js :: main"></div>
+	<div th:replace="fragment/js :: datatables"></div>
+	<div th:replace="fragment/js :: datepicker"></div>
+	<script type="text/javascript" language="javascript" th:inline="javascript">
+		/*<![CDATA[*/
+		$(document).ready(function() {
+			initializeUI();
+			reloadGrafik();
+
+			$("#btnCari").click(function(){
+				reloadGrafik();
+			});
+
+			$("#btnExport").click(function() {
+				var url = /*[[@{/layanan/cetak-dashboard-reg-akun"}]]*/
+				$.ajax({
+					type: 'POST',
+					url,
+					data: getFormData(),
+					processData: false,
+					contentType: false,
+					cache: false,
+					xhrFields: {
+						responseType: 'blob',
+					},
+					beforeSend: function () {
+						showLoading();
+					},
+					complete:function(){
+						hideLoading();
+					},
+					success: function (response) {
+						var downloadUrl = URL.createObjectURL(response);
+						var a = document.createElement("a");
+						a.href = downloadUrl;
+						a.download = "dashboard-reg-akun.xls";
+						document.body.appendChild(a);
+						a.click();
+					},
+				})
+			});
+
+			function reloadGrafik() {
+				var nama = $('#mLookup').val() == '' ? 'Semua' : $('#mLookup').val()
+				$.ajax({
+					type: 'POST',
+					url: /*[[@{/layanan/ajax-dashboard-reg-akun"}]]*/'',
+					data: getFormData(),
+					processData: false,
+					contentType: false,
+					dataType: 'JSON',
+					cache: false,
+					beforeSend: function () {
+						showLoading();
+					},
+					complete:function(){
+						hideLoading();
+
+					},
+					success: function (data) {
+						grafikRegistrasi(data.grafikRegistrasi, nama)
+						grafikStatus(data.grafikStatus)
+
+						var regAkuns = data.regAkun;
+						var regAkun = ''
+						var div = ''
+						for (i = 0; i < regAkuns.length; i++) {
+							regAkun = regAkuns[i]
+							div += '<div class="col-md-3">'
+							div += '<h5 ></h5>'+regAkun.nama+'<br></br>'
+							div += '<div class="form-group">'
+							div += '<table id="table" style="background-color:#FFFFFF">'
+							div += '<thead>'
+							div += '<tr>'
+							div += '<th style="height: 100px; width: 150px; text-align:center">'+regAkun.total+'</th>'
+							div += '</tr>'
+							div += '</thead>'
+							div += '</table>'
+							div += '</div>'
+							div += '</div>'
+						}
+						$('#regAkun').html(div);
+					},
+					error: function (xhr, status) {
+						swal("Error", "error", "error");
+					}
+				});
+			}
+
+			function initializeUI() {
+				var lastMonthDate = new Date();
+				lastMonthDate.setDate(0);
+				var defaultStartDate = `${lastMonthDate.getFullYear()}/${String(lastMonthDate.getMonth() + 1).padStart(2, '0')}/01`;
+				var defaultEndDate = `${lastMonthDate.getFullYear()}/${String(lastMonthDate.getMonth() + 1).padStart(2, '0')}/${String(lastMonthDate.getDate()).padStart(2, '0')}`;
+				var datepickerOptions = {
+					format: 'yyyy/mm/dd',
+					autoclose: true,
+					todayBtn: 'linked',
+					endDate: 'today',
+					todayHighlight: true,
+					orientation: "bottom"
+				};
+
+				$('#startDate').val(defaultStartDate);
+				$('#endDate').val(defaultEndDate);
+				$('.datepicker').datepicker(datepickerOptions);
+			}
+
+			function getFormData() {
+				var formData = new FormData;
+				var data = {}
+				data.tipe = $('#mLookup').val()
+				data.status = $('#mStatus').val()
+				data.start = $('#startDate').val()
+				data.end = $('#endDate').val()
+				formData.append('data', JSON.stringify(data));
+				return formData;
+			}
+			//grafik permohonan
+			function grafikRegistrasi(data, nama) {
+				Highcharts.chart('grafikRegistrasi', {
+
+					chart: {
+						type: 'column'
+					},
+
+					title: {
+						text: 'Grafik Registrasi Akun'
+					},
+
+					legend: {
+						align: 'right',
+						verticalAlign: 'middle',
+						layout: 'vertical'
+					},
+
+					xAxis: {
+						categories: data.bulan,
+						labels: {
+							x: -10
+						}
+					},
+
+					yAxis: {
+						title: {
+							text: "Akun"
+						}
+					},
+
+					plotOptions: {
+						series: {
+							minPointLength: 3,
+						},
+					},
+
+					series: [{
+						name: nama,
+						data: data.value
+					}]
+				});
+			}
+
+			function grafikStatus(datas) {
+				Highcharts.chart('grafikStatus', {
+					chart: {
+						plotBackgroundColor: null,
+						plotBorderWidth: null,
+						plotShadow: false,
+						type: 'pie'
+					},
+					title: {
+						text: 'Pie Diagram Status'
+					},
+					tooltip: {
+						pointFormat: '{series.name}: <b>{point.y:.0f}</b>'
+					},
+					accessibility: {
+						point: {
+							valueSuffix: ''
+						}
+					},
+					plotOptions: {
+						pie: {
+							allowPointSelect: true,
+							cursor: 'pointer',
+							dataLabels: {
+								enabled: true,
+								format: '<b>{point.name}</b>: {point.y:.0f}'
+							}
+						}
+					},
+					series: [{
+						name: 'Akun',
+						colorByPoint: true,
+						data: datas
+					}]
+				});
+			}
+		});
+		/*]]>*/
+	</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="limit_continuation" pageWidth="523" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="523" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="12e33e45-ea8b-4bfb-aa07-255962c97973">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT *
+FROM(
+SELECT ROWNUM AS R, B.*
+FROM(
+SELECT D.COUNTRY_NAME, C.TOTAL_FEE
+FROM TX_TM_GENERAL A
+LEFT JOIN TX_TM_MADRID_FEE B ON A.APPLICATION_ID=B.APPLICATION_ID
+LEFT JOIN TX_TM_MADRID_FEE_DETAIL C ON B.TM_MADRID_FEE_ID=C.TM_MADRID_FEE_ID
+LEFT JOIN M_COUNTRY D ON C.TM_MADRID_FEE_DETAIL_COUNTRY=D.COUNTRY_CODE
+WHERE A.APPLICATION_ID = $P{applicationId} AND D.IS_MADRID = 1
+ORDER BY C.TM_MADRID_FEE_DETAIL_COUNTRY ASC) B)
+WHERE R  > 20]]>
+	</queryString>
+	<field name="R" class="java.math.BigDecimal"/>
+	<field name="COUNTRY_NAME" class="java.lang.String"/>
+	<field name="TOTAL_FEE" class="java.lang.String"/>
+	<columnHeader>
+		<band height="57">
+			<textField>
+				<reportElement x="0" y="23" width="177" height="34" uuid="9b1fa100-4a8c-47f1-bf4f-f69355219279"/>
+				<box leftPadding="3"/>
+				<textElement>
+					<font fontName="Courier New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Designated Contracting Parties"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="209" y="23" width="152" height="34" uuid="5a238ea6-6b8d-44a4-a76b-8a15ac6be49f"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Courier New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Individual fee"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="43" y="0" width="307" height="20" uuid="6bd7bd71-5b1d-458d-b970-8b2e9628a6e9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INDIVIDUAL FEES( SWISS FRANCS)]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="177" height="20" uuid="04c4ed57-d3f1-4818-bb16-676142b6c354"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="0.0" lineStyle="Dotted"/>
+					<leftPen lineWidth="0.0" lineStyle="Dotted"/>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+					<rightPen lineWidth="0.0" lineStyle="Dotted"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COUNTRY_NAME}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="209" y="0" width="152" height="20" uuid="13fc7098-5f43-48a6-88c8-df3107d5d106"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="0.0" lineStyle="Dotted"/>
+					<leftPen lineWidth="0.0" lineStyle="Dotted"/>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+					<rightPen lineWidth="0.0" lineStyle="Dotted"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom">
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_FEE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

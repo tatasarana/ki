@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="class_continuation" pageWidth="523" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="523" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="12e33e45-ea8b-4bfb-aa07-255962c97973">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="listClass" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("1")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT TM_OWNER_DETAIL_NAME 
+FROM TX_TM_OWNER_DETAIL 
+WHERE APPLICATION_ID = $P{applicationId} 
+ORDER BY TM_OWNER_DETAIL_NAME ASC]]>
+	</queryString>
+	<field name="TM_OWNER_DETAIL_NAME" class="java.lang.String"/>
+	<columnHeader>
+		<band height="45">
+			<rectangle>
+				<reportElement x="18" y="0" width="20" height="20" backcolor="#000000" uuid="588367b7-76e6-4616-98ce-6d5398c3cb2c"/>
+			</rectangle>
+			<textField>
+				<reportElement x="0" y="25" width="200" height="20" uuid="9b1fa100-4a8c-47f1-bf4f-f69355219279"/>
+				<textElement textAlignment="Center">
+					<font fontName="Courier New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Applicant Name"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="18" y="0" width="20" height="19" forecolor="#FFFFFF" backcolor="#000000" uuid="3c3317ec-a8ce-4f03-bf37-06f82aa41a62"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="43" y="0" width="307" height="20" uuid="e107301e-fd99-44ca-a4c6-11bedd97a3a4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[APPLICANT NAME]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="200" height="20" uuid="04c4ed57-d3f1-4818-bb16-676142b6c354"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_OWNER_DETAIL_NAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <form class="form-horizontal" th:action="@{/layanan/edit-konsultan}" th:object="${form}"
+          th:method="post">
+        <div class="my-wrapper" id="my-wrapper">
+            <div class="my-wrapper--inner">
+
+                <div class="wrapper-content" id="permohonan-baru">
+                    <div class="content--top border--bottom padding-content--left-right">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="content--title text--bold">
+                                    <i class="fas fa-diagnoses"></i> Data Konsultan - Ubah
+                                </h3>
+                                <small class="sub-header">Konsultan / Ubah</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content--center padding-content--left-right">
+                        <div class="wrapper--bg">
+                            <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                                <button data-dismiss="alert" class="close close-sm" type="button">
+                                    <i class="icon-remove"></i>
+                                </button>
+                                <p>[[${errorMessage}]]</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                    <input type="hidden" th:field="*{id}"/>
+                                        <label class="col-sm-3 col-form-label required-label">Nomor Konsultan</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Nomor Konsultan"
+                                                   th:field="*{no}" th:required="true" maxlength="20"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('no')}"
+                                                  th:errors="*{no}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label required-label col-sm-3">Nama Konsultan</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Nama Konsultan"
+                                                   th:field="*{name}" th:required="true" maxlength="255"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('name')}"
+                                                  th:errors="*{name}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-3">Nama Kantor</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Nama Kantor" th:field="*{office}" 
+                                                   id="namaKantor" maxlength="255"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label required-label col-sm-3">Negara</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:field="*{mCountry.id}" id="idNegara"
+                                                    th:required="true">
+                                                <option style="display: none" value="">-Pilih Negara-</option>
+                                                <option th:each="listCountry : ${listCountry}" th:value="${listCountry.id}"
+                                                        th:text="${listCountry.name}"></option>
+                                            </select>
+                                            <input type="hidden" th:value="*{mCountry.id}" id="temp_mCountry"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('mCountry.id')}"
+                                                  th:errors="*{mCountry.id}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-3">Provinsi</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control cDisable" th:field="*{mProvince.id}"
+                                                    id="idProvinsi">
+                                                <option style="display: none" value="">-Pilih Provinsi-</option>
+                                                <option th:each="listProvince : ${listProvince}"
+                                                        th:value="${listProvince.id}"
+                                                        th:text="${listProvince.name}"></option>
+                                            </select>
+                                            <input type="hidden" th:value="*{mProvince.id}" id="temp_mProvince"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-3">Kabupaten/Kota</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control cDisable" th:field="*{mCity.id}" id="idKota">
+                                                <option style="display: none" value="">-Pilih Kabupaten/Kota-</option>
+                                                <option th:each="listCity : ${listCity}" th:value="${listCity.id}"
+                                                        th:text="${listCity.name}"></option>
+                                            </select>
+                                            <input type="hidden" th:value="*{mCity.id}" id="temp_mCity"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label required-label col-sm-3">Alamat</label>
+                                        <div class="col-sm-9">
+                                            <textarea class="form-control" placeholder="Alamat" id="alamat"
+                                                      th:field="*{address}" th:required="true" maxlength="500"></textarea>
+                                            <span class="help-block" th:if="${#fields.hasErrors('address')}"
+                                                  th:errors="*{address}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-3">Kode Pos</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Kode Pos" id="kodePos" 
+                                            	th:field="*{zipCode}" maxlength="9"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-3">Telepon</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="No Telepon" id="noTelp" 
+                                            	th:field="*{phone}" maxlength="100"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-3">Email</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Email" id="mail"
+                                                   th:field="*{email}" maxlength="100"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('email')}"
+                                                  th:errors="*{email}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label required-label col-sm-3">Username</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" readonly="true"
+                                                    th:field="*{userId.username}" maxlength="255"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-3">Status</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" id="status" th:field="*{statusFlag}">
+                                                <option th:value="true">Aktif</option>
+                                                <option th:value="false">Tidak Aktif</option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('statusFlag')}" th:errors="*{statusFlag}"></span>
+                                        </div>
+                                    </div>
+                                    <label class="col-form-label notice">*) Wajib Diisi</label>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                            <div class="col-sm-3"></div>
+                                                <div class="col-sm-9">
+                                                    <a class="btn btn-danger" th:href="@{/layanan/list-konsultan}"><i class="fas fa-times"></i> Batal</a>
+                                                    <button type="submit" class="btn btn-primary"><i
+                                                            class="fas fa-paper-plane"></i> Proses
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+</body>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    var indVal = "ID";
+    var temp_mProvince = $('#temp_mProvince').val();
+    var temp_mCity = $('#temp_mCity').val();
+
+    $(document).ready(function () {
+        $('form').validate({
+        	rules: {
+
+				'zipCode' : {
+					digits: '#zipCode'
+				}
+        	},
+            messages: {
+                'no': {
+                    required: /*[[#{field.error.required('Nomor Konsultan')}]]*/''
+                },
+                'name': {
+                    required: /*[[#{field.error.required('Nama Konsultan')}]]*/''
+                },
+                'mCountry.id': {
+                    required: /*[[#{field.error.required('Nama Negara')}]]*/''
+                },
+                'address': {
+                    required: /*[[#{field.error.required('Alamat')}]]*/''
+                },
+                'zipCode': {
+                	digits: /*[[#{field.error.not.numeric('Kode Pos')}]]*/''
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+	        submitHandler: function(form) {
+		        showLoading();
+		        $('form')[0].submit();
+	        }
+        });
+
+        $('.cDisable').attr("disabled", true);
+        if ($('#temp_mCountry').val() === indVal) {
+            $('.cDisable').attr("disabled", false);
+        }
+        getCity(temp_mProvince, temp_mCity);
+    });
+    // End Document Ready Funtion
+
+    $('#idNegara').change(function () {
+        var kodeVal = this.value;
+        if (kodeVal === indVal) {
+            $('.cDisable').attr("disabled", false);
+        } else {
+            $('.cDisable').attr("disabled", true);
+            $('#idProvinsi').val(null);
+            $('#idKota').val(null);
+        }
+    });
+    $('#idProvinsi').change(function () {
+        var idProv = this.value;
+        getCity(idProv, temp_mCity);
+    });
+
+    function getCity(idProv, value) {
+	    var url=/*[[@{/layanan/list-kota}]]*/'';
+        $.ajax({
+            data: {
+                target: idProv
+            },
+            url: url,
+	        beforeSend:function(){
+		        showLoading();
+	        },
+	        complete:function(){
+		        hideLoading();
+	        },
+            success: function (result) {
+            	var temp = {};
+            	var isExist = false;
+            	try {
+            		temp = JSON.parse(JSON.stringify(result));
+                     $('#idKota')
+                         .find('option')
+                         .remove().end();
+                     $('#idKota').append('<option style="display: none" value="">-Pilih Kabupaten/Kota-</option>');
+                     temp.forEach(function (item) {
+                         if (value == item.id) {
+                             isExist = true;
+                         }
+                         $('#idKota').append('<option value="' + item.id + '">' + item.name + '</option>');
+                     });
+            	} catch(e) {     
+            		/* alert(e);
+            		console.log(e); */
+            	}
+                $('#idKota').val(isExist ? value : null);
+            },
+	        error: function (xhr, status) {
+		        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	        }
+        });
+    }
+</script>
+</html>

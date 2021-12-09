@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+
+    <div class="my-wrapper" id="my-wrapper">
+        <div class="my-wrapper--inner">
+
+            <div class="wrapper-content">
+                <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="fas fa-copy"></i> Dokumen Workflow - Parameter
+                            </h3>
+                            <small class="sub-header">Dokumen / Parameter</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="content--center padding-content--left-right">
+                    <div class="wrapper--bg">
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                            <button data-dismiss="alert" class="close close-sm" type="button">
+                                <i class="icon-remove"></i>
+                            </button>
+                            <p>[[${errorMessage}]]</p>
+                        </div>
+                        <form class="form-horizontal" th:object="${form}" th:action="@{/layanan/edit-dokumen-param}"
+                              method="post">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Nama Parameter</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" placeholder="Nama Parameter" th:field="*{name}"
+                                                   th:required="true"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('name')}"
+                                                  th:errors="*{name}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Keterangan Parameter</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" placeholder="Keterangan Parameter" th:field="*{description}"
+                                                   th:required="true"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('description')}"
+                                                  th:errors="*{description}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="fDocument">
+                                        <label class="col-sm-3 col-form-label required-label">Tipe Parameter</label>
+                                        <div class="col-sm-9">
+                                            <select id="cmbTipe" class="form-control" th:field="*{types}" onchange="showHideNilaiParam(this.value)">
+                                                <!--<option value="TERDEFINISI">Terdefinisi</option>-->
+                                                <option value="TEKS_BEBAS">Teks Bebas</option>
+                                                <option value="PILIH_TANGGAL">Pilih Tanggal</option>
+                                                <!--<option value="SQL">Sql Statement</option>-->
+                                                <option value="QRCODE">QRCode</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="fNilaiParam">
+                                        <label class="col-sm-3 col-form-label">Nilai Parameter</label>
+                                        <div class="col-sm-9">
+                                            <textarea class="form-control" rows="10" th:field="*{value}" placeholder="ex. Sql Statement"></textarea>
+                                            <span class="help-block" th:if="${#fields.hasErrors('value')}"
+                                                  th:errors="*{value}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <div class="col-sm-3"></div>
+                                        <div class="col-sm-9">
+                                            <input type="hidden" th:field="*{id}"/>
+                                            <input type="hidden" th:field="*{mDocument.id}"/>
+                                            <a th:href="@{'/layanan/edit-dokumen/'+${form.mDocument.id}}" class="btn btn-danger"><i class="fas fa-times"></i> Batal</a>
+                                            <button type="submit" class="btn btn-primary"><i
+                                                    class="fas fa-paper-plane"></i> Proses
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+
+    function showHideNilaiParam(val){
+            var x = document.getElementById('fNilaiParam');
+            if(val==="SQL"){
+                x.style.visibility = "visible";
+            }else{
+                x.style.visibility = "hidden";
+            }
+        }
+    $(document).ready(function(){
+
+        var cmbTipe = document.getElementById('cmbTipe');
+        var x = document.getElementById('fNilaiParam');
+        if(cmbTipe.val==="SQL"){
+            x.style.visibility = "visible";
+        }else{
+                x.style.visibility = "hidden";
+            }
+
+    });
+</script>
+
+</body>
+</html>

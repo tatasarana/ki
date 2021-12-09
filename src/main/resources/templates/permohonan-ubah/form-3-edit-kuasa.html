@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+<div class="my-wrapper" id="my-wrapper">
+    <div class="my-wrapper--inner">
+        <div class="wrapper-content">
+            <div class="content--top border--bottom padding-content--left-right">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="content--title text--bold">
+                            <i class="fas fa-edit"></i> Permohonan - Ubah
+                        </h3>
+                        <small class="sub-header">Pratinjau / Kuasa</small>
+                    </div>
+                </div>
+            </div>
+            <div class="content--center padding-content--left-right">
+                <div class="wrapper--bg">
+                    <form id="idForm1" class="form form-horizontal" th:object="${txTmReprs}">
+                        <input type="hidden" value="isEdit" id="isEdit"/>
+                        <input type="hidden" class="form-control kuasa" disabled="disabled" id="reprsId" th:field="*{mRepresentative.id}"/>
+                        <input type="hidden" class="form-control kuasa" disabled="disabled" id="txTmReprsId" th:field="*{id}"/>
+                        <!-- <input type="hidden" th:field="${txTmReprs.status}" th:value="${txTmReprs.status}" id="status"/> -->
+                        <!--Header Judul-->
+                        <div class="row col-md-12" style="margin-bottom: 15px">
+                            <div class="col-md-4">
+                                <h3>Data Kuasa</h3>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-default" id="btnHapus3" th:if="${#authentication.getPrincipal().hasAccessMenu('T-HPKUASA')}"><i class="fa fa-trash"></i>
+                                        Hapus
+                                    </button>
+                                    <button type="button" class="btn btn-primary" id="btnSaveForm3" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PSKUASA')}"><i class="fas fa-save"></i>
+                                        Simpan
+                                    </button>
+                                    <button type="button" class="btn btn-danger" onclick="window.history.go(-1); return false;"><i class="fa fa-arrow-left"></i>
+                                        Kembali
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row col-md-12">
+                            <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-4">Status</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-control" th:field="*{status}" id="status">
+                                                <option th:value="true">Aktif </option>
+                                                <option th:value="false">Tidak Aktif </option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-4">Nomor Konsultan</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control kuasa" placeholder="Nomor Konsultan"
+                                                   id="noKonsultan" disabled="disabled" th:value="*{mRepresentative.no}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-4">Nama Konsultan</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control kuasa" placeholder="Nama Konsultan"
+                                                   id="namaKonsultan"
+                                                   th:value="*{mRepresentative.name}" disabled="disabled"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-4">Nama Kantor</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control kuasa" placeholder="Nama Kantor"
+                                                   id="namaKantor"
+                                                   th:value="*{mRepresentative.office}" disabled="disabled"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-4">Negara</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control kuasa" placeholder="Negara"
+                                                   id="negara"
+                                                   th:value="*{mCountry.name}"
+                                                   disabled="disabled"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-4">Provinsi</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control kuasa" placeholder="Provinsi"
+                                                   id="provinsi"
+                                                   th:value="*{mProvince.name}"
+                                                   disabled="disabled"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-4">Kabupaten/Kota</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control kuasa" placeholder="Kabupaten/Kota"
+                                                   id="kabKota"
+                                                   th:value="*{mCity.name}"
+                                                   disabled="disabled"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-4">Alamat</label>
+                                        <div class="col-sm-8">
+                                    <textarea class="form-control kuasa" placeholder="Alamat"
+                                              th:field="*{address}"
+                                              disabled="disabled" id="alamat"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-4">Kode Pos</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control kuasa" placeholder="Kode Pos"
+                                                   th:value="*{zipCode}" disabled="disabled"
+                                                   id="kodePos"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-4">Telepon</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control kuasa" placeholder="No Telepon"
+                                                   disabled="disabled"
+                                                   th:value="*{phone}" id="noTelp"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-sm-4">Email</label>
+                                        <div class="col-sm-8">
+                                            <input type="email" class="form-control kuasa" placeholder="Email"
+                                                   disabled="disabled"
+                                                   th:value="*{email}" id="mail"/>
+                                        </div>
+                                    </div>
+                                <!-- </div> -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<div th:replace="fragment/permohonan/js-form-3 :: form-3"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript"></script>
+</body>
+</html>

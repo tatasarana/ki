@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="resume" th:remove="tag">
+	<script type="text/javascript" language="javascript" th:inline="javascript">
+	/*<![CDATA[*/
+		var check = "" ;
+		var mFileType = " ";
+		var csrf = /*[[${_csrf.token}]]*/'';
+		var header = "X-CSRF-TOKEN";
+		var tipePermohonan = /*[[${_csrf.token}]]*/'';
+
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, csrf);
+        });
+
+        $(document).ready(function () {
+			console.log("Jenis Permohonan: " +$('#mFileType').val()) ;
+			$('#btnSelesai').click(function () {
+        		var PASS = true ;
+        		if ($('#mFileType').is(':disabled')) {
+                    if ($('#ownerName').val() == "" || $('#ownerNationality').val() =="" || $('#ownerCountry').val() == "" || $('#ownerAddress').val() == "" || $('#ownerEmail').val() == "") {
+					 	$('#pemohon').trigger('click');
+					 	swal("Informasi", "Silakan melengkapi data Pemohon, kemudian klik Simpan dan Lanjutkan.", "info");
+						PASS = false ;
+                    }
+                    if (PASS){
+						if ($('#tableDokumen').DataTable().page.info().recordsDisplay == 0) {
+							swal("Informasi", "Tab Dokumen Belum Dilampirkan", "info");
+							PASS = false ;
+						}
+					}
+					if (PASS){
+						var select = document.getElementById('mFileType');
+						var selectedIndex = select.selectedIndex;
+						if ( select.options[selectedIndex].value == 'PENCATATAN_PERJANJIAN_LISENSI' && $('#tableLicense').DataTable().page.info().recordsDisplay == 0) {
+							swal("Informasi", "Data Lisensi wajib diisi pada Tab 5 untuk tipe permohonan: " + select.options[selectedIndex].text, "info");
+							PASS = false ;
+						}
+					}
+                     // ======================  'PENCATATAN_PENGALIHAN_HAK' =========================
+                    if (PASS){
+							var $typeApp = $('#mFileType').val() ;
+
+						if ( ($typeApp == 'PENCATATAN_PENGALIHAN_HAK') || ($typeApp == 'PENCATATAN_PERUBAHAN_NAMA_ALAMAT')  )
+						{
+
+							$.ajax({
+								type: 'POST',
+								url: /*[[@{/layanan/ajax-check/pasca-pengalihan}]]*/'',
+								// datatype: 'jsonp',
+								data:  {
+									postNo: /*[[${dataGeneral.id}]]*/'',
+									noIPT : $('#noIPT').val(),
+								},
+								beforeSend: function () {
+									showLoading();
+								},
+								complete:function(){
+									hideLoading();
+								},
+								success: function(data) {
+									var result = data;
+									// alert("Hasil: "+result) ;
+									if (result == "success") {
+										check = "success";
+
+									} else {
+										check = "failed" ;
+										PASS = false ;
+										swal("Informasi", "Data Baru Harus Diisi (lihat Tab 5)!", "info");
+										$('#preview').trigger('click');
+									}
+								},
+								error: function (xhr, status) {
+									swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+									PASS = false ;
+								}
+							});
+
+						}
+					}
+
+					// langkah terakhir, bila semua Beres!!
+					if (PASS)
+					{
+						swal("Konfirmasi", "Apakah Anda yakin akan proses Pasca Online ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+						.then((value) => {
+							if(value) {
+								$.ajax({
+									type: 'POST',
+									url: /*[[@{/layanan/save-resume-pasca-online}]]*/'',
+									datatype: 'jsonp',
+									data:  {
+										// postId: /*[[${dataGeneral.id}]]*/'',
+										postId: $('#noIPT').val(),
+										postNote: $('#postNote').val(),
+										// mFileType: $('#mFileType').val(),
+										mFileType: $('#ref_mFileType').val(),
+									},
+									beforeSend: function () {
+										showLoading();
+									},
+									complete:function(){
+										hideLoading();
+									},
+									success: function (data) {
+										console.log(data);
+										if (data.success) {
+											swal("Informasi", data.message, "info");
+										} else {
+											console.log("sukses ");
+											window.location = /*[[@{/layanan/list-pasca-online}]]*/'';
+										}
+									},
+									error: function (xhr, status) {
+										swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+									}
+								});
+							}
+						});
+					}
+            	} else {
+            		$('#general').trigger('click');
+            		swal("Informasi", "Silakan melengkapi data General dan klik Simpan.", "info");
+            	}
+            });
+        });
+
+
+
+
+
+		/*]]>*/
+
+
+
+
+	</script>
+
+
+
+
+</div>
+</html>

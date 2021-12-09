@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <form class="form-horizontal" th:object="${form}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+        <div class="my-wrapper" id="my-wrapper">
+            <div class="my-wrapper--inner">
+                <!-- data pemohon -->
+                <div class="wrapper-content" id="permohonan-baru">
+                    <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="fas fa-edit"></i> Data from week <span th:text="${#strings.substring(form.no,0,2) }"></span>, Gazette: <span th:text="${form.no}"></span>
+                            </h3>
+                             <h3 class="content--title text--bold">
+                                 <span th:text="${form.docType}"> </span> (  <span th:text="${form.tranTyp}"> </span> )
+                            </h3>
+
+                            <small style="float:right;margin-left:13px"><a th:if="${ application_no != '' }" th:href="@{/layanan/pratinjau-permohonan(no=${application_no})}"><i class="fa fa-laptop"></i> Permohonan</a></small>
+                            <small style="float:right;margin-left:13px"><a th:href="@{/layanan/list-madrid}"><i class="fa fa-arrow-left"></i> Kembali</a></small>
+                        </div>
+                    </div>
+                </div>
+                    <div class="content--center padding-content--left-right">
+                        <div class="wrapper--bg">
+                            <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                                <button data-dismiss="alert" class="close close-sm" type="button">
+                                    <i class="icon-remove"></i>
+                                </button>
+                                <p>[[${errorMessage}]]</p>
+                            </div>
+                            <div class="row">                                
+                                    <div class="form-group" th:if="${(form.intregn != '' and form.intregn != null )}">
+                                        <label class="col-sm-3 col-form-label">International Registration Number</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" th:value="${form.intregn}" disabled="disabled"/>                                            
+                                        </div>
+                                    </div>                                   
+                                     <div class="form-group" th:if="${(mdi.originalLanguage != null and mdi.originalLanguage != '')}">
+                                        <label class="col-sm-3 col-form-label">Original Language (1=English, 3=French)</label>
+                                        <div class="col-sm-9">
+                                        	<input type="text" class="form-control" th:value="${mdi.originalLanguage}" disabled="disabled"/>  
+                                        </div>
+                                    </div>
+                                    <div class="form-group" th:if="${(mdi.officeOrigin != '' and mdi.officeOrigin != null )}">
+                                        <label class="col-sm-3 col-form-label">Office of Origin </label>
+                                        <div class="col-sm-9">
+                                         <input type="text" class="form-control" th:value="${mdi.officeOrigin}" disabled="disabled"/>  
+                                        </div>
+                                    </div>
+                                    <div class="form-group" th:if="${(mdi.expiryDate != '' and mdi.expiryDate != null )}">
+                                        <label class="col-sm-3 col-form-label">Expiry Date</label>
+                                        <div class="col-sm-9">
+                                           <input type="text" class="form-control" th:value="${mdi.expiryDate}" disabled="disabled"/> 
+                                        </div>
+                                    </div>
+                                    <div class="form-group" th:if="${(mdi.documentId != '')}">
+                                        <label class="col-sm-3 col-form-label">IB's Document ID</label>
+                                        <div class="col-sm-9">
+                                           <input type="text" class="form-control" th:value="${mdi.documentId}" disabled="disabled"/> 
+                                        </div>
+                                    </div>
+                                    <div class="form-group" th:if="${(mdi.dateRecord != ''  and mdi.dateRecord != null )}">
+                                        <label class="col-sm-3 col-form-label">Date of Recordal</label>
+                                        <div class="col-sm-9">       
+                                        	<input type="text" class="form-control" th:value="${mdi.dateRecord}" disabled="disabled"/>                                    
+                                        </div>
+                                    </div>
+                                   <div class="form-group" th:if="${(mdi.notificationDate != '' and mdi.notificationDate != null )}">
+                                        <label class="col-sm-3 col-form-label">Notification Date</label>
+                                        <div class="col-sm-9"> 
+                                        	<input type="text" class="form-control" th:value="${mdi.notificationDate}" disabled="disabled"/>                                          
+                                        </div>
+                                    </div>
+                                    <div class="form-group" th:if="${(mdi.effectiveDate != ''  and mdi.notificationDate != null)}">
+                                        <label class="col-sm-3 col-form-label">Effective Date</label>
+                                        <div class="col-sm-9">                                       
+                                        	<input type="text" class="form-control" th:value="${mdi.effectiveDate}" disabled="disabled"/>    
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="form-group" th:if="${(mdi.internationalRegistrationDate != '' and mdi.internationalRegistrationDate != null  )}">
+                                        <label class="col-sm-3 col-form-label">International Registration Date</label>
+                                        <div class="col-sm-9"> 
+                                        	<input type="text" class="form-control" th:value="${mdi.internationalRegistrationDate}" disabled="disabled"/>                                          
+                                        </div>
+                                    </div>
+                                    <div class="form-group" th:if="${( mdi.instrumentContractingPartyDesign != '' and mdi.instrumentContractingPartyDesign != null )}">
+                                        <label class="col-sm-3 col-form-label">Instrument Contracting Party Designated (Protocol/Agreement)</label>
+                                        <div class="col-sm-9" >                                          
+                                        	<input type="text" class="form-control" th:value="${mdi.instrumentContractingPartyDesign}" disabled="disabled"/> 
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group" th:if="${!mdi.holderList.isEmpty()}">
+                                        <label class="col-sm-3 col-form-label">Holder Details</label>
+                                         <div class="col-sm-9">                   		
+						                	<table id="holderTableId" class="table table-bordered table-striped"> 
+						                  		<thead>
+						            				<tr>
+						                 				<th>Name</th>                                                                                 
+						            					<th>Address</th>
+						            					<th>Country</th>
+						            					<th>Entitlement</th>
+						            					<th>Entitlement Address</th>
+						            					<th>Entitlement Country</th>
+						            					<th>Legal Nature</th>	
+						            					<th>Place Incorporated</th>
+						            					<th>Correspondence Address</th>					            					
+						                			</tr>
+						                		</thead> 
+						                   		 <tbody>
+													<tr th:each="hl : ${mdi.holderList}">
+														<td th:text="${hl.holdName}" align="center"></td>
+														<td th:text="${hl.holdAddress}" align="center"></td>	
+														<td th:text="${hl.holdCountry}" align="center"></td>
+														<td th:text="${hl.holdEntitlement}" align="center"></td>
+														<td th:text="${hl.holdEntitlementAddress}" align="center"></td>
+														<td th:text="${hl.holdEntitlementCountry}" align="center"></td>	
+														<td th:text="${hl.holdLegalNature}" align="center"></td>
+														<td th:text="${hl.holdPlaceIncorporated}" align="center"></td>								                          
+							                            <td th:text="${hl.holdCorrsAddress}" align="center"></td>				                           
+						                       		</tr>	                                                        
+						                    	</tbody>          								
+						                	</table>
+						            	</div>                                                                               
+                                    </div>
+                                    
+                                    <div class="form-group" th:if="${(mdi.prevHolderDetail !='' and mdi.prevHolderDetail !=null )}">
+                                        <label class="col-sm-3 col-form-label">Previous Holder's Details</label>
+                                        <div class="col-sm-9" >    
+                                            <textarea class="form-control" th:field="${mdi.prevHolderDetail}" disabled="disabled"/>                                                         
+                                        </div>
+                                    </div>
+                                  
+                                    <div class="form-group" th:if="${(mdi.correspondenceDetail !='' and mdi.correspondenceDetail !=null )}">
+                                        <label class="col-sm-3 col-form-label">Correspondence Details</label>
+                                        <div class="col-sm-9" >    
+                                            <textarea class="form-control" th:field="${mdi.correspondenceDetail}" disabled="disabled"/>                                                         
+                                        </div>
+                                    </div>
+                                    <div class="form-group" th:if="${!mdi.reprsList.isEmpty()}">
+                                        <label class="col-sm-3 col-form-label">Representative Details</label>
+                                         <div class="col-sm-9">                   		
+						                	<table class="table table-bordered table-striped">
+						                  		<thead>
+						            				<tr>
+						                 				<th>Name</th>                                                                                 
+						            					<th>Address</th>
+						            					<th>Country</th>						            								            					
+						                			</tr>
+						                		</thead> 
+						                   		 <tbody>
+													<tr th:each="rep : ${mdi.reprsList}">
+														<td th:text="${rep.repName}" align="center"></td>
+														<td th:text="${rep.repAddress}" align="center"></td>	
+														<td th:text="${rep.repCountry}" align="center"></td>																	                           
+						                       		</tr>	                                                        
+						                    	</tbody>          								
+						                	</table>
+						            	</div>                                                                               
+                                    </div>
+
+                                    <div class="form-group" th:if="${(mdi.vienna != '' and mdi.vienna != null )}">
+                                        <label class="col-sm-3 col-form-label">Vienna</label>
+                                        <div class="col-sm-9">
+                                        	<input type="text" class="form-control" th:field="${mdi.vienna}" disabled="disabled"/>                                               
+                                        </div>
+                                    </div>
+                                    <div class="form-group" th:if="${(mdi.VIECLA3 != ''  and mdi.VIECLA3 != null )}">
+                                        <label class="col-sm-3 col-form-label">Vienna Classification 3</label>
+                                        <div class="col-sm-9">
+                                        	<input type="text" class="form-control" th:field="${mdi.VIECLA3}" disabled="disabled"/>                                               
+                                        </div>
+                                    </div>
+                                    
+                                   <!-- brand --> 
+                                    <div class="form-group" th:if="${(mdi.brandTypeName != '' and mdi.brandTypeName != null )}">
+                                        <label class="col-sm-3 col-form-label">Brand Type</label>
+                                        <div class="col-sm-9">
+                                        	  <input type="text" class="form-control" th:field="${mdi.brandTypeName}" disabled="disabled"/>                                        
+                                        </div>
+                                    </div>
+                                    
+                                   <div class="form-group" th:if="${(mdi.brandName != '' and mdi.brandName != null )}">
+                                        <label class="col-sm-3 col-form-label">Brand Name</label>
+                                        <div class="col-sm-9">
+                                        	  <input type="text" class="form-control" th:field="${mdi.brandName}" disabled="disabled"/>                                        
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group" th:if="${(mdi.fileName != '' and mdi.fileName != null )}">
+                                        <label class="col-sm-3 col-form-label">File Name</label>
+                                        <div class="col-sm-9">
+                                        	  <input type="text" class="form-control" th:field="${mdi.fileName}" disabled="disabled"/>                                        
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group" th:if="${(mdi.markDescription != '' and mdi.markDescription != null )}">
+                                        <label class="col-sm-3 col-form-label">Mark Description</label>
+                                        <div class="col-sm-9">  
+                                         	<input type="text" class="form-control" th:field="${mdi.markDescription}" disabled="disabled"/>                                        
+                                        </div>
+                                    </div>
+                                    
+                                     <div class="form-group" th:if="${(mdi.markDescriptionChar != '' and mdi.markDescriptionChar != null )}">
+                                        <label class="col-sm-3 col-form-label">Mark Transliteration</label>
+                                        <div class="col-sm-9">  
+                                         	<textarea class="form-control" th:field="${mdi.markDescriptionChar}" disabled="disabled"/>                                        
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <div class="form-group" th:if="${(mdi.colorsClaimed != '' and mdi.colorsClaimed != null )}">
+                                        <label class="col-sm-3 col-form-label">Colours Claimed</label>
+                                        <div class="col-sm-9">
+                                        	  <textarea class="form-control" th:field="${mdi.colorsClaimed}" disabled="disabled"/>                                        
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group" th:if="${(mdi.disclaimer != '' and mdi.disclaimer != null )}">
+                                        <label class="col-sm-3 col-form-label">Disclaimer</label>
+                                        <div class="col-sm-9">
+                                        	  <textarea class="form-control" th:field="${mdi.disclaimer}" disabled="disabled"/>                                        
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group" th:if="${(mdi.translation != '' and mdi.translation != null )}">
+                                        <label class="col-sm-3 col-form-label">Translation</label>
+                                        <div class="col-sm-9">
+                                        	  <textarea class="form-control" th:field="${mdi.translation}" disabled="disabled"/>                                        
+                                        </div>
+                                    </div>
+                                    
+                                   <div class="form-group" th:if="${(mdi.markinColorEn != '' and mdi.markinColorEn != null )}">
+                                        <label class="col-sm-3 col-form-label">Colours Claimed in English</label>
+                                        <div class="col-sm-9">
+                                        	  <textarea class="form-control" th:field="${mdi.markinColorEn}" disabled="disabled"/>                                        
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group" th:if="${(mdi.colorsClaimed != '' and mdi.colorsClaimed != null )}">
+                                        <label class="col-sm-3 col-form-label">Colours Claimed</label>
+                                        <div class="col-sm-9">
+                                        	  <input type="text" class="form-control" th:field="${mdi.colorsClaimed}" disabled="disabled"/>                                        
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group" th:if="${(mdi.markVoluntary != '' and mdi.markVoluntary != null )}">
+                                        <label class="col-sm-3 col-form-label">Voluntary Mark description from applicant</label>
+                                        <div class="col-sm-9">
+                                        	  <textarea class="form-control" th:field="${mdi.markVoluntary}" disabled="disabled"/>                                        
+                                        </div>
+                                    </div>
+                                    
+                                 
+                                    
+                                    
+                                    <div class="form-group"  th:if="${!mdi.basicList.isEmpty()}" > 
+                                        <label class="col-sm-3 col-form-label">Basic List</label>                                    
+                                        <div class="col-sm-9">                   		
+						                	<table class="table table-bordered table-striped" >
+						                  		<thead>
+						            				<tr>
+						                 				<th>Class No</th>                                                                                 
+						            					<th>Description</th>						            					
+						                			</tr>
+						                		</thead> 
+						                   		 <tbody>
+													<tr th:each="basic : ${mdi.basicList}">							                          
+							                            <td th:text="${basic.key}"></td>
+							                            <td th:text="${basic.value}"></td>							                           
+						                       		</tr>	                                                        
+						                    	</tbody>          								
+						                	</table>
+						            	</div>                                        
+                                    </div>
+                                    
+                                    <div class="form-group" th:if="${!mdi.basicDetail.isEmpty()}">
+                                        <label class="col-sm-3 col-form-label">Basic Application Details</label>
+                                         <div class="col-sm-9">                   		
+						                	<table class="table table-bordered table-striped">
+						                  		<thead>
+						            				<tr>
+						                 				<th>Application Date</th>                                                                                 
+						            					<th>Application Number</th>						            					
+						                			</tr>
+						                		</thead> 
+						                   		 <tbody>
+													<tr th:each="basic : ${mdi.basicDetail}">
+														<td th:text="${basic.value}" align="center"></td>								                          
+							                            <td th:text="${basic.key}" align="center"></td>
+							                            						                           
+						                       		</tr>	                                                        
+						                    	</tbody>          								
+						                	</table>
+						            	</div>                                                                               
+                                    </div>
+                                   
+                                    <div class="form-group" th:if="${!mdi.priorityDetail.isEmpty()}">
+                                        <label class="col-sm-3 col-form-label">Priority Details</label>
+                                        <div class="col-sm-9">                                         
+                                        	             		
+						                	<table class="table table-bordered table-striped" >
+						                  		<thead>
+						            				<tr>
+						                 				<th>Priority Country</th>                                                                                 
+						            					<th>Priority Date</th>	
+						            					<th>Priority Number</th>
+						            					<th>Priority Class</th>				            					
+						                			</tr>
+						                		</thead> 
+						                   		 <tbody>
+													<tr th:each="prior : ${mdi.priorityDetail}">
+														<td th:text="${prior.priorCountry}" align="center"></td>								                          
+							                            <td th:text="${prior.priorDate}" align="center"></td>
+							                            <td th:text="${prior.priorNo}" align="center"></td>
+							                            <td th:text="${prior.classNo}" align="center"></td>						                           
+						                       		</tr>	                                                        
+						                    	</tbody>          								
+						                	</table>
+						            	
+                                        </div>
+                                    </div>                                                       
+                                   <div class="form-group" th:if="${(mdi.protocolDesignation != ''  and mdi.protocolDesignation != null )}">
+                                        <label class="col-sm-3 col-form-label">Protocol Designations</label>
+                                        <div class="col-sm-9">   
+                                        	<input type="text" class="form-control" th:field="${mdi.protocolDesignation}" disabled="disabled"/>                                         	                           
+                                        </div>
+                                    </div>
+                                   
+                                   <div class="form-group" th:if="${(mdi.DESPG2 != '' and mdi.DESPG2 != null )}">
+                                        <label class="col-sm-3 col-form-label">Protocol Designations virtue of Article 9sexies</label>
+                                        <div class="col-sm-9">   
+                                        	<input type="text" class="form-control" th:field="${mdi.DESPG2}" disabled="disabled"/>                                         	                           
+                                        </div>
+                                    </div>
+                                    
+                                     <div class="form-group" th:if="${(mdi.limitation != '' and mdi.limitation != null )}">
+                                        <label class="col-sm-3 col-form-label">Limitation</label>
+                                        <div class="col-sm-9">   
+                                        	<input type="text" class="form-control" th:field="${mdi.limitation}" disabled="disabled"/>                                       
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group"  th:if="${!mdi.limtoList.isEmpty()}" > 
+                                        <label class="col-sm-3 col-form-label">Limitation List</label>                                    
+                                        <div class="col-sm-9">                   		
+						                	<table class="table table-bordered table-striped" >
+						                  		<thead>
+						            				<tr>
+						                 				<th>Class No</th>                                                                                 
+						            					<th>Description</th>						            					
+						                			</tr>
+						                		</thead> 
+						                   		 <tbody>
+													<tr th:each="basic : ${mdi.limtoList}">							                          
+							                            <td th:text="${basic.key}"></td>
+							                            <td th:text="${basic.value}"></td>							                           
+						                       		</tr>	                                                        
+						                    	</tbody>          								
+						                	</table>
+						            	</div>                                        
+                                    </div>
+                            </div>                         
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    $(document).ready(function () {
+    	$('#holderTableId').DataTable({
+    		"scrollX": true,
+    		"scrollCollapse": true,
+    		"searching":false,
+    		 "paging": false,
+    		 "bInfo" : false,
+    		});
+    });
+</script>
+</body>
+</html>

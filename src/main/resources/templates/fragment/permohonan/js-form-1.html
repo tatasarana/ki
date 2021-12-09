@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="form-1" th:remove="tag">
+    <script th:src="@{/js/bootstrap-multiselect.min.js}"></script>
+    <script type="text/javascript" language="javascript" th:inline="javascript">
+        var csrf = /*[[${_csrf.token}]]*/'';
+        var redirect = /*[[@{/layanan/pratinjau-permohonan(no=${noGeneral})}]]*/'';
+        var isEdit = $("#isEdit").val();
+        $(document).ready(function () {
+            /*---------------FORM 1---------------*/
+            $("#idStatus").combobox();
+            $("#idAction").combobox();
+            $('.datepicker').datepicker({
+				format: 'dd/mm/yyyy',
+				autoclose: true,
+				todayBtn: 'linked',
+				todayHighlight: true,
+				endDate:'today',
+				orientation: "bottom"
+			});
+
+            $('#class').multiselect({
+                selectAllValue: 'multiselect-all',
+                enableCaseInsensitiveFiltering: true,
+                enableFiltering: true,
+                maxHeight: '300',
+                buttonHeight: '34',
+                buttonWidth: '100%',
+                onChange: function(element, checked) {
+                    var brands = $('#class option:selected');
+                    var selected = [];
+                    $(brands).each(function(index, brand){
+                        selected.push([$(this).val()]);
+                    });
+
+                    console.log(selected);
+                }
+            });
+            
+            $("#idForm1").validate({
+                rules: {
+                    "mLaw": {
+                        required: true
+                    },
+                    "mWorkflow": {
+                        required: true
+                    },
+                     "tglPenerimaan": {
+                        required: true
+                    },
+                    "status": {
+                        required: true
+                    },
+                    "action": {
+                        required: true
+                    }
+                },
+                messages: {
+                    "mLaw": {
+                    	required:/*[[#{field.error.required('Dasar Hukum')}]]*/''
+                    },
+                    "mWorkflow": {
+                        required:/*[[#{field.error.required('Workflow')}]]*/''
+                    },
+                    "tglPenerimaan": {
+                        required: "Field Tanggal Penerimaan Wajib Diisi"
+                    },
+                    "status": {
+                        required: "Field Status Wajib Diisi"
+                    },
+                    "action": {
+                        required: "Field Action Wajib Diisi"
+                    }
+                },
+                highlight: function (element) {
+                    $(element).closest('.form-group').addClass('has-error');
+                },
+                unhighlight: function (element) {
+                    $(element).closest('.form-group').removeClass('has-error');
+                },
+                errorElement: 'span',
+                errorClass: 'help-block',
+                errorPlacement: function (error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    } else {
+                        error.insertAfter(element);
+                    }
+                }
+            });
+            $('#idtypefilechild').val($('#temp_ftChild').val());
+            //$('#idLaw').val($('#temp_law').val());
+            /*---------------END FORM 1---------------*/
+        });
+        var header = "X-CSRF-TOKEN";
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, csrf);
+        });
+
+        $('#form1push').on('click', function (e) {
+            var isValidForm1 = $("#idForm1").valid();
+            if (isValidForm1) {
+                e.preventDefault();
+                doSave1();
+            }
+        });
+
+        function doSave1() {
+            var appId = $('#form1AppId').val();
+            var idLaw = $('#idLaw').val();
+            var idWorkflow = $('#idWorkflow').val();
+            var idStatus = $('#idStatus').val();
+            var idAction = $('#idAction').val();
+            var tgl = $('#idTglPenerimaan').val();
+            var tipeP = $('#idTypeFiled').val();
+            var totalClass = $('#totalClass').val()
+			var totalPayment = $('#totalPayment').val()
+			var notesIpas = $('#notesIpas').val()
+
+            var data = {
+                appid: appId,
+                law: idLaw,
+                workflow: idWorkflow,
+                status: idStatus,
+                action: idAction,
+                tgl: tgl,
+                tipePermohonan: tipeP,
+                totalClass: totalClass,
+                totalPayment: totalPayment,
+  			    notesIpas: notesIpas
+
+            };
+            $.ajax({
+                type: 'POST',
+                contentType: "application/json",
+                url: /*[[@{/layanan/save-form-1}]]*/'',
+                data: JSON.stringify(data),
+                dataType: 'json',
+	            beforeSend: function () {
+		            showLoading();
+	            },
+	            complete:function(){
+		            hideLoading();
+	            },
+                success: function (data)
+                {
+                    if (isEdit != undefined){
+                        window.location.replace(redirect);
+                    }else{
+                        <!--$('#general').addClass('yet');-->
+                        <!-- Start set value form 8 -->
+                        var options = { year: "numeric", month: "short", day: "2-digit" };
+                    	var tglTemp = $('#idTglPenerimaan').datepicker('getDate');
+                    	
+                    	$('#form8JenisPermohonan').text($('#idtypefilechild option:selected').text());
+                    	$('#form8TanggalPenerimaan').text(tglTemp.toLocaleDateString('id-ID', options).replace(/\s+/g, '-'));
+                    	$('#form8DasarHukum').text($('#idLaw option:selected').text());
+                    	<!-- end set value form 8 -->
+                        $("#pemohon").trigger("click");
+                    }
+                },
+	            error: function (xhr, status) {
+		            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	            }
+            });
+        }
+    </script>
+</div>
+</html>

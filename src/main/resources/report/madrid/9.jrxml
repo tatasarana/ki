@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="3" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5074e2f0-89f8-4eb6-b3ef-03243fdf7c9f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start1" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end1" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start3" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end3" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start4" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end4" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+OWN.APPLICATION_ID,
+COALESCE(OWN.TM_ENTITLEMENT,'0') AS TM_ENTITLEMENT,
+OWN.TM_COMMERCIAL_ADDRESS AS TM_COMMERCIAL_ADDRESS,
+A.REPRS_NAME AS REPRS_NAME,
+A.REPRS_ADDRESS AS REPRS_ADDRESS,
+A.REPRS_PHONE AS REPRS_PHONE,
+A.REPRS_EMAIL AS REPRS_EMAIL,
+C.PROV_NAME AS REPRS_PROV,
+COALESCE(E.APPLICATION_NO,' ') AS APPLICATION_NO,
+COALESCE(to_char(E.FILING_DATE,'DD/MM/YYYY'),' ') AS FILING_DATE,
+COALESCE(F.REG_NO,' ') AS REG_NO,
+COALESCE(to_char(F.REG_START_DATE,'DD/MM/YYYY'),' ') AS REG_START_DATE
+FROM TX_TM_OWNER OWN
+LEFT JOIN TX_TM_REPRS A ON A.APPLICATION_ID = OWN.APPLICATION_ID
+LEFT JOIN M_REPRS B ON B.REPRS_ID=A.REPRS_ID
+LEFT JOIN M_PROVINCE C ON C.PROV_ID=A.PROV_ID
+LEFT JOIN TX_TM_REFERENCE d ON D.APPLICATION_ID = OWN.APPLICATION_ID
+left join TX_TM_GENERAL e on e.APPLICATION_ID=D.REF_APPLICATION_ID
+left join TX_REGISTRATION F on F.APPLICATION_ID = E.APPLICATION_ID
+WHERE OWN.APPLICATION_ID=$P{applicationId}]]>
+	</queryString>
+	<field name="APPLICATION_ID" class="java.lang.String"/>
+	<field name="TM_ENTITLEMENT" class="java.lang.String"/>
+	<field name="TM_COMMERCIAL_ADDRESS" class="java.lang.String"/>
+	<field name="REPRS_NAME" class="java.lang.String"/>
+	<field name="REPRS_ADDRESS" class="java.lang.String"/>
+	<field name="REPRS_PHONE" class="java.lang.String"/>
+	<field name="REPRS_EMAIL" class="java.lang.String"/>
+	<field name="REPRS_PROV" class="java.lang.String"/>
+	<field name="APPLICATION_NO" class="java.lang.String"/>
+	<field name="FILING_DATE" class="java.lang.String"/>
+	<field name="REG_NO" class="java.lang.String"/>
+	<field name="REG_START_DATE" class="java.lang.String"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="100" y="25" width="225" height="224" uuid="8016c2f4-8165-4cb1-829b-94e4b34c8dda">
+					<printWhenExpression><![CDATA[$P{approve}!=null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="800" splitType="Stretch">
+			<staticText>
+				<reportElement x="440" y="0" width="70" height="15" uuid="6d69f93d-14c3-4b22-a274-da79a9f1098a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[MM2(E), page 9]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="15" y="783" width="100" height="17" uuid="5a225c0e-afa2-4ac2-a95a-240f9c5a0952"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="50" y="60" width="330" height="20" forecolor="#FF0000" uuid="48b8bdbf-f741-4954-b950-d402e2ab4b48"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[11. DESIGNATIONS]]></text>
+			</staticText>
+			<line>
+				<reportElement x="52" y="744" width="160" height="1" uuid="25f5b87e-519a-4534-b9ba-c766e808fae4"/>
+			</line>
+			<staticText>
+				<reportElement x="50" y="90" width="230" height="18" uuid="b8e8a59a-5724-4b24-9103-99e7b60fcf8c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Check the corresponding boxes:]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="50" y="120" width="110" height="550" uuid="0b11874f-c5e3-4577-9a45-4420d325e4b1"/>
+				<subreportParameter name="start">
+					<subreportParameterExpression><![CDATA[$P{start1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="end">
+					<subreportParameterExpression><![CDATA[$P{end1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "9_country.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="170" y="120" width="110" height="550" uuid="fc149d22-ce88-4c27-af99-54f48ca45f1a"/>
+				<subreportParameter name="start">
+					<subreportParameterExpression><![CDATA[$P{start2}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="end">
+					<subreportParameterExpression><![CDATA[$P{end2}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "9_country.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="290" y="120" width="110" height="550" uuid="c6a8207b-284e-4bf6-be4c-8bc77ca1eb37"/>
+				<subreportParameter name="start">
+					<subreportParameterExpression><![CDATA[$P{start3}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="end">
+					<subreportParameterExpression><![CDATA[$P{end3}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "9_country.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="410" y="120" width="110" height="550" uuid="7c6aab19-5107-425b-b9e6-b1a74da0a661"/>
+				<subreportParameter name="start">
+					<subreportParameterExpression><![CDATA[$P{start4}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="end">
+					<subreportParameterExpression><![CDATA[$P{end4}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "9_country.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="70" y="750" width="440" height="14" uuid="52dcdeaf-bc8f-4b18-9107-8558f05c8933"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["You can find information on the procedures in national or regional offices in the Member Profile Database, "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="761" width="460" height="20" uuid="b1983e3e-ff15-4e4e-9379-068992afa0f7"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["available at  <u><font color='blue'>www.wipo.int/madrid/memberprofiles</font></u>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

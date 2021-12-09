@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div><img th:src="|cid:${logo}|" style="display: block;"/><br/><br/></div>
+<p>Yth. Sdr/i <span th:text="${name}"></span></p>
+<p>Selamat datang.<br/>Terima kasih telah mendaftar di Aplikasi Online Direktorat Jenderal Kekayaan Intelektual.</p>
+<p>Username Anda adalah : <span th:text="${username}"></span></p>
+<p>Silakan klik tombol berikut ini untuk mengaktifkan akun Anda.</p>
+<a th:href="${url}">
+    <button style="
+            background-color: #008CBA;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer">
+        Aktivasi Akun
+    </button>
+</a>
+<p style="color:red;">Jika Anda tidak melakukan aktivasi, maka sistem akan menghapus data registrasi akun Anda.</p>
+<p>Salam,<br/>Administrator Direktorat Jenderal Kekayaan Intelektual</p>
+</body>
+</html>

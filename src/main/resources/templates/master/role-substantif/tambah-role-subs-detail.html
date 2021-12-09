@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <form class="form-horizontal" th:object="${form}" th:action="@{/layanan/tambah-detail-baru}" method="post">
+        <div class="my-wrapper" id="my-wrapper">
+            <div class="my-wrapper--inner">
+                <!-- data pemohon -->
+                <div class="wrapper-content" id="permohonan-baru">
+                    <div class="content--top border--bottom padding-content--left-right">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="content--title text--bold">
+                                    <i class="fas fa-user"></i> User Role Subtantif - Tambah
+                                </h3>
+                                <small class="sub-header">User Management / Role Substantif / User / Tambah</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content--center padding-content--left-right">
+                        <div class="wrapper--bg">
+                            <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                                <button data-dismiss="alert" class="close close-sm" type="button">
+                                    <i class="icon-remove"></i>
+                                </button>
+                                <p>[[${errorMessage}]]</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Nama Role</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" th:value="${mRoleSubstantif.name}"
+                                                   disabled="disabled"/>
+                                            <input type="hidden" name="mRoleSubstantif.id" th:value="${mRoleSubstantif.id}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Deskripsi</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" th:value="${mRoleSubstantif.desc}"
+                                                   disabled="disabled"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Bagian</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:field="*{mEmployee.mSection.id}" id="bagian" th:required="true">
+                                                <option th:each="listSection : ${listSection}" th:value="${listSection.id}"
+                                                        th:text="${listSection.name}"/>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label class="col-sm-3 col-form-label required-label">User</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:field="*{mEmployee.id}" id="user" th:required="true">
+
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('mEmployee.id')}" th:errors="*{mEmployee.id}"></span>
+                                         </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <label class="col-form-label notice">*) Wajib Diisi</label>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-3 col-sm-9">
+                                            <button type="button" class="btn btn-danger"
+                                                    onclick="window.history.go(-1); return false;">
+                                                <i class="fas fa-times"></i> Batal
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-paper-plane"></i> Proses
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+//     $(document).ready(function () {
+//         $('#bagian').on('change', function(){
+//         var idBagian = $(this).val();
+//             $.ajax({
+//                 url : /*[[@{/layanan/pilih-user}]]*/'',
+//                 datatype : 'jsonp',
+//                 data : {
+//                     target: idBagian,
+//                     },
+//                 success : function (result){
+//                 $('#user').empty();
+//                 $.each(JSON.parse(result), function(key, item){
+//                     var data = '<option value="'+ item.id +'">'+ item.username +'</option>';
+//                     $('#user').append(data);
+//                 });
+
+//                 }
+//             });
+//         });
+
+
+
+        $('form').validate({
+            messages: {
+				'mEmployee.id':{
+                    required:/*[[#{field.error.required('User')}]]*/''
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+	        submitHandler: function(form) {
+		        showLoading();
+		        $('form')[0].submit();
+	        }
+        });
+//     });
+
+</script>
+</body>
+</html>

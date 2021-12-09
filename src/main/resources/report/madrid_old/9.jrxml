@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="9" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5074e2f0-89f8-4eb6-b3ef-03243fdf7c9f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<parameter name="startFees" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="endFees" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="startFees2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="endFees2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="feeContinues" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+COALESCE(B.BASIC_FEE,0) AS BASIC_FEE,
+COALESCE(B.VOL_COMPLEMENTARY_FEE,0) AS VOL_COMPLEMENTARY_FEE,
+COALESCE(B.VOL_SUPLEMENTARY_FEE,0) AS VOL_SUPLEMENTARY_FEE,
+COALESCE(B.TOTAL_COMPLEMENTARY_FEE,0) AS TOTAL_COMPLEMENTARY_FEE,
+COALESCE(B.TOTAL_SUPLEMENTARY_FEE,0) AS TOTAL_SUPLEMENTARY_FEE,
+SUM(C.TOTAL_FEE) AS TOTAL_IND_FEE
+FROM TX_TM_GENERAL A
+LEFT JOIN TX_TM_MADRID_FEE B ON A.APPLICATION_ID=B.APPLICATION_ID
+LEFT JOIN TX_TM_MADRID_FEE_DETAIL C ON B.TM_MADRID_FEE_ID=C.TM_MADRID_FEE_ID
+LEFT JOIN M_COUNTRY D ON C.TM_MADRID_FEE_DETAIL_COUNTRY=D.COUNTRY_CODE
+WHERE A.APPLICATION_ID = $P{applicationId} AND D.IS_MADRID=1
+GROUP BY B.BASIC_FEE,B.VOL_COMPLEMENTARY_FEE,B.VOL_SUPLEMENTARY_FEE,B.TOTAL_COMPLEMENTARY_FEE,B.TOTAL_SUPLEMENTARY_FEE]]>
+	</queryString>
+	<field name="BASIC_FEE" class="java.math.BigDecimal"/>
+	<field name="VOL_COMPLEMENTARY_FEE" class="java.math.BigDecimal"/>
+	<field name="VOL_SUPLEMENTARY_FEE" class="java.math.BigDecimal"/>
+	<field name="TOTAL_COMPLEMENTARY_FEE" class="java.math.BigDecimal"/>
+	<field name="TOTAL_SUPLEMENTARY_FEE" class="java.math.BigDecimal"/>
+	<field name="TOTAL_IND_FEE" class="java.math.BigDecimal"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="100" y="25" width="225" height="224" uuid="8016c2f4-8165-4cb1-829b-94e4b34c8dda">
+					<printWhenExpression><![CDATA[$P{approve}!=null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="802" splitType="Stretch">
+			<rectangle>
+				<reportElement x="15" y="629" width="525" height="156" uuid="3442f714-cf44-499e-b0cb-a5ff93d79169"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="15" y="147" width="525" height="480" uuid="e5033e00-c3ae-4cbd-949d-16fa6b05e847"/>
+			</rectangle>
+			<textField>
+				<reportElement x="424" y="214" width="110" height="18" uuid="8dfb7e9d-a2ba-45af-92f6-be6a6d682466"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{BASIC_FEE}==null?"":$F{BASIC_FEE})]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="15" y="35" width="525" height="110" uuid="9e96ffd2-251c-4a81-aedf-2cd0a6f6876f"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="470" y="0" width="70" height="15" uuid="6d69f93d-14c3-4b22-a274-da79a9f1098a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[MM2(E), page 9]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="15" y="15" width="525" height="20" uuid="aab8f2eb-6067-4ae0-b6b6-4459bc6076cc"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FEE CALCULATION SHEET]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="39" y="38" width="494" height="18" uuid="3b54ead2-f361-4436-be99-64aa2cd2d6da"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["INSTRUCTION TO DEBIT FROM A CURRENT ACCOUNT"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="60" width="493" height="30" uuid="f81a5c6c-22a9-4e7e-a3b7-35b2b853ee4c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["The International Bureau is hereby instructed to debit the required amount of fees from a current account opened with the International Bureau (if this box is checked, it is not necessary to complete (b))."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="424" y="216" width="110" height="18" uuid="d0fc4277-33d9-4bc9-a4b6-bdaf2ff97587"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[".............................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="15" y="785" width="100" height="17" uuid="5a225c0e-afa2-4ac2-a95a-240f9c5a0952"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="179" width="388" height="55" uuid="b59719d6-c122-4123-a97a-6db79238a853"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>Basic fee</b>:  653 Swiss francs if the reproduction of the mark is in black and white only and 903 Swiss francs if there is a reproduction in color.  (For international applications filed by applicants whose country of origin is a Least Developed Country, in accordance with the list established by the United Nations (<u><font color='blue'>www.wipo.int/ldcs/en/country</font></u>), 65 Swiss francs if the reproduction is in black and white only and 90 Swiss francs if there is a reproduction in color.)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="234" width="388" height="24" uuid="db8cf274-fdaf-4839-8f3a-82c3e3f25de8"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Complementary and supplementary fees : "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="258" width="108" height="35" uuid="bb2fadee-d820-48a6-a924-6fdaa3b366db"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Number of designations for which complementary fee is applicable"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="20" y="38" width="14" height="14" uuid="1164cab7-e62c-4c87-b554-645b7f4ed5ef"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(a)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="20" y="61" width="10" height="10" uuid="9f8aa3f6-634c-4565-99f6-e27f23aab7b7"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="20" y="90" width="108" height="18" uuid="feb957c4-b4b3-441b-b962-6f6e3e18e678"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Holder of the account : "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="315" y="90" width="108" height="18" uuid="7535fa5e-3087-4382-978d-e69fadd1833f"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Account number : "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="20" y="111" width="193" height="18" uuid="70a39ecc-9d02-401e-99db-9495ba9455d1"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Identity of the party giving the instructions : "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="113" y="92" width="190" height="18" uuid="999e0765-a2bd-48a4-be64-233564e6a390"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["..................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="195" y="114" width="338" height="18" uuid="7e7e810a-630b-4a4b-b458-d368b579f50c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["..................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="388" y="94" width="145" height="18" uuid="23c75718-736a-4b61-8814-17b2fbe51139"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["..................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="151" width="494" height="25" uuid="e382340c-7007-4b27-a4f2-c6e362689a1f"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>AMOUNT OF FEES</b> (see Fee Calculator: <u><font color='blue'>www.wipo.int/madrid/en/fees/calculator.jsp</font></u>)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="151" width="14" height="14" uuid="efc02e69-8f6d-44b8-b8e0-61daa008ba8f"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(b)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="293" width="108" height="18" uuid="f033d184-4526-478e-ab9a-00a8349a1b4a"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{VOL_COMPLEMENTARY_FEE}==null?"":$F{VOL_COMPLEMENTARY_FEE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="295" width="108" height="18" uuid="821f0412-0313-49bf-b060-a82014940126"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["......................................................"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="154" y="275" width="95" height="18" uuid="5ce41695-2234-49b2-9161-5c45875c38a4"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Complementary fee"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="154" y="293" width="95" height="18" uuid="14731dff-93cd-4825-879b-02a922dc09e4"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["100 Swiss francs"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="129" y="293" width="25" height="18" uuid="e8cbe11d-7b71-4ac4-b6b5-4f44b9f5354e"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["x"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="273" y="268" width="109" height="25" uuid="2a876e2f-e6fe-4892-bb93-84d7a600a9de"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total amount of the complementary fees"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="249" y="293" width="25" height="18" uuid="387657d6-b996-4ca7-8728-142cfd3647ea"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["="]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="274" y="295" width="108" height="18" uuid="c02fb6dd-2136-4e2c-9cb3-ce2f705dd1ab"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["......................................................"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="274" y="293" width="108" height="18" uuid="c4c25dbb-2670-4103-88e2-5d42df2000a2"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TOTAL_COMPLEMENTARY_FEE}==null?"":$F{TOTAL_COMPLEMENTARY_FEE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="424" y="295" width="110" height="18" uuid="c4487c39-d63f-40b2-bb34-3e0b1a0ffaef"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[".............................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="424" y="293" width="110" height="18" uuid="6d1dedbb-3892-486f-bf34-f4d519d95805"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TOTAL_COMPLEMENTARY_FEE}==null?"":$F{TOTAL_COMPLEMENTARY_FEE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="382" y="293" width="42" height="18" uuid="c15c184c-6a73-48c1-9583-621d59116b36"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" => "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="154" y="335" width="95" height="18" uuid="b60f4fbe-44b3-4002-ae7f-e9288c9cf8ae"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Supplementary fee"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="355" width="108" height="18" uuid="cfcc05a2-da98-4175-8686-c62fd2309df9"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["......................................................"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="154" y="353" width="95" height="18" uuid="19e2f711-8c04-49e0-8ad3-e5e8e14a3210"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["100 Swiss francs"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="273" y="328" width="109" height="25" uuid="86e6525f-6dda-4f28-9839-c4afa606e9c1"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total amount of the supplementary fees"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="129" y="353" width="25" height="18" uuid="52f84cb2-bda3-47d2-a84d-9dfaaa80eff4"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["x"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="353" width="108" height="18" uuid="ddc82a57-9d98-4a27-883c-725565fe071f"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{VOL_SUPLEMENTARY_FEE}==null?"":$F{VOL_SUPLEMENTARY_FEE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="318" width="108" height="35" uuid="03357bc7-9e51-434d-8d63-5cc8e84e98b6"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Number of classes of goods and services beyond three"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="424" y="351" width="110" height="18" uuid="d3889e91-879c-49c9-b9b6-0098d43c724e"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TOTAL_SUPLEMENTARY_FEE}==null?"":$F{TOTAL_SUPLEMENTARY_FEE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="382" y="351" width="42" height="18" uuid="a26493e2-0bb7-40d2-a170-4a3feef00339"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" => "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="424" y="353" width="110" height="18" uuid="cfab2245-3271-4e50-959e-97037bde2739"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[".............................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="273" y="351" width="108" height="18" uuid="10f13908-65f1-4dea-a70e-7a90db967048"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TOTAL_SUPLEMENTARY_FEE}==null?"":$F{TOTAL_SUPLEMENTARY_FEE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="248" y="351" width="25" height="18" uuid="e9dfdcf5-aafb-4c28-9659-b1b1d9992fe5"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["="]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="273" y="353" width="108" height="18" uuid="5bc51141-2b3d-4dca-9480-b7e9c9a3de12"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["......................................................"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="373" width="388" height="24" uuid="bd171f26-f9e5-41ec-8739-188cf9dbf771"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>Individual fees</b> (Swiss francs) : "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="381" y="589" width="42" height="14" uuid="6fde1ed8-576b-432f-b864-2994bd1d22d7"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" => "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="273" y="589" width="108" height="14" uuid="bf9be542-31fb-4350-82a1-a2996df1a46b"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total individual fees"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="423" y="585" width="111" height="18" uuid="b4b800e5-67b9-4c59-91d1-16684fb73448"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TOTAL_IND_FEE}==null?"":$F{TOTAL_IND_FEE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="423" y="591" width="111" height="14" uuid="1f6e54f6-a4af-4ea5-ab84-f0b1dd5b3a87"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[".............................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="422" y="615" width="111" height="12" uuid="3b9dae33-8f47-43a2-9e8b-f906de7a4745"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[".............................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="228" y="605" width="154" height="20" uuid="17673bb7-1e53-4efe-8910-ac1cfda18d44"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["GRAND TOTAL (Swiss francs)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="423" y="605" width="111" height="20" uuid="d3451069-29ba-4a4a-808c-6302c5e15802"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(($F{BASIC_FEE}==null || $F{TOTAL_COMPLEMENTARY_FEE}==null || $F{TOTAL_SUPLEMENTARY_FEE}==null || $F{TOTAL_IND_FEE}==null) ?"":$F{BASIC_FEE}.add($F{TOTAL_COMPLEMENTARY_FEE}).add($F{TOTAL_SUPLEMENTARY_FEE}).add($F{TOTAL_IND_FEE}))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="634" width="494" height="18" uuid="4a9b7a59-ddee-42fa-88e5-7834e894992b"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["INSTRUCTION TO DEBIT FROM A CURRENT ACCOUNT"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="634" width="14" height="14" uuid="a79e6a38-bb78-49b0-ae26-bc893b18d237"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(c)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="652" width="192" height="18" uuid="74403ae7-72b2-4c3d-a9ba-a7d8d72e1f4c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Identity of the party effecting the payment: : "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="198" y="654" width="336" height="18" uuid="9bc95410-cca7-4c44-9acf-2ba19587ce27"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["..................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="672" width="207" height="25" uuid="41ef7ea3-cfd4-4157-ab14-fb1d4ae686f8"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Payment received and acknowledged by WIPO"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="248" y="684" width="10" height="10" uuid="19411a8e-c8c7-4ddb-bd20-8b27efd9181b"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="269" y="672" width="78" height="10" uuid="ea36dad9-c413-4da0-9b17-6c0f1a8f2f3f"/>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["WIPO receipt number"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="269" y="684" width="154" height="15" uuid="81d9d568-36f2-46ea-946c-a25af3fdce8b"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[".............................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="269" y="722" width="154" height="15" uuid="1432a11a-c2de-48b2-8403-918ed1dad5b7"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[".............................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="248" y="722" width="10" height="10" uuid="b91e33c0-f3b1-4161-8673-3026d0a9e385"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="269" y="710" width="90" height="10" uuid="301991d8-78ef-4aca-aa7f-2fd271624df5"/>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Payment identification"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="699" width="207" height="38" uuid="c20b7861-4b37-4801-95e8-c4b4d46fc0a3"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Payment made to WIPO bank account IBAN No. CH51 0483 5048 7080 8100 0 Crédit Suisse, CH-1211 Geneva 70 Swift/BIC:  CRESCHZZ80A"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="436" y="710" width="83" height="10" uuid="e385fb25-38a6-4801-8773-3c061e88d74d"/>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["dd/mm/yyyy"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="436" y="722" width="97" height="15" uuid="9b3e68b6-cb4e-474a-89c4-61ed13943163"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[".............................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="436" y="767" width="97" height="15" uuid="5ec28551-9e5b-4c98-b568-f1ce3c070503"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[".............................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="248" y="767" width="10" height="10" uuid="4a64d7b3-0df9-43d4-80d7-326fa8aae997"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="737" width="207" height="43" uuid="2531086e-81cd-418a-9cd5-decc8bf40a53"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Payment made to WIPO postal account (within Europe only) IBAN No. CH03 0900 0000 1200 5000 8 Swift/BIC:  POFICHBE"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="436" y="755" width="83" height="10" uuid="8f4aa653-7d79-45e1-aa09-429f4c3a10e4"/>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["dd/mm/yyyy"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="269" y="755" width="90" height="10" uuid="5020062c-85c6-439f-b10b-ba24986d3787"/>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Payment identification"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="268" y="767" width="154" height="15" uuid="4c870196-ae21-44fc-a77e-3dcc40e72c30"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[".............................................................................................................."]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="21" y="397" width="240" height="188" uuid="7b62b18e-0750-472d-a0b8-28ddf01747d7"/>
+				<subreportParameter name="startFees">
+					<subreportParameterExpression><![CDATA[$P{startFees}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="endFees">
+					<subreportParameterExpression><![CDATA[$P{endFees}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "9_fess.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="294" y="397" width="240" height="188" uuid="10a6a1c9-c5c4-4a9d-bdae-df21463b231f"/>
+				<subreportParameter name="startFees">
+					<subreportParameterExpression><![CDATA[$P{startFees2}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="endFees">
+					<subreportParameterExpression><![CDATA[$P{endFees2}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "9_fess.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="21" y="589" width="208" height="20" uuid="264bd690-4f17-4066-83a3-d0eefe39eee9">
+					<printWhenExpression><![CDATA[$P{feeContinues}.intValue()>0]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="false" isItalic="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["SEE MORE IN CONTINUATION SHEET"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="3" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5074e2f0-89f8-4eb6-b3ef-03243fdf7c9f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ttEmployee" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logoKI" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+A.STATUS_ID,A.APPLICATION_ID,A.UPDATED_BY,
+COALESCE(to_char(A.APPROVED_DATE,'DD/MM/YYYY'),' ') AS APPROVED_DATE,
+B.EMPLOYEE_NAME,
+COALESCE(B.EMPLOYEE_EMAIL,' ') AS EMPLOYEE_EMAIL
+FROM TX_TM_GENERAL A
+LEFT JOIN M_EMPLOYEE B ON A.APPROVED_BY = B.EMPLOYEE_ID
+WHERE A.APPLICATION_ID=$P{applicationId}]]>
+	</queryString>
+	<field name="STATUS_ID" class="java.lang.String"/>
+	<field name="APPLICATION_ID" class="java.lang.String"/>
+	<field name="UPDATED_BY" class="java.lang.String"/>
+	<field name="APPROVED_DATE" class="java.lang.String"/>
+	<field name="EMPLOYEE_NAME" class="java.lang.String"/>
+	<field name="EMPLOYEE_EMAIL" class="java.lang.String"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="100" y="25" width="225" height="224" uuid="8016c2f4-8165-4cb1-829b-94e4b34c8dda">
+					<printWhenExpression><![CDATA[$P{approve}!=null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="800" splitType="Stretch">
+			<staticText>
+				<reportElement x="440" y="0" width="70" height="15" uuid="6d69f93d-14c3-4b22-a274-da79a9f1098a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[MM2(E), page 11]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="15" y="783" width="100" height="17" uuid="5a225c0e-afa2-4ac2-a95a-240f9c5a0952"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="50" y="100" width="18" height="20" forecolor="#003366" uuid="932d11bd-78ac-46ce-b330-302b57e7dd18"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(a)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="100" width="400" height="20" forecolor="#003366" uuid="630b8004-b624-4f3e-a8b9-3ee0c8bee190"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Certification.  The Office of origin certifies:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="60" width="450" height="31" forecolor="#FF0000" uuid="48b8bdbf-f741-4954-b950-d402e2ab4b48"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[13. CERTIFICATION AND SIGNATURE OF THE INTERNATIONAL APPLICATION BY THE OFFICE OF ORIGIN ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="130" width="22" height="18" uuid="8fd69988-80ae-43e8-8bc5-f9a7de3353fe"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(i)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="130" width="400" height="18" uuid="57170fa7-1b65-4631-931f-ec243afd3373"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[That the request to present this application was received on (dd/mm/yyyy): ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="180" width="22" height="18" uuid="b00f996f-534a-440e-8079-9cfbe43554c2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(ii)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="180" width="400" height="250" uuid="85d73da2-e7e6-410e-aa4b-0959b6f16c30"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[that the applicant named in item 2 is the same as the applicant named in the basic application or the holder named in the basic registration mentioned in item 5, as the case may be,
+
+that any indication given in item 7(d), 9(d) or 9(e)(i) appears also in the basic application or the basic registration, as the case may be,
+
+that the mark in item 7(a) is the same as in the basic application or the basic registration, as the case may be,
+
+that, if color is claimed as a distinctive feature of the mark in the basic application or the basic registration, the same claim is included in item 8 or that, if color is claimed in item 8 without having being claimed in the basic application or basic registration, the mark in the basic application or basic registration is in fact in the color or combination of colors claimed, and
+
+that the goods and services listed in item 10 are covered by the list of goods and services appearing in the basic application or basic registration, as the case may be.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="52" y="440" width="448" height="40" uuid="9af0971c-20fe-4625-86be-35de7d38ddca"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Where the international application is based on two or more basic applications or basic registrations, the above declaration shall be deemed to apply to all those basic applications or basic registrations.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="490" width="18" height="20" forecolor="#003366" uuid="23f78ec1-ee5b-4606-8b29-557b3a5405f0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(b)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="490" width="400" height="20" forecolor="#003366" uuid="0679c655-f320-4496-a89d-d9906ad5fff9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name of the Office:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="550" width="18" height="20" forecolor="#003366" uuid="435ebea0-8a4e-4c99-a286-bd6257a21604"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(c)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="550" width="400" height="20" forecolor="#003366" uuid="4c93396e-0f83-4783-8cf7-1377a73a19bf"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name and signature of the official signing on behalf of the Office:  ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="100" y="590" width="400" height="80" forecolor="#FFFFFF" uuid="5abc5e88-33fd-4e04-9ffb-c5f34b137669"/>
+				<graphicElement>
+					<pen lineColor="#CCCCFF"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="100" y="570" width="400" height="18" uuid="4db96eeb-10c4-4d62-a021-b29282fb83f7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[That the request to present this application was received on (dd/mm/yyyy): ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="680" width="18" height="20" forecolor="#003366" uuid="97e7ef6b-7b97-41aa-897a-348fce652fb5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(d)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="680" width="400" height="20" forecolor="#003366" uuid="b2c10062-458f-4ebc-8595-7fd3d8790311"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name and e-mail address of the contact person in the Office:  ]]></text>
+			</staticText>
+			<image>
+				<reportElement x="116" y="595" width="113" height="70" uuid="26aaf9d4-1e7d-4182-8fc9-e18a5c8b3de1">
+					<printWhenExpression><![CDATA[$P{ttEmployee}!=null && !$P{ttEmployee}.equals("") && !$P{ttEmployee}.equals(" ")]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<imageExpression><![CDATA[$P{ttEmployee}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="150" y="595" width="113" height="70" uuid="50c0a25e-d46b-46b3-b489-f4039714e6a5">
+					<printWhenExpression><![CDATA[$P{logoKI}!=null && !$P{logoKI}.equals("") && !$P{logoKI}.equals(" ")]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<imageExpression><![CDATA[$P{logoKI}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="100" y="510" width="398" height="30" uuid="54f29bf8-4034-4943-a6ba-ef7c8250c2eb"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA["Directorate General of Intellectual Property, Indonesia"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="700" width="398" height="50" uuid="e9150182-9b3c-46f3-9406-4777b6b483ab"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($F{EMPLOYEE_NAME}==null?"":$F{EMPLOYEE_NAME}.toUpperCase())+" - madrid.indonesia@dgip.go.id"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="148" width="398" height="22" uuid="a4e4d64c-86b6-4db7-8697-6e421cf7cb21"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($F{APPROVED_DATE}==null?"":$F{APPROVED_DATE})]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

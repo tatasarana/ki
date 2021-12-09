@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <form class="form-horizontal" th:object="${form}" th:action="@{/layanan/tambah-user}" method="post">
+        <div class="my-wrapper" id="my-wrapper">
+            <div class="my-wrapper--inner">
+                <div class="wrapper-content">
+                    <div class="content--top border--bottom padding-content--left-right">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="content--title text--bold">
+                                    <i class="fas fa-users"></i> Data User - Tambah
+                                </h3>
+                                <small class="sub-header">User / Tambah</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content--center padding-content--left-right">
+                        <div class="wrapper--bg">
+                            <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                                <button data-dismiss="alert" class="close close-sm" type="button">
+                                    <i class="icon-remove"></i>
+                                </button>
+                                <p>[[${errorMessage}]]</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group required">
+                                        <label class="col-sm-3 col-form-label required-label">Jenis User</label>
+                                        <div class="col-sm-9">
+
+                                            <select class="form-control" th:field="*{userType}" th:required="true">
+                                                <option style="display: none" value="">-Pilih Jenis User-</option>
+                                                <option th:each="list : ${listDataUser}"
+                                                        th:value="${list.name}"
+                                                        th:text="${list.name}"></option>
+                                            </select>
+
+                                            <span class="help-block" th:if="${#fields.hasErrors('userType')}"
+                                                  th:errors="*{userType}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label class="col-form-label required-label col-sm-3">Username</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Username" th:field="*{username}" th:required="true"
+                                            maxlength="50"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label class="col-form-label col-sm-3">NIP</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Nomor Induk Pegawai" th:field="*{nik}"
+                                            maxlength="36"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('nik')}" th:errors="*{nik}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label class="col-form-label required-label col-sm-3">Nama</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Nama Lengkap" th:field="*{namaKaryawan}" th:required="true"
+                                            maxlength="50"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('namaKaryawan')}" th:errors="*{namaKaryawan}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label class="col-form-label required-label col-sm-3">Direktorat</label>
+                                        <div class="col-sm-9">                                           
+                                            <select class="form-control" th:required="true" id="divisiId" th:field="*{divisiId}">
+                                                <option style="display: none" value="">-Pilih Direktorat-</option>
+                                                <option th:each="mDivision : ${listDivision}" th:value="${mDivision.id}" th:text="${mDivision.name}" ></option>
+                                            	
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('divisiId')}" th:errors="*{divisiId}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required"> 
+                                        <label class="col-form-label required-label col-sm-3">Subdit</label>
+                                        <div class="col-sm-9">                                        
+                                            <select class="form-control" th:required="true" id="departementId" th:field="*{departementId}">
+                                                <option style="display: none" value="">-Pilih Subdit-</option>
+                                                <option th:each="mDepartment : ${listDepartement}" th:value="${mDepartment.id}" th:text="${mDepartment.name}" 
+                                                		th:attr="filetype=${mDepartment.mDivision.id}" th:if="${mDepartment.statusFlag}"></option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('departementId')}" th:errors="*{departementId}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label class="col-form-label required-label col-sm-3">Seksi</label>
+                                        <div class="col-sm-9">                                           
+                                             <select class="form-control" th:required="true" id="bagianId" th:field="*{bagianId}"> 
+                                                <option style="display: none" value="">-Pilih Seksi-</option>
+                                                <option th:each="mSection : ${listSection}" th:value="${mSection.id}" th:text="${mSection.name}"
+                                                	th:attr="filetype=${mSection.mDepartment.id}" th:if="${mSection.statusFlag}"></option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('bagianId')}" th:errors="*{bagianId}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label class="col-form-label required-label col-sm-3">Asal Permohonan</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" id="asalPermohonanId"
+                                                    th:field="*{asalPermohonanId}" th:required="true">
+                                                <option style="display: none" value="">-Pilih Asal Permohonan-</option>
+                                                <option th:each="listAsalPermohonan : ${listAsalPermohonan}"
+                                                        th:value="${listAsalPermohonan.id}"
+                                                        th:text="${listAsalPermohonan.desc}"></option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('asalPermohonanId')}"
+                                                  th:errors="*{asalPermohonanId}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label class="col-form-label col-sm-3">Telepon</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Telepon" th:field="*{telp}"
+                                            maxlength="20"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('telp')}" th:errors="*{telp}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label class="col-form-label col-sm-3">Email</label>
+                                        <div class="col-sm-9">
+                                            <input type="email" class="form-control" placeholder="Email" th:field="*{email}"
+                                            maxlength="100"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                                        </div>
+                                    </div>
+
+                                    <label class="col-form-label notice">*) Wajib Diisi</label>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-3 col-sm-9">
+                                                    <a class="btn btn-danger" th:href="@{/layanan/list-user}"><i class="fas fa-times"></i> Batal</a>
+                                                    <button type="submit" class="btn btn-primary"><i
+                                                            class="fas fa-paper-plane"></i> Proses
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+</body>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    $(document).ready(function () {
+    	$('#divisiId').change(function() {     	
+   			$('#departementId').children('option[filetype!="'+$(this).val()+'"]').stop(true,true).hide();
+			$('#departementId').children('option[filetype!="'+$(this).val()+'"]').prop('selected',false);
+			$('#departementId').children('option[filetype="'+$(this).val()+'"]').stop(true,true).show();
+			$('#departementId').children('option[filetype="'+$(this).val()+'"]').first().prop('selected',true);
+			
+			$('#departementId').change();
+			
+			$('#bagianId').parent('option[filetype!="'+$(this).val()+'"]').stop(true,true).hide();
+			$('#bagianId').parent('option[filetype!="'+$(this).val()+'"]').prop('selected',false);
+			$('#bagianId').parent('option[filetype="'+$(this).val()+'"]').stop(true,true).show();
+			$('#bagianId').parent('option[filetype="'+$(this).val()+'"]').first().prop('selected',true);	
+			
+		});   
+    	$('#divisiId').change();
+    	
+    	$('#departementId').change(function() {       		
+ 			$('#bagianId').children('option[filetype!="'+$(this).val()+'"]').stop(true,true).hide();
+			$('#bagianId').children('option[filetype!="'+$(this).val()+'"]').prop('selected',false);
+			$('#bagianId').children('option[filetype="'+$(this).val()+'"]').stop(true,true).show();
+			$('#bagianId').children('option[filetype="'+$(this).val()+'"]').first().prop('selected',true);	
+			
+		});   	
+    	$('#departementId').change();
+    	
+    	//Jenis user value default = Karyawan
+    	if($('#userType').val('Karyawan') != null) {
+    		$('#userType option[value=Karyawan]').attr('selected','selected');
+    	} else {
+    		$('#userType').val($('#userType option:first').val());
+    		//$('#userType option:first').attr('selected','selected');
+    	}
+    	
+    	//Asal Permohonan value default = DJKI
+    	if($('#asalPermohonan').val('00') != null) {
+    		$('#asalPermohonanId option[value=00]').attr('selected','selected');
+    	} else {
+    		$('#asalPermohonanId').val($('#asalPermohonanId option:first').val());
+    		//$('#asalPermohonanId option:first').attr('selected','selected');
+    	}
+		
+        $('form').validate({
+        	rules : {
+        		'telp' : {
+        			digits: '#telp'
+        		}
+        	},
+            messages:{
+                'username':{
+                    required:/*[[#{field.error.required('username')}]]*/''
+                },
+                'nik':{
+                    required:/*[[#{field.error.required('NIK')}]]*/''
+                },
+                'namaKaryawan':{
+                    required:/*[[#{field.error.required('Nama Karyawan')}]]*/''
+                },
+                'divisiId':{
+                    required:/*[[#{field.error.required('Direktorat')}]]*/''
+                },
+                'departementId':{
+                    required:/*[[#{field.error.required('Subdit')}]]*/''
+                },
+                'bagianId':{
+                    required:/*[[#{field.error.required('Seksi')}]]*/'' 
+                },
+                'asalPermohonanId':{
+                    required:/*[[#{field.error.required('Asal Permohonan')}]]*/''
+                },
+                'telp':{
+                    required:/*[[#{field.error.required('Telepon')}]]*/''
+                    ,digits: /*[[#{field.error.not.numeric('Telepon')}]]*/''
+                },
+                'email':{
+                    required:/*[[#{field.error.required('Email')}]]*/''
+                    ,email:/*[[#{field.error.invalid.format.email('Email')}]]*/''
+                },
+                'userType':{
+                    required:/*[[#{field.error.required('Jenis User')}]]*/''
+                }
+            },
+            highlight: function(element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function(error, element) {
+                if(element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+	        submitHandler: function(form) {
+		        showLoading();
+		        $('form')[0].submit();
+	        }
+        });
+    });
+    
+   
+    
+		
+		
+		 
+    // End Document Ready Funtion
+</script>
+</html>

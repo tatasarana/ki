@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<link rel="stylesheet" th:href="@{/css/home.css}"/>
+<style>
+* {box-sizing: border-box;}
+body {font-family: Verdana, sans-serif;}
+.mySlides {display: none;}
+img {vertical-align: middle;}
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+
+/* Caption text */
+.text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+/* The dots/bullets/indicators */
+.dot {
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active {
+  background-color: #717171;
+}
+
+/* Fading animation */
+.fade {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1.5s;
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@-webkit-keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+  .text {font-size: 11px}
+}
+</style>
+<div class="my-wrapper-body bghome">
+	<p th:replace="fragment/header :: navbar"/>
+	<div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+		<div class="wrapcasaka">
+			<div class="casakatitle">
+				<b style="font-size:20px;">Direktorat Jenderal Kekayaan Intelektual</b>
+				<br/>Kementerian Hukum dan Hak Asasi Manusia R.I.
+				<input type="hidden" id="islogin" th:value="${islogin}" />
+			</div>
+			<!--<div style="margin:5%">-->
+				<!--<h2>Informasi (issue 230):</h2>-->
+				<!--<div th:each="item : ${informasi}">-->
+					<!--<p th:text="${item}"></p>-->
+				<!--</div>-->
+			<!--</div>-->
+			<marquee style="float:left;color:red;">
+				<i>Pengumuman: Persyaratan mengenai Pengajuan Permohonan Pendaftaran Merek yang dilakukan secara Online untuk Jenis Permohonan: Usaha Mikro dan Usaha Kecil yang berlaku sejak 17 Agutus 2019.</i></marquee>
+			<div class="content--center padding-content--left-right">
+				<div class="wrapper--bg">
+					<div class="form-group">
+						<table class="table table-bordered"> 
+							<thead>
+								<tr>
+									<td align="center">
+										<div class="slideshow-container">
+											<div th:each="imgPath : ${imgPaths}" class="mySlides">
+											  <img th:src="@{${imgPath}}" style="height:500px;"/>
+											</div>
+										</div>
+										<br></br>
+										<div style="text-align:center">
+										  <span th:each="num : ${nums}" class="dot"></span>
+										</div>
+									</td>
+								</tr>
+							</thead>
+						</table>
+						<br></br>
+						<table class="table table-bordered"> 
+							<thead>
+								<tr th:each="fileVideo : ${fileVideo}">
+									<td align="left">
+										<a href="javascript:void(0);" th:text="${fileVideo.name}" th:attr="onclick='downloadVideo(\''+${fileVideo.id}+'\', \''+${fileVideo.name}+'\')'"></a>
+									</td>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+<div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	
+	function isloginnow(id){
+		//alert('halo');
+		swal("Informasi", "Anda berhasil login, pengaduan dan pertanyaan seputar merek, silahkan hubungi halodjki@dgip.go.id atau live chat pada website dgip.go.id", "warning", {buttons: {  confirm:'Ya, Saya Mengerti'}})
+				.then((value) => {
+					if (value) {
+						var listId = id;
+						$.ajax({
+							url: "layanan/berhasil-login",
+							method: "POST",
+							data: {"listId":listId},
+							context: document.body
+						}).then(swal.close());
+					}
+				}).then(self.hideProgress = function() {
+			swal.close();
+		});
+
+	};
+	
+	function downloadVideo(id, name) {
+		console.log('download')
+		$.ajax({
+			type: 'POST',
+			url: /*[[@{/layanan/home-download"}]]*/'',
+			data: id,
+			processData: false,
+			contentType: false,
+			dataType: 'JSON',
+			cache: false,
+			beforeSend: function () {
+				showLoading();
+			},
+			complete:function(){
+				hideLoading();
+			},
+			success: function (data) {
+				console.log('result : '+data)
+				var a = document.createElement("a");
+		        a.href = data;
+		        a.download = name;
+		        document.body.appendChild(a);
+		        a.click();
+			},
+			error: function (xhr, status) {
+				swal("Error", "error", "error");
+			}
+		});
+	}
+
+	$(document).ready(function(){
+	
+		let islogin =	parseInt($("#islogin").val());
+		if (islogin == 1){
+			isloginnow(1);
+		}
+
+		var slideIndex = 0;
+		showSlides();
+
+		function showSlides() {
+		  var i;
+		  var slides = document.getElementsByClassName("mySlides");
+		  var dots = document.getElementsByClassName("dot");
+		  for (i = 0; i < slides.length; i++) {
+			slides[i].style.display = "none";  
+		  }
+		  slideIndex++;
+		  if (slideIndex > slides.length) {slideIndex = 1}    
+		  for (i = 0; i < dots.length; i++) {
+			dots[i].className = dots[i].className.replace(" active", "");
+		  }
+		  slides[slideIndex-1].style.display = "block";  
+		  dots[slideIndex-1].className += " active";
+		  setTimeout(showSlides, 3000); // Change image every 3 seconds
+		}
+	});
+	/*]]>*/
+</script>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="3" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5074e2f0-89f8-4eb6-b3ef-03243fdf7c9f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA["D001991002796"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="regCount" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("1")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+OWN.APPLICATION_ID,
+COALESCE(OWN.TM_ENTITLEMENT,'0') AS TM_ENTITLEMENT,
+OWN.TM_COMMERCIAL_ADDRESS AS TM_COMMERCIAL_ADDRESS,
+A.REPRS_NAME AS REPRS_NAME,
+A.REPRS_ADDRESS AS REPRS_ADDRESS,
+A.REPRS_PHONE AS REPRS_PHONE,
+A.REPRS_EMAIL AS REPRS_EMAIL,
+C.PROV_NAME AS REPRS_PROV,
+COALESCE(E.APPLICATION_NO,' ') AS APPLICATION_NO,
+COALESCE(to_char(E.FILING_DATE,'DD/MM/YYYY'),' ') AS FILING_DATE,
+COALESCE(F.REG_NO,' ') AS REG_NO,
+COALESCE(to_char(F.REG_START_DATE,'DD/MM/YYYY'),' ') AS REG_START_DATE
+FROM TX_TM_OWNER OWN
+LEFT JOIN TX_TM_REPRS A ON A.APPLICATION_ID = OWN.APPLICATION_ID
+LEFT JOIN M_REPRS B ON B.REPRS_ID=A.REPRS_ID
+LEFT JOIN M_PROVINCE C ON C.PROV_ID=A.PROV_ID
+LEFT JOIN TX_TM_REFERENCE d ON D.APPLICATION_ID = OWN.APPLICATION_ID
+left join TX_TM_GENERAL e on e.APPLICATION_ID=D.REF_APPLICATION_ID
+left join TX_REGISTRATION F on F.APPLICATION_ID = E.APPLICATION_ID
+WHERE OWN.APPLICATION_ID=$P{applicationId}]]>
+	</queryString>
+	<field name="APPLICATION_ID" class="java.lang.String"/>
+	<field name="TM_ENTITLEMENT" class="java.lang.String"/>
+	<field name="TM_COMMERCIAL_ADDRESS" class="java.lang.String"/>
+	<field name="REPRS_NAME" class="java.lang.String"/>
+	<field name="REPRS_ADDRESS" class="java.lang.String"/>
+	<field name="REPRS_PHONE" class="java.lang.String"/>
+	<field name="REPRS_EMAIL" class="java.lang.String"/>
+	<field name="REPRS_PROV" class="java.lang.String"/>
+	<field name="APPLICATION_NO" class="java.lang.String"/>
+	<field name="FILING_DATE" class="java.lang.String"/>
+	<field name="REG_NO" class="java.lang.String"/>
+	<field name="REG_START_DATE" class="java.lang.String"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="100" y="25" width="225" height="224" uuid="8016c2f4-8165-4cb1-829b-94e4b34c8dda">
+					<printWhenExpression><![CDATA[$P{approve}!=null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="802" splitType="Stretch">
+			<staticText>
+				<reportElement x="440" y="0" width="70" height="15" uuid="6d69f93d-14c3-4b22-a274-da79a9f1098a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[MM2(E), page 3]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="15" y="783" width="100" height="17" uuid="5a225c0e-afa2-4ac2-a95a-240f9c5a0952"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="80" y="90" width="340" height="20" forecolor="#003366" uuid="563a012e-4b50-41bd-a45c-6057d5a2f4d3"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Check the appropriate box:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="90" width="20" height="20" forecolor="#003366" uuid="ac520f8f-721c-49ba-ab8a-0841c34d8ee8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(a)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="120" width="20" height="18" uuid="2ef72257-5745-4417-bf84-c1318a4f5493"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(i)]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="110" y="124" width="10" height="10" backcolor="#808080" uuid="e746af1c-bdc9-4573-aa42-9167992f502a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_ENTITLEMENT}==null?" ":$F{TM_ENTITLEMENT}.equalsIgnoreCase("HakPengajuan1") ? "X":" "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="140" y="120" width="370" height="30" uuid="8840f463-14dc-4db5-965d-9a3d1f90d070"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[where the Contracting Party mentioned in item 1 is a State, the applicant is a national of that State;  or]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="110" y="164" width="10" height="10" backcolor="#808080" uuid="e0b3c0a8-ecbb-476d-8015-24aa620a829c"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_ENTITLEMENT}==null?" ":$F{TM_ENTITLEMENT}.equalsIgnoreCase("HakPengajuan2") ? "X":" "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="80" y="159" width="20" height="18" uuid="e50b3e5a-15f5-45f9-b6af-485fca2bf1f0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(ii)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="159" width="370" height="28" uuid="261ef78b-0074-4bd7-82e0-70c33c134191"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[where the Contracting Party mentioned in item 1 is an organization, the name of the State of which the applicant is a national:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="52" y="746" width="160" height="1" uuid="b43b7b35-d634-4d7e-b0c1-109f623c5dfd"/>
+			</line>
+			<staticText>
+				<reportElement x="52" y="750" width="458" height="30" uuid="9c092762-6bb4-438d-b436-4678399b6164"/>
+				<textElement>
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[	If there is more than one applicant, indicate the entitlement details for the first applicant only and provide the details requested in the “Continuation Sheet for Several Applicants” attached to this form.  ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="47" y="60" width="232" height="20" forecolor="#FF0000" uuid="0627fa87-3ba2-4671-83af-3914291626cb"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[3. ENTITLEMENT TO FILE ]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="110" y="224" width="10" height="10" backcolor="#808080" uuid="8943d6ab-4447-4c66-827f-5533a4eae5e4"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_ENTITLEMENT}==null?" ":$F{TM_ENTITLEMENT}.equalsIgnoreCase("HakPengajuan3") ? "X":" "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="140" y="220" width="370" height="28" uuid="df822429-3012-4f54-822f-9e401a43de6d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[the applicant is domiciled in the territory of the Contracting Party mentioned in item 1;  or]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="220" width="20" height="18" uuid="c2592da6-a12b-4099-9d5d-68265a2cf5a1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(iii)]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="110" y="264" width="10" height="10" backcolor="#808080" uuid="2a01bad2-87f9-461e-9fde-e531c0f54c85"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_ENTITLEMENT}==null?" ":$F{TM_ENTITLEMENT}.equalsIgnoreCase("HakPengajuan4") ? "X":" "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="140" y="260" width="370" height="30" uuid="32937ba8-d83c-4387-876c-50bc6b142735"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[the applicant has a real and effective industrial or commercial establishment in the territory of the Contracting Party mentioned in item 1.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="259" width="20" height="18" uuid="93b38b2a-06dc-48a9-8c16-6bdaef780299"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(iv)]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Opaque" x="140" y="188" width="340" height="20" forecolor="#FFFFFF" uuid="ef301cec-41f5-434b-81bb-742ebd2fad71"/>
+				<graphicElement>
+					<pen lineColor="#CCCCFF"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="480" y="188" width="30" height="20" uuid="efcbdf80-6c03-42e2-bb8d-8b884ffee83f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[; or]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="300" width="20" height="20" forecolor="#003366" uuid="a4b29d1d-779d-48d6-8d75-4d52f6a509a5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(b)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="300" width="419" height="30" forecolor="#003366" uuid="9f8766d0-05de-407a-b770-e83ac5003d36"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Where the address of the applicant, given in item 2(b), is not in the territory of the Contracting Party mentioned in item 1, indicate in the space provided below:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="340" width="20" height="18" uuid="ecdf7ba9-8379-4767-85c4-b51503c251a3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(i)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="340" width="398" height="30" uuid="2e461e61-3d3b-40a1-a4df-d024135b3389"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[if the box in paragraph (a)(iii) of the present item has been checked, the domicile of the applicant in the territory of that Contracting Party, or,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="380" width="399" height="39" uuid="097eca79-00f6-44ec-8ffd-48fbe4502e24"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[if the box in paragraph (a)(iv) of the present item has been checked, the address of the applicant’s industrial or commercial establishment in the territory of that Contracting Party.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="380" width="20" height="18" uuid="e89b648e-a495-4eca-8b63-b9c818e36195"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(ii)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="420" width="398" height="68" uuid="f55cde2d-90f9-44e6-b0a8-a96c87a5312d"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($F{TM_COMMERCIAL_ADDRESS}==null?"":$F{TM_COMMERCIAL_ADDRESS})]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

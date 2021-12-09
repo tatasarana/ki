@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="form-6" th:remove="tag" th:if="${form=='kelas'} or ${isEdit == false}">
+    <script type="text/javascript" language="javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var csrf = /*[[${_csrf.token}]]*/'';
+        var header = "X-CSRF-TOKEN";
+        var redirect = /*[[@{/layanan/pratinjau-permohonan-online(no=${eFilingNo})}]]*/'';
+        var noGeneral = /*[[${noGeneral}]]*/'';
+        var totalClass = /*[[${totalClass}]]*/'';
+        var lookupKonfirm = /*[[${lookupKonfirm}]]*/'';
+        var fileType = /*[[${txReception.mFileType.id}]]*/'';
+        var isNew = /*[[${isNew}]]*/'';
+        var isEdit = /*[[${isEdit}]]*/'';
+        var tableBiaya = $('#tableBiaya');
+        var classStatusEnum = JSON.parse(/*[[${classStatusEnum}]]*/'');
+
+        var searchByArr6 = [];
+        var keywordArr6 = [];
+        var selectedClass = [];
+        var actionType = "none" ;
+        var idxCountry = 0;
+        var idxBiaya = tableBiaya.children('tbody').children('tr').length + 1;
+
+        console.log("idx "+idxBiaya);
+
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, csrf);
+        });
+        $(document).ready(function () {
+            noGeneral = isEdit ? noGeneral : $("#form8NoPermohonan").text();
+            actionType = "none";
+
+            var initTotal = $('#totalBiaya').val();
+            var initBasicFee = $('#basicFee').val();
+            var initCompFee = $('#totalComp').val();
+            var initSupFee = $('#totalSup').val();
+
+            // alert('Initial Total Biaya Negara : '+ sumnya);
+
+            // jumlah biaya negara $('#JumlahBiaya') mesti di-initialisasi pertama kali
+            var sumnya = initTotal - initBasicFee - initCompFee - initSupFee ;
+            $('#JumlahBiaya').val(sumnya) ;
+
+
+            // Langsung isi Table Biaya
+            var basicfeeIn = $('#basicFee').val();
+            if (basicfeeIn == "")
+                basicfeeIn = 0 ;
+            $('#form8basicFee').html(basicfeeIn);
+
+            var totalSupIn = $('#totalSup').val();
+            if (totalSupIn == "")
+                totalSupIn = 0;
+            $('#form8suplementaryFeeTotal').html(totalSupIn);
+
+            var totalCompIn = $('#totalComp').val();
+            if (totalCompIn == "")
+                totalCompIn = 0;
+            $('#form8complentaryFeeTotal').html(totalCompIn);
+
+
+
+
+//             tableBiaya = $('#tableBiaya').DataTable({
+//             	'createdRow': function( row, data, dataIndex ) {
+//           	      	$(row).attr('id', data[0]);
+//         	    },
+//         	    'columnDefs': [
+//                     {
+//                         "targets": [0],
+//                         "visible": false,
+//                         "searchable": false
+//                     }
+//                 ],
+//         	    language: {
+//                     url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+//                 }
+//             });
+//             
+//             tableBiaya.on('error.dt',function(e,settings,techNote,message){
+// 	            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+//             });
+
+            $('#btnAddDocBiaya').click(function () {
+                $('#docType').val('');
+                $('#docDesc').val('');
+                $('#docFile').val('');
+
+                $('.required-input').closest('.form-group').removeClass('has-error');
+                $('.required-input').next().remove();
+
+                $('#modalDocBiaya').modal('show');
+            });
+
+            $('#btnAddCountry').click(function () {
+                kode = $("#country").val();
+                nama = $("#country option:selected" ).text();
+                idxCountry++;
+                if (kode) {
+                    var checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'record';
+                    var markup = "<tr><td>"+idxCountry+"</td><td>" + kode + "</td><td>" + nama + "</td><td class=\"dt-body-center\"><button type=\"button\" class=\"btn btn-danger btn-xs\">Hapus</button></td></tr>";
+                    $("#tableCountry tbody").append(markup);
+                    $("#tableCountry tbody tr td span").html('');
+                    $("#tableCountry tbody tr td span").append(checkbox);
+                    $("#nationality").val('');
+
+
+
+                }
+            });
+
+            $('#btnHapusCountry').click(function () {
+                $("#tableCountry tbody").find('input[name="record"]').each(function () {
+                    if ($(this).is(":checked")) {
+                        $(this).parents("tr").remove();
+                    }
+                });
+            });
+
+            $('#tableBiaya tbody').on('click', 'button', function () {
+
+                var row = tableClass.row($(this).parents('tr'));
+                var data = row.data();
+
+                // http://jsbin.com/eyeyu/edit?html,js,output
+                var colIndex = $(this).parent().children().index($(this));
+                var rowIndex = $(this).parent().parent().children().index($(this).parent());
+                var kurangibiaya = parseInt( $(this).closest('td').prev('td').text());
+
+
+                var jumlahbiaya = parseInt($('#JumlahBiaya').val()) ;
+                $('#JumlahBiaya').val(jumlahbiaya - kurangibiaya) ;
+                // var t = $('#JumlahBiaya').val();
+                // alert('Jumlah Biaya: '+ t);
+                calculateFee();
+
+                $(this).closest("tr").remove();
+
+
+                // row.remove().draw(false);
+                //
+                // tableClass.column(1).nodes().each(function (cell, i) {
+                //     cell.innerHTML = i + 1;
+                // });
+            });
+
+            $('#btnHapusCountryAll').click(function () {
+                swal("Konfirmasi", "Apakah Anda yakin akan menghapus semua data negara?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+                    .then((value) => {
+                        if (value) {
+                            $.each(tableClass.rows().nodes(), function (index, value) {
+                                var data = tableBiaya.row(index).data();
+                                console.log(data);
+                                // tableForm6.cell("#"+data[0], 7).data('show').draw();
+                            });
+                            tableBiaya.clear().draw();
+                        }
+                    });
+            });
+
+            $('#btnAddBiaya').click(function () {
+                biaya = $("#biayaPerNegara").val();
+                biayaNegara = $("#biayaNegara option:selected" ).text();
+                idNegara = $("#biayaNegara").val();
+
+                if ((biaya != '')&&(idNegara != '')) {
+                    var checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'record';
+                    var markup = "<tr><td hidden=\"true\">"+idNegara+"</td><td align=\"center\">"+idxBiaya+"</td><td>" + biayaNegara + "</td><td align=\"right\">" + biaya + "</td><td align=\"center\"><button id=\"Line"+idxBiaya+"\" onclick=\"deleteCountryForm(this.id)\" type=\"button\" class=\"btn btn-danger btn-xs\">Hapus</button></td></tr>";
+                    $("#tableBiaya tbody").append(markup);
+                    $("#tableBiaya tbody tr td span").html('');
+                    $("#tableBiaya tbody tr td span").append(checkbox);
+
+                    // Lakukan juga untuk form8TableBiaya
+                    var markup2 = "<tr id=\"BiayaLine"+idxBiaya+"\" ><td>" + biayaNegara + "</td><td align=\"left\">" + biaya + "</td></tr>";
+                    $("#form8TableBiaya tbody").append(markup2);
+                    $("#form8TableBiaya tbody tr td span").html('');
+                    $("#form8TableBiaya tbody tr td span").append(checkbox);
+
+
+
+
+// 	                $("#nationality").val('');
+                    var tambahanbiaya = parseInt(biaya)
+                    var jumlahbiaya = parseInt($('#JumlahBiaya').val()) ;
+                    $('#JumlahBiaya').val(jumlahbiaya + tambahanbiaya) ;
+                    // var t = $('#JumlahBiaya').val();
+                    // alert('Jumlah Biaya: '+ t);
+                    calculateFee();
+                    idxBiaya++;
+                }
+                $("#biayaNegara").val('');
+                $("#biayaPerNegara").val('');
+                $('#modalDocBiaya').modal('hide');
+
+// 				var classValidate = [];
+//                 var listId = [];
+//                 var row = [];
+//                 console.log(tableBiaya.rows().eq(0));
+//
+//                 tableBiaya.rows().eq(0).each( function ( index ) {
+//                     var data = tableBiaya.row(index).data();
+//                     console.log(data);
+//                     if (classValidate.indexOf(data[2]) == -1) {
+//                         classValidate.push(data[2]);
+//                     }
+//                     listId.push(data[0]);
+//                 });
+//
+//                 for (var i = 0; i < selectedClass.length; i++) {
+//                     if (classValidate.indexOf(selectedClass[i][1]) == -1) {
+//                         classValidate.push(selectedClass[i][1]);
+//                     }
+//                     if (jQuery.inArray( selectedClass[i][0], listId ) == -1){
+//                         row.push(selectedClass[i]);
+//                     }
+//                 }
+//
+//                 if (row.length > 0) {
+// //                     if (classValidate.length > jumlahKelas) {
+// //                         swal("Informasi", "Sesuai dengan pembayaran Anda hanya boleh memiliki '" + jumlahKelas + "' kelas.", "info");
+// //                     } else {
+//                         $.each(row, function (index, value) {
+//                             var data = value;
+//
+//                             tableBiaya
+//                                 .row.add([data[0], 0, data[1], data[2], data[3], data[4], data[5], data[6], classStatusEnum.acceptLabel, isEdit ? 'TRUE' : 'FALSE', ''])
+//                                 .draw()
+//                                 .node().id = data[0];
+//                         });
+//
+//                         tableBiaya.column(1).nodes().each(function (cell, i) {
+//                             cell.innerHTML = i + 1;
+//                         });
+//
+//                         $("#modalDocBiaya").modal('hide');
+// //                     }
+//                 }
+//                 $("#modalDocBiaya").modal('hide');
+            });
+
+            //PUSH TO TXTMMADRIDFEE
+            $('#btnSaveFormBiaya').on('click', function (e) {
+                noGeneral = isEdit ? noGeneral : $("#form8NoPermohonan").text();
+                if (noGeneral != '') {
+                    e.preventDefault();
+                    // yang seharusnya diisi angka, TIDAK BOLEH String kosong
+                    var basicFee = $("#basicFee").val();
+                    if (basicFee == "")
+                        basicFee = 0;
+                    var volComp = $("#volComp").val();
+                    if (volComp == "")
+                        volComp = 0;
+                    var totalComp = $("#totalComp").val();
+                    if (totalComp == "")
+                        totalComp = 0;
+                    var volSup = $("#volSup").val();
+                    if (volSup == "")
+                        volSup = 0;
+                    var totalSup = $("#totalSup").val();
+                    if (totalSup == "")
+                        totalSup = 0;
+                    var language2 = $("#language2").val();
+
+                    var totalBiaya = $("#totalBiaya").val();
+                    if (totalBiaya == "")
+                        totalBiaya = 0;
+                    var listBiayaNegara = [];
+                    $('#tableBiaya > tbody > tr').each(function () {
+                        listBiayaNegara.push($(this).find('td:nth-child(1)').html() + ";" + $(this).find('td:nth-child(4)').html());
+                    });
+
+                    if (listBiayaNegara != '') {
+
+                        var formData = new FormData;
+                        formData.append('basicFee', basicFee);
+                        formData.append('volComp', volComp);
+                        formData.append('totalComp', totalComp);
+                        formData.append('volSup', volSup);
+                        formData.append('totalSup', totalSup);
+                        formData.append('listBiayaNegara', listBiayaNegara);
+                        formData.append('appNo', noGeneral);
+                        formData.append('language2', language2);
+                        formData.append('totalBiaya', totalBiaya);
+
+                        $.ajax({
+                            type: 'POST',
+                            url: /*[[@{/layanan/save-madrid-oo-form-biaya}]]*/'',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            beforeSend: function () {
+                                showLoading();
+                            },
+                            complete: function () {
+                                hideLoading();
+                            },
+                            success: function (result) {
+                                hideLoading();
+                                if (isEdit) {
+                                    window.location.replace(redirect);
+                                } else {
+                                    var listNo = [];
+                                    var jsonObj = {};
+
+                                    $('#form8basicFee').html(basicFee);
+                                    $('#form8suplementaryFeeTotal').html(totalSup);
+                                    $('#form8complentaryFeeTotal').html(totalComp);
+
+                                    // $('#form8basicFee').text($('#basicFee').val());
+                                    // $('#form8suplementaryFeeTotal').text($('#totalComp').val());
+                                    // $('#form8complentaryFeeTotal').text($('#totalSup').val());
+                                    // $("#form8TableBiaya tbody").empty();
+                                    //  $.each( listNo, function( index, value ){
+                                    //  $("#form8TableBiaya tbody").append("<tr><td>" + value + "</td><td>" + jsonObj[[value, "idNegara"]] + "</td><td>" + jsonObj[[value, "idxBiaya"]] + "</td></tr>");
+                                    // });
+                                    <!-- End set value form 8 -->
+                                    $('#dokumen').trigger("click");
+                                }
+                            },
+                            error: function (xhr, status) {
+                                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                            }
+                        });
+                    } else {
+                        swal("Informasi", "Biaya per negara wajib diisi.", "info");
+                    }
+                } else {
+                    $("#general").trigger("click");
+                    swal("Informasi", "Silakan melengkapi data General dan klik Simpan.", "info");
+                }
+            });
+
+            $('#basicFee').change('input',function () {
+                calculateFee();
+            });
+            $('#supFee').change('input',function () {
+                calculateFee();
+            });
+            $('#compFee').change('input',function () {
+                calculateFee();
+            });
+
+
+        });
+
+        function checkIntegerBiaya(){
+
+            var basicFee = $('#biayaPerNegara').val();
+            if (basicFee != ""){
+                if ( Math.floor(basicFee) == basicFee && $.isNumeric(basicFee) ){
+                    $('#btnAddBiaya').show() ;
+                }
+                else{
+                    alert("Hanya boleh mengisi Angka");
+                    $('#btnAddBiaya').hide() ;
+                }
+            }
+            else{
+                $('#btnAddBiaya').show() ;
+            }
+
+        }
+
+
+
+        function calculateFee() {
+            var lanjut = true ;
+            var grandTotal = 0;
+            var basicFee = $('#basicFee').val();
+            var biayaNegara = $('#JumlahBiaya').val() ;
+
+
+            if (biayaNegara == ""){
+                biayaNegara = 0;
+            }
+
+
+            if (basicFee != ""){
+                if ( Math.floor(basicFee) == basicFee && $.isNumeric(basicFee) ){
+
+                }
+                else{
+                    alert("Hanya boleh mengisi Angka");
+                    lanjut = false ;
+                }
+            }
+            else
+                basicFee = 0;
+
+            var supFee = $('#totalSup').val();
+            if (supFee != ""){
+                if ( Math.floor(supFee) == supFee && $.isNumeric(supFee) ){
+
+                }
+                else{
+                    alert("Hanya boleh mengisi Angka");
+                    lanjut = false ;
+                }
+            }
+            else
+                supFee = 0;
+
+            var compFee = $('#totalComp').val();
+            if (compFee != ""){
+                if ( Math.floor(compFee) == compFee && $.isNumeric(compFee) ){
+
+                }
+                else{
+                    alert("Hanya boleh mengisi Angka");
+                    lanjut = false ;
+                }
+            }
+            else
+                compFee = 0;
+
+
+            if (lanjut == true){
+                grandTotal = parseInt(basicFee) + parseInt(supFee)+parseInt(compFee) + parseInt(biayaNegara) ;
+                // alert(grandTotal) ;
+
+                $('#form8basicFee').val(basicFee);
+                $('#form8suplementaryFeeTotal').val(supFee);
+                $('#form8complentaryFeeTotal').val(compFee);
+            }
+
+            $('#totalBiaya').val(grandTotal);
+            $('#totalBiaya1').val(grandTotal);
+        }
+
+
+        function deleteCountryForm(x){
+            var c = x ;
+            $('#Biaya'+c).remove();
+        }
+
+
+
+        /*]]>*/
+    </script>
+</div>
+</html>

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="form-7" th:remove="tag">
+    <script type="text/javascript" language="javascript" th:inline="javascript">
+        var csrf = /*[[${_csrf.token}]]*/'';
+        var redirect = /*[[@{/layanan/pratinjau-permohonan(no=${noGeneral})}]]*/'';
+        var isEdit = $("#isEdit").val();
+        var noGeneral = /*[[${noGeneral}]]*/'';
+        var docUploadDate = /*[[${docUploadDate}]]*/'';
+        var tableDoc = $('#tableDoc');
+        var tableDoc2 = $('tableDoc2');
+        var tableDokumen = $('#tableDokumen');
+        var files;
+        
+        var header = "X-CSRF-TOKEN";
+        $(document).ready(function () {
+            $(document).ajaxSend(function (e, xhr, options) {
+                xhr.setRequestHeader(header, csrf);
+            });
+            $('#docFile').change(function (event) {
+            	files = event.target.files;
+            });
+            
+            $("#formAddDoc").validate({
+                messages: {
+                    "docType": {
+                        required: "Field Jenis Dokumen Wajib Diisi"
+                    },
+                    "docFile": {
+                        required: "Upload File Dokumen"
+                    }
+                },
+	            highlight: function (element) {
+	                $(element).closest('.form-group').addClass('has-error');
+	            },
+	            unhighlight: function (element) {
+	                $(element).closest('.form-group').removeClass('has-error');
+	            },
+	            errorElement: 'span',
+	            errorClass: 'help-block',
+	            errorPlacement: function (error, element) {
+	                if (element.parent('.input-group').length) {
+	                    error.insertAfter(element.parent());
+	                } else {
+	                    error.insertAfter(element);
+	                }
+           		}
+            });
+            
+            // untuk tambah dokumen di pratinjau online
+            $("#formAddDoc2").validate({
+                messages: {
+                    "docType": {
+                        required: "Field Jenis Dokumen Wajib Diisi"
+                    },
+                    "docFile": {
+                        required: "Upload File Dokumen"
+                    }
+                },
+	            highlight: function (element) {
+	                $(element).closest('.form-group').addClass('has-error');
+	            },
+	            unhighlight: function (element) {
+	                $(element).closest('.form-group').removeClass('has-error');
+	            },
+	            errorElement: 'span',
+	            errorClass: 'help-block',
+	            errorPlacement: function (error, element) {
+	                if (element.parent('.input-group').length) {
+	                    error.insertAfter(element.parent());
+	                } else {
+	                    error.insertAfter(element);
+	                }
+           		}
+            });
+
+            var urlViewDoc = /*[[@{/layanan/lihat-dokumen-lampiran-pemohon?id=}]]*/'';
+        	tableDoc = $('#tableDoc').DataTable({
+				'createdRow': function( row, data, dataIndex ) {
+          	      	$(row).attr('id', 'doc-'+data[0]);
+        	    },
+            	'columnDefs': [
+            		{
+                        'targets': 0,
+                        'visible': false
+                    },
+                    {
+                    	'targets': 7,
+                    	'visible': false
+                    },
+            		{
+                        'targets': -1,
+                        'searchable': false,
+    	                'orderable': false,
+                        'render': function ( data, type, full, meta ) {
+    	                	return '<div class="btn-actions">' +
+    	                				'<a href="' + urlViewDoc + full[7] + '" class="btn btn-primary btn-xs" target="_blank">Lihat</a> ' +
+    	                				'<br/>' +
+							  	        '<button type="button" class="btn btn-danger btn-xs" onclick="deleteDoc(\'' + full[7] + '\')">Hapus</button>'+
+							  	   '</div>';
+    	                }
+                    }
+                ],
+                ajax: {
+                    type: 'GET',
+                    data:{
+                        appNo : noGeneral
+                    },
+                    url: /*[[@{/layanan/list-dokumen*}]]*/'',
+                   	complete: function() {
+      	                hideLoading();
+                    }
+                },
+                language: {
+                    url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+                }
+            });
+            tableDoc.on('error.dt',function(e,settings,techNote,message){
+	            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+            });
+        
+            var url = /*[[@{/layanan/download-dokumen-lampiran-pemohon?id=}]]*/'';
+	        tableDoc2 = $('#tableDoc2').DataTable({
+				'createdRow': function( row, data, dataIndex ) {
+	      	      	$(row).attr('id', 'doc-'+data[0]);
+	    	    },
+	        	'columnDefs': [
+	        		{
+	                    'targets': [0,-1],
+	                    'visible': false
+	                },
+	        		{
+	                    'targets': 4,
+	                    'searchable': false,
+		                'orderable': false,
+	                    'render': function ( data, type, full, meta ) {
+	                    	
+							return '<a href="' + url + full[7] +'" target="_blank">' + full[4] + '</a>'
+		                }
+	                }
+	            ],
+	            ajax: {
+	                type: 'GET',
+	                data:{
+	                    appNo : noGeneral
+	                },
+	                url: /*[[@{/layanan/list-dokumen*}]]*/'',
+	                complete: function() {
+	                	hideLoading();
+	                }
+	            },
+	            language: {
+	                url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+	            }
+	        });
+	        tableDoc2.on('error.dt',function(e,settings,techNote,message){
+	            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	        });
+        
+	        // For Update data after download dokumen (set status = true)
+	        var urlDoc = /*[[@{/layanan/download-dokumen-lampiran-petugas?id=}]]*/'';
+	        tableDokumen = $('#tableDokumen').DataTable({
+				'createdRow': function( row, data, dataIndex ) {
+					$(row).attr('id', 'idDoc-'+data[0]);
+	    	    },
+	        	'columnDefs': [
+	        		{
+	                    'targets': [0,1,-1],
+	                    'visible': false
+	                },
+	        		{
+	                    'targets': 5,
+	                    'searchable': false,
+		                'orderable': false,
+	                    'render': function ( data, type, full, meta ) {
+							return '<a class="srcdoc" href="' + urlDoc + full[0] + '" target="_blank">' + full[5] + '</a>';
+		                }
+	                }
+	            ],
+	            ajax: {
+	                type: 'GET',
+	                data:{
+	                    appNo : noGeneral
+	                },
+	                url: /*[[@{/layanan/cari-list-data-dokumen*}]]*/''
+	            },
+	            language: {
+	                url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+	            }
+	        });
+	        tableDokumen.on('error.dt',function(e,settings,techNote,message){
+	            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	        });
+	        
+	     	// set status = true after download dokumen permohonan
+			$('#tableDokumen').on('click', '.srcdoc', function(){
+	        	var cell_clicked    = tableDokumen.cell(this).data();
+	            var row_clicked     = $(this).closest('tr');
+	            var row_data = tableDokumen.row(row_clicked).data();
+	            var data = row_data;
+	        	    	
+	            $.ajax({
+	            	data: { txTmDocId : data[0] },
+	                type: 'POST',
+	                url: /*[[@{/layanan/update-data-download-dokumen"}]]*/'',
+	                complete:function(){
+	                	hideLoading();
+	                },
+	                success: function (data) {
+	               	},
+	                error: function (xhr, status) {
+		                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	                }
+	            });
+			});
+	
+	        $('#btnAddDoc').click(function () {
+	        	$('#docType').val('');
+	        	$('#docDesc').val('');
+	        	$('#docFile').val('');
+	        	
+	        	$('.required-input').closest('.form-group').removeClass('has-error');
+	        	$('.required-input').next().remove();
+	        	
+	        	$('#modalDoc').modal('show');
+	        });     
+	        
+	        $('#docType').on("change", function(e) {
+            	if($('#docType').val() == 'TTDP' || $('#docType').val() == 'TTDK'  || $('#docType').val() == 'TTD') {
+            		$('#docFile').attr("accept","image/jpeg,image/jpg");
+            	} else {
+            		$('#docFile').attr("accept","application/pdf");
+            	}
+            });
+
+            $('#docFile').click(function (e) {
+            	if($('#docType').val() == '') {
+            	    swal("Informasi", "Silahkan memilih Jenis Dokumen terlebih dahulu", "info");
+            		e.preventDefault();
+            	}
+
+            });
+	        
+	        var docFileName;
+	        var docFileType;
+	        var docFileSize;
+	        var docFileSrc;
+	        
+	        $('#docFile').change(function () {
+	        	var error = '';
+	        	docFileName = this.files[0].name;
+	        	docFileType = this.files[0].type;
+	        	docFileSize = this.files[0].size;
+	   
+			    $('#docFile').closest('.form-group').removeClass('has-error');
+	        	$('#docFile').next().remove();
+	        	
+	        	if (docFileSize > 15728640) {
+	        		error = 'Ukuran File Diatas 15 MB!';
+	                this.value = "";
+	            } 
+	        	if($('#docType').val() == 'TTDP' || $('#docType').val() == 'TTDK' || $('#docType').val() == 'TTD') {
+            		if(docFileType != 'image/jpeg') {
+                		error = 'File yang dipilih bukan jpg/jpeg!';
+    	                this.value = "";
+            		}
+            	} else if(docFileType != 'application/pdf') {
+            		error = 'File yang dipilih bukan pdf!';
+	                this.value = "";
+            	}
+	        	if(error.length > 0){
+	        		$('#docFile').closest('.form-group').addClass('has-error');
+	            	$('#docFile').after('<span for="docFile" class="help-block">' + error + '</span>');
+	        	}
+	        	if (this.files[0]) {
+	        		var reader = new FileReader();
+	
+	                reader.onload = function(e) {
+	                	docFileSrc = e.target.result;
+	                }
+	
+	                reader.readAsDataURL(this.files[0]);
+	        	}
+	        });
+	        
+	        $('#btnSaveDoc').click(function () {
+	        	var isValidForm = $("#formAddDoc").valid();
+	        	
+	        	if(isValidForm){
+	        		var dt = docUploadDate;
+	        		var docId = $('#docType option:selected').val();
+	        		var docType = $('#docType option:selected').text();
+	        		var docDesc = $('#docDesc').val();
+	        		
+	        		if ($("#doc-"+docId).length == 0) {
+            			$('#modalDoc').modal('hide');
+
+            			var formData = new FormData;
+            			var docList = [];
+
+    	          	        var item = {}
+
+    	          	        item ["docId"] = docId;
+    	                    item ["docDate"] = dt;
+    	                    item ["docType"] = docType;
+    	                    item ["docFileName"] = docFileName;
+    	                    item ["docDesc"] = docDesc;
+    	                    item ["docFileSize"] = docFileSize;
+
+    	                    docList.push(item);
+    	                    formData.append('file-'+docId, docFileSrc);
+
+    	                    if(files){
+	                    		formData.append('docFiles', files[0]);
+	                    	}
+
+    	                formData.append('appNo', noGeneral);
+    					formData.append('docList', JSON.stringify(docList));
+
+        	            $.ajax({
+        	                type: 'POST',
+        	                url: /*[[@{/layanan/save-edit-dokumen-lampiran"}]]*/'',
+        	                data: formData,
+        	                processData: false,
+        	                contentType: false,
+        	                cache: false,
+        	                beforeSend: function () {
+        	                	showLoading();
+        	                },
+        	                success: function (data) {
+        	                    try {
+        	                	    var result = JSON.parse(data);
+                                    console.log("Sukses Save Form Dokumen");
+                                    if(result.key === "fileTypeError") {
+                                	    if (result.value === "notMatchFileTypeImage") {
+                                            swal("Error", "Untuk file Jenis Dokumen Tanda Tangan harus JPG/JPEG.", "error");
+                                        } else if (result.value === "notMatchFileTypePdf") {
+                                            swal("Error", "Untuk file Jenis Dokumen selain Tanda Tangan harus PDF.", "error");
+                                        }
+                                    }
+                                    else {
+                                	    tableDoc.ajax.reload();
+                                    }
+                                } catch (exception) {
+                                    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                                    hideLoading();
+                                }
+        	               	},
+    		                error: function (xhr, status) {
+    			                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+    		                }
+        	            });
+            		} else {
+            			swal("Informasi", "Data Jenis Dokumen '" + docType + "' Sudah Ada", "info");
+            		}
+	        	 }
+	        });
+	    	 
+	        // untuk save dokumen di pratinjau online
+	        $('#btnSaveDoc2').click(function () {
+				var isValidForm = $("#formAddDoc2").valid();
+	        	
+	        	if(isValidForm){
+	        		var dt = docUploadDate;
+	        		var docId = $('#docType option:selected').val();
+	        		var docType = $('#docType option:selected').text();
+	        		var docDesc = $('#docDesc').val();
+	        		
+        			$('#modalDoc').modal('hide');
+        			
+        			var formData = new FormData;
+        			var docList = [];
+        			
+	          	        var item = {}
+	            	
+	          	        item ["docId"] = docId;
+	                    item ["docDate"] = dt;
+	                    item ["docType"] = docType;
+	                    item ["docFileName"] = docFileName;
+	                    item ["docDesc"] = docDesc;
+	                    item ["docFileSize"] = docFileSize;
+	                    
+	                    docList.push(item);
+	                    formData.append('file-'+docId, docFileSrc);
+	                    
+	                formData.append('appNo', noGeneral);
+					formData.append('docList', JSON.stringify(docList));
+	            	    	
+    	            $.ajax({
+    	                type: 'POST',
+    	                url: /*[[@{/layanan/pratinjau-insert-data-dokumen"}]]*/'',
+    	                data: formData,
+    	                processData: false,
+    	                contentType: false,
+    	                cache: false,
+    	                beforeSend: function () {
+    	                	showLoading();
+    	                },
+    	                success: function (data) {
+    	                	tableDoc2.ajax.reload();
+    	               	},
+		                error: function (xhr, status) {
+			                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+		                }
+    	            });
+	        	} else {
+	        		swal("Informasi", "Pastikan anda sudah mengisi Jenis Dokumen dan Upload File.", "info");
+	        	}
+	        });
+	        
+	        $('#btnSaveForm7').click(function () {
+	        	var formData = new FormData;
+				var docList = [];
+				
+				noGeneral = isEdit ? noGeneral : $("#form8NoPermohonan").text();
+	        	if (noGeneral != '') {
+					$.each(tableDoc.rows().nodes(), function (index, value) {
+	            		var row = tableDoc.row( index );
+	            	    var data = row.data();
+	          	        var item = {}
+	            	
+	          	        item ["docId"] = data[0];
+	                    item ["docDate"] = data[2];
+	                    item ["docType"] = data[3];
+	                    item ["docFileName"] = data[4];
+	                    item ["docDesc"] = data[5];
+	                    item ["docFileSize"] = data[6];
+	                    
+	                    docList.push(item);
+	                    formData.append('file-'+data[0], data[7]);
+	                });
+					
+					formData.append('appNo', noGeneral);
+					formData.append('docList', JSON.stringify(docList));
+	            	    	
+		            $.ajax({
+		                type: 'POST',
+		                url: /*[[@{/layanan/insert-data-dokumen*"}]]*/'',
+		                data: formData,
+		                processData: false,
+		                contentType: false,
+		                cache: false,
+		                beforeSend: function () {
+		                	showLoading();
+		                },
+		                complete:function(){
+		                	hideLoading();
+		                },
+		                success: function (data) {
+		                    console.log("Sukses Save Form Dokumen");
+		                    if (isEdit){
+		                        window.location.replace(redirect);
+		                    }else {
+		                        <!--$('#dokumen').addClass('yet');-->
+		                        $("#preview").trigger("click");
+		                    }
+		                },
+			            error: function (xhr, status) {
+				            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+			            }
+		            });
+	        	} else {
+	        		$("#general").trigger("click");
+	        		swal("Informasi", "Silakan melengkapi data General dan klik Simpan.", "info");
+	        	}
+	        });
+	    });
+	        
+	         $('#idForm7CB').click(function (e) {
+	             var tablef7 = $(e.target).closest('table');
+	             $('td input:checkbox', tablef7).prop('checked', this.checked);
+	         });
+	        
+	         $('#btnsaveJenisDokumen').click(function () {
+	             doSave7();
+	         });
+	
+	         function doSave7(){
+	             var docId = [];
+	             var checked = [];
+	
+	             $("input[name='docId']").each(function () {
+	                 docId.push([this.value, this.checked]);
+	             });
+	
+	             $.ajax({
+	                 type: 'POST',
+	                 url: /*[[@{/layanan/post-dokumen-lampiran*"}]]*/'',
+	                 datatype: "jsonp",
+	                 data: {
+	                     docid: docId, 
+	                     checked: checked,
+	                     _appNo: noGeneral
+	                 },
+	                 beforeSend: function () {
+	                 	showLoading();
+	                 },
+	                 complete:function(){
+	                 	hideLoading();
+	                 },
+	                 success: function (data) {
+	                     console.log("Sukses Save Form Dokumen");
+	                     if (isEdit != undefined){
+	                         window.location.replace(redirect);
+	                     }else {
+	                         <!--$('#dokumen').addClass('yet');-->
+	                         $("#preview").trigger("click");
+	                     }
+	                 },
+	                 error: function (data) {
+	                     alert(data.status + ' ' + data.statusText);
+	                 }
+	             });
+	         }
+	         
+	       	 //Delete Dokumen
+	         function deleteDoc(deleteRowDoc){
+	         	swal("Konfirmasi", "Apakah Anda yakin akan menghapus data dokumen ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+	       		.then((value) => {
+	       			if (value) {
+	       				$.ajax({
+	                         type : "POST",
+	                         url:/*[[@{/layanan/delete-dokumen-pemohon}]]*/'',
+	                         datatype:'jsonp',
+	                         data : {
+	                             idDoc : deleteRowDoc,
+	                         },
+	                         beforeSend: function () {
+	     	                	showLoading();
+	     	                 },
+	                         success:function(result){
+	                         	tableDoc.ajax.reload();
+	                         },
+	 				         error: function (xhr, status) {
+	 					        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	 				         }
+	                     });
+	       		  	}
+	       		});
+	         }
+    </script>
+</div>
+</html>

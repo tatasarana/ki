@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="limit_continuation" pageWidth="592" pageHeight="150" whenNoDataType="AllSectionsNoDetail" columnWidth="592" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="12e33e45-ea8b-4bfb-aa07-255962c97973">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="regCount" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("1")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+COALESCE(A.APPLICATION_NO,' ') AS APPLICATION_NO,
+COALESCE(to_char(A.FILING_DATE,'DD/MM/YYYY'),' ') AS FILING_DATE,
+COALESCE(C.REG_NO,' ') AS REG_NO,
+COALESCE(to_char(C.REG_START_DATE,'DD/MM/YYYY'),' ') AS REG_START_DATE
+FROM TX_TM_GENERAL A
+LEFT JOIN TX_TM_REFERENCE B ON A.APPLICATION_ID=B.REF_APPLICATION_ID
+LEFT JOIN TX_REGISTRATION C ON C.APPLICATION_ID=A.APPLICATION_ID
+WHERE B.APPLICATION_ID = $P{applicationId}]]>
+	</queryString>
+	<field name="APPLICATION_NO" class="java.lang.String"/>
+	<field name="FILING_DATE" class="java.lang.String"/>
+	<field name="REG_NO" class="java.lang.String"/>
+	<field name="REG_START_DATE" class="java.lang.String"/>
+	<columnHeader>
+		<band height="40">
+			<staticText>
+				<reportElement x="50" y="13" width="330" height="20" forecolor="#000000" uuid="be18d70f-80cc-4966-b05a-b22dc95a9000"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[5. BASIC APPLICATION OR BASIC REGISTRATION]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="114" splitType="Stretch">
+			<staticText>
+				<reportElement x="50" y="9" width="110" height="40" forecolor="#003366" uuid="1551931b-a595-470f-be81-27e7aad428e6"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Basic application number: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="59" width="110" height="40" forecolor="#003366" uuid="281b324e-9b4a-47fe-bf52-a8a6eac9fc68"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Basic registration number: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="281" y="9" width="110" height="40" forecolor="#000000" uuid="87990fb9-330d-44ad-a48d-073bf75bcb9e"/>
+				<box padding="4"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Date of the basic application (dd/mm/yyyy): ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="281" y="59" width="110" height="40" forecolor="#000000" uuid="d791e63b-aedd-4d05-a468-8ffb8eded814"/>
+				<box padding="4"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Date of the basic application (dd/mm/yyyy): ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="160" y="9" width="121" height="40" uuid="b01f32a7-3232-4479-9e34-db2dda828247"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($P{regCount}==null?"":$P{regCount}.intValue() > 1 ? "" : $F{APPLICATION_NO})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="59" width="121" height="40" uuid="215ae2bf-fa99-45ce-9d28-6120597b8563"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($P{regCount}==null?"":$P{regCount}.intValue() > 1 ? "" : $F{REG_NO})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="9" width="121" height="40" uuid="0a483e0c-220f-48fc-8d43-0c515bded8d2"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($P{regCount}==null?"":$P{regCount}.intValue() > 1 ? "" : $F{FILING_DATE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="59" width="121" height="40" uuid="562a7de1-ecb2-454b-b614-3e80a2e16591"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($P{regCount}==null?"":$P{regCount}.intValue() > 1 ? "" : $F{REG_START_DATE})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

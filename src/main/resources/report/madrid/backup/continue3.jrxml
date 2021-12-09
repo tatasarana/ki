@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="3" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5074e2f0-89f8-4eb6-b3ef-03243fdf7c9f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA["D001991002796"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="regCount" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("1")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+OWN.APPLICATION_ID,
+COALESCE(OWN.TM_ENTITLEMENT,'0') AS TM_ENTITLEMENT,
+OWN.TM_COMMERCIAL_ADDRESS AS TM_COMMERCIAL_ADDRESS,
+A.REPRS_NAME AS REPRS_NAME,
+A.REPRS_ADDRESS AS REPRS_ADDRESS,
+A.REPRS_PHONE AS REPRS_PHONE,
+A.REPRS_EMAIL AS REPRS_EMAIL,
+C.PROV_NAME AS REPRS_PROV,
+COALESCE(E.APPLICATION_NO,' ') AS APPLICATION_NO,
+COALESCE(to_char(E.FILING_DATE,'DD/MM/YYYY'),' ') AS FILING_DATE,
+COALESCE(F.REG_NO,' ') AS REG_NO,
+COALESCE(to_char(F.REG_START_DATE,'DD/MM/YYYY'),' ') AS REG_START_DATE
+FROM TX_TM_OWNER OWN
+LEFT JOIN TX_TM_REPRS A ON A.APPLICATION_ID = OWN.APPLICATION_ID
+LEFT JOIN M_REPRS B ON B.REPRS_ID=A.REPRS_ID
+LEFT JOIN M_PROVINCE C ON C.PROV_ID=A.PROV_ID
+LEFT JOIN TX_TM_REFERENCE d ON D.APPLICATION_ID = OWN.APPLICATION_ID
+left join TX_TM_GENERAL e on e.APPLICATION_ID=D.REF_APPLICATION_ID
+left join TX_REGISTRATION F on F.APPLICATION_ID = E.APPLICATION_ID
+WHERE OWN.APPLICATION_ID=$P{applicationId}]]>
+	</queryString>
+	<field name="APPLICATION_ID" class="java.lang.String"/>
+	<field name="TM_ENTITLEMENT" class="java.lang.String"/>
+	<field name="TM_COMMERCIAL_ADDRESS" class="java.lang.String"/>
+	<field name="REPRS_NAME" class="java.lang.String"/>
+	<field name="REPRS_ADDRESS" class="java.lang.String"/>
+	<field name="REPRS_PHONE" class="java.lang.String"/>
+	<field name="REPRS_EMAIL" class="java.lang.String"/>
+	<field name="REPRS_PROV" class="java.lang.String"/>
+	<field name="APPLICATION_NO" class="java.lang.String"/>
+	<field name="FILING_DATE" class="java.lang.String"/>
+	<field name="REG_NO" class="java.lang.String"/>
+	<field name="REG_START_DATE" class="java.lang.String"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="100" y="25" width="225" height="224" uuid="8016c2f4-8165-4cb1-829b-94e4b34c8dda">
+					<printWhenExpression><![CDATA[$P{approve}!=null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="802" splitType="Stretch">
+			<textField>
+				<reportElement x="15" y="783" width="100" height="17" uuid="5a225c0e-afa2-4ac2-a95a-240f9c5a0952"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="47" y="60" width="232" height="20" forecolor="#FF0000" uuid="0627fa87-3ba2-4671-83af-3914291626cb"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONTINUATION SHEET]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Opaque" x="47" y="90" width="463" height="590" forecolor="#FFFFFF" uuid="d1e4b51f-f633-4d9c-8b5f-b052e33a1b85"/>
+				<graphicElement>
+					<pen lineColor="#CCCCFF"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="360" y="60" width="30" height="20" forecolor="#000000" uuid="8cb64af6-2f62-4675-979d-b29193a11f8f"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="439" y="60" width="30" height="20" forecolor="#000000" uuid="b3b13823-e330-4c24-81ad-111b4149bdbc"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[of]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Opaque" x="469" y="60" width="40" height="20" forecolor="#FFFFFF" uuid="ba27096a-bb13-4243-854d-72a098349131"/>
+				<graphicElement>
+					<pen lineColor="#CCCCFF"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Opaque" x="390" y="60" width="40" height="20" forecolor="#FFFFFF" uuid="35839208-f93b-40fc-8740-1bd03ffdf584"/>
+				<graphicElement>
+					<pen lineColor="#CCCCFF"/>
+				</graphicElement>
+			</rectangle>
+		</band>
+	</summary>
+</jasperReport>

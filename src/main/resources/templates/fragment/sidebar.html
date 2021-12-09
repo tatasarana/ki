@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<aside class="ui-sidebar" js-direction="sidebar-wrap-place" th:fragment="left" style="overflow:auto">
+	
+	<ul class="ui-accordion">
+		<li th:if="${#authentication.getPrincipal().hasAccessMenu('DB') and (@environment.getProperty('app.mode') == 'admin' or @environment.getProperty('app.mode') == 'all')}"
+			th:classappend="${menu == 'dashboard' ? 'active' : ''}">
+			<a th:href="@{/layanan/dashboard}">Dashboard</a>  
+		</li>
+		<li th:if="${#authentication.getPrincipal().hasAccessMenu('DB-PER','DB-PASCA','DB-PEM', 'DB-REG')}"
+			th:classappend="${menu == 'dashboardStatistic' ? 'active' : ''}">
+			<a class="ui-accordion--title" th:classappend="${menu == 'dashboardStatistic' ? 'active' : ''}">
+				Dashboard dan Statistik
+			</a>
+			<ul class="ui-accordion--content" th:classappend="${menu == 'dashboardStatistic' ? 'active' : ''}">
+				<li th:if="${#authentication.getPrincipal().hasAccessMenu('DB-PER')}">
+					<a th:href="@{/layanan/dashboard-permohonan}" 
+						th:classappend="${subMenu == 'dashboardPermohonan' ? 'active' : ''}">
+						Dashboard Permohonan
+					</a>
+				</li>
+
+				<li th:if="${#authentication.getPrincipal().hasAccessMenu('DB-PASCA')}">					
+					<a th:href="@{/layanan/dashboard-pasca-permohonan}" 
+						th:classappend="${subMenu == 'dashboardPascaPermohonan' ? 'active' : ''}">
+					    Dashboard Pasca Permohonan
+					</a>
+				</li>
+
+				<li th:if="${#authentication.getPrincipal().hasAccessMenu('DB-PEM')}">
+					<a th:href="@{/layanan/dashboard-pemohon-kuasa}" 
+						th:classappend="${subMenu == 'dashboardTop10' ? 'active' : ''}">
+						Dashboard Top 10
+					</a>
+				</li>
+
+				<li th:if="${#authentication.getPrincipal().hasAccessMenu('DB-REG')}">
+					<a th:href="@{/layanan/dashboard-reg-akun}"
+						th:classappend="${subMenu == 'dashboardReg' ? 'active' : ''}">
+						Dashboard Registrasi Akun
+					</a>
+				</li>
+
+			</ul>
+		</li>
+		
+		<div th:if="${@environment.getProperty('app.mode') == 'general' or @environment.getProperty('app.mode') == 'all'}" th:remove="tag">
+		<!--<div th:if="${@environment.getProperty('app.mode') == 'admin' or @environment.getProperty('app.mode') == 'all'}" th:remove="tag">-->
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('P-OL') and (@environment.getProperty('app.mode') == 'general' or @environment.getProperty('app.mode') == 'all')}"
+				th:classappend="${menu == 'permohonanonlineMerek' ? 'active' : ''}">
+						<a th:href="@{/layanan/list-data-permohonan-online}"
+						   th:classappend="${subMenu == 'permohonan-online' ? 'active' : ''}">
+							Permohonan Online
+						</a>
+			</li>
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('PASCA-OL') and (@environment.getProperty('app.mode') == 'general' or @environment.getProperty('app.mode') == 'all')}"
+			    th:classappend="${menu == 'permohonanPasca' ? 'active' : ''}">
+
+						<a th:href="@{/layanan/list-pasca-online}"
+						   th:classappend="${subMenu == 'pascaOnline' ? 'active' : ''}">
+							Pasca Permohonan Online
+						</a>
+			</li>
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('MADRID-OL') and (@environment.getProperty('app.mode') == 'general' or @environment.getProperty('app.mode') == 'all')}"
+			    th:classappend="${menu == 'permohonanProtokolMadrid' ? 'active' : ''}">
+				<ul class="ui-accordion--content" th:classappend="${menu == 'permohonanProtokolMadrid' ? 'active' : ''}">
+					<li>
+						<a th:href="@{/layanan/list-permohonan-madrid-oo}"
+						   th:classappend="${subMenu == 'permohonan-madrid-oo' ? 'active' : ''}">
+							Madrid Office of Origin Online
+						</a>
+					</li>
+				</ul>
+			</li>
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('MTR-OL') and (@environment.getProperty('app.mode') == 'general' or @environment.getProperty('app.mode') == 'all')}"
+			    th:classappend="${menu == 'prosesMadrid' ? 'active' : ''}">
+				<ul class="ui-accordion--content" th:classappend="${menu == 'prosesMadrid' ? 'active' : ''}">
+					<li>
+						<a th:href="@{/layanan/list-permohonan-proses-madrid}"
+						   th:classappend="${subMenu == 'proses-madrid' ? 'active' : ''}">
+							Madrid Transformasi Replacement Online
+						</a>
+					</li>
+				</ul>
+			</li>
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('P-INBOX') and (@environment.getProperty('app.mode') == 'general' or @environment.getProperty('app.mode') == 'all')}"
+				th:classappend="${menu == 'inbox-suratRole' ? 'active' : ''}">
+				<a th:href="@{/layanan/inbox-surat-role}"
+				   th:classappend="${subMenu == 'inbox-surat' ? 'active' : ''}">
+					Inbox Surat
+				</a>
+			</li>
+
+		</div>
+		
+		<div th:if="${@environment.getProperty('app.mode') == 'admin' or @environment.getProperty('app.mode') == 'all'}" th:remove="tag">
+			<!--Notifikasi for ALL-->
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('NOTIF') and (@environment.getProperty('app.mode') == 'admin' or @environment.getProperty('app.mode') == 'all')}"
+				th:classappend="${menu == 'notifikasiRole' ? 'active' : ''}">
+				<!--<li th:if="${@environment.getProperty('app.mode') == 'admin'}">-->
+				<a  th:href="@{/layanan/notifikasi-role}" th:classappend="${menu == 'notifikasiRole' ? 'active' : ''}">
+					Tembusan Surat
+				</a>
+				<!--<ul class="ui-accordion&#45;&#45;content" th:classappend="${menu == 'notifikasiRole' ? 'active' : ''}">-->
+				<!--foreach tulis di sini-->
+				<!--<li>-->
+				<!--<a th:href="@{/layanan/notifikasi-role}"-->
+				<!--th:classappend="${subMenu == 'notifikasi' ? 'active' : ''}">-->
+				<!--Pemeriksaan TU-->
+				<!--</a>-->
+				<!--</li>-->
+				<!--</ul>-->
+			</li>
+			<!--End Notifikasi for All-->
+
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('LP-L','LP-D') and (@environment.getProperty('app.mode') == 'admin' or @environment.getProperty('app.mode') == 'all')}"
+				th:classappend="${menu == 'loketPenerimaan' ? 'active' : ''}">
+				<a class="ui-accordion--title" th:classappend="${menu == 'loketPenerimaan' ? 'active' : ''}">
+					Loket Penerimaan
+				</a>
+				<ul class="ui-accordion--content" th:classappend="${menu == 'loketPenerimaan' ? 'active' : ''}">
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('LP-L')}">
+						<a th:href="@{/layanan/loket-penerimaan}"
+						   th:classappend="${subMenu == 'permohonanBaru' ? 'active' : ''}">
+							Permohonan Baru
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('LP-D')}">
+						<a th:href="@{/layanan/loket-dokumen}"
+						   th:classappend="${subMenu == 'penerimaanDokumen' ? 'active' : ''}">
+							Penerimaan Dokumen
+						</a>
+					</li>
+				</ul>
+			</li>
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('P-L','PASCA-OFF','M-UPL', 'M-PRP')}"
+				th:classappend="${menu == 'permohonanMerek' ? 'active' : ''}">
+				<a class="ui-accordion--title" th:classappend="${menu == 'permohonanMerek' ? 'active' : ''}">
+					Permohonan Merek
+				</a>
+				<ul class="ui-accordion--content" th:classappend="${menu == 'permohonanMerek' ? 'active' : ''}">
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('P-L')}">
+						<a th:href="@{/layanan/list-data-permohonan}"
+						   th:classappend="${subMenu == 'permohonan' ? 'active' : ''}">
+							Permohonan
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('PASCA-OFF')}">
+						<a th:href="@{/layanan/list-pasca-permohonan}"
+						   th:classappend="${subMenu == 'pascaPermohonan' ? 'active' : ''}">
+							Pasca Permohonan
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-UPL')}">
+						<a th:href="@{/layanan/permohonan-multiupload}"
+						   th:classappend="${subMenu == 'multiupload' ? 'active' : ''}">
+							Multiple Upload File
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-PRP')}">
+						<a th:href="@{/layanan/proses-permohonan}"
+						   th:classappend="${subMenu == 'prosesPermohonan' ? 'active' : ''}">
+							Proses Permohonan
+						</a>
+					</li>
+				</ul>
+			</li>
+
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('CEKPOL-L')}"
+				th:classappend="${menu == 'cekPermohonan' ? 'active' : ''}">
+				<a class="ui-accordion--title" th:classappend="${menu == 'cekPermohonan' ? 'active' : ''}">
+					Cek Permohonan
+				</a>
+				<ul class="ui-accordion--content" th:classappend="${menu == 'cekPermohonan' ? 'active' : ''}">
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('CEKPOL-L')}">
+						<a th:href="@{/layanan/cek-permohonan-online}"
+						   th:classappend="${subMenu == 'cekPermohonanOnline' ? 'active' : ''}">
+							Cek Permohonan Online
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('CEKPOL-L')}">
+						<a th:href="@{/layanan/cek-pasca-permohonan}"
+						   th:classappend="${subMenu == 'cekPascaPermohonan' ? 'active' : ''}">
+							Cek Pasca Permohonan Online
+						</a>
+					</li>
+				</ul>
+			</li> 
+						
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('P-G')}"
+				th:classappend="${menu == 'grupPermohonan' ? 'active' : ''}">
+				<a th:href="@{/layanan/grup-permohonan}"
+				   th:classappend="${menu == 'grupPermohonan' ? 'active' : ''}">
+					Grup Permohonan
+				</a>
+			</li>
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('PU-L')}"
+				th:classappend="${menu == 'publikasi' ? 'active' : ''}">
+				<a th:href="@{/layanan/publikasi}" th:classappend="${menu == 'publikasi' ? 'active' : ''}">
+					Publikasi
+				</a>
+			</li>
+
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('PT-L')}"
+				th:classappend="${menu == 'pelayananTeknis' ? 'active' : ''}">
+				<a th:href="@{/layanan/pelayanan-teknis}" th:classappend="${menu == 'pelayananTeknis' ? 'active' : ''}">
+					Pelayanan Teknis
+				</a>
+			</li>
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('PS-L')}"
+				th:classappend="${menu == 'pemeriksaanSubstantif' ? 'active' : ''}">
+				<a th:href="@{/layanan/pemeriksaan-substantif}"
+				   th:classappend="${subMenu == 'pemeriksaanSubstantif' ? 'active' : ''}">
+					Pemeriksaan Substantif
+				</a>
+			</li>
+			<!--<li th:if="${#authentication.getPrincipal().hasAccessMenu('PS-L')}"-->
+				<!--th:classappend="${menu == 'kertasKerjaSubstantif' ? 'active' : ''}">-->
+				<!--<a th:href="@{/layanan/kertas-kerja-substantif}"-->
+				   <!--th:classappend="${subMenu == 'kertasKerjaSubstantif' ? 'active' : ''}">-->
+					<!--Kertas Kerja Substantif 1-->
+				<!--</a>-->
+			<!--</li>-->
+
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('PS-L')}"
+				th:classappend="${menu == 'kertasKerjaSubstantif' ? 'active' : ''}">
+				<a class="ui-accordion--title" th:classappend="${menu == 'kertasKerjaSubstantif' ? 'active' : ''}">
+					Kertas Kerja Substantif
+				</a>
+				<ul class="ui-accordion--content" th:classappend="${menu == 'kertasKerjaSubstantif' ? 'active' : ''}">
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('PS-L')}">
+						<a th:href="@{/layanan/kertas-kerja-substantif-p1}"
+						   th:classappend="${subMenu == 'kertasKerjaSubstantifP1' ? 'active' : ''}">
+							Kertas Kerja Pemeriksa Substantif 1
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('PS-L')}">
+						<a th:href="@{/layanan/kertas-kerja-substantif-p2}"
+						   th:classappend="${subMenu == 'kertasKerjaSubstantifP2' ? 'active' : ''}">
+							Kertas Kerja Pemeriksa Substantif 2
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('PS-L')}">
+						<a th:href="@{/layanan/kertas-kerja-menunggu-tanggapan}"
+						   th:classappend="${subMenu == 'kertasKerjaSubstantifMenungguTanggapan' ? 'active' : ''}">
+							Kertas Kerja Menunggu Tanggapan
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('PS-L')}">
+						<a th:href="@{/layanan/kertas-kerja-pemeriksaan-tanggapan}"
+						   th:classappend="${subMenu == 'kertasKerjaSubstantifPemeriksaanTanggapan' ? 'active' : ''}">
+							Kertas Kerja Pemeriksaan Tanggapan
+						</a>
+					</li>
+				</ul>
+			</li>
+
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('C-I')}"
+				th:classappend="${menu == 'listChk' ? 'active' : ''}">
+						<a th:href="@{/layanan/list-cek-logo}"
+						   th:classappend="${subMenu == 'listChk' ? 'active' : ''}">
+							Penelusuran Figuratif
+						</a>
+			</li>
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('LADMPK','LFP','LKBM','LKSBDT','LRBRM','LTU','LRS','LSAM','LAB','LAT','LPSCPRMHN')}"
+				th:classappend="${menu == 'laporan' ? 'active' : ''}">
+				<a class="ui-accordion--title" th:classappend="${menu == 'laporan' ? 'active' : ''}">
+					Laporan
+				</a>
+				<ul class="ui-accordion--content" th:classappend="${menu == 'laporan' ? 'active' : ''}">
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('LADMPK')}">
+						<a th:href="@{/layanan/laporan-administrasi-permohonan-klasifikasi}"
+						   th:classappend="${subMenu == 'laporanAdministrasiPermohonanKlasifikasi' ? 'active' : ''}">
+							Administrasi Permohonan Dan Klasifikasi
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('LFP')}">
+						<a th:href="@{/layanan/laporan-fungsional-pemeriksa}"
+						   th:classappend="${subMenu == 'laporanFungsionalPemeriksa' ? 'active' : ''}">
+							Fungsional Pemeriksa
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('LKBM')}">
+						<a th:href="@{/layanan/laporan-kbm}"
+						   th:classappend="${subMenu == 'laporanKbm' ? 'active' : ''}">
+							Laporan KBM
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('LPSCPRMHN')}">
+						<a th:href="@{/layanan/laporan-pasca-permohonan}"
+						   th:classappend="${subMenu == 'laporanPascaPermohonan' ? 'active' : ''}">
+							Pasca Permohonan
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('LRBRM')}">
+						<a th:href="@{/layanan/laporan-rekap-brm}"
+						   th:classappend="${subMenu == 'laporanRekapBrm' ? 'active' : ''}">
+							Rekap BRM
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('LTU')}">
+						<a th:href="@{/layanan/laporan-keputusan-direktur}"
+						   th:classappend="${subMenu == 'laporanKeputusanDirektur' ? 'active' : ''}">
+							TU
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('LRS')}">
+						<a th:href="@{/layanan/laporan-rekap-sertifikat}"
+						   th:classappend="${subMenu == 'rekapSertifikat' ? 'active' : ''}">
+							Rekap Sertifikat
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('LSAM')}">
+						<a th:href="@{/layanan/laporan-rekap-status-dan-aksi-mingguan}"
+						   th:classappend="${subMenu == 'laporanRekapStatusDanAksiMingguan' ? 'active' : ''}">
+							Status dan Aksi Mingguan
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('LAB')}">
+						<a th:href="@{/layanan/laporan-rekap-aksi-bulanan}"
+						   th:classappend="${subMenu == 'laporanRekapAksiBulanan' ? 'active' : ''}">
+							Aksi Bulanan
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('LAT')}">
+						<a th:href="@{/layanan/laporan-rekap-aksi-tahunan}"
+						   th:classappend="${subMenu == 'laporanRekapAksiTahunan' ? 'active' : ''}">
+							Aksi Tahunan
+						</a>
+					</li>
+				</ul>
+			</li>
+
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('MD')}"
+				th:classappend="${menu == 'Madrid' ? 'active' : ''}">
+						<a th:href="@{/layanan/list-madrid}"
+						   th:classappend="${subMenu == 'Madrid' ? 'active' : ''}">
+							Madrid DCP
+						</a>
+			</li>
+
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-RS','M-KON','M-KLS','M-RKLSP')}"
+				th:classappend="${menu == 'maintenance' ? 'active' : ''}">
+				<a class="ui-accordion--title" th:classappend="${menu == 'maintenance' ? 'active' : ''}">
+					Maintenance Data
+				</a>
+				<ul class="ui-accordion--content" th:classappend="${menu == 'maintenance' ? 'active' : ''}">
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-RKLSP')}">
+						<a th:href="@{/layanan/permintaan-jenis-barang-jasa}"
+						   th:classappend="${subMenu == 'permintaanBarangJasa' ? 'active' : ''}">
+							Permintaan Jenis Barang/Jasa
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-KLS')}">
+						<a th:href="@{/layanan/list-master-kelas}"
+						   th:classappend="${subMenu == 'listKelas' ? 'active' : ''}">
+							Kelas
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-KON')}">
+						<a th:href="@{/layanan/list-konsultan}"
+						   th:classappend="${subMenu == 'listKonsultan' ? 'active' : ''}">
+							Kuasa
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-RS')}">
+						<a th:href="@{/layanan/list-role-substantif}"
+						   th:classappend="${subMenu == 'listRoleSubstantif' ? 'active' : ''}">
+							Role Substantif
+						</a>
+					</li>
+				</ul>
+			</li>
+
+			<!-- <li th:if="${#authentication.getPrincipal().hasAccessMenu('M-US','M-RL','M-RS','M-DU','M-DO','M-KON')}"
+			    th:classappend="${menu == 'usermgmnt' ? 'active' : ''}"> -->
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-US','M-RL','M-DU','M-DO')}"
+				th:classappend="${menu == 'usermgmnt' ? 'active' : ''}">
+				<a class="ui-accordion--title" th:classappend="${menu == 'usermgmnt' ? 'active' : ''}">
+					User Management
+				</a>
+				<ul class="ui-accordion--content" th:classappend="${menu == 'usermgmnt' ? 'active' : ''}">
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-US')}">
+						<a th:href="@{/layanan/list-user}" th:classappend="${subMenu == 'listUser' ? 'active' : ''}">
+							User
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-RL')}">
+						<a th:href="@{/layanan/list-role}" th:classappend="${subMenu == 'listRole' ? 'active' : ''}">
+							Role
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-DO')}">
+						<a th:href="@{/layanan/list-daftar-online}"
+						   th:classappend="${subMenu == 'listRegOnline' ? 'active' : ''}">
+							Registrasi Akun
+						</a>
+					</li>
+				</ul>
+			</li>
+
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-HD','M-AP','M-TP','M-BT','M-DT','M-UUD','M-NEG','M-PROV','M-DS')}"
+				th:classappend="${menu == 'master' ? 'active' : ''}">
+				<a class="ui-accordion--title" th:classappend="${menu == 'master' ? 'active' : ''}">
+					Setting
+				</a>
+				<ul class="ui-accordion--content" th:classappend="${menu == 'master' ? 'active' : ''}">
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-HD')}">
+						<a th:href="@{/layanan/home-display}"
+						   th:classappend="${subMenu == 'homeDisplay' ? 'active' : ''}">
+							Home Display
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-DS')}">
+						<a th:href="@{/layanan/list-departemen}"
+						   th:classappend="${subMenu == 'listDepartemen' ? 'active' : ''}">
+							Subdit dan Seksi
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-UUD')}">
+						<a th:href="@{/layanan/list-undang-undang}"
+						   th:classappend="${subMenu == 'listUndangUndang' ? 'active' : ''}">
+							Dasar Hukum
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-AP')}">
+						<a th:href="@{/layanan/list-asal-permohonan}"
+						   th:classappend="${subMenu == 'listAsalPermohonan' ? 'active' : ''}">
+							Asal Permohonan
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-TP')}">
+						<a th:href="@{/layanan/list-tipe-permohonan}"
+						   th:classappend="${subMenu == 'listTipePermohonan' ? 'active' : ''}">
+							Tipe Permohonan
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-DT')}">
+						<a th:href="@{/layanan/list-jenis-dokumen}"
+						   th:classappend="${subMenu == 'listJenisDokumen' ? 'active' : ''}">
+							Jenis Dokumen
+						</a>
+					</li>
+
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-NEG')}">
+						<a th:href="@{/layanan/list-negara}" th:classappend="${subMenu == 'listNegara' ? 'active' : ''}">
+							Negara
+						</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-PROV')}">
+						<a th:href="@{/layanan/list-provinsi}"
+						   th:classappend="${subMenu == 'listProvinsiKota' ? 'active' : ''}">
+							Provinsi dan Kota
+						</a>
+					</li>
+				</ul>
+			</li>
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-KA', 'M-KD', 'M-KS', 'M-WF', 'M-WFP')}"
+				th:classappend="${menu == 'config' ? 'active' : ''}">
+				<a class="ui-accordion--title" th:classappend="${menu == 'config' ? 'active' : ''}">
+					Konfigurasi
+				</a>
+				<ul class="ui-accordion--content" th:classappend="${menu == 'config' ? 'active' : ''}">
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-WF')}">
+						<a th:href="@{/layanan/list-workflow}"
+						   th:classappend="${subMenu == 'listWorkflow' ? 'active' : ''}">
+							Workflow</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-KD')}">
+						<a th:href="@{/layanan/list-dokumen}"
+						   th:classappend="${subMenu == 'listDoc' ? 'active' : ''}">
+							Dokumen</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-KA')}">
+						<a th:href="@{/layanan/list-aksi}"
+						   th:classappend="${subMenu == 'listAction' ? 'active' : ''}">
+							Aksi</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-KS')}">
+						<a th:href="@{/layanan/list-status}"
+						   th:classappend="${subMenu == 'listStatus' ? 'active' : ''}">
+							Status</a>
+					</li>
+					<li th:if="${#authentication.getPrincipal().hasAccessMenu('M-WFP')}">
+						<a th:href="@{/layanan/list-workflow-process}"
+						   th:classappend="${subMenu == 'listWorkflowProcess' ? 'active' : ''}">
+							Workflow Process</a>
+					</li>
+				</ul>
+			</li>
+
+			<li th:if="${#authentication.getPrincipal().hasAccessMenu('LOG')}"
+				th:classappend="${menu == 'listLog' ? 'active' : ''}">
+				<ul class="ui-accordion--content" th:classappend="${menu == 'listLog' ? 'active' : ''}">
+					<li>
+						<a th:href="@{/layanan/list-log}"
+						   th:classappend="${subMenu == 'listLog' ? 'active' : ''}">
+							Log History
+						</a>
+					</li>
+				</ul>
+			</li>
+
+			<!-- <li th:if="${#authentication.getPrincipal().hasAccessMenu('I-CLS')}"
+				th:classappend="${menu == 'import-class' ? 'active' : ''}">
+				<a th:href="@{/layanan/import-class}" th:classappend="${menu == 'import-class' ? 'active' : ''}">
+					Import Class Detail
+				</a>
+			</li> -->
+		</div>
+	</ul>
+</aside>
+</html>

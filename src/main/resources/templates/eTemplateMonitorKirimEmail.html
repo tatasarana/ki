@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div><img th:src="|cid:${logo}|" style="display: block;"/><br/><br/></div>
+<p>Yth. Sdr/i <span th:text="${nm}"></span></p>
+<p>Terima kasih telah mengajukan permohonan merek pada Aplikasi Online Direktorat Jenderal Kekayaan Intelektual.</p>
+<p>Permohonan Merek Saudara, dengan Nomor Permohonan: <i><span th:text="${appId}"></span></i>, Merek: <i><span th:text="${brand}"></span></i>, telah masuk ke dalam sistem. 
+Saudara memiliki surat hasil pemeriksaan oleh petugas (surat terlampir).</p>
+<p>Demikian kami sampaikan, terima kasih.</p>
+<p>Hormat Kami,<br/>Petugas Merek<br/><br/><span th:text="${note}"></span></p>
+
+</body>
+</html>

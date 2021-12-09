@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+	<p th:replace="fragment/header :: navbar"/>
+	<div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+	<form class="form-horizontal" th:action="@{/layanan/detail-cek-permohonan-online(no=${form.applicationNo})}" th:object="${form}" th:method="post">
+		<div class="my-wrapper" id="my-wrapper">
+			<div class="my-wrapper--inner">
+				<div class="wrapper-content" id="cek-permohonan-online">
+					<div class="content--top border--bottom padding-content--left-right">
+						<div class="row">
+							<div class="col-md-12">
+								<h3 class="content--title text--bold">
+									<i class="fas fa-file-alt"></i> Cek Permohonan Online - [[${form.applicationNo}]]
+								</h3>
+								<small class="sub-header">Cek Permohonan Online - Detail</small>
+								<small style="float:right;margin-left:2px"><a th:href="@{/layanan/cek-permohonan-online}"><i class="fa fa-arrow-left"></i> Kembali</a></small>
+							</div>
+						</div>
+					</div>
+					<div class="content--center padding-content--left-right">
+						<div class="wrapper--bg">
+							<div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+								<button data-dismiss="alert" class="close close-sm" type="button">
+									<i class="icon-remove"></i>
+								</button>
+								<p>[[${errorMessage}]]</p>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label">Nomor Permohonan</label>
+										<div class="col-sm-7 col-form-label text-left" th:text="*{applicationNo}"></div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label">Asal Permohonan</label>
+										<div class="col-sm-7 col-form-label text-left" th:text="*{txReception.mFileSequence.desc}"></div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label">Tipe Permohonan</label>
+										<div class="col-sm-7 col-form-label text-left" th:text="*{txReception.mFileType.desc}"></div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label">Jenis Permohonan</label>
+										<div class="col-sm-7 col-form-label text-left" th:text="*{txReception.mFileTypeDetail == null ? '-' : txReception.mFileTypeDetail.desc }"></div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label">Tanggal Pengajuan</label>
+										<div class="col-sm-7 col-form-label text-left" th:text="*{#dates.format(filingDate, 'dd/MM/yyyy HH:mm:ss')}"></div>
+									</div>
+									<div class="form-group" style="border-top: 1px solid #d6d6d6; padding-top: 15px;">
+										<label class="col-sm-5 col-form-label">Status</label>
+										<div class="col-sm-7 col-form-label text-left" th:text="*{mStatus.name}"></div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label">Nomor Transaksi</label>
+										<div class="col-sm-7 col-form-label text-left" th:text="*{txReception.eFilingNo == null ? '-' : txReception.eFilingNo}"></div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label">Kode Billing</label>
+										<div class="col-sm-7 col-form-label text-left" th:text="*{txReception.bankCode}"></div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label">Jumlah Kelas</label>
+										<div class="col-sm-7 col-form-label text-left" th:text="*{txReception.totalClassTemp}"></div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label">Jumlah Pembayaran</label>
+										<div class="col-sm-7 col-form-label text-left" th:text="*{'Rp ' + txReception.totalPaymentTemp}"></div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-5 col-form-label">Tanggal Pembayaran</label>
+										<div class="col-sm-7 col-form-label text-left" th:text="*{#dates.format(txReception.paymentDate, 'dd/MM/yyyy HH:mm:ss')}"></div>
+									</div>
+									<div class="form-group" style="border-top: 1px solid #d6d6d6; padding-top: 15px;">
+										<label class="col-sm-5 col-form-label">Username</label>
+										<div class="col-sm-7 col-form-label text-left" th:text="*{createdBy.username}"></div>
+									</div>
+								</div>
+							</div>
+
+							<hr/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	$(document).ready(function(){
+        $('.datepicker2').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            todayBtn: 'linked',
+            todayHighlight: true,
+            endDate:'today',
+            orientation: "bottom"
+        });
+		$('form').validate({
+			messages:{
+				'paymentDateTemp':{
+					required:/*[[#{field.error.required('tanggal pembayaran')}]]*/''
+				},
+				'bankCode':{
+					required:/*[[#{field.error.required('kode billing')}]]*/''
+				}
+			},
+			highlight: function(element) {
+				$(element).closest('.form-group').addClass('has-error');
+			},
+			unhighlight: function(element) {
+				$(element).closest('.form-group').removeClass('has-error');
+			},
+			errorElement: 'span',
+			errorClass: 'help-block',
+			errorPlacement: function(error, element) {
+				if(element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else {
+					error.insertAfter(element);
+				}
+			}
+		});
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="6" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5074e2f0-89f8-4eb6-b3ef-03243fdf7c9f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+A.APPLICATION_ID,
+B.TM_BRAND_DESC_CHAR,
+B.TM_BRAND_TRANSLATION,
+B.TM_TRANSLATION_FR,
+B.TM_TRANSLATION_SP,
+COALESCE(B.TM_TYPE_3D, 0) AS TM_TYPE_3D,
+COALESCE(B.TM_TYPE_SOUND, 0) AS TM_TYPE_SOUND,
+COALESCE(B.TM_TYPE_COLLECTIVE, 0) AS TM_TYPE_COLLECTIVE,
+COALESCE(B.TM_BRAND_NAME,' ') AS TM_BRAND_NAME,
+COALESCE(B.TM_BRAND_DESCRIPTION,' ') AS TM_BRAND_DESCRIPTION,
+COALESCE(B.TM_BRAND_DISCLAIMER,' ') AS TM_BRAND_DISCLAIMER
+FROM TX_TM_GENERAL A
+LEFT JOIN TX_TM_BRAND B ON A.APPLICATION_ID = B.APPLICATION_ID
+WHERE A.APPLICATION_ID = $P{applicationId}]]>
+	</queryString>
+	<field name="TM_BRAND_DESC_CHAR" class="java.lang.String"/>
+	<field name="TM_BRAND_TRANSLATION" class="java.lang.String"/>
+	<field name="TM_TRANSLATION_FR" class="java.lang.String"/>
+	<field name="TM_TRANSLATION_SP" class="java.lang.String"/>
+	<field name="TM_TYPE_3D" class="java.lang.Integer"/>
+	<field name="TM_TYPE_SOUND" class="java.lang.Integer"/>
+	<field name="TM_TYPE_COLLECTIVE" class="java.lang.Integer"/>
+	<field name="TM_BRAND_NAME" class="java.lang.String"/>
+	<field name="TM_BRAND_DESCRIPTION" class="java.lang.String"/>
+	<field name="TM_BRAND_DISCLAIMER" class="java.lang.String"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="100" y="25" width="225" height="224" uuid="8016c2f4-8165-4cb1-829b-94e4b34c8dda">
+					<printWhenExpression><![CDATA[$P{approve}!=null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="802" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="440" y="0" width="70" height="15" uuid="6d69f93d-14c3-4b22-a274-da79a9f1098a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[MM2(E), page 6]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="15" y="783" width="100" height="17" uuid="5a225c0e-afa2-4ac2-a95a-240f9c5a0952"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="81" y="336" width="10" height="10" backcolor="#808080" uuid="a792ddec-be42-433b-afa0-2cad6edabf1c"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TM_BRAND_DESC_CHAR}==null?"":"X")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="50" y="330" width="18" height="20" forecolor="#003366" uuid="754f3900-912d-4a5f-834b-95b5c92daec0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(a)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="439" width="18" height="20" forecolor="#003366" uuid="d22a2709-ed8e-4f4b-84e4-2ea033d8ded2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(b)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="60" width="330" height="20" forecolor="#FF0000" uuid="48b8bdbf-f741-4954-b950-d402e2ab4b48"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[8. COLOR(S) CLAIMED]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="300" width="330" height="20" forecolor="#FF0000" uuid="bf8cd864-de3f-4e25-85be-3b916415074a"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[9. MISCELLANEOUS INDICATIONS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="101" y="330" width="399" height="50" forecolor="#003366" uuid="b5caa3ae-8951-4b3e-bb95-6c2879e44287"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>Transliteration of the mark</b> (this information is compulsory where the mark consists of or contains matter in characters other than Latin characters, or   numerals other than Arabic or Roman numerals):"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="440" width="410" height="30" forecolor="#003366" uuid="63fc2feb-f545-438f-874c-ae3e4ce7df06"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>Transliteration of the mark</b> (as may be required by certain designated Contracting Parties;  <b>do not</b> check the box in item (c) if you provide a translation in this item):"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="70" y="480" width="22" height="18" uuid="25f28985-6a6d-4bf2-b211-1833c458b8f9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(i)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="480" width="79" height="20" uuid="20024780-459b-44c6-a66d-1a4f869f6e03"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[into English:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="510" width="79" height="20" uuid="2b8ba00f-7d8c-4ff1-aff1-12c184412ce7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[into French:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="98" y="540" width="80" height="20" uuid="7970f0f5-b65a-489f-b1bc-35ac825cfd1b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[into Spanish:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="510" width="22" height="18" uuid="60fe2839-9a94-4116-8125-fe2b13d3e9ab"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(ii)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="540" width="22" height="18" uuid="2e663a76-7646-4daa-ae53-635acc6b2eb9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(iii)]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="79" y="575" width="10" height="10" backcolor="#808080" uuid="79bf56a6-e197-4514-b7a5-7cd95075a2f5"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TM_BRAND_TRANSLATION} == null ? "X" : "")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="48" y="570" width="18" height="20" forecolor="#003366" uuid="0bfe273a-e8fa-4900-8022-09c525952e56"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(c)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="48" y="610" width="18" height="20" forecolor="#003366" uuid="1fc2dd79-da4e-4935-8a73-8e90d4ef0ffb"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(d)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="99" y="570" width="407" height="30" forecolor="#003366" uuid="4db4c577-6a53-48f2-9888-8e926e9a83db"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>The words contained in the mark have no meaning</b> (and therefore cannot be translated;  <b>do not</b> check this box if you have provided a translation in item (b))."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="100" y="610" width="410" height="19" forecolor="#003366" uuid="d665bc41-45a5-4139-b22e-f7ee2e1281a7"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Where applicable, check the relevant box(es) below:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="81" y="644" width="10" height="10" backcolor="#808080" uuid="cb9fa03f-9e36-4e83-b885-ccd54903a4d8"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_TYPE_3D} > 0 ? "X" : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="81" y="674" width="10" height="10" backcolor="#808080" uuid="551ccf0a-69f0-4066-b30f-7a38da30d33d"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_TYPE_SOUND} > 0 ? "X" : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="81" y="704" width="10" height="10" backcolor="#808080" uuid="85b31d50-04a1-438a-ac23-3a011cf89430"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_TYPE_COLLECTIVE} > 0 ? "X" : ""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="99" y="640" width="180" height="18" uuid="b36599f3-69e5-4035-8ea5-423a13c3fee0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Three-dimensional mark]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="101" y="670" width="178" height="18" uuid="e813bccf-c21a-4bd5-a75d-01fc900462f9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Sound mark]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="700" width="179" height="18" uuid="2464b4b2-6be8-4c31-b44e-e9219b33bdf4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Collective mark, certification mark, or guarantee mark]]></text>
+			</staticText>
+			<subreport isUsingCache="false" overflowType="Stretch">
+				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="50" y="84" width="460" height="215" isRemoveLineWhenBlank="true" uuid="29cd8b11-0c20-451b-906f-953eb74422fd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"6-2.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="101" y="380" width="409" height="50" uuid="189c17d0-57e6-44e2-8458-d820b7689226"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($F{TM_BRAND_DESC_CHAR}==null?"":$F{TM_BRAND_DESC_CHAR})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="480" width="331" height="20" uuid="1aa84f06-8cb6-4405-a96b-fb5469f9431f"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($F{TM_BRAND_TRANSLATION}==null?"":$F{TM_BRAND_TRANSLATION})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="179" y="510" width="332" height="20" uuid="1b96491d-fdba-4221-9085-452fb78c9086"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($F{TM_TRANSLATION_FR}==null?"":$F{TM_TRANSLATION_FR})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="179" y="540" width="332" height="20" uuid="4219b4db-033b-43d0-8db3-dba7d60b4d87"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[($F{TM_TRANSLATION_SP}==null?"":$F{TM_TRANSLATION_SP})]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

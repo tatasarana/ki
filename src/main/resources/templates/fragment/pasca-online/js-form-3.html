@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="kuasa" th:remove="tag">
+	<script type="text/javascript" language="javascript" th:inline="javascript">
+	/*<![CDATA[*/
+		var csrf = /*[[${_csrf.token}]]*/'';
+		var header = "X-CSRF-TOKEN";
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, csrf);
+        });
+        
+        var tableKuasa = $('#tableKuasa');
+        var dataTableKuasa = null;
+        
+        $(document).ready(function () {
+        	var searchByArr = [];
+            var keywordArr = [];
+
+            searchByArr.push('no');
+            keywordArr.push($('#searchReprsNo').val());
+            searchByArr.push('name');
+            keywordArr.push($('#searchReprsName').val());
+
+            tableKuasa.data('searchByArr', searchByArr);
+            tableKuasa.data('keywordArr', keywordArr);
+            tableKuasa.data('orderBy', 'no');
+
+            dataTableKuasa = $('#tableKuasa').DataTable({
+                ajax: {
+                    data: function (d) {
+                        d.searchByArr = tableKuasa.data('searchByArr');
+                        d.keywordArr = tableKuasa.data('keywordArr');
+                        d.orderBy = tableKuasa.data('orderBy');
+                    },
+                    type: 'GET',
+                    url: /*[[@{/layanan/cari-kuasa-pasca-online}]]*/''
+                },
+                language: {
+                    url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+                }
+            });
+	        dataTableKuasa.on('error.dt',function(e,settings,techNote,message){
+		        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	        });
+            
+	        $('#btnModalKuasa').click(function () {
+	        	$('#searchReprsNo').val(null);
+	        	$('#searchReprsName').val(null);
+	        	$('#btnSearchReprs').click();
+	        });
+	        
+            $('#btnSearchReprs').click(function () {
+            	var searchByArr = [];
+                var keywordArr = [];
+
+                searchByArr.push('no');
+                keywordArr.push($('#searchReprsNo').val());
+                searchByArr.push('name');
+                keywordArr.push($('#searchReprsName').val());
+
+                tableKuasa.data('searchByArr', searchByArr);
+                tableKuasa.data('keywordArr', keywordArr);
+                dataTableKuasa.ajax.reload();
+            });
+            
+            
+            $('body').on('click', '.btn-kuasa', function() {
+    			var param=$(this).attr('paramId');
+    			$.ajax({
+    				beforeSend: function () {
+    					showLoading();
+    				},
+    				complete:function(){
+    					hideLoading();
+    				},
+    				url: /*[[@{/layanan/choose-kuasa-pasca-online}]]*/'',
+    				datatype: 'jsonp',
+    				data: {
+    					target: param
+    				},
+    				success: function (result) {
+    					$('#reprsId').val(result.id);
+   						$('#reprsName').val(result.name);
+   						$('#reprsNo').val(result.no);
+   						$('#reprsOffice').val(result.office);
+   						if (result.mCountry != null) {
+   							$('#reprsCountry').val(result.mCountry.name);
+   						}
+   						if (result.mProvince != null) {
+   							$('#reprsProvince').val(result.mProvince.name);
+   						}
+   						if (result.mCity != null) {
+   							$('#reprsCity').val(result.mCity.name);
+   						}
+   						$('#reprsAddress').val(result.address);
+   						$('#reprsZipCode').val(result.zipCode);
+   						$('#reprsPhone').val(result.phone);
+   						$('#reprsMail').val(result.email);
+    				},
+				    error: function (xhr, status) {
+					    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+				    }
+    			});
+    		});
+    			
+   			$('#btnHapusKuasa').click(function () {
+   	        	$('.form-control.kuasa').val(null); //hanya dihapus di UI
+   	        });
+   			
+   			$('#btnSaveFormKuasa').on('click', function (e) {
+   				if ($('#mFileType').is(':disabled')) {
+                   	e.preventDefault();
+                   	
+                   	// var postId = /*[[${dataGeneral.id}]]*/'';
+					var postId = $('#noIPT').val();
+                   	var formData = {
+                   		id: /*[[${dataKuasa.id}]]*/'',
+                   		txPostReception: { id: postId },
+                   		mRepresentative: { id: $('#reprsId').val() }
+                   	};
+                   	
+                   	$.ajax({
+	                    type: 'POST',
+	                    contentType: "application/json",
+	                    url: /*[[@{/layanan/save-kuasa-pasca-online}]]*/'',
+	                    data: JSON.stringify(formData),
+	                    dataType: 'json',
+	                    beforeSend: function () {
+	                     	console.log(JSON.stringify(formData));
+		                    showLoading();
+	                    },
+	                    complete: function () {
+		                    hideLoading();
+	                    },
+	                    success: function (data) {
+		                    $('#dokumen').trigger('click');
+	                    },
+	                    error: function (xhr, status) {
+		                    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	                    }
+                    });
+               	} else {
+               		$('#general').trigger('click');
+               		swal("Informasi", "Silakan melengkapi data General dan klik Simpan.", "info");
+               	}
+            });
+        });        
+        /*]]>*/
+	</script>
+</div>
+</html>

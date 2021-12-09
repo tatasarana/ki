@@ -1,0 +1,296 @@
+<div class="row display--none" js-direction="step-form-place" js-id="8" xmlns:th="http://www.w3.org/1999/xhtml">
+    <!--Modal-->
+    <div class="row col-md-12" style="margin-bottom: 15px">
+        <div class="col-md-4">
+            <h3>Ringkasan Pengisian</h3>
+        </div>
+        <div class="col-md-8">
+            <div class="pull-right">
+                <button type="button" class="btn btn-warning" id="btnSelesai" data-toggle="modal"
+                        data-target="#previewModal">
+                    Selesai
+                </button>
+                <div class="modal fade" id="previewModal" role="dialog">
+                    <div class="modal-dialog" style="height: 40%">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Konfirmasi</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Apakah Pengisian Data Sudah Selesai ?</p>
+                                <br/>
+                                <p>Pesan :</p>
+                                <div style="outline: 1px solid #00FF00; padding: 15px" id="brdr">
+                                    <h4 id="isError"></h4>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i
+                                        class="fas fa-times"></i> Batal
+                                </button>
+                                <button type="submit" class="btn btn-success" data-toggle="modal"
+                                        data-target="#myModal2" id="yaModal"><i class="fas fa-check"></i> Ya
+                                </button>
+                                <div class="modal fade" id="myModal" role="dialog"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Form-->
+    <div class="row col-md-12">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-responsive">
+                    <tbody>
+                    <tr>
+                        <td style="width: 20%;">
+                            <label>No Permohonan</label>
+                        </td>
+                        <td>
+                            <span th:text="${dataLoketPenerimaan.applicationNo}" id="noPermohonan"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Asal Permohonan</label>
+                        </td>
+                        <td>
+                            <span th:text="${dataLoketPenerimaan.mFileSequence.desc}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Tipe Permohonan</label>
+                        </td>
+                        <td>
+                            <span th:text="${dataLoketPenerimaan.mFileType.desc}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Jenis Permohonan</label>
+                        </td>
+                        <td>
+                            <span th:text="${dataLoketPenerimaan.mFileTypeDetail.desc}"
+                                  id="form8JenisPermohonan"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Tanggal Pengajuan</label>
+                        </td>
+                        <td>
+                            <span th:text="*{#dates.format(dataLoketPenerimaan.applicationDateTemp, 'dd/MM/yyyy HH:mm:ss')}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Tanggal Penerimaan</label>
+                        </td>
+                        <td>
+                            <span th:text="*{#dates.format(dataGeneral.filingDate, 'dd/MM/yyyy HH:mm:ss')}"
+                                  id="form8TanggalPenerimaan"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Status</label>
+                        </td>
+                        <td>
+                            <span th:text="*{dataGeneral.mStatus.name}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Dasar Hukum</label>
+                        </td>
+                        <td>
+                            <span th:text="${dataGeneral.mLaw.desc}" id="form8DasarHukum"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Tipe Merek</label>
+                        </td>
+                        <td>
+                            <span th:text="${txTmBrand.mBrandType.name}" id="form8TipeMerek"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Merek</label>
+                        </td>
+                        <td>
+                            <span th:text="${txTmBrand.name}" id="form8NamaMerek"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Label Merek</label>
+                        </td>
+                        <td>
+                            <span><img th:src="${imgMerek}" id="form8Preview"
+                                       class="img-fluid img-thumbnail"
+                                       alt="Responsive image"
+                                       style="max-width: 20%;"/></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Deskripsi Merek</label>
+                        </td>
+                        <td>
+                            <span th:text="${txTmBrand.description}" id="form8DeskripsiMerek"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Warna Merek</label>
+                        </td>
+                        <td>
+                            <span th:text="${txTmBrand.color}" id="form8WarnaMerek"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Terjemahan Bahasa Asing</label>
+                        </td>
+                        <td>
+                            <span th:text="${txTmBrand.translation}" id="form8BahasaAsing"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Terjemahan Huruf Latin</label>
+                        </td>
+                        <td>
+                            <span th:text="${txTmBrand.descChar}" id="form8HurufLatin"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Disclaimer</label>
+                        </td>
+                        <td>
+                            <span th:text="${txTmBrand.disclaimer}" id="form8Disclaimer"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Kelas</label>
+                        </td>
+                        <td>
+                            <table class="table table-striped table-bordered table-responsive" id="form8TableKelas">
+                                <thead>
+                                <tr>
+                                    <td>Kelas</td>
+                                    <td>Uraian Barang / Jasa</td>
+                                    <td>Uraian Barang / Jasa (E)</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="list : ${listTxTmClass}">
+                                    <td th:text="${list.key}"></td>
+                                    <td th:text="${list.value[0]}"></td>
+                                    <td th:text="${list.value[1]}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Pemohon</label>
+                        </td>
+                        <td>
+                            <table class="table table-striped table-bordered table-responsive" id="form8TablePemohon">
+                                <thead>
+                                <tr>
+                                    <td>Nama Pemohon</td>
+                                    <td>Negara</td>
+                                    <td>Alamat</td>
+                                    <td>Telepon</td>
+                                    <td>Email</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td th:text="${pemohon.name}"></td>
+                                    <td th:text="${pemohon.mCountry.name}"></td>
+                                    <td th:text="${pemohon.address}"></td>
+                                    <td th:text="${pemohon.phone}"></td>
+                                    <td th:text="${pemohon.email}"></td>
+                                </tr>
+                                <tr th:each="child : ${pemohon.txTmOwnerDetails}">
+                                    <td th:text="${child.name}"></td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Kuasa</label>
+                        </td>
+                        <td>
+                            <table class="table table-striped table-bordered table-responsive" id="form8TableKuasa">
+                                <thead>
+                                <tr>
+                                    <td>Nomor Konsultan</td>
+                                    <td>Nama Konsultan</td>
+                                    <td>Alamat</td>
+                                    <td>Telepon</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td th:text="${txTmReprs.mRepresentative.no}"></td>
+                                    <td th:text="${txTmReprs.mRepresentative.name}"></td>
+                                    <td th:text="${txTmReprs.mRepresentative.address}"></td>
+                                    <td th:text="${txTmReprs.mRepresentative.phone}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Prioritas</label>
+                        </td>
+                        <td>
+                            <table class="table table-striped table-bordered table-responsive" id="form8TablePrioritas">
+                                <thead>
+                                <tr>
+                                    <td>No Prioritas</td>
+                                    <td>Tanggal Prioritas</td>
+                                    <td>Negara/Kantor Merek</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="prior : ${dataGeneral.txTmPriorList}">
+                                    <td th:text="${prior.no}"></td>
+                                    <td th:text="*{#dates.format(prior.priorDate, 'dd/MM/yyyy')}"></td>
+                                    <td th:text="${prior.mCountry.name}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

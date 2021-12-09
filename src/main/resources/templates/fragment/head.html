@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:fragment="head">
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>Direktorat Jenderal Kekayaan Intelektual</title>
+	<base th:href="@{/}"/>
+	<link rel="shortcut icon" th:href="@{/img/favicon.ico}" type="image/vnd.microsoft.icon" />
+	<link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+	<link rel="stylesheet" th:href="@{/css/bootstrap-theme.css}"/>
+	<link rel="stylesheet" th:href="@{/css/bootstrap-datepicker3.css}"/>
+	<link rel="stylesheet" th:href="@{/css/adminlte.css}"/>
+	<link rel="stylesheet" th:href="@{/css/adminlte-skins.css}"/>
+	<link rel="stylesheet" th:href="@{/css/fontawesome.css}"/>
+	<link rel="stylesheet" th:href="@{/css/ionicons.css}"/>
+	<link rel="stylesheet" th:href="@{/css/jquery.datatables.css}"/>
+	<link rel="stylesheet" th:href="@{/css/buttons.datatables.css}"/>
+	<link rel="stylesheet" th:href="@{/css/responsive.datatables.css}"/>
+	<link rel="stylesheet" th:href="@{/css/select.datatables.css}"/>
+	<link rel="stylesheet" th:href="@{/css/jquery-ui.css}"/>
+	<link rel="stylesheet" th:href="@{/css/main.css}"/>
+	<!--[if lt IE 9]>
+	<script th:src="@{/js/html5shiv.min.js}"></script>
+	<script th:src="@{/js/respond.min.js}"></script>
+	<![endif]-->
+	<style>
+		table.dataTable.no-footer {
+			border-bottom: none;
+		}
+		<!--.custom-combobox {-->
+    		<!--position: relative;-->
+    		<!--display: inline-block;-->
+  		<!--}-->
+  		.custom-combobox-toggle {
+    		position: absolute;
+    		top: 0;
+    		bottom: 0;
+    		margin-left: -1px;
+    		padding: 0;
+  		}
+  		.custom-combobox-input {
+    		margin: 0;
+    		padding: 5px 10px;
+    		width: -webkit-calc(97% - 10px);
+			width: -moz-calc(97% - 10px);
+    		-webkit-box-sizing: border-box;
+    		-moz-box-sizing: border-box;
+    		-o-box-sizing: border-box;
+    		-ms-box-sizing: border-box;
+    		box-sizing: border-box;
+  		}
+	</style>
+</head>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+
+<div th:fragment="general" th:remove="tag">
+    <script type="text/javascript" language="javascript" th:inline="javascript">
+		/*<![CDATA[*/
+		var csrf = /*[[${_csrf.token}]]*/'';
+		var header = "X-CSRF-TOKEN";
+		$(document).ajaxSend(function (e, xhr, options) {
+			xhr.setRequestHeader(header, csrf);
+		});
+
+		var isNew = /*[[${isNew}]]*/'';
+		var isValidBilling = !isNew;
+		var tableReferensi = $('#tableReferensi');
+		var dataTableReferensi = null;
+		var statusPaid;
+		var sFlag='';
+		var applicationId = null;
+		var tablePostReceptionDetail = $('#tblPostReceptionDetail');
+		var mFileTypePancing ;
+		
+		$(document).ready(function () {
+			$("#formGeneral").validate({
+				rules: {
+					'billingCode' : {
+						digits: '#codeBilling'
+					}
+				},
+				messages: {
+					'mFileType.id': {
+						required: /*[[#{field.error.required('Tipe Permohonan')}]]*/''
+					},
+					'billingCode': {
+						required: /*[[#{field.error.required('Kode Billing')}]]*/''
+						,digits: /*[[#{field.error.not.numeric('Kode Billing')}]]*/''
+					}
+				},
+				highlight: function (element) {
+					$(element).closest('.form-group').addClass('has-error');
+				},
+				unhighlight: function (element) {
+					$(element).closest('.form-group').removeClass('has-error');
+				},
+				errorElement: 'span',
+				errorClass: 'help-block',
+				errorPlacement: function (error, element) {
+					if (element.parent('.input-group').length) {
+						error.insertAfter(element.parent());
+					} else {
+						error.insertAfter(element);
+					}
+				}
+			});
+
+			var searchByArr = [];
+			var keywordArr = [];
+
+			tableReferensi.data('searchByArr', searchByArr);
+			tableReferensi.data('keywordArr', keywordArr);
+			tableReferensi.data('orderBy', 'applicationNo');
+
+			dataTableReferensi = $('#tableReferensi').DataTable({
+				createdRow: function( row, data, dataIndex ) {
+					if ($('#ref-'+data[3]).length) {
+						dataTableReferensi.rows($(row)).remove();
+					}
+				},
+				columnDefs: [
+					{
+						'targets': -1,
+						'searchable': false,
+						'data': null,
+						'className': 'dt-body-center',
+						'render': function (data, type, full, meta) {
+							return '<button type="button" class="btn btn-primary btn-referensi" data-dismiss="modal" paramId=' + data[3] + '>Pilih</button>';
+						}
+					}
+				],
+				ajax: {
+					data: function (d) {
+						d.searchByArr = tableReferensi.data('searchByArr');
+						d.keywordArr = tableReferensi.data('keywordArr');
+						d.orderBy = tableReferensi.data('orderBy');
+					},
+					dataSrc: function (result) {
+						if (!result.data.length && tableReferensi.data('searchByArr').length)
+							swal("Informasi", "Data tidak ditemukan.", "info");
+
+						return result.data;
+					},
+					type: 'GET',
+					url: /*[[@{/layanan/cari-referensi-pasca-online}]]*/''
+				},
+				language: {
+					url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+				}
+			});
+			dataTableReferensi.on('error.dt',function(e,settings,techNote,message){
+				swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+			});
+
+			$('#btnModalReferensi').click(function () {
+				$('#searchAppNo').val(null);
+				$('#searchRegNo').val(null);
+				dataTableReferensi.clear().draw();
+			});
+
+			$('#btnSearchReferensi').click(function () {
+				if($('#searchAppNo').val().trim().length == 0 && $('#searchRegNo').val().trim().length == 0){
+					dataTableReferensi.clear().draw();
+				} else {
+					var searchByArr = [];
+					var keywordArr = [];
+
+					searchByArr.push('applicationNo');
+					searchByArr.push('txRegistration.no');
+					keywordArr.push($('#searchAppNo').val());
+					keywordArr.push($('#searchRegNo').val());
+
+					tableReferensi.data('searchByArr', searchByArr);
+					tableReferensi.data('keywordArr', keywordArr);
+					dataTableReferensi.ajax.reload();
+				}
+			});
+
+			$('#billingCode').keypress(function(e) {
+				if (e.which == 13) {
+					$('#btnCheckBillingCode').click();
+				}
+			});
+
+			$('#billingCode').on('change', function (e) {
+				isValidBilling = false;
+			});
+
+			$('#btnCheckBillingCode').on('click', function (e) {
+				var isValidForm = $("#formGeneral").valid();
+				if (isValidForm) {
+					e.preventDefault();
+					var billingCode = $('#billingCode').val();
+
+					if(billingCode.trim().length > 0){
+						$.ajax({
+							type: 'POST',
+							url: /*[[@{/layanan/check-billing-pasca-online}]]*/'',
+							datatype: 'jsonp',
+							data:  {
+								billingCode: billingCode
+							},
+							beforeSend: function () {
+								mFileTypePancing =  $('#mFileType').val()
+								showLoading();
+							},
+							complete:function(){
+								hideLoading();
+							},
+							success: function (result) {
+								$('#mFileseq').val(result.mFileSequence);
+								//$('#mFileType').val(mFileTypePancing) ;
+								if(mFileTypePancing == '14acf099-f0bc-40d1-9f9b-2063d23d7e1d')
+								{
+	                                $('#mFileType').val(mFileTypePancing) ;
+								}else{
+								    $('#mFileType').val(result.mFileType);
+								}
+								$('#mFileTypeDetail').val(result.mFileTypeDetail);
+								$('#paymentDate').val(result.paymentDate);
+								$('#totalPayment').val(result.totalPayment);
+								$('#totalPaymentTemp').val(result.totalPaymentTemp);
+								$('#totalClassTemp').val(result.totalClass==undefined ? '0' : result.totalClass);
+
+								$('#ownerName').val(result.ownerName);
+								$('#ownerPhone').val(result.ownerPhone);
+								$('#ownerEmail').val(result.ownerEmail);
+								$('#ownerNationality').val(result.ownerCountry);
+								$('#ownerCountry').val(result.ownerCountry);
+								$('#ownerAddress').val(result.ownerAddress);
+
+								$('#unitTemp').val(result.unit);
+
+								// for satuan value in label
+								$('#label-unit').text(result.unit);
+
+								if (result.transactionNo != null || result.transactionNo != 'null') {
+									$('#transactionNoTemp').val(result.transactionNo);
+								} else {
+									$('#transactionNoTemp').val('');
+								}
+
+
+								if (result.ownerCountry == 'ID') {
+									$('.cDisable').attr("disabled", false);
+									$('#ownerProvince').val(result.ownerProvince);
+									getCity(result.ownerProvince, result.ownerCity);
+								}
+
+								if (result.statusError != null) {
+									isValidBilling = false;
+									swal("Informasi", result.statusError, "info");
+								} else {
+									isValidBilling = true;
+								}
+							},
+							error: function (xhr, status) {
+								swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+							}
+						});
+					}
+				}
+			});
+
+
+			$('#btnHapusTxPostReceptionDetail').click(function () {
+				$("#tblPostReceptionDetail tbody").find('input[name="record"]').each(function () {
+					if ($(this).is(":checked")) {
+						$(this).parents("tr").remove();
+					}
+				});
+			});
+
+
+			$('body').on('click', '.btn-referensi', function() {
+				var param=$(this).attr('paramId');
+				$.ajax({
+					url: /*[[@{/layanan/choose-referensi-pasca-online}]]*/'',
+					datatype: 'json',
+					data: {
+						target: param
+					},
+					beforeSend: function () {
+						showLoading();
+					},
+					complete:function(){
+						hideLoading();
+					},
+					success: function (result) {
+						/* $('#applicationId').val(result.applicationId);
+                        $('#applicationNo').val(result.applicationNo);
+                      $('#registrationNo').val(result.registrationNo);
+                     $('#brandName').val(result.brandName);
+
+                     $('#applicationNo').closest('.form-group').removeClass('has-error');
+                     $('#applicationNo').next().remove(); */
+						var appId = result.applicationId;
+						var checkbox = document.createElement('input');
+						checkbox.type = 'checkbox';
+						checkbox.name = 'record';
+						var rowId = "ref-" + param;
+						var markup = "<tr id='" + rowId + "' appId='" + appId + "'><td align='center'><span></span></td> <td>" + result.applicationNo + "</td><td>"
+								+ result.brandName + "</td><td>" + result.registrationNo + "</td></tr>";
+						$("#tblPostReceptionDetail tbody").append(markup);
+						$("#tblPostReceptionDetail tbody tr td span").html('');
+						$("#tblPostReceptionDetail tbody tr td span").append(checkbox);
+					},
+					error: function (xhr, status) {
+						swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+					}
+				});
+			});
+
+
+			$('#mFileType').on('change', function (e) {
+				$('#billingCode').closest('.form-group').removeClass('has-error');
+				$('#billingCode').next().remove();
+
+				$('#mFileseq').val('');
+				$('#mFileTypeDetail').val('');
+				$('#paymentDate').val('');
+				$('#totalPayment').val('');
+				$('#totalPaymentTemp').val('');
+				$('#totalClassTemp').val('');
+				$('#billingCode').val('');
+
+				statusPaid =  $("option:selected", this).attr('flagPaid');
+				if(statusPaid == 'N') {
+					$('#billingCode').prop('disabled', true);
+					$('#btnCheckBillingCode').prop('disabled', true);
+
+					$('input[name="billingCode"]').rules('remove', 'required');
+					isValidBilling = true;
+				} else {
+					$('#billingCode').prop('disabled', false);
+					$('#btnCheckBillingCode').prop('disabled', false);
+
+					$('input[name="billingCode"]').rules('add', { required: true });
+					isValidBilling = false;
+				}
+
+				$('.optDocType').attr('hidden',true);
+				$('.'+this.value).attr('hidden',false);
+			});
+
+			$('#btnSaveFormGeneral').on('click', function (e) {
+				if ($('#mFileType').is(':disabled')) {
+					if ($('#tblPostReceptionDetail tr').length <= 1) {
+						swal("Error", "Nomor Permohonan pada tabel Detail tidak boleh kosong", "error");
+					} else {
+						var applicationIdList = [];
+						$("#tblPostReceptionDetail tbody tr").each(function (i) {
+							applicationIdList.push({ applicationId : $(this).attr('appId') });
+						});
+
+						var formData = {
+							id: /*[[${dataGeneral.id}]]*/'',
+							applicationIdListTemp : applicationIdList
+						};
+						
+						$.ajax({
+							type: 'POST',
+							contentType: "application/json",
+							url: /*[[@{/layanan/save-general-pasca-online_v2}]]*/'',
+							data: JSON.stringify(formData),
+							dataType: 'json',
+							beforeSend: function () {
+								showLoading();
+							},
+							complete:function(){
+								hideLoading();
+							},
+							success: function (data) {
+								if(data.errorMessage!=null) {
+									swal("Error", data.errorMessage,  "error");
+								} else {
+									$('#pemohon').trigger('click');
+									console.log(data);
+								}
+							},
+							error: function (xhr, status) {
+								swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.Error.no:6395682673", "error");
+							}
+						});
+					}					
+				} else {
+					var isValidForm = $("#formGeneral").valid();
+					if (isValidForm) {
+						var noGeneral = [];
+						var fileType = $('#mFileType').val();
+
+						$('#tblPostReceptionDetail > tbody > tr').each(function() {
+							if(($(this).find('td:nth-child(4)').html() == '') || ($(this).find('td:nth-child(4)').html() == undefined)) {
+								noGeneral.push($(this).find('td:nth-child(2)').html());
+							} else {
+								noGeneral;
+							}
+						});
+
+						var totalRowCount = 0;
+						var rows = $('#tblPostReceptionDetail').find('> tbody > tr');
+						var countData = rows.find('> td:empty:nth-child(4)');
+						for (var i = 0; i < countData.length; i++) {
+							totalRowCount++;
+						}
+
+						if (isValidBilling) {
+							if($('#tblPostReceptionDetail tr').length <= 1) {
+								swal("Error", "Nomor Permohonan pada tabel Detail tidak boleh kosong", "error");
+								//return 0;
+							} else if((fileType == 'PENCATATAN_PERJANJIAN_LISENSI'||fileType == 'PERMOHONAN_PETIKAN_RESMI'||fileType == 'PENCATATAN_PENGHAPUSAN_PENDAFTARAN') && totalRowCount > 0) {
+								swal("Informasi", "Nomor Permohonan '" + noGeneral + "' belum mendapatkan nomor registrasi, sehingga tidak dapat melakukan transaksi dengan tipe ini.", "info");
+							} else {
+								if(isNew) {
+									swal("Konfirmasi", "Apakah data yang Anda isi sudah benar? Tipe permohonan yang sudah disimpan tidak dapat diubah lagi.", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+											.then((value) => {
+										if(value) {
+											e.preventDefault();
+
+											var applicationIdList = [];
+											$("#tblPostReceptionDetail tbody tr").each(function (i) {
+												applicationIdList.push({ applicationId : $(this).attr('appId') });
+											});
+
+											var formData = {
+												id: /*[[${dataGeneral.id}]]*/'',
+												billingCode: $('#billingCode').val(),
+												postDateTemp: $('#postDate').val(),
+												paymentDateTemp: $('#paymentDate').val(),
+												totalPaymentTemp: $('#totalPaymentTemp').val(),
+												txTmGeneral: { id: $('#applicationId').val() },
+												mFileSequence: { id: $('#mFileseq').val() },
+												mFileType: { id: $('#mFileType').val() },
+												mFileTypeDetail: { id: $('#mFileTypeDetail').val() },
+												totalClassTemp: $('#totalClassTemp').val(),
+												unitTemp: $('#unitTemp').val(),
+												transactionNoTemp: $('#transactionNoTemp').val(),
+												applicationIdListTemp : applicationIdList
+											};
+
+											$.ajax({
+												type: 'POST',
+												contentType: "application/json",
+												url: /*[[@{/layanan/save-general-pasca-online}]]*/'',
+												data: JSON.stringify(formData),
+												dataType: 'json',
+												beforeSend: function () {
+													console.log(JSON.stringify(formData));
+													showLoading();
+												},
+												complete:function(){
+													hideLoading();
+												},
+												success: function (data) {
+													if(data.errorMessage!=null) {
+														swal("Error", data.errorMessage,  "error");
+													} else {
+														$('#tablePostRecDetail').DataTable().ajax.reload();
+														$('#mFileType').prop('disabled', true);
+														$('#billingCode').prop('disabled', true);
+														$('#btnCheckBillingCode').prop('disabled', true);
+														$('#btnModalReferensi').prop('disabled', true);
+														$('#btnHapusTxPostReceptionDetail').prop('disabled', true);
+														$('#pemohon').trigger('click');
+														$('#noIPT').val(data.noIPT) ;
+                                                        $('#noIPTheader').html(" - "+data.noIPT) ;
+                                                        $('#ref_application_id').val(data.ref_application_id) ;
+                                                        $('#ref_mFileType').val($('#mFileType').val()) ;
+                                                        $('#ref_application_no').val(data.ref_application_no) ;
+                                                        $('#header_FileType').html("Pasca: "+$('#mFileType').val());
+                                                        $('#header_application_id').html("Referensi: "+ data.ref_application_id + " ("+data.ref_application_no+ ")" );
+
+                                                        console.log(data);
+
+													}
+
+													if((fileType == 'PENCATATAN_PERUBAHAN_NAMA_ALAMAT')) {
+														$('#btnEditPemohon').show();
+													} else if(fileType == 'PENCATATAN_PENGALIHAN_HAK') {
+														$('#btnAddPemohon').show();
+													} else if(fileType == 'PENCATATAN_PERJANJIAN_LISENSI') {
+														$('#btnAddLicense').show();
+													} else if(fileType == 'PENCATATAN_PENGHAPUSAN_PENDAFTARAN') {
+														$('#btnAddPostNote').show();
+													}
+
+												},
+												error: function (xhr, status) {
+													swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.Error.no:6395682673", "error");
+												}
+											});
+										}
+									});
+								}
+							}
+						} else {
+							//swal("Informasi", "Kode Billing '" + $('#billingCode').val() + "' Tidak Ditemukan", "info");
+							swal("Informasi", "Klik tombol 'Check' Kode Billing dan periksa data kode billing", "info");
+						}
+					}
+				}
+			});
+		});
+		/*]]>*/
+	</script>
+</div>
+</html>

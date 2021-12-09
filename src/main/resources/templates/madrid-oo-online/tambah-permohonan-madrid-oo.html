@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container"> 	<p th:replace="fragment/header :: navbar"/> 	<div id="mySideBar" class="panel-left"> 		<span id="position"></span> 		<p th:replace="fragment/sidebar :: left"/> 	</div> 	<div id="myDragBar" class="splitter"></div> 	<div id="myMain" class="panel-right">
+
+    <div class="my-wrapper" id="my-wrapper">
+        <div class="my-wrapper--inner">
+
+            <div class="wrapper-co[]ntent" id="permohonan-baru">
+                <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="fas fa-edit"></i> Tambah Madrid OO Online
+                            </h3>
+                            <small class="sub-header">Permohonan Madrid / <a th:href="@{/layanan/list-permohonan-madrid-oo}">Office of Origin</a>
+                                / Tambah
+                            </small>
+                            <small style="float:right;margin-left:13px"><a th:href="@{/layanan/list-permohonan-madrid-oo}"><i class="fa fa-arrow-left"></i> Kembali</a></small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="permohonan-baru--step">
+                    <ul class="display--flex" style="overflow-x: auto;flex-wrap: nowrap;padding-bottom: 20px">
+                        <!-- ##############################################
+                       Tambahkan class="yet" untuk data yang telah diedit dan disimpan pada <li>
+                        ################################################## -->
+                        <li js-direction="step-form" class="current" js-id="1" id="general">
+                            <div class="iconn text-center text-bold" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">1</div>
+                            <div class="textt text-bold text-center" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">
+                                General
+                            </div>
+                        </li>
+                        <li js-direction="step-form" js-id="2" id="pemohon">
+                            <div class="iconn text-center text-bold" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">2</div>
+                            <div class="textt text-bold text-center" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">
+                                Pemohon
+                            </div>
+                        </li>
+                        <li js-direction="step-form" js-id="3" id="prior">
+                            <div class="iconn text-center text-bold" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">3</div>
+                            <div class="textt text-bold text-center" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">
+                                Prioritas
+                            </div>
+                        </li>
+                        <li js-direction="step-form" js-id="4" id="merek">
+                            <div class="iconn text-center text-bold" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">4</div>
+                            <div class="textt text-bold text-center" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">
+                                Merek
+                            </div>
+                        </li>
+                        <li js-direction="step-form" js-id="5" id="kelas">
+                            <div class="iconn text-center text-bold" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">5</div>
+                            <div class="textt text-bold text-center" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">
+                                Kelas
+                            </div>
+                        </li>
+                        <li js-direction="step-form" js-id="6" id="biaya">
+                            <div class="iconn text-center text-bold" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">6</div>
+                            <div class="textt text-bold text-center" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">
+                                Biaya
+                            </div>
+                        </li>
+                        <li js-direction="step-form" js-id="7" id="dokumen">
+                            <div class="iconn text-center text-bold" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">7</div>
+                            <div class="textt text-bold text-center" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">
+                                Lampiran
+                            </div>
+                        </li>
+                        <li js-direction="step-form" js-id="8" id="preview">
+                            <div class="iconn text-center text-bold" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">8</div>
+                            <div class="textt text-bold text-center" onclick="if(!confirm('Tombol ini hanya untuk navigasi, jika anda menekan tombol ini, maka data anda tidak akan tersimpan. Untuk menyimpan data klik tombol Simpan dan Lanjutkan. Pastikan data anda tersimpan.')){event.stopImmediatePropagation();}">
+                                Resume
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="content--center padding-content--left-right">
+                    <div class="wrapper--bg">
+                        <div class="form-horizontal form--input">
+                            <!-- form 1 -->
+                            <p th:replace="/madrid-oo-online/form-1-permohonan-madrid-oo"/>
+                            <!-- form 2 -->
+                            <p th:replace="/madrid-oo-online/form-2-permohonan-madrid-oo"/>
+                            <!-- form 3 -->
+                            <p th:replace="/madrid-oo-online/form-3-permohonan-madrid-oo"/>
+                            <!-- form 4 -->
+                            <p th:replace="/madrid-oo-online/form-4-permohonan-madrid-oo"/>
+                            <!-- form 5 -->
+                            <p th:replace="/madrid-oo-online/form-5-permohonan-madrid-oo"/>
+                            <!-- form 6 -->
+                            <p th:replace="/madrid-oo-online/form-6-permohonan-madrid-oo"/>
+                            <!-- form 7 -->
+                            <p th:replace="/madrid-oo-online/form-7-permohonan-madrid-oo"/>
+                            <!-- form 8 -->
+                            <p th:replace="/madrid-oo-online/form-8-permohonan-madrid-oo"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div><div th:replace="fragment/js :: default"></div> <div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datepickerEndDate"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<div th:replace="fragment/madrid-oo-online/js-form-1 :: form-1"></div>
+<div th:replace="fragment/madrid-oo-online/js-form-2 :: form-2"></div>
+<div th:replace="fragment/madrid-oo-online/js-form-3 :: form-3"></div>
+<div th:replace="fragment/madrid-oo-online/js-form-4 :: form-4"></div>
+<div th:replace="fragment/madrid-oo-online/js-form-5 :: form-5"></div>
+<div th:replace="fragment/madrid-oo-online/js-form-6 :: form-6"></div>
+<div th:replace="fragment/madrid-oo-online/js-form-7 :: form-7"></div>
+<div th:replace="fragment/madrid-oo-online/js-form-8 :: form-8"></div>
+</body>
+</html>

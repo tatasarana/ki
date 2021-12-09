@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="7" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5074e2f0-89f8-4eb6-b3ef-03243fdf7c9f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="432"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start1" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end1" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start3" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end3" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start4" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end4" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT A.LANGUAGE_2
+FROM TX_TM_GENERAL A
+WHERE A.APPLICATION_ID = $P{applicationId}]]>
+	</queryString>
+	<field name="LANGUAGE_2" class="java.lang.String"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="100" y="25" width="225" height="224" uuid="8016c2f4-8165-4cb1-829b-94e4b34c8dda">
+					<printWhenExpression><![CDATA[$P{approve}!= null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="802" splitType="Stretch">
+			<subreport>
+				<reportElement x="32" y="97" width="115" height="550" uuid="82d2045b-6846-4d74-ba31-9521fd3423ce"/>
+				<subreportParameter name="start">
+					<subreportParameterExpression><![CDATA[$P{start1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="end">
+					<subreportParameterExpression><![CDATA[$P{end1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "7_country.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="168" y="97" width="115" height="550" uuid="9b7da7b6-b519-4171-87b9-46752cb7e713"/>
+				<subreportParameter name="start">
+					<subreportParameterExpression><![CDATA[$P{start2}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="end">
+					<subreportParameterExpression><![CDATA[$P{end2}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "7_country.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="295" y="97" width="115" height="550" uuid="331881bf-1982-4928-96df-ae99d35c3082"/>
+				<subreportParameter name="start">
+					<subreportParameterExpression><![CDATA[$P{start3}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="end">
+					<subreportParameterExpression><![CDATA[$P{end3}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "7_country.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="419" y="97" width="115" height="550" uuid="cfb04c50-29ed-4370-94e6-d1970a7f8423"/>
+				<subreportParameter name="start">
+					<subreportParameterExpression><![CDATA[$P{start4}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="applicationId">
+					<subreportParameterExpression><![CDATA[$P{applicationId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="end">
+					<subreportParameterExpression><![CDATA[$P{end4}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "7_country.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="47" y="40" width="487" height="36" uuid="30a2527d-118f-41d9-97b5-b8921eeed5e3"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(Information on the procedures in the national or regional Offices of the members of the Madrid System may be found at the following website:  <u><font color='blue'>www.wipo.int/madrid/en/members/ipoffices_info.html</font></u>.  Additional information may be found in the information notices available at:  <u><font color='blue'>www.wipo.int/madrid/en/notices/</font></u>.)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="47" y="76" width="487" height="16" uuid="007932b9-bf3c-4edf-8f3e-8b704d5c0c79"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Check the corresponding boxes :"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="15" y="15" width="525" height="731" uuid="9e96ffd2-251c-4a81-aedf-2cd0a6f6876f"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="470" y="0" width="70" height="15" uuid="6d69f93d-14c3-4b22-a274-da79a9f1098a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[MM2(E), page 6]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="47" y="20" width="307" height="20" uuid="aab8f2eb-6067-4ae0-b6b6-4459bc6076cc"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESIGNATIONS]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="22" y="20" width="20" height="20" backcolor="#000000" uuid="59e216bb-d4a1-4f85-a7a8-3951b90c56f8"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="22" y="21" width="20" height="19" forecolor="#FFFFFF" uuid="81d3c3d1-8aa3-4f61-8a9c-15c98cbc439b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[11]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="15" y="790" width="100" height="12" uuid="5a225c0e-afa2-4ac2-a95a-240f9c5a0952"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+
+    <div class="my-wrapper" id="my-wrapper">
+        <div class="my-wrapper--inner">
+
+            <div class="wrapper-content" id="permohonan-baru">
+                <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="fas fa-tasks"></i> Monitor - Update Status
+                            </h3>
+                            <small class="sub-header">Permohonan / Monitor / Update</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="content--center padding-content--left-right">
+                    <div class="wrapper--bg">
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                            <button data-dismiss="alert" class="close close-sm" type="button">
+                                <i class="icon-remove"></i>
+                            </button>
+                            <p>[[${errorMessage}]]</p>
+                        </div>
+                        <!-- div th:each="firstform:${form}"> <th:if="${iter.index} == 0"-->
+                            <form class="form-horizontal" th:object="${form}" th:action="@{/layanan/tambah-monitor}" enctype="multipart/form-data"
+                              method="post">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group" id="IDMonitor">
+                                        <label class="col-sm-3 col-form-label">Nomor Permohonan</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Nomor Permohonan" name="applicationNo"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Status Saat Ini</label>
+                                        <div class="col-sm-9">
+                                            <label class="col-form-label" th:text="${currentStatus}"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="tglMonitor">
+                                        <label class="col-sm-3 col-form-label required-label">Tanggal</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="myDate" class="form-control datepicker" placeholder="Tanggal" th:field="*{createdDateTemp}"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('createdDate')}"
+                                                  th:errors="*{createdDate}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Pilih Status</label>
+                                        <div class="col-sm-9">
+                                            <input type="hidden" id="mUserRoleAdmin" name="mUserRoleAdmin"/>
+                                            <select class="form-control" th:field="*{mWorkflowProcess.id}" id="wfProcess" th:required="true">
+                                                <option th:value="${null}">-Pilih Status-</option>
+                                                <option th:each="process : ${wfProcess}"
+                                                        th:value="${process.id}"
+                                                        th:text="${mUserRoleAdmin} ? ${process.status.name}+' (ROLE:'+${process.role.name}+')' : ${process.status.name}"></option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('mWorkflowProcess.id')}"
+                                                  th:errors="*{mWorkflowProcess.id}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Pilih Aksi</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:field="*{mWorkflowProcessActions.id}" id="wfProcessAction" th:required="true">
+                                                <option th:value="${null}">-Pilih Aksi-</option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('mWorkflowProcessActions.id')}"
+                                                  th:errors="*{mWorkflowProcessActions.id}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <label class="col-form-label"> Pilih Pasca Permohonan </label> <br /> <span
+                                                style="color: red; font-size: 12px">Dipilih jika ingin membuat surat dari pasca permohonan</span>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <select name="wfPostReceptionID" class="form-control" th:field="*{txPostReception.id}" id="wfPascaSelection">
+                                                <option th:value="${null}">-Pilih Pasca-</option>
+                                                <option th:each="pasca : ${wfPascaSelection}"
+                                                        th:value="${pasca.id}" th:text="${pasca.id}+'-'+${pasca.postNo} +'-'+${pasca.mFileType.desc}"></option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('txPostReception.id')}"
+                                                  th:errors="*{txPostReception.id}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Catatan</label>
+                                        <div class="col-sm-9">
+                                            <textarea type="text" placeholder="Catatan" class="form-control" th:field="*{notes}" maxlength="1000"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="tglTempo">
+                                        <label class="col-sm-3 col-form-label required-label">Tanggal Jatuh Tempo</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control datepicker" th:field="*{dueDate}"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('dueDate')}"
+                                                  th:errors="*{dueDate}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="targetStatus">
+                                        <label class="col-sm-3 col-form-label required-label">Target Status</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:field="*{targetWorkflowProcess.id}" id="selectTarget">
+                                                <option th:value="${null}">-Pilih Status-</option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('targetWorkflowProcess.id')}"
+                                                  th:errors="*{targetWorkflowProcess.id}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="uploadDokumen">
+                                        <label class="col-sm-3 col-form-label required-label">File</label>
+                                        <div class="col-sm-9">
+                                            <input type="file" class="form-control" placeholder="File"
+                                                   name="file"/>
+                                        </div>
+                                    </div>
+                                    <label class="col-form-label  notice">*) Wajib Diisi</label>
+                                    <hr/>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-3 col-sm-9">
+                                            <input type="hidden" th:field="*{txTmGeneral.id}"/>
+                                            <a th:href="@{/layanan/list-monitor(no=*{txTmGeneral.applicationNo})}" class="btn btn-danger"><i class="fas fa-times"></i> Batal</a>
+                                            <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Proses</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <!--/div-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+/*<![CDATA[*/
+
+    function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+    };
+    
+    // Untuk tanggal createdDate
+    var currentDate = new Date();
+    $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            todayBtn: 'linked',
+            todayHighlight: true,
+            endDate: 'today'
+    }).datepicker('setDate', currentDate.toString());
+    
+    $(document).ready(function(){
+        $("input[name='applicationNo']").val( getUrlParameter("no") );
+        $("input[name='applicationNo']").prop("disabled",true);
+        $('#tglTempo').hide();
+        $('#targetStatus').hide();
+        $('#uploadDokumen').hide();
+        $('form').validate({
+			messages:{
+				'mWorkflowProcess.id':{
+					required:/*[[#{field.error.required('Status')}]]*/''
+				},
+				'mWorkflowProcessActions.id':{
+					required:/*[[#{field.error.required('Aksi')}]]*/''
+				},
+			},
+			highlight: function(element) {
+				$(element).closest('.form-group').addClass('has-error');
+			},
+			unhighlight: function(element) {
+				$(element).closest('.form-group').removeClass('has-error');
+			},
+			errorElement: 'span',
+			errorClass: 'help-block',
+			errorPlacement: function(error, element) {
+				if(element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else {
+					error.insertAfter(element);
+				}
+			},
+			submitHandler: function(form) {
+                $("input[name='applicationNo']").prop("disabled",false);
+				showLoading();
+				$('form')[0].submit();
+	      	}
+		});
+        
+     	// Remove duplicate value
+        var finishItems = {};
+        $("#wfProcess > option").each(function () {
+        if(finishItems[this.text]) {
+             $(this).remove();
+        } else {
+             finishItems[this.text] = this.value;
+        }});
+    });
+
+    $('#wfProcess').change(function(){
+        var processId = $('#wfProcess').val();
+        $('#wfProcessAction').empty();
+        $('#wfProcessAction').prepend($('<option></option>').html('Loading...'));
+        $.get('layanan/ajax-workflow-process-action?id='+processId, function(data, status){
+            var option = '';
+            if(status=='success'){
+                 $.each(data, function(index){
+                    aId = data[index].id;
+                    console.log(aId);
+                    name = data[index].actionName;
+                    option += '<option value="'+ aId +'">'+name+'</option>';
+                });
+                $('#wfProcessAction').empty();
+                $('#wfProcessAction').append('<option value="">-Pilih Aksi-</option>');
+                $('#wfProcessAction').append(option);
+                 $('#loader').hide();
+            }else{
+                alert('Telah terjadi kesalahan');
+            }
+        });
+    });
+
+    function addDays(date, days) {
+        var result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+    }
+
+    $('#wfProcessAction').change(function(){
+        var processId = $('#wfProcess').val();
+        var no = getUrlParameter('no');
+        var processActionId = $('#wfProcessAction').val();
+        $.get('layanan/ajax-workflow-process-action-byid?id='+processActionId, function(action,status){
+            if(status=='success'){
+               if(action.actionType=='Otomatis'){
+                    $.get('layanan/ajax-workflow-process?no='+no+'&id='+processId, function(data, status){
+                        var option = '';
+                        if(status=='success'){
+                            $.each(data, function(index){
+                                aId = data[index].id;
+                                name = data[index].status.name;
+                                option += '<option value="'+ aId +'">'+name+'</option>';
+                            });
+                            $('#selectTarget').empty();
+                            $('#selectTarget').append('<option th:value="null">-Pilih Status-</option>');
+                            $('#selectTarget').append(option);
+                            $('#targetStatus').show();
+                            $('#loader').hide();
+                        }else{
+                            alert('Telah terjadi kesalahan');
+                        }
+                    });
+                    $('#tglTempo').show();
+                    $('#uploadDokumen').val("");
+                    $('#uploadDokumen').hide();
+                     var today = new Date();
+                     var newdate = new Date();
+                     newdate.setDate(today.getDate()+Number(action.actionDuration));
+                     $('.datepicker').datepicker('setDate', newdate);
+               }else if(action.actionType=='Upload'){
+                    $('#uploadDokumen').val("");
+                    $('#uploadDokumen').show();
+                    $('#tglTempo').val("");
+                    $('#targetStatus').val("");
+                    $('#tglTempo').hide();
+                    $('#targetStatus').hide();
+               }else{
+                    $('#tglTempo').val("");
+                    $('#targetStatus').val("");
+                    $('#uploadDokumen').val("");
+                    $('#tglTempo').hide();
+                    $('#targetStatus').hide();
+                    $('#uploadDokumen').hide();
+               }
+            }
+        });
+    });
+
+  /*]]>*/
+</script>
+</body>
+</html>

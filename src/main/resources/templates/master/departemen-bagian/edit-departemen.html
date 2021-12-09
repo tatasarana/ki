@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <form class="form-horizontal" th:object="${form}" th:action="@{/layanan/edit-departemen}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+        <div class="my-wrapper" id="my-wrapper">
+            <div class="my-wrapper--inner">
+
+                <div class="wrapper-content" id="departemen-baru">
+                    <div class="content--top border--bottom padding-content--left-right">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="content--title text--bold">
+                                    <i class="fas fa-laptop"></i> Data Subdit - Ubah
+                                </h3>
+                                <small class="sub-header">Subdit / Ubah</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content--center padding-content--left-right">
+                        <div class="wrapper--bg">
+                            <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                                <button data-dismiss="alert" class="close close-sm" type="button">
+                                    <i class="icon-remove"></i>
+                                </button>
+                                <p>[[${errorMessage}]]</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Divisi</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" th:value="*{mDivision.name}"
+                                                   disabled="disabled"/>
+                                            <input type="hidden" name="mDivision.id" th:value="*{mDivision.id}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Kode Subdit</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Kode Subdit"
+                                                   th:field="*{code}" th:required="true" maxlength="10"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('code')}"
+                                                  th:errors="*{code}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label required-label">Nama Subdit</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Nama Subdit"
+                                                   th:field="*{name}" th:required="true" maxlength="255"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('name')}"
+                                                  th:errors="*{name}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Deskripsi Subdit</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Deskripsi Subdit"
+                                                   th:field="*{desc}" maxlength="1000"/>
+                                            <span class="help-block" th:if="${#fields.hasErrors('desc')}"
+                                                  th:errors="*{desc}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Status</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" th:field="*{statusFlag}">
+                                                <option th:value="true">Aktif</option>
+                                                <option th:value="false">Tidak Aktif</option>
+                                            </select>
+                                            <span class="help-block" th:if="${#fields.hasErrors('statusFlag')}"
+                                                  th:errors="*{statusFlag}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <label class="col-form-label notice">*) Wajib Diisi</label>
+                            <hr/>
+                            <div class="col-md-12">
+                                <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <a th:href="@{/layanan/list-departemen}" class="btn btn-danger"><i
+                                                    class="fas fa-times"></i> Batal</a>
+                                            <button type="submit" class="btn btn-primary"><i
+                                                    class="fas fa-paper-plane"></i> Proses
+                                            </button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    
+    $(document).ready(function(){
+        $('form').validate({
+            messages:{
+                'code':{
+                    required:/*[[#{field.error.required('Kode Subdit')}]]*/''
+                },
+                'name':{
+                    required:/*[[#{field.error.required('Nama Subdit')}]]*/''
+                }
+            },
+            highlight: function(element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function(error, element) {
+                if(element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+	        submitHandler: function(form) {
+		        showLoading();
+		        $('form')[0].submit();
+	        }
+        });
+    });
+
+</script>
+</body>
+</html>

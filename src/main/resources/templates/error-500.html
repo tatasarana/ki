@@ -1,0 +1,21 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper" id="my-wrapper">
+		<div class="my-wrapper--inner">
+			<h1>Terjadi kesalahan pada aplikasi, Silakan hubungi Administrator</h1>
+			<a class="navbar-brand" href="javascript:history.back()">Kembali ke Halaman Sebelumnya<img th:src="@{/img/logo.png}"/></a>
+			<p>ID.Error No: </p>
+		</div>
+	</div>
+	<script>
+		if (window.location.href.indexOf("download-dokumen") > -1) {
+			var anchors = document.querySelectorAll('a');
+			Array.prototype.forEach.call(anchors, function(element, index) {
+				element.href = "javascript:window.open('','_self').close();";
+			});
+		}
+	</script>
+</body>
+</html>
+ 

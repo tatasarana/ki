@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="3" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5074e2f0-89f8-4eb6-b3ef-03243fdf7c9f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start1" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end1" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start3" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end3" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start4" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end4" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ttdp" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+OWN.APPLICATION_ID,
+COALESCE(OWN.TM_ENTITLEMENT,'0') AS TM_ENTITLEMENT,
+OWN.TM_COMMERCIAL_ADDRESS AS TM_COMMERCIAL_ADDRESS,
+A.REPRS_NAME AS REPRS_NAME,
+A.REPRS_ADDRESS AS REPRS_ADDRESS,
+A.REPRS_PHONE AS REPRS_PHONE,
+A.REPRS_EMAIL AS REPRS_EMAIL,
+C.PROV_NAME AS REPRS_PROV,
+COALESCE(E.APPLICATION_NO,' ') AS APPLICATION_NO,
+COALESCE(to_char(E.FILING_DATE,'DD/MM/YYYY'),' ') AS FILING_DATE,
+COALESCE(F.REG_NO,' ') AS REG_NO,
+COALESCE(to_char(F.REG_START_DATE,'DD/MM/YYYY'),' ') AS REG_START_DATE
+FROM TX_TM_OWNER OWN
+LEFT JOIN TX_TM_REPRS A ON A.APPLICATION_ID = OWN.APPLICATION_ID
+LEFT JOIN M_REPRS B ON B.REPRS_ID=A.REPRS_ID
+LEFT JOIN M_PROVINCE C ON C.PROV_ID=A.PROV_ID
+LEFT JOIN TX_TM_REFERENCE d ON D.APPLICATION_ID = OWN.APPLICATION_ID
+left join TX_TM_GENERAL e on e.APPLICATION_ID=D.REF_APPLICATION_ID
+left join TX_REGISTRATION F on F.APPLICATION_ID = E.APPLICATION_ID
+WHERE OWN.APPLICATION_ID=$P{applicationId}]]>
+	</queryString>
+	<field name="APPLICATION_ID" class="java.lang.String"/>
+	<field name="TM_ENTITLEMENT" class="java.lang.String"/>
+	<field name="TM_COMMERCIAL_ADDRESS" class="java.lang.String"/>
+	<field name="REPRS_NAME" class="java.lang.String"/>
+	<field name="REPRS_ADDRESS" class="java.lang.String"/>
+	<field name="REPRS_PHONE" class="java.lang.String"/>
+	<field name="REPRS_EMAIL" class="java.lang.String"/>
+	<field name="REPRS_PROV" class="java.lang.String"/>
+	<field name="APPLICATION_NO" class="java.lang.String"/>
+	<field name="FILING_DATE" class="java.lang.String"/>
+	<field name="REG_NO" class="java.lang.String"/>
+	<field name="REG_START_DATE" class="java.lang.String"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="100" y="25" width="225" height="224" uuid="8016c2f4-8165-4cb1-829b-94e4b34c8dda">
+					<printWhenExpression><![CDATA[$P{approve}!=null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="800" splitType="Stretch">
+			<staticText>
+				<reportElement x="440" y="0" width="70" height="15" uuid="6d69f93d-14c3-4b22-a274-da79a9f1098a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[MM2(E), page 10]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="15" y="783" width="100" height="17" uuid="5a225c0e-afa2-4ac2-a95a-240f9c5a0952"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="50" y="60" width="20" height="18" uuid="3926db46-65af-49b8-8b05-7cef29d010d9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[a]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="600" width="330" height="20" forecolor="#FF0000" uuid="c9153156-5900-4321-928c-bbd927f2cb2a"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[12. SIGNATURE OF THE APPLICANT AND/OR THEIR REPRESENTATIVE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="51" y="200" width="20" height="18" uuid="23409c3d-03df-4c19-aa4f-0b799050af5f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[b]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="51" y="430" width="20" height="18" uuid="df3a030f-c4c9-4edb-9f42-e1a3900fb0af"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[g]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="51" y="330" width="20" height="18" uuid="16c640f4-aff2-46a8-9639-20ec29853943"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[e]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="51" y="290" width="20" height="18" uuid="88d58f19-7cb6-471a-889c-d6e108992eaa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[d]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="51" y="250" width="20" height="18" uuid="882adf39-0bd1-4b35-93db-c0336e770102"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[c]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="49" y="499" width="20" height="18" uuid="b1d7615a-9bdf-4871-ae77-87576f09441a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[i]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="49" y="517" width="20" height="18" uuid="cb5465f3-6be0-41b4-b633-e38f90c011b2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[j]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="51" y="410" width="20" height="18" uuid="15d8b367-adaf-43dc-9617-caa36255e30d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[f]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="49" y="460" width="20" height="18" uuid="571b4428-6734-48b9-8f99-2ea12d1e5be1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[h]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="49" y="550" width="20" height="18" uuid="540ffb27-4199-4e60-a9fd-99a295b40210"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[k]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="51" y="620" width="328" height="18" uuid="10b801e1-8b4e-4723-a475-de7ec31d553d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[If required or allowed by the Office of origin.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="650" width="458" height="18" uuid="0b973be6-68a9-47dc-8bb7-f9b40694fcc4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[By signing this form, I declare that I am entitled to sign it under the applicable law.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="51" y="668" width="58" height="18" uuid="3de25f69-a027-47e0-82c0-2dd5c0618bbd"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Signature:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Opaque" x="109" y="668" width="399" height="62" forecolor="#FFFFFF" uuid="877f0a6e-85e7-4d90-b4c9-337cc6468adc"/>
+				<graphicElement>
+					<pen lineColor="#CCCCFF"/>
+				</graphicElement>
+			</rectangle>
+			<image>
+				<reportElement x="120" y="680" width="80" height="40" uuid="6d0d5d3f-fad6-479c-b161-152326c77194">
+					<printWhenExpression><![CDATA[$P{ttdp}!=null && !$P{ttdp}.equals("") && !$P{ttdp}.equals(" ")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{ttdp}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="80" y="60" width="430" height="50" forecolor="#000000" uuid="ccede78b-95ef-4b4e-bf12-335a83c930d3">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["The designation of the <b>European Union</b> covers its Member States (Austria, Belgium, Bulgaria, Croatia, Cyprus, Czech Republic, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Ireland, Italy, Latvia, Lithuania, Luxembourg, Malta, The Netherlands, Poland, Portugal, Romania, Slovakia, Slovenia, Spain, Sweden)."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="110" width="430" height="30" forecolor="#000000" uuid="5a3371aa-539a-462a-8d93-78c77ad1c0dc">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["If the <b>European Union</b> is designated, it is compulsory to indicate a second language before the Office of the European Union, among the following (check one box only):	"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="160" width="430" height="40" forecolor="#000000" uuid="5f2cedbb-2f33-44d8-a3b4-821fe6df6f01">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Moreover, if the applicant wishes to claim the <b>seniority</b> of an earlier mark registered in, or for, a Member State of the European Union, the <b>official form MM17 must be annexed</b> to the present international application."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="200" width="430" height="50" forecolor="#000000" uuid="16804c41-077c-4c23-8b99-9f33ac4b1ed1">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["By designating <b>Brunei Darussalam, Guernsey, India, Ireland, Lesotho, Malawi, Malaysia, Mozambique, New Zealand, Singapore, Trinidad and Tobago</b> or the <b>United Kingdom</b>, the applicant declares that he/she has the intention that the mark will be used by him/her or with his/her consent in that country in connection with the goods and services identified in this application."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="250" width="430" height="40" forecolor="#000000" uuid="4bf2ebca-f6a9-479a-9dc5-772014eabec8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["The designation of the African Intellectual Property Organization <b>(OAPI)</b> covers the following Member States:  Benin, Burkina Faso, Cameroon, Central African Republic, Chad, Comoros, Congo, Côte d’Ivoire, Equatorial Guinea, Gabon, Guinea, Guinea-Bissau, Mali, Mauritania, Niger, Senegal, Togo. "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="290" width="430" height="40" forecolor="#000000" uuid="a083750e-1878-4760-8c46-516deefa8f76">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["If the <b>United States of America</b> is designated, it is <b>compulsory to annex</b> to the present international application the official form <b>(MM18)</b> containing the declaration of intention to use the mark required by this Contracting Party.  Item 2(e) of the present form should also be completed."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="330" width="430" height="80" forecolor="#000000" uuid="a0b9b027-7382-4a05-881c-515efa026dfc">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>Cuba, Brazil</b> and <b>Japan</b> have made a notification under Rule 34(3)(a) of the Regulations.  Their respective <b>individual fees are payable in two parts.</b>  Therefore, if <b>Cuba, Brazil</b> or <b>Japan</b> is designated, only the  first  part of the applicable individual fee is payable at the time of filing the present international application.  The second part will have to be paid only if the Office of the Contracting Party concerned is satisfied that the mark which is the subject of the international registration qualifies for protection.  The date by which the second part must be paid, and the amount due, will be notified to the holder of the international registration at a later stage."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="410" width="430" height="18" forecolor="#000000" uuid="9f2c69de-e83e-4a8a-bd75-042378943773">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Territorial entity previously part of the former Netherlands Antilles."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="429" width="430" height="30" forecolor="#000000" uuid="f911a684-58b0-446f-ab99-6b3436fbfbf4">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Protection in <b>BQ</b> (Bonaire, Saint Eustatius and Saba) is granted automatically with the designation (see <u><font color='blue'>Information Notice No. 27/2011</font></u>). "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="460" width="430" height="39" forecolor="#000000" uuid="4d9b3c6c-68d4-4d90-9e8f-fecd602146e0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["By designating <b>Brazil</b>, the applicant declares that the applicant, or a company controlled by the applicant, effectively and lawfully conducts business in connection with the goods and services for which Brazil is being designated. "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="499" width="430" height="18" forecolor="#000000" uuid="30cf3cc7-8e18-434a-9c8b-80c24276d61c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["The designation of <b>Benelux</b> covers the following States:  Belgium, Luxembourg and the Netherlands. "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="517" width="430" height="33" forecolor="#000000" uuid="438bf8ce-e79c-4e05-9ccf-80d71e0dc9a7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["The designation of the <b>United Kingdom</b> covers England, Wales, Scotland, Northern Ireland, the British Overseas Territory of the Falkland Islands (Malvinas) and Gibraltar, as well as the two British Crown Dependencies of the Isle of Man and Jersey (see Information Notices No. <u><font color='blue'>38/2015</font></u> and <u><font color='blue'>77/2020</font></u>)."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="550" width="430" height="30" forecolor="#000000" uuid="aafebdea-4746-4a17-8dae-1a9a30804089">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["The Bailiwick of <b>Guernsey</b> is a self-governing British Crown Dependency (see Information Notice No. <u><font color='blue'>77/2020</font></u>)."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" mode="Transparent" x="131" y="146" width="10" height="10" backcolor="#808080" uuid="80330193-d2fa-4d11-8ff3-cf1a26d41021"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LANGUAGE_2} != null && $F{LANGUAGE_2}.equalsIgnoreCase("French") ? "X":""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" mode="Transparent" x="221" y="145" width="10" height="10" backcolor="#808080" uuid="b24d24d9-88c7-48d0-aa21-4bdc9614df83"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LANGUAGE_2} != null && $F{LANGUAGE_2}.equalsIgnoreCase("German") ? "X":""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" mode="Transparent" x="308" y="145" width="10" height="10" backcolor="#808080" uuid="f9904ba8-f7b1-45fb-8d2a-8395c9749994"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LANGUAGE_2} != null && $F{LANGUAGE_2}.equalsIgnoreCase("Italian") ? "X":""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" mode="Transparent" x="391" y="145" width="10" height="10" backcolor="#808080" uuid="791a64e7-a7c6-4246-b393-94d90a85c087"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LANGUAGE_2} != null && $F{LANGUAGE_2}.equalsIgnoreCase("Spanish") ? "X":""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="149" y="141" width="50" height="18" uuid="a9c8e901-4a37-48d8-ae3a-876e9068d539"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[French]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="239" y="141" width="50" height="18" uuid="154d768a-884a-428e-b013-5213a3541dd1"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[German]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="329" y="141" width="50" height="18" uuid="77af2737-19fe-4bb1-a012-c6f31933cb76"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Italian]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="409" y="141" width="50" height="18" uuid="28ab2cec-df1b-4dc8-b99e-b40bb0ebab55"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Spanish]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

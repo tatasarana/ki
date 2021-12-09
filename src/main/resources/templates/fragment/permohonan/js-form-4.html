@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="form-4" th:remove="tag">
+    <script type="text/javascript" language="javascript" th:inline="javascript">
+        var csrf = /*[[${_csrf.token}]]*/'';
+        var redirect = /*[[@{/layanan/pratinjau-permohonan(no=${noGeneral})}]]*/'';
+        var isEdit = $("#isEdit").val();
+        var noGeneral = /*[[${noGeneral}]]*/'';
+        var tablePrioritas = $('#tblPrioritas');
+        var isButtonUpdate = /*[[${isButtonUpdate}]]*/'';
+        var user = /*[[${#authentication.getPrincipal().getCurrentId()}]]*/;
+        
+        var header = "X-CSRF-TOKEN";
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, csrf);
+        });
+        
+        $(document).ready(function () {
+            tablePrioritas = $('#tblPrioritas').DataTable({
+            	'columnDefs': [
+            		{
+                        'targets': [3, 4],
+                        'visible': isEdit != undefined,
+                    },
+            		{
+                        'targets': -1,
+                        'searchable': false,
+                        'width': '80',
+                        'data': null,
+                        'className': 'dt-body-center',
+                        'render': function (data, type, full, meta) {
+                        	if (isEdit == undefined)
+                        		return '<button type="button" class="btn btn-danger btn-xs" onclick="deletePrioritas(\'' + data[5] + '\')">Hapus</button>';
+                        	else{
+                        	    if(isButtonUpdate==true)
+                               	return '<div class="btn-actions">' +
+    	                				'<button type="button" class="btn btn-success btn-xs" onclick="modalUpdatePrioritas(\'' + data[5] + '\')">Update</button>' +
+    	                				'<br/>' +
+							  	        '<button type="button" class="btn btn-danger btn-xs" onclick="deletePrioritas(\'' + data[5] + '\')">Hapus</button>'+
+							  	   '</div>';
+
+                        	    else
+                        	        return '';
+                        	}
+                        }
+                    }
+                ],
+                ajax: {
+                    type: 'GET',
+                    data:{
+                        appNo : noGeneral
+                    },
+                    url: /*[[@{/layanan/list-prioritas}]]*/''
+                },
+                language: {
+                    url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+                }
+            });
+	        tablePrioritas.on('error.dt',function(e,settings,techNote,message){
+		        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	        });
+        });
+
+        /*Save Data To DB*/
+        $('#btnSaveForm4').click(function () {
+            if (isEdit != undefined){
+                window.location.replace(redirect);
+            } else {
+            	<!-- Start set value form 8 -->
+                $("#form8TablePrioritas tbody").empty()
+                $('#tblPrioritas > tbody  > tr').each(function() {
+                	var no = $.trim($(this).find('td:eq(0)').html());
+                    var tanggal = $.trim($(this).find('td:eq(1)').html());
+                    var negara = $.trim($(this).find('td:eq(2)').html());
+                    var tableRowData = "<tr><td>" + no + "</td><td>" + tanggal + "</td><td>" + negara + "</td></tr>";
+            		$("#form8TablePrioritas tbody").append(tableRowData);
+				});
+            	<!-- end set value form 8 -->
+            }
+        });
+
+        $('#btnTambahPrioritas').click(function () {
+            $("#priorId").val("-");
+        	$('.form-group.prioritas').removeClass('has-error');
+        	$('.form-control.prioritas').next().remove();
+        	$('.form-control.prioritas').val('');
+        });
+        
+        $("#newModalForm").validate({
+    		messages: {
+    			'tglPrior': {
+					required:/*[[#{field.error.required('Tanggal')}]]*/''
+				},
+				'countryPrior': {
+					required:/*[[#{field.error.required('Negara/Kantor Merek')}]]*/''
+				},
+				'noPrior': {
+					required:/*[[#{field.error.required('Nomor Prioritas')}]]*/''
+				},
+				'statusPrioritas': {
+					required:/*[[#{field.error.required('Status Prioritas')}]]*/''
+				}
+    		},
+			highlight: function(element) {
+				$(element).closest('.form-group').addClass('has-error');
+			},
+			unhighlight: function(element) {
+				$(element).closest('.form-group').removeClass('has-error');
+			},
+			errorElement: 'span',
+			errorClass: 'help-block',
+			errorPlacement: function(error, element) {
+				if(element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else {
+					error.insertAfter(element);
+				}
+			},
+    		submitHandler: function(form) {
+    			if (isEdit == undefined) {
+	    			$.ajax({
+	                    data: {
+	                        tgl : $("#tglPrioritas").val(),
+	                        negara : $("#negaraPrioritas option:selected").text(),
+	                        negaraId : $("#negaraPrioritas").val(),
+	                        no : $("#noPrioritas").val(),
+	                        appNo : noGeneral
+	                    },
+	                    type: 'GET',
+	                    beforeSend: function () {
+		                	showLoading();
+		                },
+		                complete:function(){
+		                	hideLoading();
+		                },
+	                    success: function(data){
+	                    	if (data.success) {
+	                    		alert('sukses');
+	    		                console.log("Sukses Save Form Prioritas");	    	                
+	    	                } else {
+	    	                	alert('error');
+	    		                swal("Error", data.message, "error");
+	    	                }
+	                    },
+					    error: function (xhr, status) {
+						    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+					    },
+	                    url: /*[[@{/layanan/insert-data-prioritas}]]*/''
+	                });
+	    			$("#tambahprioritas").modal('hide');
+    			} else {
+    				$.ajax({
+	                    data: {
+	                    	user : user,
+	                        tgl : $("#tglPrioritas").val(),
+	                        negara : $("#negaraPrioritas option:selected").text(),
+	                        negaraId : $("#negaraPrioritas").val(),
+	                        no : $("#noPrioritas").val(),
+	                        status : $("#statusPrioritas").val(),
+	                        note : $("#notePrioritas").val(),
+	                        appNo : noGeneral,
+	                        priorId : $("#priorId").val()
+	                    },
+	                    type: 'GET',
+	                    beforeSend: function () {
+		                	showLoading();
+		                },
+		                complete:function(){
+		                	hideLoading();
+		                },
+	                    success: function(result){
+	                    	if (!result.success) {
+	    	                	swal("Error", result.message, "error");
+	    	                } else {
+	                    		tablePrioritas.ajax.reload();
+	    	                }
+	                    },
+					    error: function (xhr, status) {
+						    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+					    },
+	                    url: /*[[@{/layanan/update-data-prioritas}]]*/''
+	                });
+	    			$("#tambahprioritas").modal('hide');
+    			}
+           	}
+    	});
+
+        //Delete Prior  
+        function deletePrioritas(idDeletePrior){
+        	swal("Konfirmasi", "Apakah Anda yakin akan menghapus data prioritas ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+      		.then((value) => {
+      			if (value) {
+      				$.ajax({
+                        type : "POST",
+                        url:/*[[@{/layanan/delete-prioritas}]]*/'',
+                        datatype:'jsonp',
+                        data : {
+                            idPrior : idDeletePrior,
+                        }, 
+                        success:function(result){
+                            tablePrioritas.ajax.reload();
+                        },
+				        error: function (xhr, status) {
+					        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+				        }
+                    });
+                    tablePrioritas.ajax.reload();
+      		  	} 
+      		});
+        }
+        
+        function modalUpdatePrioritas(idPrior){
+        	$('.form-group.prioritas').removeClass('has-error');
+        	$('.form-control.prioritas').next().remove();
+        	$('.form-control.prioritas').val('');
+        	
+        	$.ajax({
+                type: 'POST',
+                url: /*[[@{/layanan/get-data-prior}]]*/'',
+                datatype: 'jsonp',
+                data:  {
+                	idPrior: idPrior
+                },
+		        beforeSend:function(){
+			        showLoading();
+		        },
+		        complete:function(){
+			        hideLoading();
+		        },
+                success: function (data) {
+                	$("#priorId").val(data.id)
+                	$('#tglPrioritas').val(data.priorDateTemp);
+                	$('#negaraPrioritas').val(data.mCountry.id);
+                	$('#noPrioritas').val(data.no);
+                	$('#statusPrioritas').val(data.status);
+                	$('#notePrioritas').val(data.note);
+                	$("#tambahprioritas").modal('show');
+                },
+		        error: function (xhr, status) {
+			        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+		        }
+            });
+        }
+
+    </script>
+</div>
+</html>

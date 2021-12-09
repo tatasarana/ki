@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head">
+
+</head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+	<p th:replace="fragment/header :: navbar"/>
+	<div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+	
+	<div class="my-wrapper" id="my-wrapper">
+		<div class="my-wrapper--inner">
+			<div class="wrapper-content" id="permohonan-baru">
+				<div class="content--top border--bottom padding-content--left-right">
+					<div class="row">
+						<div class="col-md-12">
+							<h3 class="content--title text--bold">
+								<i class="fas fa-share-square"></i> Import Class Detail 
+							</h3>
+							<small class="sub-header">Home / import class detail</small>
+						</div>
+					</div>
+				</div>
+                <div class="content--center padding-content--left-right">
+					<div class="wrapper--bg">
+					  <form id="fileupload" class="form-horizontal" th:action="@{/layanan/import-class}" method="POST" >
+					   
+					    <div class="form-group">
+				        	<button type="submit" class="btn btn-success"  >Proses</button>
+	               		  
+					    </div>
+						<div th:id="status"></div>
+						<div th:id="photos" class="row"></div>
+               		  </form>
+               		             		  
+					</div>
+                <!-- finish -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: multiupload"></div>
+
+<script type="text/javascript" language="javascript" th:inline="javascript">
+/*<![CDATA[*/
+	$(document).ready(function(){
+		var imgSrc = /*[[@{/img}]]*/'';
+		var fileId = 0;
+		var listRemoveFileId=[];
+		
+		$('#fileupload').fileupload({
+			add: function(e, data) {
+				fileId = fileId + 1;
+				data.files[0].fileId = fileId;
+				
+				var table= $('#fileTable');
+		        table.show();
+		        
+		        var fshow = '<td class="fshow" style="text-align: center;">';
+		        if (data.files[0].name.substr(-4) == '.pdf') {
+		        	fshow = fshow + '<img src="'+imgSrc+'/pdf.png" style="max-width:70px">';
+		        } else if (data.files[0].name.substr(-4) == '.doc') {
+		        	fshow = fshow + '<img src="'+imgSrc+'/word.png" style="max-width:40px">';
+		        } else if (data.files[0].name.substr(-5) == '.docx') {
+		        	fshow = fshow + '<img src="'+imgSrc+'/word.png" style="max-width:40px">';
+		        } else if (data.files[0].name.substr(-4) == '.xls') {
+		        	fshow = fshow + '<img src="'+imgSrc+'/excel.png" style="max-width:40px">';
+		        } else if (data.files[0].name.substr(-5) == '.xlsx') {
+		        	fshow = fshow + '<img src="'+imgSrc+'/excel.png" style="max-width:40px">';
+		        } else {
+		        	fshow = fshow + '<img src="'+URL.createObjectURL(data.files[0])+'" style="max-width:100px;max-height:70px">';
+		        }
+		        fshow = fshow + '</td>';
+		        
+		        var tpl = $('<tr class="file" height="85px">' +
+		        			fshow +
+		        			'<td class="fname"></td>' +
+		                    '<td class="fsize"></td>' +
+		                    '<td class="fact" id="fact'+fileId+'" >' +
+		                    '<a href="#" class="btn btn-warning btn-xs rmvBtn" fileId="'+fileId+'">Remove</a>' +
+		                    '</td></tr>');
+		        tpl.find('.fname').text(data.files[0].name);
+		        tpl.find('.fsize').text(data.files[0].size);
+		        data.context = tpl.appendTo('#fileList');
+		        
+				$('#uploadBtn').click(function () {
+	  				var id = '' + data.files[0].fileId;
+	  				
+  					if (jQuery.inArray(id, listRemoveFileId)=='-1') {
+  						/*if (data.files[0].size > 1048576) {
+  		  					$('#fact'+data.files[0].fileId).empty();
+  		  	            	$('#fact'+data.files[0].fileId).append('<label style="color: red">Uploaded bytes exceed file size</label>');
+  		                }*/
+  						data.submit();
+  						listRemoveFileId.push(id);
+	  				}
+	  	        });
+				
+				$('#clearBtn').click(function () {
+					data.submit().abort();
+		            tpl.fadeOut(function(){
+		                tpl.remove();
+		            });
+		            table.hide();
+		            fileId = 0;
+					listRemoveFileId=[];
+		        });
+	  			
+    			tpl.find('.rmvBtn').click(function() {
+    				listRemoveFileId.push(tpl.find('.rmvBtn').attr("fileId"));
+    				if (tpl.hasClass('file')) {
+      					data.submit().abort();
+      				}
+      				tpl.fadeOut(function() {
+      					tpl.remove();
+      				});
+    			});
+  			},
+  			done: function(e, data) {
+  				var result = JSON.parse(data.result);
+  				
+  				$('#fact'+data.files[0].fileId).empty();
+  				if(result == 'Success')
+  					$('#fact'+data.files[0].fileId).append('<label style="color: green">'+result+'</label>');
+  				else
+  					$('#fact'+data.files[0].fileId).append('<label style="color: red">'+result+'</label>');
+  			}
+		});
+	});
+	/*]]>*/	
+</script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 7.2.1.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EkspedisiDokumen" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="43e07cdb-85ac-4c94-ace7-e263b27088c1">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<subDataset name="ItemDaftarIsi" uuid="90c17410-8a6e-4bfa-b88c-397b073d4cae">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="268"/>
+		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="718"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="noPermohonan" class="java.lang.String"/>
+		<field name="tanggalPenerimaan" class="java.lang.String"/>
+		<field name="kelas" class="java.lang.String"/>
+		<field name="merek" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="pPrintDate" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pBagianPengirim" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pBagianPenerima" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pNoBundle" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pJumlahDokumen" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="IsiDataReport" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="fBagianPenerima" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="39" splitType="Stretch">
+			<staticText>
+				<reportElement x="6" y="0" width="555" height="39" uuid="6ef502fb-85c0-43cf-b02d-79437c1511b6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial Narrow" size="14"/>
+				</textElement>
+				<text><![CDATA[EKSPEDISI DOKUMEN]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="100" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="02c2b00b-98cc-46a2-ad25-5da542a24fc9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Tanggal Dicetak]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="100" height="20" uuid="406d82fc-22fa-44c1-953a-c71aa149caee"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Bagian Pengirim]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="100" height="20" uuid="f4cac7bf-e08c-409e-92e3-709d102848f6"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Bagian Penerima]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="60" width="100" height="20" uuid="17e3a7c4-5e8f-48f5-bbb1-a502b9bc694d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Nomor Bundle]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="80" width="100" height="20" uuid="d1d0ea9d-c81b-4727-8b45-725c8b73f458"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Jumlah Dokumen]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="20" height="20" uuid="11059ee7-e4dd-4d91-9919-a26888a5a897"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[ : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="20" width="20" height="20" uuid="5412a92c-7a32-40aa-b15c-ae65e21f282a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[ : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="40" width="20" height="20" uuid="a1c57e3c-ec22-43f4-9ace-9d643582e741"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[ : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="60" width="20" height="20" uuid="84c44a52-6de4-43bc-a39a-58c84577503e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[ : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="80" width="20" height="20" uuid="9bf2e2c0-6a19-46e7-9ade-69747f1e0994"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[ : ]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="0" width="170" height="20" uuid="3d2b4fa2-e8b2-4be6-b5da-0b03471747dd"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{pPrintDate}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="20" width="350" height="20" uuid="f3d254f9-d594-4e10-8e5e-d5a7b4cd6737"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{pBagianPengirim}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="40" width="350" height="20" uuid="97da769d-59b5-4221-9155-1a2f8f47881b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{pBagianPenerima}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="60" width="350" height="20" uuid="9e45498b-bdef-46a4-963f-bfd3d9c4b212"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{pNoBundle}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="80" width="350" height="20" uuid="8e6e50b3-df7b-461b-a5aa-61bd3be45a90"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{pJumlahDokumen}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="60" splitType="Stretch">
+			<componentElement>
+				<reportElement x="1" y="0" width="571" height="60" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="f9c47ee3-3070-46e4-9ae4-6eb9befece17">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="Blank">
+					<datasetRun subDataset="ItemDaftarIsi" uuid="2d11f7f5-41fe-46c7-9c7e-a73882c44c87">
+						<dataSourceExpression><![CDATA[$P{IsiDataReport}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="40" uuid="b931198c-b6bf-43f3-b96d-3930933f1511">
+						<property name="com.jaspersoft.studio.components.table.model.value.name" value="Column1"/>
+						<jr:tableHeader height="30" rowSpan="1">
+							<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="40" height="30" uuid="1290020a-bc40-4b9f-89bf-f02060a3412a"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial Narrow" size="11"/>
+								</textElement>
+								<text><![CDATA[No]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell height="30">
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="40" height="30" uuid="ea243350-beea-489a-a753-e91c8876fd55"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial Narrow"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="166330ed-3a86-49fd-8607-d5996c724bd4">
+						<property name="com.jaspersoft.studio.components.table.model.value.name" value="Column2"/>
+						<jr:tableHeader height="30" rowSpan="1">
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="e2ce7283-2891-4b31-9c16-b4b1117985a4"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial Narrow" size="11"/>
+								</textElement>
+								<text><![CDATA[Nomor Permohonan]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell height="30">
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="100" height="30" uuid="c1738239-cb90-4543-8335-8ad3c48c72bb"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial Narrow"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{noPermohonan}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="c6284dae-82e3-469b-a447-1fbcf7ee28a6">
+						<property name="com.jaspersoft.studio.components.table.model.value.name" value="Column3"/>
+						<jr:tableHeader height="30" rowSpan="1">
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="76c97fd6-7a45-479f-8b93-5a31cbb7cff6"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial Narrow" size="11"/>
+								</textElement>
+								<text><![CDATA[Tanggal Penerimaan]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell height="30">
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="100" height="30" uuid="62574620-b622-4cfd-a7d9-2496a335d8eb"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial Narrow"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{tanggalPenerimaan}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="12ea183e-fd43-45a7-a709-eb5d02d52d44">
+						<property name="com.jaspersoft.studio.components.table.model.value.name" value="Column4"/>
+						<jr:tableHeader height="30" rowSpan="1">
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="d8cce8c2-ad2e-4a92-83f7-eff61e7b5a2d"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial Narrow" size="11"/>
+								</textElement>
+								<text><![CDATA[Kelas]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell height="30">
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="90" height="30" uuid="786731f8-17d5-411c-a46c-05717a635a51"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial Narrow"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{kelas}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="213" uuid="eb2c0af7-ea66-4ed0-9684-e0c0786a6539">
+						<property name="com.jaspersoft.studio.components.table.model.value.name" value="Column5"/>
+						<jr:tableHeader height="30" rowSpan="1">
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="213" height="30" uuid="2118990a-1afc-42c8-a286-6a8b543da0d2"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial Narrow" size="11"/>
+								</textElement>
+								<text><![CDATA[ Merek]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell height="30">
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="213" height="30" uuid="ef1378ce-1ac1-4f8d-9879-575daceb00a6"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial Narrow"/>
+								</textElement>
+								<textFieldExpression><![CDATA[" " + $F{merek}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="139" splitType="Stretch">
+			<staticText>
+				<reportElement x="31" y="34" width="149" height="19" uuid="2e6d96f7-b4e5-4fa7-9ace-8743d346a06c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Penerima,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="120" width="209" height="19" uuid="be4106ba-301e-4482-aa5e-cf03418caeae"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[TM. Fungsional Pemeriksa
+]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="100" width="210" height="20" uuid="07762600-84e4-497d-90c6-f3ecd281e47a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{fBagianPenerima}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="335" y="120" width="209" height="19" uuid="bef635d4-b7b1-4057-8625-2a97b351bfab"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Kepala Seksi Pelayanan Teknis]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="101" width="209" height="19" uuid="c2214f44-1255-4fe0-a4ec-af1fced506fd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Dra. Emmy Rosliana Donaria]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="347" y="34" width="184" height="19" uuid="08398346-e283-49d1-b4a1-62d656d6c73e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Pengirim,]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="347" y="14" width="184" height="20" uuid="7787e5db-7836-4f5a-bcdf-98014cafada8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Jakarta, " + $P{pPrintDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="37" splitType="Stretch">
+			<textField>
+				<reportElement x="390" y="20" width="110" height="16" uuid="f94dd67f-86f5-46d4-9824-0be497598ef1"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Halaman " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="500" y="20" width="72" height="16" uuid="b3118eb8-e642-4cdd-822c-0d89c78a913f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[" dari " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

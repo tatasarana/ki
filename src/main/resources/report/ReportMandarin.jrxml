@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sales" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="15ce32e1-aef5-4d43-83d6-6588f89e232e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="text_pinyin" class="java.lang.String"/>
+	<parameter name="text_arabic" class="java.lang.String"/>
+	<parameter name="text_latin" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="text_pinyin" class="java.lang.String"/>
+	<field name="text_arabic" class="java.lang.String"/>
+	<field name="text_latin" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="706" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="550" height="30" uuid="96eedb9a-1ad8-4ee7-8850-94008443d973"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FORMULIR PERMOHONAN PENDAFTARAN MEREK INDONESIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="560" height="30" uuid="1ccf86e2-cb37-477f-9a38-bf84788acc73"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="microsoft-yahei" size="11" isBold="false" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[在此，我们向您发送软件开发和维护部门的销售报告：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="167" width="535" height="30" uuid="e24824be-f85a-4942-9ef7-97550d78b6d1"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Hereby we send you the sales Report fromsoftwaredevelopment and Maintenance divission:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="200" width="110" height="17" uuid="3f75bfc2-82db-456a-83ac-b18c51ef2813"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Periods]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="227" width="110" height="17" uuid="8cdda8f7-6085-43f5-ac63-86f313a7ae43"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Sales]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="200" width="20" height="17" uuid="3d9b6d49-2cf0-4019-ac6c-bfea2fa78347"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="119" y="227" width="20" height="17" uuid="9502fd45-c1e1-4884-98ac-9476e4cbf5c3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="139" y="200" width="201" height="17" uuid="55574f9a-b263-43cf-bef0-cb3fa219c63b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[2018 - 2019]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="182" y="282" width="200" height="68" uuid="a64dcc60-10dc-4781-9125-205994356716"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="microsoft-yahei" size="26" isBold="true" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[销售报告]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="368" width="535" height="30" uuid="1ccf86e2-cb37-477f-9a38-bf84788acc73"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="microsoft-yahei" size="16" isBold="false" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[在此，我们向您发送软件开发和维护部门的销售报告：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="401" width="110" height="39" uuid="8d51a59f-b5b8-425c-9136-ce105015f30b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="microsoft-yahei" size="16" isBold="true" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[期]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="452" width="110" height="31" uuid="be9afbe2-3b38-4bfd-8f22-b2317e63eda9"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="microsoft-yahei" size="16" isBold="false" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[总销售额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="124" y="401" width="20" height="39" uuid="33d5b993-7724-4d04-ae1b-755cc25329d6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="124" y="452" width="20" height="31" uuid="825146dc-5f6c-4c17-9c74-955d0a6728c5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="143" y="401" width="201" height="39" uuid="742a6af5-b220-453c-825a-feb748bdfe83"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="16" isBold="false"/>
+				</textElement>
+				<text><![CDATA[2018 - 2019]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="138" y="227" width="201" height="17" uuid="598ed526-5946-413e-8ccf-e86f12b6b977"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rp 25.000.000.000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="13" y="240" width="535" height="30" uuid="50a87d71-65a0-4b3a-bb3a-f72d32fe482a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[(twenty four billion five hundred seventy thousand million Rupiah)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="143" y="452" width="201" height="31" uuid="38d8e7bc-d7b6-462a-a05d-98addfcafeac"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rp 25.000.000.000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="514" width="535" height="30" uuid="bd4cdf97-68fd-4791-8cf8-2fb46c289ae9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="microsoft-yahei" size="16" isBold="false" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[（二十四亿五千七百万卢比）]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="10" y="80" width="451" height="20" uuid="d68c12d4-5bbd-4a69-b73e-501d7a0f7326"/>
+				<textElement>
+					<font fontName="microsoft-yahei" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{text_pinyin}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="110" width="451" height="21" uuid="c98b222b-3eb9-46d5-b187-1f71e82204a1"/>
+				<textElement>
+					<font fontName="microsoft-yahei" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{text_arabic}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="12" y="137" width="449" height="24" uuid="68cff43e-ac2b-44ec-a278-b342af96d687"/>
+				<textElement>
+					<font fontName="microsoft-yahei" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{text_latin}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

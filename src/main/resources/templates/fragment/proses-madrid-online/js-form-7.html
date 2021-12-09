@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="form-7" th:remove="tag">
+	<script type="text/javascript" language="javascript" th:inline="javascript">
+    $(document).ready(function () {
+        var csrf = /*[[${_csrf.token}]]*/'';
+        var header = "X-CSRF-TOKEN";
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, csrf);
+        });
+        
+     	// Checkbox agree disclaimer check checked or not checked
+        $('input[name=agreeResumeCheckbox]').click(function(){
+        	if($(this).is(":checked")){
+                $("#yaModal").attr("disabled", false);
+            }
+            else if($(this).is(":not(:checked)")){
+            	$("#yaModal").attr("disabled", true);
+            }
+        });
+     	
+        $('#btnSelesai').click(function (e) {
+        	$("#agreeResume").prop('checked', false);
+        	$("#yaModal").attr("disabled", true);
+        });
+
+	    $('#yaModal').click(function () {
+		    if ($('#form8NoPermohonan').text() != '') { 
+		          if ($('#tableTxTmClass').DataTable().page.info().recordsDisplay == 0) {
+                    swal("Error", "Silakan melengkapi data Kelas, kemudian klik Simpan dan Lanjutkan.", "error");
+                    $("#kelas").trigger("click");
+                    $('#previewModal').modal('hide');
+                 }     
+             	 else {
+                	var noPermohonan = $('#form8NoPermohonan').text();
+				    $.ajax({
+					    url: /*[[@{/layanan/selesai-permohonan-proses-madrid}]]*/'',
+					    data: {
+						    noPermohonan: noPermohonan
+					    },
+					    type: 'POST',
+					    beforeSend: function () {
+						    showLoading();
+					    },
+					    complete: function () {
+						    hideLoading();
+					    },
+					    success: function (data) {
+					    	try {
+							    var result = JSON.parse(data);
+							    if (result.key === "Error") {
+							    	$("#agreeResume").prop('checked', false);
+							    	$("#yaModal").attr("disabled", true);
+								    $('#isError').css("color", "orangered");
+								    $('#isError').text(result.value);
+							    	setTimeout(function () {
+									    $("#isError").html(null);
+									    if (result.value === "Tab Kelas Belum Tersimpan") {
+									    	$('#kelas').trigger("click");
+									    	$('#previewModal').modal('hide');
+
+								    	} else if (result.value === "Untuk Tipe Permohonan: Merek Dagang dan Jasa, Pilihan Kelas harus meliputi kelas Barang (Kelas : 1-34) dan kelas Jasa (Kelas : 35-45).") {
+								    		$('#kelas').trigger("click");
+								    		$('#previewModal').modal('hide');
+								    	} else if (result.value === "File Gambar Label Merek Yang Anda Upload Terindikasi Sama Dengan File Gambar Tanda Tangan Kuasa/Pemohon, Mohon Periksa Kembali. Pastikan Gambar, Nama file Label Merek dengan Tanda Tangan Pemohon/Kuasa berbeda dan Kemudian Klik Simpan dan Lanjutkan !!") {
+								    		$('#merek').trigger("click");
+								    		$('#previewModal').modal('hide');
+								    	}
+								    }, 10000);
+							    } else if (result.key === "Success") {
+								    $('#isError').css("color", "black");
+								    $('#isError').text(result.value);
+								    window.location = /*[[@{/layanan/list-permohonan-proses-madrid}]]*/'';
+							    }
+							 } catch(ex) {
+							    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+							    hideLoading();
+								 
+							 }
+					    },
+					    error: function (xhr, status) {
+						    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+					    }
+				    });
+                }
+		    }
+	    });
+    });
+</script>
+</div>
+</html>

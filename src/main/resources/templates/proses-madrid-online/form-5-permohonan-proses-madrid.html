@@ -1,0 +1,154 @@
+<div class="row" th:classappend="${isEdit ? '' : 'display--none'}"
+     th:attr="js-direction=${isEdit ? '' : 'step-form-place'}, js-id=${isEdit ? '' : '5'}"
+     xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="row col-md-12">
+        <!--Header Judul-->
+        <div class="row col-md-12" style="margin-bottom: 15px">
+            <div class="col-md-4">
+                <h3>Referensi</h3>
+            </div>
+            <div class="col-md-8">
+                <div class="pull-right" th:if="${!isEdit}">
+                    <li js-direction="step-form" class="current" js-id="3"
+                        style="list-style-type: none; float: left">
+                        <button type="button" class="btn btn-warning">
+                            Sebelumnya
+                        </button>
+                    </li>
+                    <li style="list-style-type:none; float: right; margin-left:5px;">
+                        <button class="btn btn-primary" id="btnSaveForm5">
+                            Simpan dan Lanjutkan
+                        </button>
+                    </li>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row col-md-12">
+    <form id="idTranformasiMadrid" class="form form-horizontal">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Madrid Transformasi-Data Nomor Madrid (yang ingin di transformasi)</div>
+            <div class="panel-body">
+
+                <form id="formSearch" method="post">
+                    <div class="form-group" style="padding-left: 15px">
+                        <div class="col-lg-4" style="padding-left: 0px">
+                            <input type="text" id="cariNoTranformasiMadrid" class="form-control"
+                                   placeholder="Cari Nomor Permohonan Madrid (contoh : M002019xxx)"/>
+                        </div>
+                        <div class="col-lg-4" style="padding-left: 0px">
+                            <input type="text" id="cariRegistrasiTransformasiMadrid" class="form-control"
+                                   placeholder="Cari Nomor Pendaftaran Madrid (contoh: IDM000000123)"/>
+                        </div>
+                        <div class="col-lg-4">
+                            <button type="button" id="cariBtnTransformasiMadrid" class="btn btn-primary btn-Merek"> <i class="fas fa-search"></i>
+                                Cari
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="table-container">
+                    <table id="tableTransformasi" class="table table-striped table-bordered table-responsive">
+                        <thead>
+                        <tr>
+                            <!--<th hidden="true"></th>-->
+                            <th>No.</th>
+                            <th>Nomor Permohonan</th>
+                            <th>Tanggal Penerimaan</th>
+                            <th>Nomor Pendaftaran</th>
+                            <th>Tanggal Pendaftaran</th>
+                            <!--<th hidden="true"></th>-->
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+
+                <!--<div class="col-lg-12" style="padding-left: 0px">-->
+                    <!--<label class="col-sm-4 col-form-label">Tanggal Notifikasi Pembatalan</label>-->
+                    <!--<div class="col-sm-8">-->
+                        <!--<input type="text" class="form-control" id="tglNotifPembatalan" placeholder="Tanggal Notifikasi Pembatalan"/>-->
+                    <!--</div>-->
+                <!--</div>-->
+            </div>
+        </div>
+    </form>
+
+    <form id="idReplacementMadrid" class="form form-horizontal">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Madrid Replacement-Data Nomor Madrid (yang ingin di ganti)</div>
+            <div class="panel-body">
+
+                <form id="formSearch" method="post">
+                    <div class="form-group" style="padding-left: 15px">
+                        <div class="col-lg-4" style="padding-left: 0px">
+                            <input type="text" id="cariNoPendaftaranInter" class="form-control"
+                                   placeholder="Cari Nomor Pendaftaran (IDM)"/>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <button type="button" id="cariBtnNoPendaftaranInter" class="btn btn-primary btn-Merek"> <i class="fas fa-search"></i>
+                                Cari
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="table-container">
+                    <table id="tableReplacementPendaftar" class="table table-striped table-bordered table-responsive">
+                        <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Nomor Permohonan</th>
+                            <th>Tanggal Penerimaan</th>
+                            <th>Nomor Pendaftaran</th>
+                            <th>Tanggal Pendaftaran</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form id="idReplacementMadridPenggantian" class="form form-horizontal">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Madrid Replacement-Data Nomor Nasional (Pengganti)</div>
+            <div class="panel-body">
+
+                <form id="formSearchPenggantianMadrid" method="post">
+                    <div class="form-group" style="padding-left: 15px">
+                        <div class="col-lg-4" style="padding-left: 0px">
+                            <input type="text" id="cariNoReplacementMadridInter" class="form-control"
+                                   placeholder="Cari Nomor Pendaftaran (IDM)"/>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <button type="button" class="btn btn-primary" id="cariBtnNoReplacementMadridInter"><span class="glyphicon glyphicon-plus"></span></button>
+                            <button type="button" class="btn btn-danger" id="hapusBtnNoReplacementMadridInter"><span class="glyphicon glyphicon-minus"></span></button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="table-container">
+                    <table id="tableReplacementPendaftarPengganti" class="table table-striped table-bordered table-responsive">
+                        <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Nomor Permohonan</th>
+                            <th>Tanggal Penerimaan</th>
+                            <th>Nomor Pendaftaran</th>
+                            <th>Tanggal Pendaftaran</th>
+                            <th>Tanggal Prioritas</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+</div>
+
+

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="limit_continuation" pageWidth="592" pageHeight="250" whenNoDataType="AllSectionsNoDetail" columnWidth="592" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="12e33e45-ea8b-4bfb-aa07-255962c97973">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA["MID2019000001"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="priorList" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+A.APPLICATION_ID,
+D.TM_PRIOR_ID,
+COALESCE(B.COUNTRY_NAME,'-') AS COUNTRY_NAME,
+COALESCE(D.TM_PRIOR_NO,'-') AS TM_PRIOR_NO,
+COALESCE(D.TM_PRIOR_NOTE,'-') AS TM_PRIOR_NOTE,
+COALESCE(TO_CHAR(D.TM_PRIOR_DATE,'DD/MM/YY'),' ') AS TM_PRIOR_DATE
+FROM TX_TM_GENERAL A
+LEFT JOIN TX_TM_PRIOR D ON D.APPLICATION_ID = A.APPLICATION_ID
+LEFT JOIN M_COUNTRY B ON B.COUNTRY_ID = D.TM_PRIOR_COUNTRY
+WHERE A.APPLICATION_ID = $P{applicationId}
+ORDER BY D.TM_PRIOR_NO ASC]]>
+	</queryString>
+	<field name="APPLICATION_ID" class="java.lang.String"/>
+	<field name="TM_PRIOR_ID" class="java.lang.String"/>
+	<field name="COUNTRY_NAME" class="java.lang.String"/>
+	<field name="TM_PRIOR_NO" class="java.lang.String"/>
+	<field name="TM_PRIOR_NOTE" class="java.lang.String"/>
+	<field name="TM_PRIOR_DATE" class="java.lang.String"/>
+	<columnHeader>
+		<band height="36">
+			<staticText>
+				<reportElement x="52" y="16" width="330" height="20" forecolor="#000000" uuid="0943abdb-11af-4c7a-9354-27f698825dcf"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[6. PRIORITY CLAIMED]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="150" splitType="Stretch">
+			<staticText>
+				<reportElement x="70" y="10" width="400" height="20" forecolor="#003366" uuid="54eafc24-c3f0-4473-a1df-bddb9ac383b8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[The applicant claims the priority of the earlier filing mentioned below:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="50" y="15" width="10" height="10" backcolor="#808080" uuid="89f62e01-23e2-4748-97bc-493ecb82ba0a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_PRIOR_ID} != null ? "X":""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="70" y="40" width="120" height="20" forecolor="#000000" uuid="9258618a-06b7-47e4-ac3e-c2705ba55b6d"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Office of earlier filing:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="190" y="40" width="308" height="20" uuid="cf22a5ca-4bd8-4c2f-8ebe-9eefbd341745"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{COUNTRY_NAME}!=null ?$F{COUNTRY_NAME}:"-"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="189" y="70" width="308" height="30" uuid="53c97636-42ae-48c4-a0fc-23b931b2d38e"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{TM_PRIOR_NO}!=null?$F{TM_PRIOR_NO}:"-"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="70" y="70" width="120" height="30" forecolor="#000000" uuid="6c4858b4-c34b-4d14-ad82-a723fd0c451e"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Number of earlier filing (if available): ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="69" y="110" width="120" height="30" forecolor="#000000" uuid="06bc85c3-6afe-43a1-81a0-241375cad0c3"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Date of earlier filing (dd/mm/yyyy):]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="189" y="110" width="308" height="30" uuid="994a360d-1b0b-470f-a278-d61fcb4276bb"/>
+				<box padding="3">
+					<pen lineColor="#CCCCFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#CCCCFF"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{TM_PRIOR_DATE}!=null?$F{TM_PRIOR_DATE}:"-"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

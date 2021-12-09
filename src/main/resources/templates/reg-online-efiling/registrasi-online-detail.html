@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+	<p th:replace="fragment/header :: navbar"/>
+	<div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+	<form class="form-horizontal" th:object="${form}">
+	<div class="my-wrapper" id="my-wrapper">
+		<div class="my-wrapper--inner">
+
+			<div class="wrapper-content">
+				<div class="content--top border--bottom padding-content--left-right">
+					<div class="row">
+						<div class="col-md-12">
+							<h3 class="content--title text--bold">
+								<i class="fas fa-user"></i> Registrasi Akun - Detail
+							</h3>
+							<small class="sub-header">Registrasi Akun / Detail</small>
+							<small style="float:right;margin-left:13px"><a th:href="@{/layanan/list-daftar-online}"><i class="fa fa-arrow-left"></i> Kembali</a></small>
+						</div>
+					</div>
+				</div>
+				<div class="content--center padding-content--left-right">
+					<div class="wrapper--bg">
+						<div class="row">
+                  			<div class="col-md-6">
+                  				<div class="form-group">
+                        			<label class="col-sm-4 col-form-label">Email</label>
+                        			<div class="col-sm-8">
+                          				<label class="col-sm-8 col-form-label" th:text="*{email}"></label>
+                        			</div>
+                      			</div>
+                      			<div class="form-group">
+                        			<label class="col-sm-4 col-form-label">Jenis Pemohon</label>
+                        			<div class="col-sm-8">
+                        				<label class="col-sm-8 col-form-label" th:text="*{applicantType}"></label>
+                        			</div>
+                      			</div>
+                      			<div class="form-group">
+                        			<label class="col-sm-4 col-form-label">Nomor Konsultan</label>
+                        			<div class="col-sm-8">
+                          				<label class="col-sm-8 col-form-label" th:text="*{mReprs == null ? ' - ' : mReprs.no}"></label>
+                        			</div>
+                      			</div>
+                      		</div>
+                  			<div class="col-md-6">
+	                  			<div class="form-group">
+                        			<label class="col-sm-3 col-form-label">Status</label>
+                        			<div class="col-md-9">
+                          				<label class="col-md-9 col-form-label" th:text="*{approvalStatusLabel}" id="approvalStatus"></label>
+                        			</div>
+                      			</div>
+                  				<div class="form-group">
+                        			<label class="col-sm-3 col-form-label">Attachment</label>
+                        			<div class="col-md-9">
+                        				<img th:if="${imgReprsCard != null}" th:src="${imgReprsCard}" th:attr="alt=*{fileNameCard}"
+                        					class="image-thumbnail" style="max-width: 40%; margin-top: 10px"/>
+                        				<a th:if="${fileReprsCard != null}" th:href="${fileReprsCard}" th:attr="download=*{fileNameCard}">
+                        					<label class="col-sm-8 col-form-label" th:text="*{fileNameCard}" style="cursor: pointer"></label>
+                        				</a>
+                        			</div>
+                      			</div>
+                  			</div>
+                  		</div>
+                  		<div class="row" style="border-top: 1px solid #d6d6d6;border-bottom: 1px solid #d6d6d6;padding-top: 15px;">
+                  			<div class="col-md-6">
+                  				<div class="form-group">
+                        			<label class="col-sm-4 col-form-label">Nama</label>
+                        			<div class="col-md-8">
+                          				<label class="col-md-8 col-form-label" th:text="*{name}"></label>
+                        			</div>
+                      			</div>
+                      			<div class="form-group">
+                        			<label class="col-sm-4 col-form-label">Nomor KTP</label>
+                        			<div class="col-md-8">
+                        				<label class="col-md-8 col-form-label" th:text="*{noTemp}"></label>
+                        			</div>
+                      			</div>
+                      			<div class="form-group">
+                        			<label class="col-sm-4 col-form-label">Jenis Kelamin</label>
+                        			<div class="col-md-8">
+                        				<label class="col-md-8 col-form-label" th:text="*{gender.name}"></label>
+                        			</div>
+                      			</div>
+                      			<div class="form-group">
+                        			<label class="col-sm-4 col-form-label">Tanggal Lahir</label>
+                        			<div class="col-md-8">
+                        				<label class="col-md-8 col-form-label" th:text="*{birthDateTemp}"></label>
+                        			</div>
+                      			</div>
+                      			<div class="form-group">
+                        			<label class="col-sm-4 col-form-label">Kewarganegaraan</label>
+                        			<div class="col-md-8">
+                        				<label class="col-md-8 col-form-label" th:text="*{nationality.name}"></label>
+                        			</div>
+                      			</div>
+                      			<div class="form-group">
+                        			<label class="col-sm-4 col-form-label">Telepon</label>
+                        			<div class="col-md-8">
+                        				<label class="col-md-8 col-form-label" th:text="*{phone}"></label>
+                        			</div>
+                      			</div>
+                  			</div>
+                  			<div class="col-md-6">
+                  				<div class="form-group">
+                        			<label class="col-sm-3 col-form-label">Provinsi</label>
+                        			<div class="col-md-9">
+                          				<label class="col-md-9 col-form-label" th:text="*{mProvince.name}"></label>
+                        			</div>
+                      			</div>
+                      			<div class="form-group">
+                        			<label class="col-sm-3 col-form-label">Kabupaten/Kota</label>
+                        			<div class="col-md-9">
+                          				<label class="col-md-9 col-form-label" th:text="*{mCity.name}"></label>
+                        			</div>
+                      			</div>
+                      			<div class="form-group">
+                        			<label class="col-sm-3 col-form-label">Alamat</label>
+                        			<div class="col-md-9">
+                          				<label class="col-md-9 col-form-label" th:text="*{address}"></label>
+                        			</div>
+                      			</div>
+                      			<div class="form-group">
+                        			<label class="col-sm-3 col-form-label">Kode Pos</label>
+                        			<div class="col-md-9">
+                          				<label class="col-md-9 col-form-label" th:text="*{zipCode}"></label>
+                        			</div>
+                      			</div>
+                      			<div class="form-group" hidden="true">
+                        			<label class="col-sm-3 col-form-label">KTP</label>
+                        			<div class="col-md-9">
+                        				<img th:if="${imgIdCard != null}" th:src="${imgIdCard}" th:attr="alt=*{fileNameNik}"
+                        					class="image-thumbnail" style="max-width: 40%; margin-top: 10px"/>
+                        			</div>
+                      			</div>
+                  			</div>
+                  		</div>
+                  		<br/>
+						<button id="btnResend" type="button" class="btn btn-info"
+							th:if="${showButton and #authentication.getPrincipal().hasAccessMenu('T-REGA')}"><i class="fa fa-paper-plane"></i>  Resend</button>
+						<button id="btnApprove" type="button" class="btn btn-primary"
+							th:if="${showButton and #authentication.getPrincipal().hasAccessMenu('T-REGA')}"><i class="fas fa-check"></i>  Setuju</button>
+						<button id="btnReject" type="button" class="btn btn-danger" 
+							th:if="${showButton and #authentication.getPrincipal().hasAccessMenu('T-REGA')}"><i class="fa fa-times"></i> Tolak</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</form>
+</div>
+<!-- The Modal Zoom Preview -->
+<div id="modalImage" class="modal modal-image">
+
+  <!-- The Close Button -->
+  <span class="modal-image-close" id="modalImageClose">&times;</span>
+
+  <!-- Modal Content (The Image) -->
+  <img class="modal-image-content" id="modalImageContent"/>
+
+  <!-- Modal Caption (Image Text) -->
+  <div class="modal-image-caption" id="modalImageCaption"></div>
+</div>
+<!-- The Modal Zoom Preview --></div><div th:replace="fragment/js :: default"></div> <div th:replace="fragment/js :: main"></div> <div th:replace="fragment/js :: datatables"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var csrf = /*[[${_csrf.token}]]*/'';
+	var header = "X-CSRF-TOKEN";
+	$(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(header, csrf);
+    });
+	$(document).ready(function(){
+		$('#btnResend').on('click', function (e) {
+			swal("Konfirmasi", "Apakah Anda yakin akan mengirimkan ulang Aktivasi Akun ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+			.then((value) => {
+				if (value) {
+					$.ajax({
+						type: 'POST',
+						url: /*[[@{/layanan/resend-daftar-online}]]*/'',
+						datatype: 'jsonp',
+						data:  {
+							id: /*[[${form.id}]]*/''
+						},
+						beforeSend: function () {
+							showLoading();
+						},
+						complete:function(){
+							hideLoading();
+						},
+		                success: function (data) {
+		                	swal("Informasi", "Email Aktivasi Akun telah dikirimkan", "info");
+		                },
+		                error: function (xhr, status) {
+			                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+		                }
+		            });
+				}
+			});
+		});
+		
+		$('#btnApprove').on('click', function (e) {
+			swal("Konfirmasi", "Apakah Anda yakin akan mengaktifkan Akun ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+			.then((value) => {
+				if (value) {
+					$.ajax({
+						type: 'POST',
+						url: /*[[@{/layanan/approve-daftar-online}]]*/'',
+						datatype: 'jsonp',
+						data:  {
+							id: /*[[${form.id}]]*/''
+						},
+						beforeSend: function () {
+							showLoading();
+						},
+						complete:function(){
+							hideLoading();
+						},
+		                success: function (data) {
+		                	var result = JSON.parse(data);
+		                	
+		                	if (result == 'SUCCESS') {
+			                	$('#approvalStatus').text('Aktif');
+			                	$('#btnResend').hide();
+			                	$('#btnApprove').hide();
+			                	$('#btnReject').hide();
+			                	swal("Informasi", "Akun telah diaktifkan dan disetujui", "info");
+		                	} else {
+		                		swal("Informasi", "Akun ini tidak dapat diaktifkan, karena " + result, "info");
+		                	}
+		                },
+		                error: function (xhr, status) {
+			                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+		                }
+		            });
+				}
+			});
+		});
+		$('#btnReject').on('click', function (e) {
+			swal("Konfirmasi", "Apakah Anda yakin akan menolak Akun ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+			.then((value) => {
+				if (value) {
+					$.ajax({
+		                type: 'POST',
+		                url: /*[[@{/layanan/reject-daftar-online}]]*/'',
+		                datatype: 'jsonp',
+		                data:  {
+		                	id: /*[[${form.id}]]*/''
+		                },
+		                beforeSend: function () {
+							showLoading();
+						},
+						complete:function(){
+							hideLoading();
+						},
+		                success: function (data) {
+		                	$('#approvalStatus').text('Ditolak');
+		                	$('#btnResend').hide();
+		                	$('#btnApprove').hide();
+		                	$('#btnReject').hide();
+		                	swal("Informasi", "Akun ditolak dan dinonaktifkan", "info");
+		                },
+		                error: function (xhr, status) {
+			                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+		                }
+		            });
+				}
+			});			
+		});
+	
+		$(".image-thumbnail").click(function(){
+	    	$("#modalImage").show();
+	        $("#modalImageContent").attr("src", $(this).attr("src"));
+	        $("#modalImageCaption").html($(this).attr("alt"));
+	    });
+	    
+	    $("#modalImageClose").click(function(){
+	    	$("#modalImage").hide();
+	    });
+	});
+	/*]]>*/
+</script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+	<p th:replace="fragment/header :: navbar"/>
+	<div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+	<div class="my-wrapper" id="my-wrapper">
+		<div class="my-wrapper--inner">
+			<!-- data pemohon -->
+			<div class="wrapper-content" id="permohonan-baru">
+				<div class="content--top border--bottom padding-content--left-right">
+					<div class="row">
+						<div class="col-md-12">
+							<h3 class="content--title text--bold">
+								<i class="fas fa-copy"></i> Workflow
+							</h3>
+							<!-- <small class="sub-header">Dashboard / Workflow Permohonan</small> -->
+						</div>
+					</div>
+				</div>
+				 <input type="hidden" id="idWorkflow" th:value="${id}"/>
+				<div class="content--center padding-content--left-right">
+					<div class="wrapper--bg">
+						<div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+							<button data-dismiss="alert" class="close close-sm" type="button">
+								<i class="icon-remove"></i>
+							</button>
+							<p>[[${errorMessage}]]</p>
+						</div>
+						<div class="jumbotron filterSearch">
+							<form>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Step</label>
+											<input type="text" id="Name" class="form-control" placeholder="Nama Workflow"/>
+										</div>										
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Dasar Hukum</label>										
+											 <select class="form-control" id="mLaw"><option style="display: none;" value="">-Pilih Dasar Hukum-</option>											 	
+												 <option th:each="mLaw :${listMLaw}" th:value="${mLaw.id}" th:text="${mLaw.desc} "/>
+											 </select>
+										</div>
+									</div>
+								</div>							
+							</form>
+
+						</div>
+						<div class="table-container">
+							<table id="tableDetail" class="table table-striped table-bordered table-responsive">
+						        <thead>
+									<tr>
+										<th>No.</th>
+										<th>Step</th>																												
+										<th></th>										
+									</tr>
+								</thead>	
+							</table>
+						</div>						
+					
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> 
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	$(document).ready(function(){
+		alert('test');
+		var csrf=/*[[${_csrf.token}]]*/'';		
+		var tableDetail = $('#tableDetail');
+		var noWorkflow = $('#idWorkflow').text();
+	
+		/* Load DataTable */
+		var dataTable=tableDetail.DataTable({
+			ajax:{
+				type:'GET',			
+				data: { 
+					no : noWorkflow					
+					},
+				url:/*[[@{/layanan/list-workflow-detail}]]*/''
+			},
+			
+			language:{ url:/*[[@{/js/i18n/datatables.in.json}]]*/''},
+			
+			success: function(data){
+                var  result = JSON.parse(data);
+                if (result.key === "Error"){
+                    $('#isError').css("color", "orangered");
+                    $('#isError').text(result.value);
+                    setTimeout(function() {
+                        $("#isError").html(null);
+                    }, 10000);
+                }else if(result.key === "Success"){
+                    $('#isError').css("color", "black");
+                    $('#isError').text(result.value);
+                    window.location = /*[[@{/layanan/list-data-permohonan}]]*/'';
+                }
+            },
+			error: function (xhr, status) {
+                var err = eval("(" + xhr.responseText + ")");
+                console.log(xhr);
+                var msg = JSON.parse(err);
+                console.log(msg);
+                //alert('Exeption: Something From Server');
+            }
+		});
+		dataTable.on('error.dt',function(e,settings,techNote,message){
+			swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+		});
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,1170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MADRID_TR" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0e8698c1-6610-4400-aeae-9f78df6fb077">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<style name="Table 1_TH" mode="Opaque" backcolor="#D1D1D1">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_CH" mode="Opaque" backcolor="#919191">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="kelasDataset" uuid="8a621a0c-938c-4128-a473-9eae12ea8b37">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="mClass.no" class="java.lang.Integer"/>
+		<field name="mClass.descEn" class="java.lang.String"/>
+		<field name="mClass.desc" class="java.lang.String"/>
+		<field name="mClassDetail.descEn" class="java.lang.String"/>
+		<field name="mClassDetail.desc" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="replacementDataset" uuid="8a621a0c-938c-4128-a473-9eae12ea8b38">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="txRegistration.no" class="java.lang.String"/>
+		<field name="createdDate" class="java.sql.Timestamp"/>
+		<field name="filingDate" class="java.sql.Timestamp"/>
+	</subDataset>
+	<parameter name="APPLICATION_NO" class="java.lang.String"/>
+	<parameter name="daftarKelas" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="daftarReplacement" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="TANDA_TANGAN" class="java.lang.String"/>
+	<parameter name="pUploadImgPath" class="java.lang.String"/>
+	<parameter name="pCapDjki" class="java.lang.String"/>
+	<parameter name="noPermohonan" class="java.lang.String"/>
+	<parameter name="regNo" class="java.lang.String"/>
+	<parameter name="regNo2" class="java.lang.String"/>
+	<parameter name="tglPendaftaran" class="java.sql.Timestamp"/>
+	<parameter name="tglPengajuan" class="java.sql.Timestamp"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+MFT.FILE_TYPE_DESC,
+TR.APPLICATION_DATE, TR.APPLICANT_NOTES, TR.FILE_TYPE_ID,
+TTO.TM_OWNER_NAME, TTO.TM_OWNER_TYPE, TTO.TM_OWNER_NATIONALITY, MCTR.COUNTRY_NAME, TTO.TM_OWNER_ADDRESS, MCT.CITY_NAME, TTO.TM_OWNER_ZIP_CODE, MP.PROV_NAME, TTO.TM_OWNER_PHONE, TTO.TM_OWNER_EMAIL,
+TTR.REPRS_NAME, TTR.REPRS_OFFICE, TTR.REPRS_ADDRESS, TTR.REPRS_PHONE, TTR.REPRS_EMAIL, MR.REPRS_NO,
+TTRF.REF_APPLICATION_ID, TTG.FILING_DATE, TTRF.CREATED_DATE, TTP.TM_PRIOR_DATE,
+TTD.TM_DOC_FILENAME,
+TRG.REG_NO, TRG.REG_START_DATE
+FROM MEREK.TX_TM_GENERAL TTG
+LEFT JOIN TX_RECEPTION TR ON TR.RECEPTION_ID = TTG.RECEPTION_ID
+LEFT JOIN TX_TM_OWNER TTO ON TTG.APPLICATION_ID = TTO.APPLICATION_ID
+LEFT JOIN M_CITY MCT ON TTO.TM_OWNER_CITY = MCT.CITY_ID
+LEFT JOIN M_PROVINCE MP ON TTO.TM_OWNER_PROVINCE = MP.PROV_ID
+LEFT JOIN M_COUNTRY MCTR ON TTO.TM_OWNER_COUNTRY = MCTR.COUNTRY_ID
+LEFT JOIN TX_TM_REPRS TTR ON TTG.APPLICATION_ID = TTR.APPLICATION_ID
+LEFT JOIN M_REPRS MR ON TTR.REPRS_ID = MR.REPRS_ID
+LEFT JOIN TX_TM_REFERENCE TTRF ON TTG.APPLICATION_ID = TTRF.APPLICATION_ID
+LEFT JOIN TX_REGISTRATION TRG ON TTRF.REF_APPLICATION_ID = TRG.APPLICATION_ID
+LEFT JOIN TX_TM_PRIOR TTP ON TTRF.APPLICATION_ID = TTP.APPLICATION_ID
+LEFT JOIN TX_TM_DOC TTD ON TTD.APPLICATION_ID = TTG.APPLICATION_ID
+LEFT JOIN M_FILE_TYPE MFT ON TR.FILE_TYPE_ID = MFT.FILE_TYPE_ID
+WHERE TTG.APPLICATION_NO = $P{APPLICATION_NO}]]>
+	</queryString>
+	<field name="FILE_TYPE_DESC" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="FILE_TYPE_DESC"/>
+	</field>
+	<field name="APPLICATION_DATE" class="java.util.Date">
+		<property name="com.jaspersoft.studio.field.label" value="APPLICATION_DATE"/>
+	</field>
+	<field name="APPLICANT_NOTES" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="APPLICANT_NOTES"/>
+	</field>
+	<field name="FILE_TYPE_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="FILE_TYPE_ID"/>
+	</field>
+	<field name="TM_OWNER_NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TM_OWNER_NAME"/>
+	</field>
+	<field name="TM_OWNER_TYPE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TM_OWNER_TYPE"/>
+	</field>
+	<field name="TM_OWNER_NATIONALITY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TM_OWNER_NATIONALITY"/>
+	</field>
+	<field name="COUNTRY_NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="COUNTRY_NAME"/>
+	</field>
+	<field name="TM_OWNER_ADDRESS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TM_OWNER_ADDRESS"/>
+	</field>
+	<field name="CITY_NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CITY_NAME"/>
+	</field>
+	<field name="TM_OWNER_ZIP_CODE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TM_OWNER_ZIP_CODE"/>
+	</field>
+	<field name="PROV_NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PROV_NAME"/>
+	</field>
+	<field name="TM_OWNER_PHONE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TM_OWNER_PHONE"/>
+	</field>
+	<field name="TM_OWNER_EMAIL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TM_OWNER_EMAIL"/>
+	</field>
+	<field name="REPRS_NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REPRS_NAME"/>
+	</field>
+	<field name="REPRS_OFFICE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REPRS_OFFICE"/>
+	</field>
+	<field name="REPRS_ADDRESS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REPRS_ADDRESS"/>
+	</field>
+	<field name="REPRS_PHONE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REPRS_PHONE"/>
+	</field>
+	<field name="REPRS_EMAIL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REPRS_EMAIL"/>
+	</field>
+	<field name="REPRS_NO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REPRS_NO"/>
+	</field>
+	<field name="REF_APPLICATION_ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REF_APPLICATION_ID"/>
+	</field>
+	<field name="FILING_DATE" class="java.util.Date">
+		<property name="com.jaspersoft.studio.field.label" value="FILING_DATE"/>
+	</field>
+	<field name="CREATED_DATE" class="java.util.Date">
+		<property name="com.jaspersoft.studio.field.label" value="CREATED_DATE"/>
+	</field>
+	<field name="TM_PRIOR_DATE" class="java.util.Date">
+		<property name="com.jaspersoft.studio.field.label" value="TM_PRIOR_DATE"/>
+	</field>
+	<field name="TM_DOC_FILENAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TM_DOC_FILENAME"/>
+	</field>
+	<field name="REG_NO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REG_NO"/>
+	</field>
+	<field name="REG_START_DATE" class="java.util.Date">
+		<property name="com.jaspersoft.studio.field.label" value="REG_START_DATE"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="45" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="113" y="20" width="140" height="25" uuid="75bc2b96-f9f1-417a-a8a7-a5e884ff53f5">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FORMULIR]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="250" y="20" width="230" height="25" uuid="17a0cc84-05cd-46c9-909c-afa64fdbc868">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FILE_TYPE_DESC}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="280" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<rectangle>
+				<reportElement x="0" y="10" width="556" height="50" uuid="b910e9e1-6940-461b-808b-db1ccb130b2c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="10" y="15" width="100" height="15" uuid="9ec0844d-58bb-44a6-ac89-ae70680a9ab4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Tanggal Pengajuan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="40" width="150" height="15" uuid="5931da58-f04b-401b-8cc0-bef10163c40b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[No Referensi Pemohon]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="35" width="557" height="1" uuid="3d560cba-56df-4451-81ad-4785521d1e46">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</line>
+			<rectangle>
+				<reportElement x="0" y="70" width="556" height="196" uuid="a95190cf-92a0-49ee-bfb8-83f67bf2bdb7">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="100" width="556" height="1" uuid="4819b57e-9b9d-47f4-84fd-b958ec1df9e5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="70" width="556" height="30" backcolor="#BABABA" uuid="e42247ab-9f9f-45d8-aac8-5794c292b591"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Identitas Pemegang Pendaftaran Internasional]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="100" width="100" height="19" uuid="fd9bf7ce-17cc-4d7b-ae27-9ca3af4bda9d"/>
+				<box topPadding="2" leftPadding="5">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Nama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="119" width="100" height="19" uuid="502d7b4f-db0d-4566-9083-ea5154e78a57"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Perorangan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="283" y="119" width="91" height="19" uuid="fa8d75ed-ef3a-47ee-9366-6f20945df792"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Badan Hukum]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="138" width="100" height="19" uuid="bfd12b21-3d0b-47fd-bf06-1456b141fb5c"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Kewarganegaraan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="283" y="138" width="91" height="19" uuid="6cbf38e9-9ce7-4e91-a1b2-aa5a3d4a1daa"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Negara Pendirian]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="157" width="100" height="33" uuid="7463dc95-c6c9-4579-bde8-8b35613c6087"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Alamat]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="190" width="100" height="19" uuid="edba44ff-70ed-4b73-a65d-711c8f25d6e4"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Kabupaten/Kota]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="284" y="190" width="90" height="19" uuid="acdfafce-4f92-4a74-9a2b-e300311ec3c2"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Kode Pos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="209" width="100" height="19" backcolor="#FFFFFF" uuid="e7c8e633-1a67-4419-8b8c-4a52267e14c4"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Propinsi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="284" y="209" width="90" height="19" uuid="27ecdb8d-80b8-44b7-9752-12991bc34372"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Negara]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="228" width="100" height="19" uuid="c8a4ad24-9dcd-4d1a-80b5-2c9bef1c5a93"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Tel/Fax]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="247" width="100" height="19" uuid="334dfaad-ecee-49fb-b0ce-ac5c81cb788f"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Email]]></text>
+			</staticText>
+			<textField pattern="yyyy-MM-dd" isBlankWhenNull="true">
+				<reportElement x="183" y="15" width="200" height="15" uuid="23a31f60-690f-40e4-8509-ea27621d5b21">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{APPLICATION_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="184" y="40" width="200" height="15" uuid="3aab63d4-7665-49a0-9db8-527db2a33818">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{APPLICANT_NOTES}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="100" width="455" height="19" uuid="d7e083b3-f7a9-4add-ae44-2a1f316bac70"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_OWNER_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="119" width="183" height="19" uuid="33a7de25-3c01-417b-b293-07ac4b59adfd"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_OWNER_TYPE}.equals("Perorangan") ? "Perorangan" : "-"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="374" y="119" width="182" height="19" uuid="be39625e-2bee-4afd-a46b-e04e127cc777"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_OWNER_TYPE}.equals("Badan Hukum") ? "Badan Hukum" : "-"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="138" width="183" height="19" uuid="8b0162f7-b4d8-4259-a2b1-516e5f8ff3b4"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_OWNER_NATIONALITY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="157" width="456" height="33" uuid="95c4976a-0867-4386-8233-2dd9891a47a2"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_OWNER_ADDRESS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="374" y="138" width="180" height="19" uuid="a48ebd2e-e584-4008-9c6d-7331aa3ea4c2"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COUNTRY_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="374" y="190" width="182" height="19" uuid="5045b014-01a4-4886-86d0-415524b03280"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_OWNER_ZIP_CODE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="373" y="209" width="183" height="19" uuid="c36c13a0-0910-44ac-a458-ae0abfb88122"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COUNTRY_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="190" width="184" height="19" uuid="edc1ea40-9b46-4aea-8f26-da20c0c7bd2b"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CITY_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="209" width="184" height="19" uuid="c06a1185-fa23-458f-b585-55bbffbe2a73"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROV_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="228" width="456" height="19" uuid="163c576b-6d68-4644-a92f-3bd27d514bab"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_OWNER_PHONE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="247" width="456" height="19" uuid="6c781b55-2f65-4af0-810d-3091cfa718a0"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_OWNER_EMAIL}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="140" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="10" width="556" height="125" uuid="15ad1357-ef36-4567-8e8c-cea6c8f19fe8"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="10" width="556" height="30" backcolor="#BABABA" uuid="dfb9378d-0041-4928-ae3e-589c4a68a73d"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Identitas Kuasa]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="-1" y="40" width="557" height="1" uuid="e3038106-16a5-48aa-98ce-128a62640d8c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="40" width="100" height="19" uuid="2b45c605-0aaa-4ee3-b0e7-97e107e12721"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Nama Kuasa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="59" width="100" height="19" uuid="cc925096-1c3e-4566-8f0b-53498f9f6f99"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Nama Kantor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="97" width="100" height="19" uuid="c11148c6-25cc-422a-8fca-db0dfac2b0b5"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Tel/Fax]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="116" width="100" height="19" uuid="e3c3e506-d6c5-4157-8fd9-1844a1c886dc"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Email]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="78" width="100" height="19" uuid="3185a36a-e8ff-41ab-ad83-c83e058c0b81"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Alamat]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="283" y="40" width="90" height="19" uuid="8435a1af-6257-491a-b38c-e887f88e307b"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[No Konsultan]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="40" width="183" height="19" uuid="bd67f99f-7104-4ff9-b841-21e1d30d9f6d"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REPRS_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="59" width="456" height="19" uuid="df7be3b5-fd88-4642-b1ff-cda102a88a4a"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REPRS_OFFICE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="78" width="456" height="19" uuid="d808baca-d41d-4aef-915a-89637a4fb51d"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REPRS_ADDRESS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="97" width="456" height="19" uuid="1f28f5fb-1a42-4f07-89f8-5e993270119e"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REPRS_PHONE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="116" width="456" height="19" uuid="4b80f32f-ebca-4385-b29f-4e526e51986e"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REPRS_EMAIL}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="373" y="40" width="181" height="19" uuid="ee4ea5f6-08af-4086-845f-cde6417af875"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REPRS_NO}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="108">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$F{FILE_TYPE_ID}.equals("MADRID_TRANSFORMASI")]]></printWhenExpression>
+			<rectangle>
+				<reportElement x="-1" y="10" width="556" height="87" uuid="f1941873-9035-4d89-a92b-fa8bcd1b8cc4"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Opaque" x="-1" y="10" width="556" height="30" backcolor="#BABABA" uuid="dfb9378d-0041-4928-ae3e-589c4a68a73d"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Informasi Mengenai Pendaftaran Internasional yang ditransformasi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="78" width="260" height="19" uuid="f730e80d-61c3-467f-9216-932f34455b61"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Tanggal notifikasi pembatalan pendaftaran internasional]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="259" height="19" uuid="8dbecf46-188f-46c6-be2d-c2fa836d2545"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Nomor Pendaftaran Internasional]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="59" width="260" height="19" uuid="165daa2d-c249-4d28-9a24-457ef84d8d05"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Tanggal Pendaftaran Internasional]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="259" y="40" width="296" height="19" uuid="80def12c-18f2-45f8-b2c3-5c589a27694b"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REF_APPLICATION_ID}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy-MM-dd" isBlankWhenNull="true">
+				<reportElement x="259" y="59" width="296" height="19" uuid="9ca4f100-e5b6-476a-8c9d-43d65b79cd62"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REG_START_DATE}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="300" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$F{FILE_TYPE_ID}.equals("MADRID_REPLACEMENT")]]></printWhenExpression>
+			<rectangle>
+				<reportElement x="0" y="92" width="556" height="106" uuid="e1e194dc-86e0-4ba9-b8a8-51bcec61def0"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="141" width="260" height="19" uuid="d6c344ff-27ce-4bb1-b409-dbe52b87d74b"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Tanggal Pendaftaran]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="122" width="260" height="19" uuid="3247c7a6-5bd1-4c25-a952-db83cd8cdc95"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Nomor Pendaftaran]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="260" y="122" width="296" height="19" uuid="12cb839f-359d-41ec-85ec-3c4b1e2bb409"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{regNo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="92" width="556" height="30" backcolor="#BABABA" uuid="65f9fe7b-5671-4221-a382-e44974891422"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Informasi mengenai pendaftaran nasional yang diganti dengan pendaftaran internasional]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="160" width="260" height="19" uuid="dc0ebbfc-5a57-48ec-bb20-a2fd8b791a3c"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Tanggal Pengajuan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="179" width="260" height="19" uuid="2b9e9cb2-febd-4a11-ac67-913cd2673cef"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Tanggal Prioritas]]></text>
+			</staticText>
+			<textField pattern="yyyy-MM-dd" isBlankWhenNull="true">
+				<reportElement x="260" y="160" width="296" height="19" uuid="65058217-7adb-4704-ae24-4992a6172efa"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tglPengajuan}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy-MM-dd" isBlankWhenNull="true">
+				<reportElement x="260" y="179" width="296" height="19" uuid="1c2f6f51-85f1-4365-861d-01d104006df6"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_PRIOR_DATE}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="8" width="556" height="68" uuid="deade13d-34f1-4329-b33b-ef956916a347"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="259" y="38" width="297" height="19" uuid="6dc095bf-3980-486c-ab27-5aa319535f94"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{noPermohonan}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="57" width="259" height="19" uuid="c326e3cc-175e-4e3e-96f7-b6a23bb39e95"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Nomor Pendaftaran]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="8" width="556" height="30" backcolor="#BABABA" uuid="27c9ee94-cea2-408b-b249-49d6ca5c0e81"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Informasi mengenai pendaftaran internasional ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="38" width="260" height="19" uuid="2cb631f0-17d2-439a-9fb1-c4b4bbe847f4"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Nomor Pendaftaran Internasional]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="259" y="57" width="297" height="19" uuid="9bf1438b-2c8d-47de-83ff-3e9b996c3be9"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{regNo2}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement stretchType="ContainerHeight" mode="Transparent" x="0" y="210" width="555" height="80" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="7f622cc4-ec7b-405c-bcf9-48bfbc2550a9">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="Blank">
+					<datasetRun subDataset="replacementDataset" uuid="860c1d27-19ea-49e6-9ee3-e9c431db74c9">
+						<dataSourceExpression><![CDATA[$P{daftarReplacement}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="138" uuid="682e88ea-cd27-4448-854b-88ee55ecefe4">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="138" height="30" uuid="f8b8f951-d6be-4d78-9510-6d4550981512"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="11"/>
+								</textElement>
+								<text><![CDATA[No. Pendaftaran]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField>
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="138" height="30" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="95d4003c-3835-4a76-8058-1f86c0d09d91"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{txRegistration.no}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="138" uuid="682e88ea-cd27-4448-854b-88ee55ecefe4">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="138" height="30" uuid="f8b8f951-d6be-4d78-9510-6d4550981512"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="11"/>
+								</textElement>
+								<text><![CDATA[Tgl. Pendaftaran]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField pattern="yyyy-MM-dd">
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="138" height="30" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="95d4003c-3835-4a76-8058-1f86c0d09d91"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{createdDate}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="138" uuid="682e88ea-cd27-4448-854b-88ee55ecefe4">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="138" height="30" uuid="f8b8f951-d6be-4d78-9510-6d4550981512"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="11"/>
+								</textElement>
+								<text><![CDATA[Tgl. Pengajuan]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField pattern="yyyy-MM-dd">
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="138" height="30" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="95d4003c-3835-4a76-8058-1f86c0d09d91"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{filingDate}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="138" uuid="682e88ea-cd27-4448-854b-88ee55ecefe4">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="138" height="30" uuid="f8b8f951-d6be-4d78-9510-6d4550981512"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="11"/>
+								</textElement>
+								<text><![CDATA[Tgl. Prioritas]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField pattern="yyyy-MM-dd">
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="138" height="30" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="95d4003c-3835-4a76-8058-1f86c0d09d91"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[""]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<textField pattern="yyyy-MM-dd" isBlankWhenNull="true">
+				<reportElement x="260" y="141" width="296" height="19" uuid="a55ebe48-53d9-463e-8a16-b75298e5fe62"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tglPendaftaran}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="115">
+			<componentElement>
+				<reportElement mode="Transparent" x="1" y="15" width="555" height="100" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="5d016ee3-a5e7-4456-8ee6-4ecf2f39135b">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="Blank">
+					<datasetRun subDataset="kelasDataset" uuid="24d7f21f-5207-45fc-96bf-d027b5ed7145">
+						<dataSourceExpression><![CDATA[$P{daftarKelas}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="100" uuid="b7969b76-c503-4271-8425-f4b904364bb1">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="282a3010-e9c9-40b1-9585-a4938590b660"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="11"/>
+								</textElement>
+								<text><![CDATA[Kelas]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table 1_TD" height="50">
+							<textField isStretchWithOverflow="true">
+								<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="100" height="50" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="49855d6e-ce97-4438-a097-65eecc07f7c6"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{mClass.no}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="455" uuid="a2b3d46c-ade6-44ad-a3aa-a1f3f20b7949">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="455" height="30" uuid="cd782460-240e-4ea3-9834-fae285eab382"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="11"/>
+								</textElement>
+								<text><![CDATA[Jenis Barang/Jasa]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table 1_TD" height="50">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="0" y="0" width="455" height="50" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="b22e4d70-027f-428e-99af-271af2c02f8f">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box padding="8"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{mClass.desc} + "\n" + $F{mClass.descEn}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<summary>
+		<band height="360">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<rectangle>
+				<reportElement x="0" y="100" width="556" height="170" uuid="613ac23a-4b87-4f94-9f31-25aba27bb4e4"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="100" width="556" height="30" backcolor="#BABABA" uuid="81f324d7-7af7-4111-a0b7-dec4f7b77136"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Tanda Tangan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="234" width="202" height="36" uuid="9a2ba0fd-8c39-4c5a-bcb9-a7da85a38dc2"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Tempat dan tanggal tanda tangan]]></text>
+			</staticText>
+			<textField pattern="yyyy-MM-dd" isBlankWhenNull="true">
+				<reportElement x="203" y="234" width="352" height="36" uuid="e3ab1432-29c0-462c-b27c-c65cc51299a0"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FILING_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="221" y="208" width="100" height="20" uuid="bd4d86db-2b9a-46e5-b8e8-8c68faf6e814"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_OWNER_NAME} == null ? $F{TM_OWNER_NAME} : $F{REPRS_NAME}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="231" y="141" width="77" height="90" uuid="010a2ced-3d9b-4cd6-9ecf-4a55f543d0c8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{pCapDjki}]]></imageExpression>
+			</image>
+			<rectangle>
+				<reportElement x="0" y="20" width="556" height="60" uuid="906588a8-bc9a-4140-87cf-6203c1cb2be1"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="20" width="556" height="30" backcolor="#BABABA" uuid="f4494d52-8d88-4b90-adfb-734670ccd0dc"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Lampiran]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="50" width="554" height="30" uuid="d0849f9b-b1ec-4d84-a938-0259448cc1f9"/>
+				<box topPadding="2" leftPadding="5" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_DOC_FILENAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

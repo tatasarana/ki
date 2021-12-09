@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<style>
+#alasanpenolakan1, #alasanpenolakan2 {
+    border: 1px solid #eee;
+    width: 300px;
+    min-height: 20px;
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0 0 0;
+    float: left;
+    margin-right: 10px;
+  }
+#alasanpenolakan1 li, #alasanpenolakan2 li {
+    margin: 0 5px 5px 5px;
+    padding: 5px;
+    font-size: 0.9em;
+    width: 97%;
+  }
+  #alasanpenolakanmadrid1, #alasanpenolakanmadrid2 {
+    border: 1px solid #eee;
+    width: 300px;
+    min-height: 20px;
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0 0 0;
+    float: left;
+    margin-right: 10px;
+  }
+#alasanpenolakanmadrid1 li, #alasanpenolakanmadrid2 li {
+    margin: 0 5px 5px 5px;
+    padding: 5px;
+    font-size: 0.9em;
+    width: 97%;
+  }
+</style>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+
+    <div class="my-wrapper" id="my-wrapper">
+        <div class="my-wrapper--inner">
+
+            <div class="wrapper-content" id="permohonan-baru">
+                <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="fas fa-tasks"></i> Preview dan Download Surat
+                            </h3>
+                            <small class="sub-header">Monitor / Preview dan Download Surat</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="content--center padding-content--left-right">
+                    <div class="wrapper--bg">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <table class="table table-striped table-bordered table-responsive" id="tblParameter">
+                                    <thead>
+                                        <th>Nama Parameter</th>
+                                        <th>Tipe Parameter</th>
+                                        <th>Nilai Parameter</th>
+										<th></th>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <div class="col-sm-3"></div>
+                                    <div class="col-sm-9">
+                                        <a th:href="@{/layanan/list-monitor(no=${txTmGeneral.applicationNo})}" class="btn btn-danger pull-right"><i class="fa fa-arrow-left"></i> Kembali</a>
+                                        <a th:href="@{'layanan/download-dokumen/'+${document.id}+'/'+${txTmGeneral.applicationNo}+'/'+${monitor.id}}" class="btn btn-success pull-right" style="margin-right:10px" target="_blank"><i class="fas fa-download"></i> Download Surat</a>
+                                        <!--<a th:href="@{layanan/create-dokumen(docid=${document.id},no=${txTmGeneral.applicationNo}, monitorId=${monitor.id})}" class="btn btn-info pull-right" style="margin-right:10px"><i class="fas fa-edit"></i> Ubah dan Download Surat</a>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
+
+<!--Modal Tambah/Update Param Teks Bebas-->
+<div class="modal fade" id="ubahparam" tabindex="-1" role="dialog"
+	 aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<form role="form" id="newModalForm">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">
+						Masukkan Data Parameter
+					</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="idParam"/>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group idParam">
+								<label class="col-form-label col-sm-2">Nilai Parameter</label>
+								<div class="col-sm-10">
+									<textarea id="paramValue" name="paramValue" class="form-control idParam" style="height:300px"
+										placeholder="Contoh: Berdasarkan Undang-undang...; Kami memerlukan...; dan seterusnya... "></textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>
+						Batal
+					</button>
+					<button type="submit" id="btnUpdateParam" class="btn btn-primary"><i class="fas fa-save"></i>
+						Simpan
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!--Modal Tambah/Update Param Teks Bebas-->
+
+<!--Modal Tambah/Update Param Tanggal-->
+<div class="modal fade" id="ubahparamtanggal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form role="form" id="newModalFormTanggal">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Masukkan Data Parameter
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="idParamTanggal"/>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group idParamTanggal">
+                                <label class="col-form-label col-sm-3">Nilai Parameter</label>
+                                <div class="col-sm-9">
+									<input type="text" id="paramValueTanggal" name="paramValueTanggal" class="form-control idParamTanggal" required="true"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>
+                        Batal
+                    </button>
+                    <button type="submit" id="btnUpdateParamTanggal" class="btn btn-primary"><i class="fas fa-save"></i>
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Modal Tambah/Update Param Tanggal-->
+
+<!--Modal checkbox -->
+<div class="modal fade" id="ubahparamcheckbox" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form role="form" id="newModalFormCheckbox">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Masukkan Data Parameter
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+						<div class="row" id="idClassNo">
+							<label class="col-sm-1 col-form-label">Kelas</label>
+							<div class="col-sm-5">
+								<select class="form-control m-input" id="idListMClass"
+									name="classOption">
+									
+								</select>
+							</div>
+							<label class="col-sm-1 col-form-label">Cari</label>
+							<div class="col-sm-5">
+								<input type="text" id="search-criteria" style="width: 200px; height: 34px"/>
+							</div>
+						</div> 
+					<input type="hidden" id="idParamCheckbox"/>
+                    <input type="hidden" id="chkboxType"/>
+                    <div class="row">
+                        <div class="col-md-12 form-group idParamCheckbox">
+                            <div id="formCheckBox" style="height: 300px; overflow-y: scroll;">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>
+                        Batal
+                    </button>
+                    <button type="submit" id="btnUpdateParamCheckbox2" class="btn btn-primary"><i class="fas fa-save"></i>
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- modal checkbox -->
+
+<!--Modal panel <<doc_type_name>> -->
+<div class="modal fade" id="ubahparampaneldoctypename" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:740px;">
+        <div class="modal-content">
+            <form role="form" id="newModalFormPanelDocTypeName">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Masukkan Data Parameter
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+					<input type="hidden" id="idParamCheckbox"/>
+                    <input type="hidden" id="chkboxType"/>
+                    <div class="row">
+                    	<div class="col-sm-6">
+                    			<label>Daftar Jenis Dokumen</label>
+	                            <ul id="sortable1" style="height:200px; overflow-y: scroll;" class="connectedSortable">
+	                            </ul>
+	                            
+                        </div>
+                        <div class="col-sm-6">
+                        			<label>Pilihan Jenis Dokumen</label>
+		                        	<ul id="sortable2" name="chkData[]" style="height:200px; overflow-y: scroll;" class="connectedSortable">
+		                            </ul>
+	                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>
+                        Batal
+                    </button>
+                    <button type="submit" id="btnUpdateParamCheckbox" class="btn btn-primary"><i class="fas fa-save"></i>
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- modal panel -->
+
+<!--Modal panel <<alasanpenolakan>> -->
+<div class="modal fade" id="ubahparampanelalasanpenolakan" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:740px;">
+        <div class="modal-content">
+            <form role="form" id="newModalFormPanelAlasanPenolakan">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Masukkan Data Parameter
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+					<input type="hidden" id="idParamCheckbox"/>
+                    <input type="hidden" id="chkboxType"/>
+                    <div class="row">
+                    	<div class="col-sm-6">
+                    			<label>Daftar Undang-Undang</label>
+	                            <ul id="alasanpenolakan1" style="height:200px; overflow-y: scroll;" class="connectedSortable">
+	                            </ul>
+	                            
+                        </div>
+                        <div class="col-sm-6">
+                        			<label>Pilihan Undang-Undang</label>
+		                        	<ul id="alasanpenolakan2" name="chkData[]" style="height:200px; overflow-y: scroll;" class="connectedSortable">
+		                            </ul>
+	                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>
+                        Batal
+                    </button>
+                    <button type="submit" id="btnUpdateParamCheckbox" class="btn btn-primary"><i class="fas fa-save"></i>
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- modal panel -->
+
+    <!--Modal panel <<alasanpenolakanmadrid>> -->
+    <div class="modal fade" id="ubahparampanelalasanpenolakanmadrid" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width:740px;">
+            <div class="modal-content">
+                <form role="form" id="newModalFormPanelAlasanPenolakanMadrid">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            Masukkan Data Parameter
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="idParamCheckbox"/>
+                        <input type="hidden" id="chkboxType"/>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>Daftar Undang-Undang</label>
+                                <ul id="alasanpenolakanmadrid1" style="height:200px; overflow-y: scroll;" class="connectedSortable">
+                                </ul>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <label>Pilihan Undang-Undang</label>
+                                <ul id="alasanpenolakanmadrid2" name="chkData[]" style="height:200px; overflow-y: scroll;" class="connectedSortable">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>
+                            Batal
+                        </button>
+                        <button type="submit" id="btnUpdateParamCheckbox" class="btn btn-primary"><i class="fas fa-save"></i>
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- modal panel -->
+
+
+
+
+<!--Modal panel -->
+<div class="modal fade" id="ubahdescuu" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" >
+        <div class="modal-content">
+            <form role="form" id="newModalEditUU">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Masukkan Data Parameter
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                	<input type="hidden" id="idParamCheckbox"/>
+                    <input type="hidden" id="chkboxType"/>
+					<div class="row">
+							<div class="col-md-12">
+								<div class="form-group txClass">
+									<label class="col-form-label col-sm-4">Alasan Penolakan</label>
+									<div id="idUU" class="col-sm-12">
+									<input type="hidden" id="idDescUU"></input>
+										<textarea id="descUU" style="height: 200px"
+											class="form-control txClass" maxlength="1000"></textarea>
+									</div>
+								</div>
+							</div>
+						</div> 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>
+                        Batal
+                    </button>
+                    <button type="button" id="btnUpdateUUDesc" class="btn btn-primary"><i class="fas fa-save"></i>
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- modal panel -->
+
+<input type="hidden" id="documentId" th:value="${document.id}"/>
+<input type="hidden" id="applicationId" th:value="${txTmGeneral.applicationNo}"/>
+<input type="hidden" id="monitorId" th:value="${monitor.id}"/>
+
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+/*<![CDATA[*/
+      $(document).ready(function(){
+            //$("#paramValueTanggal").datepicker({ dateFormat: "dd-mm-yy" }).val()
+            $('#paramValueTanggal').datepicker({
+				format: 'dd MM yyyy',
+				autoclose: true,
+				todayBtn: 'linked',
+				todayHighlight: true,
+				language: "id",
+				useCurrent: false
+			});
+            var docid = $('#documentId').val();
+            var noapp = $('#applicationId').val();
+            var monitorId = $('#monitorId').val();
+
+            var url = 'layanan/document-params/'+docid+'/'+noapp+'/'+monitorId;
+            var urlEdit = 'layanan/download-dokumen/'+docid+'/'+noapp+'/'+monitorId;
+            $.get(url, function(unSorteddata, status){
+                var row = '';
+                if(status=='success'){
+                    //sort array before print
+                    let data = unSorteddata.sort(function(a, b) {
+                        if(a.paramName < b.paramName) { return -1; }
+                        if(a.paramName > b.paramName) { return 1; }
+                        return 0;
+                    });
+                    data = unSorteddata.sort(function(a, b) {
+                        if(a.paramType < b.paramType) { return -1; }
+                        if(a.paramType > b.paramType) { return 1; }
+                        return 0;
+                    });
+                    $.each(data, function(index){
+                        nama =  safe_tags(data[index].paramName);
+                        nama = '<td>' + nama + '</td>';
+                        tipe = '<td>'+ data[index].paramType +'</td>';
+                        if(data[index].paramType =='QRCODE'){
+                            nilai = '<td id="' + data[index].id + '">QRCODE</td>';
+                        }else if(data[index].paramType =='CHECKBOX' || data[index].paramType =='DROPDOWN'){
+                        	nilai = '<td id="' + data[index].id + '">'+ (data[index].paramValue == null ? '' : data[index].paramValue.replace(/\n/g,'<br/>')) +'</td>'
+                        }else{
+                        	nilai = '<td id="' + data[index].id + '">'+ (data[index].paramValue == null ? '' : data[index].paramValue.replace(/\n/g,'<br/>')) +'</td>'
+                        }
+                        if(data[index].paramType =='TEKS_BEBAS' || data[index].paramType =='PILIH_TANGGAL' || data[index].paramType=='CHECKBOX' || data[index].paramType=='DROPDOWN'){
+                        	button = '<td><button type="button" class="btn btn-success btn-xs" onclick="modalUpdateParamValue(\'' + data[index].id + '\',\'' + data[index].paramType + '\',\''+ data[index].paramName +'\')">Update</button></td>';
+                        }else{
+                        	button = '<td>&nbsp;</td>';
+                        }
+                        row += '<tr>'+nama+tipe+nilai+button+'</tr>';
+                    });
+                    $("#tblParameter tbody").append(row);
+
+                }else{
+                    alert('Telah terjadi kesalahan');
+                }
+            });
+
+            function safe_tags(str) {
+                return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') ;
+            }
+
+      });
+	  
+	  function modalUpdateParamValue(idParam, tipe, name){
+        var noapp = $('#applicationId').val();
+        if((tipe==='CHECKBOX') && (name==='<<jenis_barang_jasa>>') || (name==='<<class_desc_accept>>') || (name==='<<class_desc_reject>>') || (name==='<<class_desc_correction>>')){
+        	$('#idClassNo').show();
+        	if (!$('#idClassNo').next().is('br')) {
+            	$('#idClassNo').after('</br>');
+        	}
+        } else {
+        	$('#idClassNo').hide();
+        }
+        
+	    if(tipe==='TEKS_BEBAS'){
+		    $('.form-group.idParam').removeClass('has-error');
+      	    $('.form-control.idParam').next().remove();
+      	
+		    $('#idParam').val(idParam);
+		    $('#paramValue').val($('#' + idParam).html());
+            $('#ubahparam').modal('show');
+        }else if(tipe==='PILIH_TANGGAL'){
+            $('.form-group.idParamTanggal').removeClass('has-error');
+      	    $('.form-control.idParamTanggal').next().remove();
+
+		    $('#idParamTanggal').val(idParam);
+		    $('#paramValueTanggal').val($('#' + idParam).html());
+            $('#ubahparamtanggal').modal('show');
+        }else if(tipe==='DROPDOWN'){
+            $('.form-group.idParamCheckbox').removeClass('has-error');
+            $('#formCheckBox').next().remove();
+
+            $('#idParamCheckbox').val(idParam);
+
+            if(name==='<<usulan_penolakan>>'){
+                var urlRequest = 'layanan/lookup/UsulanPenolakan';
+                $('#chkboxType').val('usulanpenolakan');
+                $.get(urlRequest, function(data, status){
+                    if(status=='success'){
+                    	dropdown = '<select class="form-control" id="usulanPenolakan">';
+                        $.each(data, function(index){
+                        	dropdown += '<option value="' + data[index].name + '"><label for="' + data[index].id+ '" id="lbl' + data[index].id + '">' + data[index].name + '</label></option>';
+                        });
+                        dropdown += '</select>';
+                        $("#formCheckBox").empty();
+                        $("#formCheckBox").append(dropdown);
+                        $('#ubahparamcheckbox').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            }else if(name==='<<status_keberatan>>'){
+                var urlRequest = 'layanan/lookup/StatusSurat';
+                $('#chkboxType').val('statussurat');
+                $.get(urlRequest, function(data, status){
+                    if(status=='success'){
+                    	dropdown = '<select class="form-control" id="statusSurat">';
+                        $.each(data, function(index){
+                        	dropdown += '<option value="' + data[index].name + '"><label for="' + data[index].id+ '" id="lbl' + data[index].id + '">' + data[index].name + '</label></option>';
+                        });
+                        dropdown += '</select><br/>';
+                        text= '<textarea class="form-control" style="height:150px;" cols="80" id="statusSuratText"></textarea>'
+                        $("#formCheckBox").empty();
+                        $("#formCheckBox").append(dropdown+text);
+                        $('#ubahparamcheckbox').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            }else if(name==='<<status_tanggapan>>'){
+                var urlRequest = 'layanan/lookup/StatusSurat';
+                $('#chkboxType').val('statussurat');
+                $.get(urlRequest, function(data, status){
+                    if(status=='success'){
+                    	dropdown = '<select class="form-control" id="statusSurat">';
+                        $.each(data, function(index){
+                        	dropdown += '<option value="' + data[index].name + '"><label for="' + data[index].id+ '" id="lbl' + data[index].id + '">' + data[index].name + '</label></option>';
+                        });
+                        dropdown += '</select><br/>';
+                        text= '<textarea class="form-control" style="height:150px;" cols="80" id="statusSuratText"></textarea>'
+                        $("#formCheckBox").empty();
+                        $("#formCheckBox").append(dropdown+text);
+                        $('#ubahparamcheckbox').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            } else if(name==='<<alasan_penolakan>>'){
+                var urlRequest = 'layanan/lookup/AlasanPenolakan';
+                $('#chkboxType').val('alasanpenolakan');
+                $.get(urlRequest, function(data, status){
+                    if(status=='success'){
+                    	nama= '';
+                    	
+                        $.each(data, function(index){
+                        	nama += '<li class="ui-state-default" onclick="doOpenChild(this)">' + data[index].code + 
+                        	'<ul style="display:none;"><li>'+
+                        	'<a href="#" data-toggle="modal" data-target="#ubahdescuu" id="' + data[index].id + '" onclick="showModalEditDesc(this)" style="color: #0000FF;">' + data[index].name + '</a>' +
+                        	'</li></ul>'+
+                        	'</li>';
+                        });
+                        $("#alasanpenolakan1").empty();
+            			$("#alasanpenolakan2").empty();
+            			$("#alasanpenolakan1").append(nama);
+            			$('#ubahparampanelalasanpenolakan').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            } else if(name==='<<alasan_penolakan_madrid>>'){
+                var urlRequest = 'layanan/lookup/AlasanPenolakanMadrid';
+                $('#chkboxType').val('alasanpenolakanmadrid');
+                $.get(urlRequest, function(data, status){
+                    if(status=='success'){
+                    	nama= '';
+
+                        $.each(data, function(index){
+                        	nama += '<li class="ui-state-default" onclick="doOpenChild(this)">' + data[index].code +
+                        	'<ul style="display:none;"><li>'+
+                        	'<a href="#" data-toggle="modal" data-target="#ubahdescuu" id="' + data[index].id + '" onclick="showModalEditDesc(this)" style="color: #0000FF;">' + data[index].name + '</a>' +
+                        	'</li></ul>'+
+                        	'</li>';
+                        });
+                        $("#alasanpenolakanmadrid1").empty();
+            			$("#alasanpenolakanmadrid2").empty();
+            			$("#alasanpenolakanmadrid1").append(nama);
+            			$('#ubahparampanelalasanpenolakanmadrid').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            } else if(name==='<<jenis_perubahan>>' || name==='<<JENIS_PERUBAHAN>>'){
+                var urlRequest = 'layanan/lookup/JenisPerubahan';
+                $('#chkboxType').val('jenisperubahan');
+                $.get(urlRequest, function(data, status){
+                    if(status=='success'){
+                    	dropdown = '<select class="form-control" id="jenisPerubahan">';
+                        $.each(data, function(index){
+                        	dropdown += '<option value="' + data[index].name + '"><label for="' + data[index].id+ '" id="lbl' + data[index].id + '">' + data[index].name + '</label></option>';
+                        });
+                        dropdown += '</select>';
+                        $("#formCheckBox").empty();
+                        $("#formCheckBox").append(dropdown);
+                        $('#ubahparamcheckbox').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            }else if(name==='<<invalid_madrid>>'){
+                var urlRequest = 'layanan/lookup/InvalidMadrid';
+                $('#chkboxType').val('invalidmadrid');
+                $.get(urlRequest, function(data, status){
+                    if(status=='success'){
+                    	dropdown = '<select class="form-control" id="invalidMadrid">';
+                        $.each(data, function(index){
+                        	dropdown += '<option value="' + data[index].name + '"><label for="' + data[index].id+ '" id="lbl' + data[index].id + '">' + data[index].name + '</label></option>';
+                        });
+                        dropdown += '</select>';
+                        $("#formCheckBox").empty();
+                        $("#formCheckBox").append(dropdown);
+                        $('#ubahparamcheckbox').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            }else if(name==='<<reason_madrid>>'){
+                var urlRequest = 'layanan/lookup/ReasonMadrid';
+                $('#chkboxType').val('reasonmadrid');
+                $.get(urlRequest, function(data, status){
+                    if(status=='success'){
+                    	dropdown = '<select class="form-control" id="reasonMadrid">';
+                        $.each(data, function(index){
+                        	dropdown += '<option value="' + data[index].name + '"><label for="' + data[index].id+ '" id="lbl' + data[index].id + '">' + data[index].name + '</label></option>';
+                        });
+                        dropdown += '</select>';
+                        $("#formCheckBox").empty();
+                        $("#formCheckBox").append(dropdown);
+                        $('#ubahparamcheckbox').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            }else if(name==='<<usulan_penolakan_madrid>>'){
+                var urlRequest = 'layanan/lookup/UsulanPenolakanMadrid';
+                $('#chkboxType').val('usulanpenolakanmadrid');
+                $.get(urlRequest, function(data, status){
+                    if(status=='success'){
+                    	dropdown = '<select class="form-control" id="usulanPenolakanMadrid">';
+                        $.each(data, function(index){
+                        	dropdown += '<option value="' + data[index].name + '"><label for="' + data[index].id+ '" id="lbl' + data[index].id + '">' + data[index].name + '</label></option>';
+                        });
+                        dropdown += '</select>';
+                        $("#formCheckBox").empty();
+                        $("#formCheckBox").append(dropdown);
+                        $('#ubahparamcheckbox').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            }else if(name==='<<class_no>>'){
+                var urlRequest = 'layanan/class_no/'+noapp;
+                $('#chkboxType').val('classno');
+                $.get(urlRequest, function(data, status){
+                    if(status=='success'){
+                    	var classNo = "";
+                    	dropdown = '<select class="form-control" id="classno">';
+                        $.each(data, function(index){
+                        	if (classNo != data[index].no) {
+                        		dropdown += '<option value="' + data[index].no + '">' + data[index].no + '</option>';
+                        		classNo = data[index].no;
+                        	}
+                        });
+                        dropdown += '</select>';
+                        $("#formCheckBox").empty();
+                        $("#formCheckBox").append('<div class="row" id="rowClassNo">');
+                        $("#rowClassNo").append('<label id="labelKelas" class="col-sm-3 col-form-label">Pilih Kelas</label>');
+                        $("#labelKelas").after('<div class="col-sm-8">'+ dropdown);
+                        $('#ubahparamcheckbox').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            }
+        }else if(tipe==='CHECKBOX'){
+            $('.form-group.idParamCheckbox').removeClass('has-error');
+            $('#formCheckBox').next().remove();
+            
+            $('#idParamCheckbox').val(idParam);
+            if(name==='<<doc_type_name>>'){
+                var urlDocType = 'layanan/doctype_name/'+noapp;
+                $('#chkboxType').val('doctype');
+                $.get(urlDocType, function(data, status){
+                    if(status=='success'){
+                    	nama = '';
+                        $.each(data, function(index){
+                        	/* nama += '<div><input type="checkbox" id="' + data[index].id + '" name="chkData[]" class="group-check"/>&nbsp;<label for="' + data[index].id+ '" id="lbl' + data[index].id + '">' + data[index].name + '</label></div><br/>'; */
+                        	nama += '<li id="' + data[index].id + '" class="ui-state-default">' + data[index].name + '</li>';
+                        });
+                        $("#sortable1").empty();
+                        $("#sortable2").empty();
+                        $("#sortable1").append(nama);
+                        $('#ubahparampaneldoctypename').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            } else if(name==='<<jenis_barang_jasa>>'){
+                var urlClassDesc = 'layanan/jenis_barang_jasa/'+noapp;
+                var checkclassNo = "";
+                $('#chkboxType').val('classdesc');
+                $.get(urlClassDesc, function(data, status){
+                    if(status=='success'){
+                    	var classNo = "";
+                    	$('#idListMClass').find('option').remove().end();
+                    	$('#idListMClass').append('<option value="">Semua</option>');
+                    	desc = '';
+                        $.each(data, function(index){
+                        	if (classNo != data[index].parentClass.no) {
+                        		$('#idListMClass').append('<option value="' + data[index].parentClass.no + '">' + data[index].parentClass.no + '</option>');
+                        		classNo = data[index].parentClass.no;
+                        	}
+
+                        	if (classNo == checkclassNo){
+                                desc += '<div class="class-detail no-'+ data[index].parentClass.no+'"><input type="checkbox" id="' + data[index].id + '" name="chkData[]" class="group-check"/>&nbsp;<label for="' + data[index].id+ '" id="lbl' + data[index].id + '">' + data[index].desc + '</label></div>';
+                        	}else{
+                                checkclassNo = classNo;
+                        	    desc += '<div class="class-detail no-'+ data[index].parentClass.no+'"><input type="checkbox" id="' + data[index].id + '" name="chkData[]" class="group-check"/>&nbsp;<label for="' + data[index].id+ '" id="lbl' + data[index].id + '">' +"Kelas "+classNo+" : "+ data[index].desc + '</label></div>';
+                        	}
+
+                        }); 
+                        $("#formCheckBox").empty();
+                        $("#formCheckBox").append(desc);
+                        $('#ubahparamcheckbox').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            }else if(name==='<<class_desc_en>>'){
+                var urlClassDesc = 'layanan/class_desc/'+noapp;
+                $('#chkboxType').val('classdesc');
+                $.get(urlClassDesc, function(data, status){
+                    if(status=='success'){
+                    	desc = '';
+                        $.each(data, function(index){
+                        	desc += '<input type="checkbox" id="' + data[index].id + '" name="chkData[]" class="group-check"/>&nbsp;<label for="' + data[index].id+ '" id="lbl' + data[index].id + '">' + data[index].descEn + '</label><br/>';
+                        });
+                        $("#formCheckBox").empty();
+                        $("#formCheckBox").append(desc);
+                        $('#ubahparamcheckbox').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            }else if(name==='<<class_desc_accept>>'){
+                var urlClassDescAccept = 'layanan/class_desc_accept/'+noapp;
+                $('#chkboxType').val('classdesc');
+                $.get(urlClassDescAccept, function(data, status){
+                    if(status=='success'){
+                    	var classNo = "";
+                    	$('#idListMClass').find('option').remove().end();
+                    	$('#idListMClass').append('<option value="">Semua</option>');
+                    	desc = '';
+                        $.each(data, function(index){
+                        	if (classNo != data[index].parentClass.no) {
+                        		$('#idListMClass').append('<option value="' + data[index].parentClass.no + '">' + data[index].parentClass.no + '</option>');
+                        		classNo = data[index].parentClass.no;
+                        	}
+                        	desc += '<div class="class-detail no-'+ data[index].parentClass.no+'"><input type="checkbox" id="' + data[index].id + '" name="chkData[]" class="group-check"/>&nbsp;<label for="' + data[index].id+ '" id="lbl' + data[index].id + '">' + data[index].desc + '</label></div>';
+                        });
+                        $("#formCheckBox").empty();
+                        $("#formCheckBox").append(desc);
+                        $('#ubahparamcheckbox').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            }else if(name==='<<class_desc_reject>>'){
+                var urlClassDescReject = 'layanan/class_desc_reject/'+noapp;
+                $('#chkboxType').val('classdesc');
+                $.get(urlClassDescReject, function(data, status){
+                    if(status=='success'){
+                    	var classNo = "";
+                    	$('#idListMClass').find('option').remove().end();
+                    	$('#idListMClass').append('<option value="">Semua</option>');
+                    	desc = '';
+                        $.each(data, function(index){
+                        	if (classNo != data[index].parentClass.no) {
+                        		$('#idListMClass').append('<option value="' + data[index].parentClass.no + '">' + data[index].parentClass.no + '</option>');
+                        		classNo = data[index].parentClass.no;
+                        	}
+                        	desc += '<div class="class-detail no-'+ data[index].parentClass.no+'"><input type="checkbox" id="' + data[index].id + '" name="chkData[]" class="group-check"/>&nbsp;<label for="' + data[index].id+ '" id="lbl' + data[index].id + '">' + data[index].desc + '</label></div>';
+                        });
+                        $("#formCheckBox").empty();
+                        $("#formCheckBox").append(desc);
+                        $('#ubahparamcheckbox').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            }else if(name==='<<class_desc_correction>>'){
+                var urlClassDescCorrection = 'layanan/class_desc_correction/'+noapp;
+                $('#chkboxType').val('classdesc');
+                $.get(urlClassDescCorrection, function(data, status){
+                    if(status=='success'){
+                    	var classNo = "";
+                    	$('#idListMClass').find('option').remove().end();
+                    	$('#idListMClass').append('<option value="">Semua</option>');
+                    	desc = '';
+                        $.each(data, function(index){
+                        	if (classNo != data[index].parentClass.no) {
+                        		$('#idListMClass').append('<option value="' + data[index].parentClass.no + '">' + data[index].parentClass.no + '</option>');
+                        		classNo = data[index].parentClass.no;
+                        	}
+                        	desc += '<div class="class-detail no-'+ data[index].parentClass.no+'"><input type="checkbox" id="' + data[index].id + '" name="chkData[]" class="group-check"/>&nbsp;<label for="' + data[index].id+ '" id="lbl' + data[index].id + '">' + data[index].desc + '</label></div>';
+                        });
+                        $("#formCheckBox").empty();
+                        $("#formCheckBox").append(desc);
+                        $('#ubahparamcheckbox').modal('show');
+                    }else{
+                        alert('Telah terjadi kesalahan');
+                    }
+                });
+            }
+
+
+        }
+      }
+	  
+	  // Untuk konsep drag & drop panel <<doc_type_name>>
+	  $(function() {
+		    $( "#sortable1, #sortable2" ).sortable({
+		      connectWith: ".connectedSortable"
+		    }).disableSelection();
+	  });
+	  
+	  $(function() {
+		    $( "#alasanpenolakan1, #alasanpenolakan2" ).sortable({
+		      connectWith: ".connectedSortable"
+		    }).disableSelection();
+	  });
+
+	   $(function() {
+		    $( "#alasanpenolakanmadrid1, #alasanpenolakanmadrid2" ).sortable({
+		      connectWith: ".connectedSortable"
+		    }).disableSelection();
+	  });
+
+	  function changeAlasanPenolakan(value){
+	  		$('#alasanPenolakanText').val(value);
+	  }
+
+	  function changeAlasanPenolakanMadrid(value){
+	  		$('#alasanPenolakanText').val(value);
+	  }
+
+
+	  function doOpenChild(value){
+		  $(value).find('ul').slideToggle();
+	  }
+	  
+	  var ids = '';
+	  function showModalEditDesc(value){
+		  ids = $(value).prop("id");
+		  $('#idDescUU').val(ids);
+		  $('#descUU').val($(value).text());
+	  }
+	  
+	  $('#btnUpdateUUDesc').click(function () {
+		 $('#'+$('#idDescUU').val()).text($('#descUU').val());
+		 $('#ubahdescuu').modal('hide');
+	  });
+	  
+	  $('#idListMClass').change(function () { 
+		  if(this.value == '') {
+			  $('.class-detail').show();
+		  } else {
+			  $('.class-detail').hide();
+			  $('.class-detail.no-'+this.value).show();
+		  }
+	  });
+	  
+	  // Function cari di tag2 untuk class
+	  $('#search-criteria').on("keyup", function() {
+		  var g = $(this).val().toLowerCase();
+		  $(".class-detail label").each(function() {
+			 var s = $(this).text().toLowerCase();
+			 $(this).closest('.class-detail')[ s.indexOf(g) !== -1 ? 'show' : 'hide' ]();
+		  }); 
+	  });
+	  
+	  $("#newModalForm").validate({
+    		messages: {
+    			'paramValue': {
+					required:/*[[#{field.error.required('Value')}]]*/''
+				}
+    		},
+			highlight: function(element) {
+				$(element).closest('.form-group').addClass('has-error');
+			},
+			unhighlight: function(element) {
+				$(element).closest('.form-group').removeClass('has-error');
+			},
+			errorElement: 'span',
+			errorClass: 'help-block',
+			errorPlacement: function(error, element) {
+				if(element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else {
+					error.insertAfter(element);
+				}
+			},
+    		submitHandler: function(form) {
+				$.ajax({
+					data: {
+						paramId : $("#idParam").val(),
+						paramValue : $("#paramValue").val()
+					},
+					type: 'POST',
+					beforeSend: function () {
+						showLoading();
+					},
+					complete:function(){
+						hideLoading();
+					},
+					success: function(){
+						$('#' + $("#idParam").val()).html($("#paramValue").val());
+						<!--swal("Informasi", "Data berhasil di update.", "info");-->
+					},
+					error: function (xhr, status) {
+						swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+					},
+					url: /*[[@{/layanan/update-dokumen-param}]]*/''
+				});
+				$("#ubahparam").modal('hide');
+    		}
+    	});
+
+      $("#newModalFormTanggal").validate({
+    		messages: {
+    			'paramValueTanggal': {
+					required:/*[[#{field.error.required('Value')}]]*/''
+				}
+    		},
+			highlight: function(element) {
+				$(element).closest('.form-group').addClass('has-error');
+			},
+			unhighlight: function(element) {
+				$(element).closest('.form-group').removeClass('has-error');
+			},
+			errorElement: 'span',
+			errorClass: 'help-block',
+			errorPlacement: function(error, element) {
+				if(element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else {
+					error.insertAfter(element);
+				}
+			},
+    		submitHandler: function(form) {
+
+				$.ajax({
+					data: {
+						paramId : $("#idParamTanggal").val(),
+						paramValue : $("#paramValueTanggal").val()
+					},
+					type: 'POST',
+					beforeSend: function () {
+						showLoading();
+					},
+					complete:function(){
+						hideLoading();
+					},
+					success: function(){
+						$('#' + $("#idParamTanggal").val()).html($("#paramValueTanggal").val());
+						<!--swal("Informasi", "Data berhasil di update.", "info");-->
+					},
+					error: function (xhr, status) {
+						swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+					},
+					url: /*[[@{/layanan/update-dokumen-param}]]*/''
+				});
+				$("#ubahparamtanggal").modal('hide');
+    		}
+    	});
+      
+      $("#newModalFormCheckbox").validate({
+    	  rules: {
+    		  'chkData[]' : {
+    			  required: true
+    		  }
+    	  },
+  		messages: {
+  			'chkData[]': {
+					required:/*[[#{field.error.required('Value')}]]*/''
+				}
+  		},
+			highlight: function(element) {
+				$(element).closest('.form-group').addClass('has-error');
+			},
+			unhighlight: function(element) {
+				$(element).closest('.form-group').removeClass('has-error');
+			},
+			errorElement: 'span',
+			errorClass: 'help-block',
+			errorPlacement: function(error, element) {
+				if(element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else {
+					error.insertAfter(element);
+				}
+			},
+  		submitHandler: function(form) {
+  				var values = '';
+  				var chkType = $('#chkboxType').val();
+  				if(chkType==='classdesc'){
+				    $('.group-check[type="checkbox"]:checked').each(function(i,v) {
+					    values += $('#lbl' + v.id).text()  + "; ";
+				    });
+				    values = values.trim(); //hapus spasi paling akhir
+				    values = values.substring(0, values.length-1); //hapus titik koma paling akhir
+				}else if(chkType==='usulanpenolakan'){
+				    values = $('#usulanPenolakan').val();
+				}else if(chkType==='statussurat'){
+                    valuesCmb = $('#statusSurat').val();
+                    valuesTxt = $('#statusSuratText').val();
+                    values = valuesCmb+" "+valuesTxt;
+				}else if(chkType==='jenisperubahan'){
+				    values = $('#jenisPerubahan').val();
+				}else if(chkType==='invalidmadrid'){
+				    values = $('#invalidMadrid').val();
+				}else if(chkType==='reasonmadrid'){
+				    values = $('#reasonMadrid').val();
+				}else if(chkType==='usulanpenolakanmadrid'){
+				    values = $('#usulanPenolakanMadrid').val();
+				}else if(chkType==='classno'){
+				    values = $('#classno').val();
+				}
+
+				$.ajax({
+					data: {
+						paramId : $("#idParamCheckbox").val(),
+						paramValue : values
+					},
+					type: 'POST',
+					beforeSend: function () {
+						showLoading();
+					},
+					complete:function(){
+						hideLoading();
+					},
+					success: function(){
+						$('#' + $("#idParamCheckbox").val()).html(values.replace(/\n/g,'<br/>'));
+						<!--swal("Informasi", "Data berhasil di update.", "info");-->
+					},
+					error: function (xhr, status) {
+						swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+					},
+					url: /*[[@{/layanan/update-dokumen-param}]]*/''
+				});
+				$("#ubahparamcheckbox").modal('hide');
+  		}
+  	});
+      
+      $("#newModalFormPanelDocTypeName").validate({
+  		submitHandler: function(form) {
+  				var values = '';
+  				var chkType = $('#chkboxType').val();
+  				var no = 0;
+  				if (chkType==='doctype') {
+					$('#sortable2 li').each(function(i){
+				    	values += (++no + '. ' + $(this).text() + '\n');
+				    });
+				}
+  				if(values == '') {
+  					swal("Informasi", "Silahkan Memilih Jenis Dokumen Terlebih Dahulu.", "info");
+  				} else {
+					$.ajax({
+						data: {
+							paramId : $("#idParamCheckbox").val(),
+							paramValue : values
+						},
+						type: 'POST',
+						beforeSend: function () {
+							showLoading();
+						},
+						complete:function(){
+							hideLoading();
+						},
+						success: function(){
+							$('#' + $("#idParamCheckbox").val()).html(values.replace(/\n/g,'<br/>'));
+							<!--swal("Informasi", "Data berhasil di update.", "info");-->
+						},
+						error: function (xhr, status) {
+							swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+						},
+						url: /*[[@{/layanan/update-dokumen-param}]]*/''
+					});
+					$("#ubahparampaneldoctypename").modal('hide');
+  				}
+  			}
+  	});
+      
+      $("#newModalFormPanelAlasanPenolakan").validate({
+    		submitHandler: function(form) {
+    				var values = '';
+    				var chkType = $('#chkboxType').val();
+    				var no = 0;
+    				if (chkType==='alasanpenolakan') {
+	  					$('#alasanpenolakan2 a').each(function(i){
+	  				    	values += (++no + '. ' + $(this).text() + '\n');
+	  				    });
+  					}
+    				if(values == '') {
+    					swal("Informasi", "Silahkan Memilih Jenis Dokumen Terlebih Dahulu.", "info");
+    				} else {
+  					$.ajax({
+  						data: {
+  							paramId : $("#idParamCheckbox").val(),
+  							paramValue : values
+  						},
+  						type: 'POST',
+  						beforeSend: function () {
+  							showLoading();
+  						},
+  						complete:function(){
+  							hideLoading();
+  						},
+  						success: function(){
+  							$('#' + $("#idParamCheckbox").val()).html(values.replace(/\n/g,'<br/>'));
+  							<!--swal("Informasi", "Data berhasil di update.", "info");-->
+  						},
+  						error: function (xhr, status) {
+  							swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+  						},
+  						url: /*[[@{/layanan/update-dokumen-param}]]*/''
+  					});
+  					$("#ubahparampanelalasanpenolakan").modal('hide');
+   					//$('.modal-backdrop.in').remove();
+    			 }
+    		  }
+    	});
+	   $("#newModalFormPanelAlasanPenolakanMadrid").validate({
+    		submitHandler: function(form) {
+    				var values = '';
+    				var chkType = $('#chkboxType').val();
+    				var no = 0;
+    				if (chkType==='alasanpenolakanmadrid') {
+	  					$('#alasanpenolakanmadrid2 a').each(function(i){
+	  				    	values += (++no + '. ' + $(this).text() + '\n');
+	  				    });
+  					}
+    				if(values == '') {
+    					swal("Informasi", "Silahkan Memilih Jenis Dokumen Terlebih Dahulu.", "info");
+    				} else {
+  					$.ajax({
+  						data: {
+  							paramId : $("#idParamCheckbox").val(),
+  							paramValue : values
+  						},
+  						type: 'POST',
+  						beforeSend: function () {
+  							showLoading();
+  						},
+  						complete:function(){
+  							hideLoading();
+  						},
+  						success: function(){
+  							$('#' + $("#idParamCheckbox").val()).html(values.replace(/\n/g,'<br/>'));
+  							<!--swal("Informasi", "Data berhasil di update.", "info");-->
+  						},
+  						error: function (xhr, status) {
+  							swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+  						},
+  						url: /*[[@{/layanan/update-dokumen-param}]]*/''
+  					});
+  					$("#ubahparampanelalasanpenolakanmadrid").modal('hide');
+   					//$('.modal-backdrop.in').remove();
+    			 }
+    		  }
+    	});
+/*]]>*/
+</script>
+<br/><br/><br/>
+</body>
+</html>

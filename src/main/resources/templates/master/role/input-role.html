@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+
+    <div class="my-wrapper" id="my-wrapper">
+        <div class="my-wrapper--inner">
+            <div class="wrapper-content">
+                <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="fas fa-object-group"></i> Data Role - Menu
+                            </h3>
+                            <small class="sub-header">Role / Menu</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="content--center padding-content--left-right">
+                    <div class="wrapper--bg">
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                            <button data-dismiss="alert" class="close close-sm" type="button">
+                                <i class="icon-remove"></i>
+                            </button>
+                            <p>[[${errorMessage}]]</p>
+                        </div>
+                        <form id="formRole" class="form-horizontal" th:object="${form}" th:action="@{/layanan/input-role}"
+                              method="post">
+                            <input type="hidden" th:field="*{idRole}"/>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 col-form-label">Nama Role</label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control" placeholder="Nama Role" th:field="*{name}"
+                                                       th:required="true" disabled="disabled"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 col-form-label">Deskripsi</label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control" placeholder="Deskripsi" th:field="*{desc}"
+                                                       th:required="true" disabled="disabled"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <fieldset>
+                                                <legend>Pilih Menu</legend>
+                                                <div class="input-group">
+                                                    <input id="cariMenu" type="text" class="form-control"
+                                                           placeholder="Cari Menu"/>
+                                                </div>
+                                            </fieldset>
+                                            <br/>
+                                            <div class="col-md-6 row">
+                                                <select class="form-control" id="listMenu" multiple="multiple"
+                                                        style="height: 250px; overflow-x:scroll">
+                                                    <option class="menu-item col-form-label" th:each="listMenu : ${listMenu}"
+                                                            th:value="${listMenu.id}"
+                                                            th:text="${listMenu.name}">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select class="form-control" id="listMenuDetail" multiple="multiple"
+                                                        style="height: 250px;">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="margin-top: 15px">
+                                    <div class="col-md-7" style="margin-top: 15px"></div>
+                                    <div class="table-container">
+                                        <table id="tableRole" class="table table-striped table-bordered table-responsive dataTable">
+                                            <thead>
+                                            <tr>
+                                                <th>Menu</th>
+                                                <th>Menu Detail</th>
+                                                <th>Hapus</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="list-role-menu">
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="margin-top: 15px">
+                                <div class="form-group pull-right">
+                                        <div class="col-sm-12">
+                                            <a th:href="@{/layanan/list-role}" class="btn btn-danger"><i class="fas fa-times"></i> Batal</a>
+                                            <button type="submit" id="btnProses" class="btn btn-primary"><i
+                                                    class="fas fa-paper-plane"></i>
+                                                Proses
+                                            </button>
+                                        </div>
+                                    </div>
+                                    </div>
+                            </div>
+                        </form>
+                        <hr/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div></div>
+
+        <div></div>
+    </div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var nmMenu = null;
+    var menuDetail = null;
+    var t = $('#tableRole').DataTable({
+        "searching": true,
+        "columns": [
+            { "width": "70%" },
+            null,
+            null
+        ],
+        language: {
+            url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+        }
+    });
+    $(document).ready(function () {
+        var existingList = /*[[${form.roleDetailItems}]]*/'';
+        $.each(existingList, function (index, value) {
+            t.row.add(['<input type="hidden" name="idRoleDetail" value="' + value.id + '" />' + value.nmMenu,
+                value.nmMenuDetail,
+                "<button class=\"btn btn-danger btn-remove-item btn-xs\">Hapus</button>"])
+                .draw();
+        });
+
+        $('.menu-item').click(function () {
+        	
+            var idMenu = $(this).val();
+            $.ajax({
+                url: /*[[@{/layanan/pilih-menu}]]*/'',
+                datatype: 'jsonp',
+                data: {
+                    target: idMenu,
+                },
+	            beforeSend:function(){
+		            showLoading();
+	            },
+	            complete:function(){
+		            hideLoading();
+	            },
+                success: function (result) {
+                    $('#listMenuDetail').find('option').remove().end();
+                    $.each(JSON.parse(result), function (key, item) {
+                        var addRole = true;
+                        $('input[name^="idRoleDetail"]').each(function () {
+                            if ($(this).val() == item.id) {
+                                addRole = false;
+                            }
+                        });
+                        if (addRole == true) {
+                            var data = '<option class="mndetil" value="' + item.id + '">' + item.desc + '</option>';
+                            $('#listMenuDetail').append(data);
+                        }
+                    });
+                },
+	            error: function (xhr, status) {
+		            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	            }
+            });
+            nmMenu = $(this).text();
+        });
+    });
+    
+    $('#formRole').on('submit', function (e) {
+        t.search('').draw(false);
+        t.rows().nodes().page.len(-1).draw(false);
+        if ($(this).valid()) {
+            return true;
+        }
+        e.preventDefault();
+    });
+
+    /*Menu Item Click*/
+    $('#listMenuDetail').on('click', '.mndetil', function () {    	
+        var idMenu = $(this).attr("value");
+        var idMenuItem = $('#listMenu').val();  
+        var length = $('#listMenuDetail > option').length;
+        
+        var addRole = true;
+        $('input[name^="idRoleDetail"]').each(function () {
+            if ($(this).val() == idMenu) {
+                addRole = false;
+            }
+        });
+        if (addRole == true) {
+            t.row.add(['<input type="hidden" name="idRoleDetail" value="' + $(this).attr("value") + '" />' + nmMenu,
+                $(this).text(),
+                "<button class=\"btn btn-danger btn-remove-item btn-xs\">Hapus</button>"])
+                .draw();
+            $(this).remove();
+        }
+        $('#listMenuDetail').each(function () {
+        	if(length == 1) {
+        		$('#listMenu option[value="' + idMenuItem + '"]').remove().draw();
+        	}
+        });
+        
+    });
+
+    /*Delete Button event*/
+    $('#list-role-menu').on('click', '.btn-remove-item', function () {	
+        t.row($(this).parents('tr')).remove().draw(false);    
+    });
+
+    /*filter menu*/
+    $("#cariMenu").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $(".menu-item").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    /*]]>*/
+</script>
+</body>
+</html>

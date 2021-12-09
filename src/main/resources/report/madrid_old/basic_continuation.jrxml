@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="limit_continuation" pageWidth="523" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="523" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="12e33e45-ea8b-4bfb-aa07-255962c97973">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="regCount" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("1")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+COALESCE(A.APPLICATION_NO,' ') AS APPLICATION_NO,
+COALESCE(to_char(A.FILING_DATE,'DD/MM/YYYY'),' ') AS FILING_DATE,
+COALESCE(C.REG_NO,' ') AS REG_NO,
+COALESCE(to_char(C.REG_START_DATE,'DD/MM/YYYY'),' ') AS REG_START_DATE
+FROM TX_TM_GENERAL A
+LEFT JOIN TX_TM_REFERENCE B ON A.APPLICATION_ID=B.REF_APPLICATION_ID
+LEFT JOIN TX_REGISTRATION C ON C.APPLICATION_ID=A.APPLICATION_ID
+WHERE B.APPLICATION_ID = $P{applicationId}]]>
+	</queryString>
+	<field name="APPLICATION_NO" class="java.lang.String"/>
+	<field name="FILING_DATE" class="java.lang.String"/>
+	<field name="REG_NO" class="java.lang.String"/>
+	<field name="REG_START_DATE" class="java.lang.String"/>
+	<columnHeader>
+		<band height="27">
+			<rectangle>
+				<reportElement x="18" y="0" width="20" height="20" backcolor="#000000" uuid="dcce2dcc-01a8-4df7-9225-68c9ef0d3e49"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Transparent" x="43" y="0" width="307" height="20" uuid="6bd7bd71-5b1d-458d-b970-8b2e9628a6e9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BASIC APPLICATION OR BASIC REGISTRATION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="18" y="0" width="20" height="19" forecolor="#FFFFFF" uuid="672e12d2-e102-48d9-8be1-16919c243802"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[5]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="51" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="236" height="20" uuid="554404a8-1abf-4d75-b046-cd5e9b581984"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Basic application number : "+($P{regCount}.intValue() > 1 ? "" : $F{APPLICATION_NO})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="252" y="0" width="210" height="20" uuid="d0c9a338-dc6d-41d4-900f-27759711f8d9"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Date of the basic application : "+($P{regCount}.intValue() > 1 ? "" : $F{FILING_DATE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="252" y="20" width="210" height="20" uuid="41b1da13-ba4b-45a7-9c48-25812da4b24d"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Date of the basic registration : "+($P{regCount}.intValue() > 1 ? "" : $F{REG_START_DATE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="20" width="236" height="20" uuid="4ffd3196-8193-498c-bbdf-b4e0398cb6d1"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Basic registration number : "+($P{regCount}.intValue() > 1 ? "" : $F{REG_NO})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="462" y="0" width="58" height="20" uuid="8ae60b29-3c3c-4564-a9b0-f861215ceb05"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(dd/mm/yyyy)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="107" y="4" width="129" height="18" uuid="edc90a2c-b2d9-4671-b1d9-8f07632ff4c8"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["......................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="370" y="24" width="88" height="18" uuid="1ad4ec11-8e2a-40c0-9392-f430de2b5b28"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["......................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="369" y="4" width="89" height="18" uuid="0893df31-6d3d-4709-986f-b7f19f1235e3"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["......................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="108" y="24" width="128" height="18" uuid="341ed785-6c63-46c4-8a63-989ce1c6373b"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["......................................................................................."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="462" y="20" width="58" height="20" uuid="bfee826e-c65b-4aa1-957c-724ec50c9733"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(dd/mm/yyyy)]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

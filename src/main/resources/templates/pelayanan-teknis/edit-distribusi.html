@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+        <span id="position"></span>
+        <p th:replace="fragment/sidebar :: left"/>
+    </div>
+    <div id="myDragBar" class="splitter"></div>
+    <div id="myMain" class="panel-right">
+        <form class="form-horizontal" th:object="${form}" th:action="@{/layanan/edit-distribusi}" method="post">
+            <div class="my-wrapper" id="my-wrapper">
+                <div class="my-wrapper--inner">
+                    <div class="wrapper-content" id="edit-distribusi">
+                        <div class="content--top border--bottom padding-content--left-right">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3 class="content--title text--bold">
+                                        <i class="fas fa-share-square"></i> Detail Distribusi
+                                    </h3>
+                                    <small class="sub-header">Pelayanan Teknis / Distribusi Permohonan</small>
+                                    <small style="float:right;margin-left:13px"><a
+                                            th:href="@{/layanan/pelayanan-teknis}"><i class="fa fa-arrow-left"></i>
+                                        Kembali</a></small>
+                                    <small style="float:right"><a
+                                            th:href="@{'/layanan/ekspedisi-cetak?no=' + ${form.id}}" target="_blank"><i
+                                            class="fas fa-print"></i> Cetak Ekspedisi Dokumen</a></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content--center padding-content--left-right">
+                            <div class="wrapper--bg">
+                                <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                                    <button data-dismiss="alert" class="close close-sm" type="button">
+                                        <i class="icon-remove"></i>
+                                    </button>
+                                    <p>[[${errorMessage}]]</p>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="col-form-label col-sm-3">Nomor Grup</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" placeholder="Nomor Grup"
+                                                       th:field="*{txGroup.no}" th:required="true" disabled="disabled"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label col-sm-3">Nama Grup</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" placeholder="Nama Grup"
+                                                       th:field="*{txGroup.name}" th:required="true"
+                                                       disabled="disabled"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label col-sm-3">Nama Pemeriksa</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" placeholder="Nama Pemeriksa"
+                                                       th:field="${form.mRoleSubstantifDetail.mEmployee.employeeName}"
+                                                       disabled="disabled"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label col-sm-3">Jumlah Dokumen</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" placeholder="Jumlah Dokumen"
+                                                       th:field="*{txGroup.total}" th:required="true"
+                                                       disabled="disabled"/>
+                                            </div>
+                                        </div>
+                                        <div class="table-container">
+                                            <table id="table"
+                                                   class="table table-striped table-bordered table-responsive">
+                                                <thead>
+                                                <tr>
+                                                    <th>No.</th>
+                                                    <th>Tanggal Penerimaan</th>
+                                                    <th>Nomor Permohonan</th>
+                                                    <th>Nama Merek</th>
+                                                    <th>Kelas</th>
+                                                    <th>Nama Pemohon</th>
+                                                    <th>Status Distribusi</th>
+                                                    <th>Status Permohonan</th>
+                                                    <th>Pemeriksa</th>
+                                                    <th>Pemeriksa Lanjutan</th>
+                                                </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var csrf=/*[[${_csrf.token}]]*/'';
+	$(document).ready(function () {
+		/* Load DataTable */
+		var table=$('#table');
+		var groupId = /*[[${txGroup.id}]]*/ 'default';
+
+		table.data('groupId',groupId);
+		table.data('orderBy', 'txGroup.id');
+		table.data('orderType', 'ASC');
+
+		var dataTable=table.DataTable({
+			columnDefs: [
+				{
+					targets: [0, -1],
+					orderable: false
+				},
+				{
+					targets: [0, -1],
+					searchable: false
+				}
+			],
+			ajax:{
+				data:function(d){
+					d.groupId=table.data('groupId');
+					d.orderBy=table.data('orderBy');
+					d.orderType=table.data('orderType');
+					d._csrf=csrf;
+				},
+				type:'POST',
+				url:/*[[@{/layanan/list-detail-edit-distribusi}]]*/''
+			},
+			language:{
+				url:/*[[@{/js/i18n/datatables.in.json}]]*/''
+			},
+			ordering: true,
+			order:[[1,'asc']],
+			searching:true,
+			lengthMenu:[[10,30,90],[10,30,90]],
+			processing:true,
+			pageLength:10,
+		});
+		dataTable.on('error.dt',function(e,settings,techNote,message){
+			swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+		});
+
+		dataTable.on( 'order.dt search.dt', function () {
+			dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+		} ).draw();
+
+		$('form').validate({
+			messages:{
+				'txGroup.id':{
+					required:/*[[#{field.error.required('nama grup')}]]*/''
+				},
+				'mRoleSubstantifDetail.id':{
+					required:/*[[#{field.error.required('pemeriksa')}]]*/''
+				}
+			},
+			highlight: function(element) {
+				$(element).closest('.form-group').addClass('has-error');
+			},
+			unhighlight: function(element) {
+				$(element).closest('.form-group').removeClass('has-error');
+			},
+			errorElement: 'span',
+			errorClass: 'help-block',
+			errorPlacement: function(error, element) {
+				if(element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else {
+					error.insertAfter(element);
+				}
+			},
+			submitHandler: function(form) {
+				showLoading();
+				$('form')[0].submit();
+			}
+		});
+	});
+	/*]]>*/
+
+</script>
+</body>
+</html>

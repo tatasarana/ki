@@ -1,0 +1,528 @@
+<style>
+    .ui-autocomplete {
+        z-index: 1100 !important; 
+    }
+</style>
+<div class="row" th:classappend="${isEdit ? '' : 'display--none'}"
+     th:attr="js-direction=${isEdit ? '' : 'step-form-place'}, js-id=${isEdit ? '' : '6'}"
+     xmlns:th="http://www.w3.org/1999/xhtml">
+    <!--Header Judul-->
+    <div class="row col-md-12" style="margin-bottom: 15px">
+        <div class="col-md-4">
+            <h3>Data Kelas</h3>
+        </div>
+        <div class="col-md-8">
+            <div class="pull-right" th:if="${!isEdit}">
+                <li js-direction="step-form" class="current" js-id="5" style="list-style-type: none; float: left">
+                    <button type="button" class="btn btn-warning">
+                        Sebelumnya
+                    </button>
+                </li>
+                <li style="list-style-type:none; float: right; margin-left:5px;">
+                    <button type="submit" class="btn btn-primary" id="btnSaveForm6">
+                        Simpan dan Lanjutkan
+                    </button>
+                </li>
+            </div>
+        </div>
+        <div class="pull-right">
+            <label class="col-form-label notice">Beri tanda check list (v) pada persetujuan jenis barang kemudian klik tombol Simpan dan Lanjutkan untuk menyimpan</label>
+        </div>
+    </div>
+    <div class="row col-md-12">
+        <div class="col-md-12">
+            <!--Button-->
+            <div style="margin-bottom: 15px;">
+                <a class="btn btn-info" data-toggle="modal" data-target="#tambahKelas" id="btnTambahKelas">
+                    <i class="fas fa-plus"></i>
+                    Tambah
+                </a>
+                <a class="btn btn-info" data-toggle="modal" data-target="#copyKelas" id="btnCopyKelas">
+                    <i class="fas fa-plus"></i>
+                    Copy
+                </a>
+            </div>
+
+
+
+            <!-- Modal Tambah Kelas-->
+            <div class="modal fade" id="tambahKelas" tabindex="-1" role="dialog" aria-labelledby="tambahKelas">
+                <div class="modal-dialog" role="document" style="width:1200px; height:700px;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Tambah Kelas Barang/Jasa</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formSearch6" method="post" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-4 col-form-label">Kelas</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control m-input" id="idListMClass" name="classOption" onchange="renderDescKelas()">
+                                            <option value="">-Semua Kelas-</option>
+                                            <option th:each="item : ${listMClass}"
+                                                    th:value="${item.id}"
+                                                    th:text="${item.desc}"
+                                                    th:label="${item.no}"
+                                                    th:classappend="'optClass' + ${item.type}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 col-form-label">Penjelasan Kelas</label>
+                                    <div class="col-sm-8">
+                                        <span id="resultdesc" style="height:auto;color:blue;font-style:italic" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 col-form-label">Pencarian Uraian Barang/Jasa</label>
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" placeholder="Contoh: air mineral rasa; air mineral bersoda; air mineral berkarbonasi; dst. Mendukung pencarian secara banyak menggunakan titik koma (;). (Maks. 4000 karakter)" id="uraian" maxlength="4000"/>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="actionType" value="none" />
+                                <div class="form-group">
+                                    <label class="col-sm-4 col-form-label">Pencarian Uraian Barang/Jasa (English)</label>
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" placeholder="Contoh: flavored mineral water; sparkling mineral water; carbonated mineral water. Support multi keyword with semicolon (;). (Max. 4000 characters)" id="uraianEng" maxlength="4000"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-4 col-sm-8">
+                                        <button id="btnCariKelas" type="button" class="btn btn-primary">
+                                            <i class="fas fa-search"></i>
+                                            Cari
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </form>
+                            <div class="table-container">
+                                <table id="table6" class="table table-striped table-bordered table-responsive">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            <input name="select_all" value="1" id="select-all-class" type="checkbox"/>
+                                        </th>
+                                        <th>Kelas</th>
+                                        <th hidden="true"></th>
+                                        <th width="40%">Uraian Barang/Jasa</th>
+                                        <th width="40%">Uraian Barang/Jasa (English)</th>
+                                        <th hidden="true"></th>
+                                        <th hidden="true"></th>
+                                        <th hidden="true"></th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger"
+                                        data-dismiss="modal"><i class="fas fa-times"></i>
+                                    Batal
+                                </button>
+                                <button type="button" class="btn btn-primary" id="btnPilihKelas"> <i class="fas fa-check"></i>
+                                    Pilih
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Copy Kelas-->
+            <div class="modal fade" id="copyKelas" tabindex="-1" role="dialog" aria-labelledby="copyKelas">
+                <div class="modal-dialog" role="document" style="width:1200px; height:700px;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabelC">Copy Kelas Barang/Jasa</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formSearch6C" method="post" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-4 col-form-label">Dari Permohonan</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control m-input" id="idListPermohonan" name="permohonanOption">
+                                            <option value="nothing">-Pilih Nomor Permohonan-</option>
+                                            <option th:each="item : ${listPermohonan}"
+                                                    th:value="${item.id}"
+                                                    th:text="${item.applicationNo}"
+                                                    th:label="${item.applicationNo}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--                                <div class="form-group">-->
+                                <!--                                    <label class="col-sm-4 col-form-label">Kelas</label>-->
+                                <!--                                    <div class="col-sm-4">-->
+                                <!--                                        <select class="form-control m-input" id="idListTxTmClass" name="classOption">-->
+                                <!--                                            <option value="-">-Pilih Kelas-</option>-->
+                                <!--                                            <option class="optKelas"-->
+                                <!--                                                    th:each="listTxTmKelas : ${listTxTmKelas}"-->
+                                <!--                                                    th:value="${listTxTmKelas.mClass.id}"-->
+                                <!--                                                    th:text="${listTxTmKelas.mClass.desc}"-->
+                                <!--                                                    th:label="${listTxTmKelas.mClass.no}"-->
+                                <!--                                                    th:classappend="${listTxTmKelas.txTmGeneral.id}"></option>-->
+                                <!--                                        </select>-->
+                                <!--                                        <input type="hidden" id="temp_idListTxTmClass"/>-->
+                                <!--                                    </div>-->
+                                <!--                                </div>-->
+                                <!--                                <div class="form-group">-->
+                                <!--                                    <label class="col-sm-4 col-form-label">Penjelasan Kelas</label>-->
+                                <!--                                    <div class="col-sm-8">-->
+                                <!--                                        <span id="resultdescC" style="height:auto;color:blue;font-style:italic" class="form-control"/>-->
+                                <!--                                    </div>-->
+                                <!--                                </div>-->
+                                <!--                                <div class="form-group">-->
+                                <!--                                    <label class="col-sm-4 col-form-label">Pencarian Uraian Barang/Jasa</label>-->
+                                <!--                                    <div class="col-sm-8">-->
+                                <!--                                        <textarea class="form-control" placeholder="Contoh: air mineral rasa; air mineral bersoda; air mineral berkarbonasi; dst. Mendukung pencarian secara banyak menggunakan titik koma (;). (Maks. 4000 karakter)" id="uraianC" maxlength="4000"/>-->
+                                <!--                                    </div>-->
+                                <!--                                </div>-->
+                                <input type="hidden" name="actionType" value="none" />
+                                <!--                                <div class="form-group">-->
+                                <!--                                    <label class="col-sm-4 col-form-label">Pencarian Uraian Barang/Jasa (English)</label>-->
+                                <!--                                    <div class="col-sm-8">-->
+                                <!--                                        <textarea class="form-control" placeholder="Contoh: flavored mineral water; sparkling mineral water; carbonated mineral water. Support multi keyword with semicolon (;). (Max. 4000 characters)" id="uraianEngC" maxlength="4000"/>-->
+                                <!--                                    </div>-->
+                                <!--                                </div>-->
+                                <div class="form-group">
+                                    <div class="col-sm-offset-4 col-sm-8">
+                                        <!--                                        <button id="btnCariKelasC" type="button" class="btn btn-primary">-->
+                                        <!--                                            <i class="fas fa-search"></i>-->
+                                        <!--                                            Tampilkan-->
+                                        <!--                                        </button>-->
+                                        <button style="margin-right: 5px" type="button" class="btn btn-danger"
+                                                data-dismiss="modal"><i class="fas fa-times"></i>
+                                            Batal
+                                        </button>
+                                        <button type="button" class="btn btn-primary" id="btnCariKelasC"> <i class="fas fa-check"></i>
+                                            Copy
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div hidden="true" class="table-container">
+                                <table id="table6C" class="table table-striped table-bordered table-responsive">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            <input name="select_all" value="1" id="select-all-classC" type="checkbox"/>
+                                        </th>
+                                        <th>Kelas</th>
+                                        <th width="40%">Uraian Barang/Jasa</th>
+                                        <th width="40%">Uraian Barang/Jasa (English)</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div hidden="true" class="modal-footer">
+                                <button type="button" class="btn btn-danger"
+                                        data-dismiss="modal"><i class="fas fa-times"></i>
+                                    Batal
+                                </button>
+
+                                <!--note: "Copy" button will auto clicked after search result appear-->
+                                <button type="button" class="btn btn-primary" id="btnPilihKelasC"> <i class="fas fa-check"></i>
+                                    Copy
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Tambah Kelas Baru-->
+            <div class="modal fade" id="tambahKelasBaru" tabindex="-1" role="dialog" aria-labelledby="tambahKelasBaru">
+                <div class="modal-dialog" role="document" style="width:1200px; height:700px;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabelX">Permohonan Tambah Kelas Barang/Jasa</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formSearch6X" method="post" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-4 col-form-label">Kelas</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control m-input" id="idListMClassX" name="classOption" onchange="renderDescKelasX()">
+                                            <option th:each="item : ${listMClass}"
+                                                    th:value="${item.id}"
+                                                    th:text="${item.desc}"
+                                                    th:label="${item.no}"
+                                                    th:classappend="'optClass' + ${item.type}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 col-form-label">Penjelasan Kelas</label>
+                                    <div class="col-sm-8">
+                                        <span id="resultdescx" style="height:auto;color:blue;font-style:italic" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 col-form-label">Pencarian Uraian Barang/Jasa</label>
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" placeholder="Contoh: air mineral rasa; air mineral bersoda; air mineral berkarbonasi; dst. Mendukung pencarian secara banyak menggunakan titik koma (;). (Maks. 4000 karakter)" id="uraianX" maxlength="4000"/>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="actionType" value="none" />
+                                <div class="form-group">
+                                    <label class="col-sm-4 col-form-label">Pencarian Uraian Barang/Jasa (English)</label>
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" placeholder="Contoh: flavored mineral water; sparkling mineral water; carbonated mineral water. Support multi keyword with semicolon (;). (Max. 4000 characters)" id="uraianEngX" maxlength="4000"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-4 col-sm-8">
+                                        <button type="button" class="btn btn-danger"
+                                                data-dismiss="modal"><i class="fas fa-times"></i>
+                                            Batal
+                                        </button>
+                                        <button type="button" class="btn btn-primary" id="btnPilihKelasX"> <i class="fas fa-check"></i>
+                                            Proses
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--Modal Permintaan Barang Jasa Baru-->
+            <div class="modal fade" id="permintaanBarangJasaBaru" tabindex="-1" role="dialog" aria-labelledby="permintaanBarangJasaBaru">
+                <div class="modal-dialog" role="document" style="width:1200px; height:700px;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                            <h3 class="modal-title" id="myModalLabel1">Permintaan Jenis Barang/Jasa Baru yang Tidak Ada pada Database</h3>
+                            <h4 class="modal-title" id="myModalLabel2">Hanya untuk jenis barang/jasa yang tidak ada dalam pencarian kelas</h4>
+
+                        </div>
+                        <div class="modal-body">
+                            <form id="formSearch6" method="post" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-md-3 col-form-label required-label">Kelas</label>
+                                    <div class="col-md-9">
+                                        <select class="form-control m-input" id="idListMClassR" th:required="true" name="classOption"  >
+											<option value="">-Pilih Kelas-</option>
+                                            <option th:each="item : ${listMClass}"
+                                                    th:value="${item.id}"
+                                                    th:text="${item.desc}"
+                                                    th:label="${item.no}"
+                                                    th:classappend="'optClass' + ${item.type}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="form-group m-form__group row">
+                                <label class="col-md-3 col-form-label">Permohonan dengan Jenis Barang/Jasa </label>
+                                <div class="col-md-9">
+                                    <label class="radio-inline"> <input type="radio"
+                                                                        class="btnRadio" name="uraianRadio" value="disable" id="permohonanBiasa"/>
+                                        Tradisional
+                                    </label>
+                                    <label class="radio-inline"> <input type="radio"
+                                                                        class="btnRadio" name="uraianRadio" value="disable" id="permohonanMgs"/>
+                                        MGS (Madrid Good Services)
+                                    </label>
+                                    <label class="radio-inline"> <input type="radio"
+                                                                        class="btnRadio" name="uraianRadio" value="disable" id="permohonanPrioritas" />
+                                        Hak Prioritas
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group m-form__group row">
+                                <label class="col-md-3 col-form-label"> Uraian Barang/Jasa</label>
+                                <div class="col-md-9">
+                                    <textarea id="uraianBarangJasa" name="uraianBarangJasa" placeholder= "Maksimal 35 karakter" maxlength="35" rows="1" cols="112"></textarea>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group m-form__group row">
+                                <label class="col-md-3 col-form-label"> Uraian Barang/Jasa (English) </label>
+                                <div class="col-md-9">
+									<textarea id="uraianBarangJasaEnglish"
+                                              name="uraianBarangJasaEnglish" placeholder= "Maksimal 35 karakter" maxlength="35" rows="1" cols="112"></textarea>
+                                </div>
+
+                            </div>
+
+                            <div class="row col-md-12" id="labelPeringatanBiasa" >
+                                <div class="col-md-push-12">
+                                    <label style="color:red;font-size: 15px; margin-left: 1px;"   >
+                                        Masukkan jenis barang/jasa baru secara satu per satu (bukan satu paragraf). Jika jenis Barang/Jasa sudah ada pada pencarian kelas, tidak dapat diinput kembali (permintaan akan ditolak)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="row col-md-12"  id="labelPeringatanPrioritas" hidden="true" >
+                                <div class="col-md-push-12">
+                                    <label style="color:red; font-size: 15px; margin-left: 1px;"    >
+                                        Pastikan anda melampirkan bukti prioritas pada tab lampiran. Jika tidak melampirkan, permintaan akan ditolak.
+                                    </label>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-8 col-sm-8">
+                                    <button type="button" class="btn btn-danger"
+                                            data-dismiss="modal" data-toggle="modal" data-target="#tambahKelas">
+                                        <i class="fas fa-times"></i>
+                                        Kembali ke Pencarian Kelas
+                                    </button>
+                                    <button type="button" class="btn btn-primary" id="btnTambahBarangJasa"> <i class="fas fa-save"></i>
+                                        Tambah
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="table-container">
+
+                                <table class="table table-striped table-bordered table-responsive" id="tableTxTmClassNewRequest">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>No</th>
+                                        <th>Kelas</th>
+                                        <th>Serial No (E)</th>
+                                        <th>Uraian Barang/Jasa</th>
+                                        <th>Uraian Barang/Jasa (English)</th>
+                                        <th>Edition</th>
+                                        <th>Catatan</th>
+                                        <th>Version</th>
+                                        <!--<th>Status</th>  -->
+                                        <th>Koreksi</th>
+                                        <!--      <th><button th:if="${!isEdit}" type="button" class="btn btn-danger btn-xs" id="btnHapusAll">Hapus Semua</button></th>
+                                         -->
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary"
+                                        data-dismiss="modal">
+                                    Kembali ke Tab Kelas
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Data Kelas-->
+            <div class="table-container">
+                <table class="table table-striped table-bordered table-responsive" id="tableTxTmClass">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>No.</th>
+                        <th>Kelas</th>
+                        <th>Serial No (E)</th>
+                        <th>Uraian Barang/Jasa</th>
+                        <th>Uraian Barang/Jasa (English)</th>
+                        <th>Edition</th>
+                        <th>Catatan</th>
+                        <th>Version</th>
+                        <!--<th>Status</th>-->
+                        <th>Koreksi</th>
+                        <th><button th:if="${!isEdit}" type="button" class="btn btn-danger btn-xs" id="btnHapusAll">Hapus Semua</button></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row col-md-12" style="margin-bottom: 15px">
+                <div class="col-md-push-12">
+                    <label style="font-size: 18px; margin-left: 1px;">
+                        <input style="margin-right:8px; margin-bottom: 1em; float: left;" id="agreeResume" type="checkbox"
+                               name="cekPermintaanCheckbox">Jenis Barang / Jasa yang diajukan telah dicek dan telah sesuai.</input>
+                    </label>
+                    <label style="color: red; font-size: 16px">
+                        Beri tanda check list (v) pada persetujuan jenis barang kemudian klik tombol Simpan dan Lanjutkan untuk menyimpan.
+                    </label>
+
+                </div>
+            </div>
+
+            <!--penambahan data Barang Jasa Baru-->
+            <div class="row col-md-12" style="margin-bottom: 15px">
+                <div class="col-md-push-12">
+                    <h3>Permintaan Penambahan Jenis Barang/Jasa Baru</h3>
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="table table-striped table-bordered table-responsive" id="tableTxTmClassNewRequestForm6" style="width:100% !important">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>No</th>
+                        <th>Kelas</th>
+                        <th>Serial No (E)</th>
+                        <th>Uraian Barang/Jasa</th>
+                        <th>Uraian Barang/Jasa (English)</th>
+                        <th>Edition</th>
+                        <th>Catatan</th>
+                        <th>Version</th>
+                        <!--<th>Status</th>  -->
+                        <th>Koreksi</th>
+                        <th>
+                            <!-- <button th:if="${!isEdit}" type="button" class="btn btn-danger btn-xs" id="btnHapusAll">Hapus Semua</button> -->
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row col-md-12" style="margin-bottom: 15px">
+                <div class="col-md-push-12">
+                    <h3>Permintaan Ditolak</h3>
+                </div>
+            </div>
+
+            <!-- penambahan table Permintaan Ditolak-->
+            <div class="table-container">
+                <table class="table table-striped table-bordered table-responsive" id="tabelPermintaanDitolak">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>No</th>
+                        <th>Kelas</th>
+                        <th>Serial No (E)</th>
+                        <th>Uraian Barang/Jasa</th>
+                        <th>Uraian Barang/Jasa (English)</th>
+                        <th>Edition</th>
+                        <th>Catatan</th>
+                        <th>Version</th>
+                        <!--<th>Status</th>  -->
+                        <th>Koreksi</th>
+                        <!-- <th><button th:if="${!isEdit}" type="button" class="btn btn-danger btn-xs" id="btnHapusAll">Hapus Semua</button></th> -->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

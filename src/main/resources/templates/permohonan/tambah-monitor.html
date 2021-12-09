@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <form class="form-horizontal" th:object="${form}" th:action="@{/layanan/tambah-monitor}" method="post">
+        <div class="my-wrapper" id="my-wrapper">
+            <div class="my-wrapper--inner">
+                <div class="wrapper-content">
+                    <div class="content--top border--bottom padding-content--left-right">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="content--title text--bold">
+                                    <i class="fas fa-laptop"></i> Monitor
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content--center padding-content--left-right">
+                        <div class="wrapper--bg">
+                            <div class="jumbotron filterSearch">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <div>
+                                                    <label style="margin-right: 40px">No Pemohon</label>
+                                                    <label style="margin-right: 20px">:</label>
+                                                    <label th:text="${txTmGeneral.applicationNo}"></label>
+                                                    <input type="hidden" id="appNo" th:value="${txTmGeneral.applicationNo}"/>
+                                                    <input type="hidden" id="appId" th:value="${txTmGeneral.id}"/>
+                                                </div>
+                                                <div>
+                                                    <label style="margin-right: 42px">Nama Merek</label>
+                                                    <label style="margin-right: 20px">:</label>
+                                                    <label th:text="${txTmGeneral.txTmBrand.name}"></label>
+                                                    <input type="hidden" id="namaMerek" th:value="${txTmGeneral.txTmBrand.name}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div>
+                                                <label style="margin-right: 40px">Nama Pemohon</label>
+                                                <label style="margin-right: 20px">:</label>
+                                                <label th:text="${txTmGeneral.txTmOwner.name}"></label>
+                                                <input type="hidden" id="namaPemohon" th:value="${txTmGeneral.txTmOwner.name}"/>
+                                            </div>
+                                            <div>
+                                                <label style="margin-right: 57px">Status Saat Ini</label>
+                                                <label style="margin-right: 20px">:</label>
+                                                <label th:text="${txTmGeneral.mAction.step.name}"></label>
+
+                                            </div>
+                                            <div>
+                                                <label style="margin-right: 73px">Aksi Saat Ini</label>
+                                                <label style="margin-right: 20px">:</label>
+                                                <label th:text="${txTmGeneral.mAction.name}"></label>
+                                                <input type="hidden" id="statusLama" th:value="${txTmGeneral.mAction.id}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-sm-11">
+                                <form id="formSearch6" method="post" class="form-horizontal">
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Status Selanjutnya</label>
+                                        <div class="col-sm-6">
+                                            <label th:text="${nextStep.name}"></label>
+                                            <input type="hidden" th:value="${nextStep.name}"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Aksi Selanjutnya</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control m-input" th:field="*{mActionNew.id}" id="statusBaru" name="statusOption">
+                                                <option style="display:none" value="">-Pilih Aksi-</option>
+                                                <option th:each="item : ${listStatus}"
+                                                        th:value="${item.id}"
+                                                        th:text="${item.name}" ></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Catatan</label>
+                                        <div class="col-sm-6">
+                                            <textarea class="form-control" placeholder="Catatan" id="catatan"  th:field="*{actionNote}"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-11">
+                                        <div class="form-group" align="">
+                                            <a class="btn btn-danger" th:href="@{'/layanan/list-monitor?no=' + ${txTmGeneral.applicationNo}}"
+                                               id="btnKembaliMonitor"><i class="fa fa-arrow-left"></i> Kembali</a>
+                                            <a class="btn btn-primary" th:href="@{'/layanan/list-monitor?no=' + ${txTmGeneral.applicationNo}}" 
+                                            	id="btnSubmitMonitor"><i class="fas fa-paper-plane "></i> Submit</a>
+                                        </div>
+                                    </div>
+                                </form>
+                                <input type="hidden" th:field="*{id}" th:value="*{id}" id="txActionId"/>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datatables"></div>
+</body>
+</html>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    var csrf = /*[[${_csrf.token}]]*/'';
+    $('#btnSubmitMonitor').click(function(){
+        txActionId = $("#txActionId").val();
+        appId = $("#appId").val();
+        appNo = $("#appNo").val();
+        namaPemohon = $("#namaPemohon").val();
+        namaMerek = $("#namaMerek").val();
+        statusLama = $("#statusLama").val();
+        statusBaru = $("#statusBaru").val();
+        catatan = $("#catatan").val();
+        $.ajax({
+            type: 'GET',
+            url: /*[[@{/layanan/save-monitor}]]*/'',
+            data: {
+                txActionId: $("#txActionId").val(),
+                appId: $("#appId").val(),
+                appNo: $("#appNo").val(),
+                namaPemohon: $("#namaPemohon").val(),
+                namaMerek: $("#namaMerek").val(),
+                statusLama: $("#statusLama").val(),
+                statusBaru: $("#statusBaru").val(),
+                catatan: $("#catatan").val()
+            },
+	        beforeSend:function(){
+		        showLoading();
+	        },
+	        complete:function(){
+		        hideLoading();
+	        },
+            success: function (data) {
+                console.log("Sukses hapus");
+                location.reload(true);
+            },
+            error: function () {
+		        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+            }
+        });
+    });
+</script>

@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<style>
+.help-block {
+    width: 200px;
+  }
+</style>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <div class="my-wrapper" id="my-wrapper">
+        <div class="my-wrapper--inner">
+
+            <div class="wrapper-content" id="permohonan-baru">
+                <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="fas fa-laptop"></i> Permohonan Online
+                            </h3>
+                            <small class="sub-header">Permohonan Merek / Permohonan Online</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="content--center padding-content--left-right">
+                    <div class="wrapper--bg">
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+                            <button data-dismiss="alert" class="close close-sm" type="button">
+                                <i class="icon-remove"></i>
+                            </button>
+                            <p>[[${errorMessage}]]</p>
+                        </div>
+                        <div class="jumbotron filterSearch">
+                            <form>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Tanggal Pengajuan</label>
+                                            <input type="text" id="applicationDate" class="form-control datepicker" placeholder="Tanggal Pengajuan"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Nomor Permohonan</label>
+                                            <input type="text" id="applicationNo" class="form-control" placeholder="Nomor Permohonan"/>
+                                        </div>
+										<div class="form-group">
+											<label>Nomor Transaksi</label>
+											<input type="text" id="eFilingNo" class="form-control" placeholder="Nomor Transaksi"/>
+										</div>
+                                    </div>
+                                    <div class="col-md-6">
+										<div class="form-group">
+											<label>Kelas</label>
+											<input type="text" id="kelas" class="form-control" placeholder="Kelas"/>
+										</div>
+                                        <div class="form-group">
+											<label>Merek</label>
+											<input type="text" id="brandName" class="form-control" placeholder="Nama Merek"/>
+											<!-- <select id="brandName" class="form-control">
+												<option value="">Semua</option>
+												<option th:each="mFileTypeDetail :${fileTypeDetailList}" th:value="${mFileTypeDetail.id}" th:text="${mFileTypeDetail.desc}"/>
+											</select> -->
+										</div>
+										<div class="form-group">
+											<label>Kode Billing</label>
+											<input type="text" id="kodebilling" class="form-control" placeholder="Kode Billing"/>
+										</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button type="button" class="btn btn-primary" id="btnCari">
+                                            <i class="fas fa-search"></i>
+                                            Filter
+                                        </button>
+                                        <button type="submit" class="btn btn-info" onClick="window.location.reload()" style="margin-left:15px;">
+                                            <i class="fas fa-sync-alt"></i> Refresh
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-container">
+                            <table id="table" class="table table-striped table-bordered table-responsive">
+                                <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Nomor Transaksi</th>
+                                    <th>Tanggal Pengajuan</th>
+                                    <th>Tipe Merek</th>
+                                    <th>Merek</th>
+									<th>Kelas</th>
+                                    <th>Nomor Permohonan</th>
+                                    <th>Tipe Permohonan</th>
+                                    <th>Jenis Permohonan</th>
+                                    <th>Status</th>
+                                    <th class="not-export-col"></th>
+                                </tr> 
+                                </thead>
+                            </table> 
+                       </div>
+						<!-- Modal Pemesanan Kode Biling -->
+						<div class="modal fade" id="pesanKodeBilingModal" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalLabel"
+							aria-hidden="true" data-backdrop="static" data-keyboard="false">
+							<div class="modal-dialog" role="document"
+								style="width: 615px; height: 800px">
+								<div class="modal-content">
+									<form role="form" id="modalPesanBiling">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal"
+												aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+											<h5 style="font-size: 15px; font-weight: bold;"
+												class="modal-title">Pemesanan Kode Biling</h5>
+										</div>
+										<div class="modal-body">
+											<div class="row">
+												<div class="form-group fileType" style="margin-bottom:50px;">
+													<label class="col-md-4 col-form-label required-label" style="margin-left:23px;">Tipe
+														Permohonan</label>
+														<div class="col-md-7">
+															<select id="mfileTypes" class="form-control m-input" name="classOption" required="required">
+																<option style="display: none" value="">Pilih</option>
+																<option th:each="mFileType :${fileTypeListByTypeMenuDaftar}"
+																	th:value="${mFileType.id}" th:text="${mFileType.desc}" />
+															</select>
+														</div>
+												</div>
+												<div class="form-group fileTypeDetail" style="margin-bottom:100px;">
+													<label class="col-md-4 col-form-label required-label" style="margin-left:23px;">Jenis
+														Permohonan</label>
+														<div class="col-md-7">
+															<select id="mfileTypeDetail" class="form-control" name="mfileTypeDetail" required="required">
+																<option style="display: none" value="">Pilih</option>
+																<option th:each="mfileTypeDetail :${fileTypeDetailListById}"
+																	th:value="${mfileTypeDetail.id}" th:text="${mfileTypeDetail.desc}" />
+															</select>
+														</div>
+												</div>
+												<div class="form-group" style="margin-bottom:150px;">
+													<label class="col-md-4 col-form-label required-label" style="margin-left:23px;">Pilihan 
+														Kelas</label>
+														<div class="col-md-7">
+															<button type="button" id="btnDetailKelas" data-toggle="modal" data-target="#tambahKelas" class="btn btn-primary">
+															Detail Kelas (Barang/Jasa)</button>
+														</div>
+												</div>
+												<div class="form-group countKelas" style="margin-bottom:50px;">
+													<label class="col-md-4 col-form-label" style="margin-left:23px;"></label>
+														<div class="col-custom-1">
+															<input type="text" id="jmlKelas" style="width:60px; text-align:center;" name="jmlKelas" readOnly="readOnly" required="required"></input>
+														</div>
+														<div class="col-md-3">
+															<label class="col-md-2 col-form-label" style="margin-left:32px;">Kelas</label>
+														</div>
+												</div>
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-danger"
+												data-dismiss="modal">
+												<i class="fas fa-times"></i> Batal
+											</button>
+											<button type="submit" id="btnAgree" class="btn btn-primary">
+												<i class="fas fa-paper-plane"></i> Pesan Kode Billing
+											</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+						
+						<!-- Modal Tambah Kelas-->
+						<div class="modal fade" id="tambahKelas" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalTambahKelas" data-backdrop="static" data-keyboard="false">
+							<div class="modal-dialog" role="document"
+								style="width: 1200px; height: 700px;">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+
+										<h4 class="modal-title" id="myModalLabel">Kelas
+											Barang/Jasa</h4>
+									</div>
+									<div class="modal-body">
+										<form id="formTambahKelas" method="post" class="form-horizontal">
+											<div class="form-group">
+												<label class="col-sm-4 col-form-label">Kelas</label>
+												<div class="col-sm-4">
+													<select class="form-control m-input" id="idListMClass"
+														name="classOption">
+														<option value="">-Semua Kelas-</option>
+														<option th:each="item : ${listMClass}"
+															th:value="${item.id}" th:text="${item.no}"
+															th:classappend="'optClass' + ${item.type}"></option>
+													</select>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-4 col-form-label">Uraian
+													Barang/Jasa</label>
+												<div class="col-sm-8">
+													<textarea class="form-control"
+														placeholder="Uraian Barang/Jasa" id="uraian"
+														maxlength="4000" />
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-4 col-form-label">Uraian
+													Barang/Jasa (English)</label>
+												<div class="col-sm-8">
+													<textarea class="form-control"
+														placeholder="Uraian Barang/Jasa (English)" id="uraianEng"
+														maxlength="4000" />
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-sm-offset-4 col-sm-8">
+													<button id="btnCariKelas" type="button"
+														class="btn btn-primary">
+														<i class="fas fa-search"></i> Cari
+													</button>
+												</div>
+											</div>
+										</form>
+										<div class="table-container">
+											<table id="tableKelas"
+												class="table table-striped table-bordered table-responsive">
+												<thead>
+													<tr>
+														<th><input name="select_all" value="1"
+															id="select-all-class" type="checkbox" /></th>
+														<th>Kelas</th>
+														<th hidden="true"></th>
+														<th width="40%">Uraian Barang/Jasa</th>
+														<th width="40%">Uraian Barang/Jasa (English)</th>
+														<th hidden="true"></th>
+														<th hidden="true"></th>
+														<th hidden="true"></th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-danger"
+												data-dismiss="modal">
+												<i class="fas fa-times"></i> Batal
+											</button>
+											<button type="button" class="btn btn-primary"
+												id="btnPilihKelas">
+												<i class="fas fa-check"></i> Pilih
+											</button>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+                </div> 
+            </div>
+        </div>
+    </div> 
+</div>
+<!-- MODAL -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="position: relative;">
+                <h3 class="modal-title" id="exampleModalLabel">Download Sertifikat Merek Digital</h3>
+                <button style="position: absolute;top: 8px;right: 15px;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="width: 50%;margin: auto;">
+                    <p>Konfirmasi Captcha<span class="text-danger">*</span></p>
+                    <div id="loadingCaptcha" class="text-center" style="margin-top: 15px;">
+                        <i style="font-size: 40px;" class='fas fa-spinner fa-spin'></i>
+                    </div>
+                    <img id="imgCaptcha" style="width: 100%;"/>
+                    <input class="form-control" autofocus="autofocus" name="captchaAnswer" style="margin-top: 15px;" type="text" id="captchaAnswer" placeholder="Input captcha di atas"/>
+                </div>
+            </div>
+            <form class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                <button id="download" type="submit" class="btn btn-primary">Download</button>
+            </form>
+        </div>
+    </div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function () {
+        var csrf = /*[[${_csrf.token}]]*/'';
+        var table = $('#table');
+        var lookupKonfirm = /*[[${lookupKonfirm}]]*/'';
+        var searchByArr = [];
+        var keywordArr = [];
+        var searchByArr6 = [];
+        var keywordArr6 = [];
+        var selectedClass = [];
+
+        searchByArr.push('txReception.applicationDate');
+        keywordArr.push($('#applicationDate').val());
+        searchByArr.push('applicationNoOnline');
+        keywordArr.push($('#applicationNo').val());
+        searchByArr.push('txReception.eFilingNo');
+        keywordArr.push($('#eFilingNo').val());
+        searchByArr.push('txTmBrand.name');
+        keywordArr.push($('#brandName').val());
+        searchByArr.push('txReception.mFileTypeDetail.id');
+		keywordArr.push($('#fileChildType').val());
+		searchByArr.push('classList');
+		keywordArr.push($('#kelas').val());
+		searchByArr.push('txReception.bankCode');
+		keywordArr.push($('#kodebilling').val());
+
+        table.data('searchByArr', searchByArr);
+        table.data('keywordArr', keywordArr);
+        table.data('orderBy', 'txReception.applicationDate');
+        table.data('orderType', 'DESC');
+
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            todayBtn: 'linked',
+            todayHighlight: true,
+            useCurrent: false,
+            endDate:'today'
+
+        });
+        
+        $("#modalPesanBiling").validate({
+            messages: {
+                "classOption": {
+                    required: /*[[#{field.error.required('Tipe Permohonan')}]]*/''
+                },
+                "mfileTypeDetail": {
+                    required: /*[[#{field.error.required('Jenis Permohonan')}]]*/''
+                },
+                "jmlKelas": {
+                    required: /*[[#{field.error.required('Detail Kelas')}]]*/''
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+       		}
+        });
+
+        $("#startDate").on("dp.change", function (e) {
+            $('#endDate').data("DatePicker").minDate(e.date);
+        });
+        $("#endDate").on("dp.change", function (e) {
+            $('#startDate').data("DatePicker").maxDate(e.date);
+        });
+
+        /* Load DataTable */
+        var dataTable = table.DataTable({
+        	dom: 'lBfrtip',
+			buttons: [
+		        { 
+		            extend: 'excel',
+		            title:'Permohonan Online',
+		            exportOptions: {
+		            	columns: ':visible:not(.not-export-col)'
+		            },
+		            action: function ( e, dt, node, config ) {
+						if(alreadySearch == false) {
+							swal("Error", "Tidak dapat melakukan export. Harap lakukan pencarian & klik filter terlebih dahulu.", "warning");
+							e.preventDefault();
+							return false;
+						}
+						$.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+					}
+		        }
+		    ],
+            ajax: {
+                data: function (d) {
+                    d.searchByArr = table.data('searchByArr');
+                    d.keywordArr = table.data('keywordArr');
+                    d.orderBy = table.data('orderBy');
+                    d.orderType = table.data('orderType');
+                    d._csrf = csrf;
+                },
+                type: 'POST',
+                url: /*[[@{/layanan/cari-permohonan-online}]]*/''
+            },
+            ordering: true,
+			order:[[2,'desc']],
+            initComplete: function (settings, json) {
+                //var url = /*[[@{/layanan/cetak-permohonan-online}]]*/'';
+                //var urladd = /*[[@{/layanan/tambah-permohonan-online}]]*/'';
+                //$('#table_length').parent().next().addClass("text-right");
+                //$('#table_length').parent().next().append('<a class="btn btn-success" href="' + urladd + '"><i class="fas fa-plus"></i> Tambah</a> ');
+                //$('#table_length').parent().next().append('<a class="btn btn-default" id="exportToExcel"><i class="fas fa-file-excel"></i> Export to Excel</a>');                
+                //$('#table_length').parent().parent().addClass('margin-bottom-8px');
+                
+                $('.dt-buttons').prepend('<a class="btn btn-info" id="btnTambah"><i class="fas fa-plus"></i> Tambah</a> ');
+				$('.dt-buttons').addClass("dataTables_filter margin-bottom-8px").removeClass("dt-buttons");
+				$('.buttons-excel').empty();
+				$('.buttons-excel').append('<i class="fas fa-file-excel"></i> Export to Excel');
+				$('.buttons-excel').addClass('btn btn-success').removeClass('dt-button buttons-excel buttons-html5');
+            },
+            language: {
+                url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+            },
+            lengthMenu: [[10, 30, 90], [10, 30, 90]],
+            pageLength: 10,
+            processing: true,
+            searching: false,
+            serverSide: true
+        });
+	    dataTable.on('error.dt',function(e,settings,techNote,message){
+		    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+	    });
+
+        var alreadySearch = false;
+        /* Search */
+        $("#btnCari").click(function (event) {
+
+            event.preventDefault();
+            var searchByArr = [];
+            var keywordArr = [];
+            var actionType = "none";
+
+            searchByArr.push('txReception.applicationDate');
+            keywordArr.push($('#applicationDate').val());
+            searchByArr.push('applicationNoOnline');
+            keywordArr.push($('#applicationNo').val());
+            searchByArr.push('txReception.eFilingNo');
+            keywordArr.push($('#eFilingNo').val());
+            searchByArr.push('txTmBrand.name');
+            keywordArr.push($('#brandName').val());
+            searchByArr.push('txReception.mFileTypeDetail.id');
+    		keywordArr.push($('#fileChildType').val());
+			searchByArr.push('classList');
+			keywordArr.push($('#kelas').val());
+			searchByArr.push('txReception.bankCode');
+			keywordArr.push($('#kodebilling').val());
+ 
+            table.data('searchByArr', searchByArr);
+            table.data('keywordArr', keywordArr);
+            dataTable.ajax.reload(); 
+
+            alreadySearch = false;
+            keywordArr.forEach(function(item) {
+                if(item !== "") {
+                    alreadySearch = true;
+                }
+            })
+        });
+        
+        $(".table-container").on("click", "#btnTambah", function (e) {
+        	e.preventDefault();
+        	swal("Konfirmasi", "Apakah anda sudah mempunyai Kode Biling?", "warning", {buttons: {  confirm:'Sudah', cancel:'Belum'}})
+      		.then((value) => {
+      			if (value) {
+			        window.location.href = /*[[@{/layanan/tambah-permohonan-online}]]*/''; 
+      		  	} else {
+      			// belum
+      		  		$('#mfileTypes').val('');
+      		  		$('#mfileTypeDetail').val('');
+      		  		$('#jmlKelas').val('');
+      		  		$('.countKelas').removeClass('has-error');
+      		  		$('.countKelas').find('.help-block').remove();
+      		  		$('.fileType').removeClass('has-error');
+  		  			$('.fileType').find('.help-block').remove();
+  		  			$('.fileTypeDetail').removeClass('has-error');
+		  			$('.fileTypeDetail').find('.help-block').remove();
+      		  		$('#pesanKodeBilingModal').modal('show');
+      		  		selectedClass = [];
+      		  	}
+      		});
+        });
+        
+        //LIST Data Table in Modal Tambah Kelas
+        var tableModalKelas = $('#tableKelas').DataTable({
+        	'createdRow': function( row, data, dataIndex ) {
+      	      	$(row).attr('id', data[0]);
+      	    },
+            pageLength: 10,
+    		deferLoading: 0, // here
+            processing: true,
+      	 	searching : false,
+            serverSide: true,
+            ajax: {
+                data: function (d) {
+                	d.searchByArr6 = searchByArr6;
+                    d.keywordArr6 = keywordArr6;
+                    d.excludeArr6 = null;
+					d.actionType = "goSearch";
+                    //d.orderBy = 'parentClass.no';
+                    d._csrf = csrf;
+                },
+                type: 'POST',
+                url: /*[[@{/layanan/list-kelas}]]*/''
+            },
+            'columnDefs': [
+                {
+                    "targets": [2, 5, 6],
+                    "visible": false,
+                    "searchable": false
+                },
+                {
+                    "targets": [7, 8],
+                    "visible": false,
+                    "searchable": true
+                },
+                {
+                    'targets': 0,
+                    'searchable': false,
+                    'orderable': true,
+                    'className': 'dt-body-center',
+                    'render': function (data, type, full, meta) {
+                    	for (i = 0; i < selectedClass.length; i++) {
+        					if(selectedClass[i].id == data) {
+                        		return '<input class="check-class" type="checkbox" data-idx="' + data + '" checked/>';
+        		       		}
+        		       	}
+                		return '<input class="check-class" type="checkbox" data-idx="' + data + '" />';
+                    }
+                }],
+            initComplete:function(settings,json){
+            	$('#tableKelas_filter.dataTables_filter').empty();
+            },
+            language: {
+                url: /*[[@{/js/i18n/datatables.in.json}]]*/''
+            }
+        });
+
+        tableModalKelas.on('error.dt',function(e,settings,techNote,message){
+            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+        });
+
+        $(document).on('change', '.check-class', function(e) {
+        	var checked = this.checked;
+        	var idx = $(this).attr('data-idx');
+        	if(checked) {
+        		var x = new Object();
+	        	x.id = idx;
+	        	x.kelas = $(this).parent().parent().find('td:eq(1)').text();
+        		selectedClass.push(x);
+        	} else {
+        		var i;
+        		for (i = 0; i < selectedClass.length; i++) {
+        			if(selectedClass[i].id == idx) {
+        				selectedClass.splice(i, 1);
+        				break;
+        			}
+        		}
+        	}
+        });
+     	
+     	//CARI DATA TABLE ON MODAL TAMBAH KELAS
+        $('#btnCariKelas').click(function () {
+
+        	var mLookup = $('#lookupKonfirm').val() == undefined ? lookupKonfirm : $('#lookupKonfirm').val();
+            var classId = '^' + $('#idListMClass option:selected').text() + '$';
+            
+            // menambahkan parameter 'Konfirmasi' dari mlookup untuk di swal info
+            var lookupName = '';
+            mLookup.forEach(function (element) {
+            	lookupName = element.name;
+            });
+            
+	        searchByArr6 = [];
+	        keywordArr6 = [];
+			var excludeArr6 = null;
+	        var actionType ="goSearch" ;
+
+
+            if($('#idListMClass').val() != '') {
+                classId = $('#idListMClass').val();
+                searchByArr6.push('parentClass.id');
+                keywordArr6.push(classId);
+            }
+
+            if($('#uraian').val() != '') {
+                uraian = $('#uraian').val();
+                searchByArr6.push('desc');
+                keywordArr6.push(uraian);
+            }
+
+            if($('#uraianEng').val() != '') {
+                uraianEng = $('#uraianEng').val();
+                searchByArr6.push('descEn');
+                keywordArr6.push(uraianEng);
+            }
+
+
+            tableModalKelas.ajax.reload(function (json) {
+				if ((json.recordsTotal) == 0){
+
+					swal("Informasi", "Silakan cari padanan kata jenis barang/jasa sesuai dengan sistem klasifikasi. Jika jenis barang/jasa tidak terdaftar, silakan hubungi Bagian Permohonan : " + lookupName + "", "info");
+				}
+			});
+            // tableModalKelas
+            //     .column(1).search(classId, true, false )
+            //     .column(3).search($('#uraian').val())
+            //     .column(4).search($('#uraianEng').val())
+            //     .column(7).search('"show"')
+            //     .draw();
+
+
+
+            // var info = tableModalKelas.page.info();
+            // if (info.recordsDisplay == 0) {
+            //     swal("Informasi", "Silakan cari padanan kata jenis barang/jasa sesuai dengan sistem klasifikasi. Jika jenis barang/jasa tidak terdaftar, silakan hubungi Bagian Permohonan : " + lookupName + "", "info");
+            // }
+        });
+     	
+     	// Handle click on "Select all" control
+        $('#select-all-class').on('click', function () {
+            // Get all rows with search applied
+            var rows = tableModalKelas.rows({ page: 'current' }).nodes();
+            
+            if(this.checked)
+            	$(rows).addClass('chkClass');
+            else
+            	$(rows).removeClass('chkClass');
+            
+            // Check/uncheck checkboxes for all rows in the table
+            $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            $('input[type="checkbox"]', rows).change();
+        });
+        
+     	// Open Modal Detail Kelas
+		$('#btnDetailKelas').click(function () {
+			var rows1 = tableModalKelas.rows( '.chkClass' ).nodes();
+            $('input[type="checkbox"]', rows1).prop('checked', false);
+            $(rows1).removeClass('chkClass');
+
+            $('#select-all-class').prop("checked", false);
+            
+			$('#idListMClass').val('');
+            $('#uraian').val('');
+            $('#uraianEng').val('');
+            
+            tableModalKelas.$('input[type="checkbox"]').prop("checked", false);
+            
+            var classType = '';
+            var fileTypeTemp = $('#mfileTypes').val();
+            if (fileTypeTemp == 'MEREK_DAGANG') {
+                $('.optClassJasa').attr('hidden',true);
+                $('.optClassJasa').attr('disabled',true);
+                $('.optClassDagang').attr('hidden',false);
+                $('.optClassDagang').attr('disabled',false);
+                classType= '"Dagang"';
+            } else if (fileTypeTemp == 'MEREK_JASA') {
+            	$('.optClassJasa').attr('hidden',false);
+                $('.optClassJasa').attr('disabled',false);
+                $('.optClassDagang').attr('hidden',true);
+                $('.optClassDagang').attr('disabled',true);
+                classType= '"Jasa"';
+            } else {
+            	$('.optClassJasa').attr('hidden',false);
+                $('.optClassJasa').attr('disabled',false);
+                $('.optClassDagang').attr('hidden',false);
+                $('.optClassDagang').attr('disabled',false);
+            }
+            
+            tableModalKelas
+            .column(1).search('')
+            .column(3).search('')
+            .column(4).search('')
+            .column(7).search('"show"')
+            .column(8).search(classType)
+            .draw();
+       	});
+     	
+     	// Freeze enter key
+		$('#uraian').keydown( function(e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if(key == 13) {
+                e.preventDefault();
+                var inputs = $(this).closest('formTambahKelas').find('#uraian:visible');
+                inputs.eq( inputs.index(this)+ 1 ).focus();
+            }
+        });
+        
+		// Freeze enter key 
+        $('#uraianEng').keydown( function(e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if(key == 13) {
+                e.preventDefault();
+                var inputs = $(this).closest('formTambahKelas').find('#uraian:visible');
+                inputs.eq( inputs.index(this)+ 1 ).focus();
+            }
+        });
+        
+      	//Ketika Selesai Ceklis, hitung jumlah kelas
+        $('#btnPilihKelas').click(function () {
+            	console.log(selectedClass);
+            var arrClass = [];
+            for (var i = 0; i < selectedClass.length; i++) {
+            	if(arrClass.indexOf(selectedClass[i].kelas) === -1) {
+            		arrClass.push(selectedClass[i].kelas);
+            	}
+            }
+           	$('#jmlKelas').val(arrClass.length);
+            $('.countKelas').removeClass('has-error');
+            $('.countKelas').find('.help-block').remove();
+            $("#tambahKelas").modal('hide');
+        });
+
+        $('#btnAgree').click(function(e) {
+        	var isValidForm = $("#modalPesanBiling").valid();
+			e.preventDefault();
+			if(isValidForm){
+				jenis = $('#mfileTypeDetail').val() == "UMKM" ? "004003001001001" : "004003001002001";
+				jumlah = $('#jmlKelas').val();
+				var url = /*[[${urlCreateBilling}]]*/''
+					+ "?jenis=" + jenis
+					+ '&jumlah=' + jumlah;
+				window.open(url, '_blank');
+				$("#pesanKodeBilingModal").modal('hide');
+			}
+        });
+    });
+	
+	var appId = '';
+	function showModal(id) {
+        generateCaptcha();
+        appId = id;
+        $('#myModal').modal('show')
+    }
+
+    var captchaKey = '';
+
+    function generateCaptcha() {
+        $('#loadingCaptcha').css('display', 'block');
+        $.ajax({
+            url: /*[[@{/generate-captcha-sertifikat}]]*/'',
+            success: function (data) {
+                const captchaJson = JSON.parse(data);
+                captchaKey = captchaJson.captchaKey
+                $('#loadingCaptcha').css('display', 'none');
+                $('#imgCaptcha').attr('src', captchaJson.imgCaptcha);
+            },
+            error: function () {
+                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+            }
+        });
+    }
+
+    $('#download').click(function(e) {
+        e.preventDefault();
+        const captchaAnswer = $('#captchaAnswer').val();
+        const urlCetak = /*[[@{/print-sertifikat-merek}]]*/''
+        const urlCaptcha = /*[[@{/captcha-sertifikat-merek}]]*/''
+        if (captchaAnswer) {
+            $.ajax({
+                url: urlCaptcha,
+                type: 'POST',
+                data: {
+                    captchaAnswer,
+                    captchaKey,
+                },
+                beforeSend: function() {
+                    showLoading();
+                },
+                success: function(result) {
+                    if (result === 'false') {
+                        swal("Error", "Anda salah memasukan Captcha, silahkan coba lagi.", "error");
+                        hideLoading();
+                    } else {
+                        $.ajax({
+                            url: `${urlCetak}?no=${appId}`,
+                            type: 'POST',
+                            xhrFields: {
+                                responseType: 'blob'
+                            },
+                            success: function(result, statusText, xhr) {
+                                var filename = "";
+                                var disposition = xhr.getResponseHeader('Content-disposition');
+                                if (result.size > 0) {
+                                    if (disposition && disposition.indexOf('inline') !== -1) {
+                                        var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                                        var matches = filenameRegex.exec(disposition);
+                                        if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                                        var a = document.createElement('a');
+                                        var url = window.URL.createObjectURL(result);
+                                        a.href = url;
+                                        a.download = filename;
+                                        document.body.append(a);
+                                        a.click();
+                                        a.remove();
+                                        window.URL.revokeObjectURL(url);
+
+                                        $('#myModal').modal('hide')
+                                        $('#captchaAnswer').val('');
+                                        // generateCaptcha();
+                                        hideLoading();
+                                    } else {
+                                        swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                                    }
+                                } else {
+                                    swal("Error", "File tidak ditemukan.", "error");
+                                    hideLoading();
+                                }
+                            },
+                            error: function() {
+                                swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                            },
+                        });
+                    }
+                },
+                error: function() {
+                    swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+                }
+            });
+        }
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

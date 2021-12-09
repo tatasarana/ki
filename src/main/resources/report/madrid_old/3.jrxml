@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="3" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5074e2f0-89f8-4eb6-b3ef-03243fdf7c9f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA["D001991002796"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="regCount" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("1")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+OWN.APPLICATION_ID,
+COALESCE(OWN.TM_ENTITLEMENT,'0') AS TM_ENTITLEMENT,
+OWN.TM_COMMERCIAL_ADDRESS AS TM_COMMERCIAL_ADDRESS,
+A.REPRS_NAME AS REPRS_NAME,
+A.REPRS_ADDRESS AS REPRS_ADDRESS,
+A.REPRS_PHONE AS REPRS_PHONE,
+A.REPRS_EMAIL AS REPRS_EMAIL,
+C.PROV_NAME AS REPRS_PROV,
+COALESCE(E.APPLICATION_NO,' ') AS APPLICATION_NO,
+COALESCE(to_char(E.FILING_DATE,'DD/MM/YYYY'),' ') AS FILING_DATE,
+COALESCE(F.REG_NO,' ') AS REG_NO,
+COALESCE(to_char(F.REG_START_DATE,'DD/MM/YYYY'),' ') AS REG_START_DATE
+FROM TX_TM_OWNER OWN
+LEFT JOIN TX_TM_REPRS A ON A.APPLICATION_ID = OWN.APPLICATION_ID
+LEFT JOIN M_REPRS B ON B.REPRS_ID=A.REPRS_ID
+LEFT JOIN M_PROVINCE C ON C.PROV_ID=A.PROV_ID
+LEFT JOIN TX_TM_REFERENCE d ON D.APPLICATION_ID = OWN.APPLICATION_ID
+left join TX_TM_GENERAL e on e.APPLICATION_ID=D.REF_APPLICATION_ID
+left join TX_REGISTRATION F on F.APPLICATION_ID = E.APPLICATION_ID
+WHERE OWN.APPLICATION_ID=$P{applicationId}]]>
+	</queryString>
+	<field name="APPLICATION_ID" class="java.lang.String"/>
+	<field name="TM_ENTITLEMENT" class="java.lang.String"/>
+	<field name="TM_COMMERCIAL_ADDRESS" class="java.lang.String"/>
+	<field name="REPRS_NAME" class="java.lang.String"/>
+	<field name="REPRS_ADDRESS" class="java.lang.String"/>
+	<field name="REPRS_PHONE" class="java.lang.String"/>
+	<field name="REPRS_EMAIL" class="java.lang.String"/>
+	<field name="REPRS_PROV" class="java.lang.String"/>
+	<field name="APPLICATION_NO" class="java.lang.String"/>
+	<field name="FILING_DATE" class="java.lang.String"/>
+	<field name="REG_NO" class="java.lang.String"/>
+	<field name="REG_START_DATE" class="java.lang.String"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="100" y="25" width="225" height="224" uuid="8016c2f4-8165-4cb1-829b-94e4b34c8dda">
+					<printWhenExpression><![CDATA[$P{approve}!=null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="802" splitType="Stretch">
+			<textField>
+				<reportElement x="80" y="262" width="453" height="70" uuid="302ec6f6-24df-4a17-9325-048c884ca106"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[".............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="15" y="15" width="525" height="320" uuid="9e96ffd2-251c-4a81-aedf-2cd0a6f6876f"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="470" y="0" width="70" height="15" uuid="6d69f93d-14c3-4b22-a274-da79a9f1098a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[MM2(E), page 2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="47" y="20" width="307" height="20" uuid="aab8f2eb-6067-4ae0-b6b6-4459bc6076cc"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ENTITLEMENT TO FILE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="60" y="40" width="473" height="20" uuid="7ef587fe-fd38-4912-9eb6-81fd3b99b330"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Check the appropriate box :"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="47" y="40" width="13" height="20" uuid="f511a0a7-70b4-4250-9d4b-9b264cce144c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(a)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="60" y="60" width="13" height="18" uuid="a7e63561-7c6e-4695-8436-e288aa6ec68c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(i)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="105" y="60" width="428" height="18" uuid="3b54ead2-f361-4436-be99-64aa2cd2d6da"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["where the Contracting Party mentioned in item 1 is a State, the applicant is a national of that State; or"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="80" y="65" width="10" height="10" backcolor="#808080" uuid="9b0e1698-0639-42da-9bdf-4741030cd9f5"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_ENTITLEMENT}==null?" ":$F{TM_ENTITLEMENT}.equalsIgnoreCase("HakPengajuan1") ? "X":" "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="60" y="80" width="13" height="18" uuid="c62b7460-af18-4048-9da2-f52fd5e46f69"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(ii)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="105" y="78" width="428" height="31" uuid="f81a5c6c-22a9-4e7e-a3b7-35b2b853ee4c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["where the Contracting Party mentioned in item 1 is an organization, the name of the State of which the applicant is a national: ......................................................................... ;  or"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="80" y="86" width="10" height="10" backcolor="#808080" uuid="98e6e5fe-0985-4fc2-a468-11abad5c3a19"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_ENTITLEMENT}==null?" ":$F{TM_ENTITLEMENT}.equalsIgnoreCase("HakPengajuan2") ? "X":" "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="60" y="109" width="13" height="18" uuid="e0df9650-8dc0-428b-9c6b-dd0a321c14f4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(iii)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="105" y="109" width="428" height="18" uuid="b7956780-f6ad-4a01-bc08-a7c81e3f6248"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["the applicant is domiciled in the territory of the Contracting Party mentioned in item 1;  or"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="80" y="114" width="10" height="10" backcolor="#808080" uuid="b54fad76-331d-4c06-8ec7-b8a8305fc5a8"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_ENTITLEMENT}==null?" ":$F{TM_ENTITLEMENT}.equalsIgnoreCase("HakPengajuan3") ? "X":" "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="60" y="129" width="13" height="18" uuid="bb99a08d-5972-4e51-9cdc-db509620970a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(iv)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="105" y="127" width="428" height="31" uuid="f9e9a6fb-b314-4a3a-bdc5-5d1b68b11c46"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["the applicant has a real and effective industrial or commercial establishment in the territory of the Contracting Party mentioned in item 1."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="80" y="135" width="10" height="10" backcolor="#808080" uuid="ed7d8420-c927-46c9-8ac4-d1b4a0b61944"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TM_ENTITLEMENT}==null?" ":$F{TM_ENTITLEMENT}.equalsIgnoreCase("HakPengajuan4") ? "X":" "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="200" width="453" height="30" uuid="d4b15d5a-e252-46f6-b4ed-b530db4959a9"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["if the box in paragraph (a)(iii) of the present item has been checked, the domicile of the applicant in the territory of that Contracting Party, or,"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="60" y="200" width="13" height="18" uuid="a0367ed5-c755-4bc8-96af-bacd541cbfe5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(i)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="47" y="165" width="13" height="20" uuid="4b59dcad-25b1-4469-9e05-e79c7b650935"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(a)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="60" y="165" width="473" height="35" uuid="ab3f62f0-703d-49ea-abd2-b8286e8b15e3"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Where the address of the applicant, given in item 2(b), is not in the territory of the Contracting Party mentioned in item 1, indicate in the space provided below :"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="60" y="230" width="13" height="18" uuid="b6d95d66-e5b8-4e65-b419-dbdda8967682"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(ii)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="80" y="230" width="453" height="30" uuid="1f338484-9ab6-483e-94a5-f5576afac91a"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["if the box in paragraph (a)(iv) of the present item has been checked, the address of the applicant’s industrial or commercial establishment in the territory of that Contracting Party."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="260" width="453" height="70" uuid="a04f2fb8-8298-4f34-b159-f1309cd1e6e5"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TM_COMMERCIAL_ADDRESS}==null?"":$F{TM_COMMERCIAL_ADDRESS})]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="22" y="21" width="20" height="20" backcolor="#000000" uuid="59e216bb-d4a1-4f85-a7a8-3951b90c56f8"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="22" y="21" width="20" height="19" forecolor="#FFFFFF" uuid="81d3c3d1-8aa3-4f61-8a9c-15c98cbc439b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[3]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="15" y="337" width="525" height="230" uuid="1252c9a4-1c35-4fe0-8f4f-2b869abaeefb"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Transparent" x="47" y="343" width="307" height="20" uuid="39dc860b-474d-463b-bec1-8d7ae3aaa090"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[APPOINTMENT OF A REPRESENTATIVE]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="22" y="343" width="20" height="20" backcolor="#000000" uuid="688f3d65-624f-4a7d-9714-466caf8ff5f2"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="22" y="343" width="20" height="19" forecolor="#FFFFFF" uuid="6f628f4c-24cc-4254-a4c0-a0f9979ef01a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[4]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="60" y="363" width="473" height="18" uuid="1b11bf89-c840-4442-9e66-db5d418455c0"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Name : "+($F{REPRS_NAME}==null?"":$F{REPRS_NAME})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="47" y="363" width="13" height="18" uuid="c201c091-aaef-450f-9e12-58250312cdcf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(a)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="47" y="381" width="13" height="18" uuid="3989bc87-e98c-412a-8519-c35f125671f6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(b)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="60" y="386" width="473" height="70" uuid="27b46954-fec0-4fc6-a896-495315e0e4b6"/>
+				<textElement verticalAlignment="Top" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Address : "+(($F{REPRS_ADDRESS}==null ?"":$F{REPRS_ADDRESS}.trim()+", ")+($F{REPRS_PROV}==null?"":$F{REPRS_PROV}))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="60" y="399" width="473" height="57" uuid="70707f9c-dde5-4ee0-ba07-b15542c8bb47"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="47" y="459" width="278" height="18" uuid="eda0411c-3d30-4963-8e65-ef0a8ce722c5"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Telephone : "+($F{REPRS_PHONE}==null?"":$F{REPRS_PHONE}.contains(";") ? $F{REPRS_PHONE}.split(";")[0]:$F{REPRS_PHONE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="325" y="459" width="208" height="18" uuid="fae458ed-c282-4fba-b73e-b227af77036e"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fax : "+($F{REPRS_PHONE}==null?"":$F{REPRS_PHONE}.contains(";") ? $F{REPRS_PHONE}.split(";")[1]:"")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="47" y="477" width="486" height="18" uuid="704a287c-685d-4cad-a724-4530cccf238e"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["E-mail address : "+($F{REPRS_EMAIL}==null?"":$F{REPRS_EMAIL})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="47" y="495" width="486" height="68" uuid="83fee815-60f3-418b-96d4-f10e916dccc3"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["By providing an e-mail address, any further correspondence from the International Bureau related to this international application and its resulting international registration will be sent only electronically and, <b>therefore, you will no longer receive any paper correspondence</b>.  Likewise, any further correspondence from the International Bureau related to other international applications or international registrations for which the same e-mail address has been, or will be, provided will also be sent only electronically.  Please note that, for the purpose of electronic communication, there can be only one e-mail address recorded per each international registration"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="15" y="569" width="525" height="93" uuid="e5033e00-c3ae-4cbd-949d-16fa6b05e847"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Transparent" x="47" y="575" width="307" height="20" uuid="8d6ad231-54f3-4635-81e8-1f1d3e174bd0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BASIC APPLICATION OR BASIC REGISTRATION]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="22" y="575" width="20" height="20" backcolor="#000000" uuid="e57f0e1a-ebd4-4a22-9c33-123db6e2a4ce"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="22" y="575" width="20" height="19" forecolor="#FFFFFF" uuid="bd17323c-4ecf-4e73-85cf-eb72fe20f4b5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[5]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="47" y="599" width="215" height="20" uuid="bbeb3043-1e45-41c4-aaa5-373b6d01098a"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Basic application number : "+($P{regCount}==null?"":$P{regCount}.intValue() > 1 ? "" : $F{APPLICATION_NO})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="599" width="200" height="20" uuid="6db40d0f-7d5d-414e-8a3d-f468d47bc83a"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Date of the basic application : "+($P{regCount}==null?"":$P{regCount}.intValue() > 1 ? "" : $F{FILING_DATE})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="475" y="599" width="58" height="20" uuid="75d9ceb7-e680-4961-ac8b-31bacdaafb10"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(dd/mm/yyyy)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="47" y="619" width="215" height="20" uuid="488dc317-a63c-47ba-a06e-b5fb537e84db"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Basic registration number : "+($P{regCount}==null?"":$P{regCount}.intValue() > 1 ? "" : $F{REG_NO})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="619" width="200" height="20" uuid="32fb296b-86f9-4496-aaab-18f14abdaf44"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Date of the basic registration : "+($P{regCount}==null?"":$P{regCount}.intValue() > 1 ? "" : $F{REG_START_DATE})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="475" y="619" width="58" height="20" uuid="155e1400-97c8-4385-9acf-cbcc7ab8ae90"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(dd/mm/yyyy)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="15" y="783" width="100" height="17" uuid="5a225c0e-afa2-4ac2-a95a-240f9c5a0952"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="93" y="365" width="440" height="18" uuid="2b0af66e-7012-435c-9bde-d67700bed1bf"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["...................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="388" width="433" height="11" uuid="d263fe90-011f-4b2b-9824-cdbcf7881c76"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["...................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="461" width="230" height="18" uuid="88ae550f-ee57-4bd5-9066-bb473be47aae"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["......................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="325" y="461" width="206" height="18" uuid="8e116bcb-88ab-4d85-b1a6-99595fdc3e2d"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["......................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="113" y="479" width="420" height="18" uuid="aa1dc3e7-3be8-4497-8627-392186994c2f"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["......................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="154" y="603" width="109" height="18" uuid="c5d0713a-facd-43ca-bcaf-7524f21f7dd5"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["......................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="155" y="623" width="108" height="18" uuid="447a3c6e-c91d-4782-a8ad-28e96da9d39a"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["......................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="391" y="603" width="80" height="18" uuid="beba4407-163c-49cd-b568-c60ecf91b1a7"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["......................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="392" y="623" width="79" height="18" uuid="b7fa5f4e-7e29-41c4-b0d1-cd2cfe8d4b46"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["......................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="191" y="642" width="163" height="20" uuid="f58c0fcf-2a02-4833-986f-63de7ea1b6da">
+					<printWhenExpression><![CDATA[$P{regCount}.intValue()>1]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["SEE IN CONTINUATION SHEET"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

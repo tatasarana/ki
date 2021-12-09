@@ -1,0 +1,119 @@
+<div class="row display--none" js-direction="step-form-place" js-id="3" xmlns:th="http://www.w3.org/1999/xhtml">
+    <!--Header Judul-->
+    <div class="row col-md-12" style="margin-bottom: 15px">
+        <div class="col-md-4">
+            <h3>Data Prioritas</h3>
+        </div>
+        <div class="col-md-8">
+            <div class="pull-right">
+                <li js-direction="step-form" js-id="2" style="list-style-type:none; float:left;">
+                    <button type="button" class="btn btn-warning">
+                        Sebelumnya
+                    </button>
+                </li>
+                <li js-direction="step-form" js-id="4" style="list-style-type:none; float: right; margin-left:5px;">
+                    <button type="submit" class="btn btn-primary" id="btnSaveForm4">
+                        Simpan dan Lanjutkan
+                    </button>
+                </li>
+            </div>
+        </div>
+        <div class="pull-right">
+            <label class="col-form-label notice">Jika menggunakan Hak Prioritas dari negara lain. Jika tidak ada, maka tidak perlu diisi.</label>
+        </div>
+    </div>
+    <!--Form-->
+    <div class="row col-md-12">
+        <div class="col-md-12" style="margin-bottom: 15px">
+        	<div class="row">
+        	</div>
+            <a class="btn btn-info" id="btnTambahPrioritas" href="#" data-toggle="modal"
+               data-target="#tambahprioritas" th:if="${isReprs}">
+                <i class="fas fa-plus"></i>
+                Tambah
+            </a>
+            <div class="modal fade" id="tambahprioritas" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    	<form role="form" id="newModalForm">
+	                        <div class="modal-header">
+	                            <h5 class="modal-title" id="exampleModalLabel">
+	                                Tambah Hak Prioritas
+	                            </h5>
+	                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                                <span aria-hidden="true">&times;</span>
+	                            </button>
+	                        </div>
+	                        <div class="modal-body">
+	                            <div class="row">
+	                                <div class="col-md-12">
+	                                    <div class="form-group prioritas">
+	                                        <label class="col-form-label col-sm-3">Tanggal</label>
+	                                        <div class="col-sm-9">
+	                                            <input type="text" id="tglPrioritas" name="tglPrior" required="required"
+	                                                   class="form-control datepickerEndDate prioritas"
+	                                                   placeholder="Tanggal Prioritas"/>
+	                                        </div>
+	                                    </div>
+	                                    <div class="form-group prioritas">
+	                                        <label class="col-form-label col-sm-3">Negara/Kantor Merek</label>
+	                                        <div class="col-sm-9">
+	                                            <select class="form-control prioritas" id="negaraPrioritas" name="countryPrior" required="required">
+	                                                <option style="display: none" value="">-Pilih Negara-</option>
+	                                                <option th:each="listCountry : ${listCountry}"
+	                                                        th:value="${listCountry.id}"
+	                                                        th:text="${listCountry.name}"></option>
+	                                            </select>
+	                                        </div>
+	                                    </div>
+	                                    <div class="form-group prioritas">
+	                                        <label class="col-form-label col-sm-3">Nomor Prioritas</label>
+	                                        <div class="col-sm-9">
+	                                            <input type="text" id="noPrioritas" name="noPrior" required="required"
+	                                                   class="form-control prioritas" placeholder="Nomor Prioritas" maxlength="20"/>
+	                                        </div>
+	                                    </div>
+	                                    <div class="form-group prioritas">
+	                                        <label class="col-form-label col-sm-3">Catatan Prioritas</label>
+	                                        <div class="col-sm-9">
+	                                            <textarea id="catatanPrioritas" name="catatanPrior"
+	                                                   class="form-control prioritas" placeholder="Informasi terkait dengan Hak Prioritas jika hanya berlaku untuk sebagian Barang dan/atau Jasa" maxlength="255"/>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+	                        <div class="modal-footer">
+	                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>
+	                                Batal
+	                            </button>
+	                            <button type="submit" id="btnSimpanPrioritas" class="btn btn-primary"><i class="fas fa-save"></i>
+	                                Simpan
+	                            </button>
+	                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="table-container">
+                <table class="table table-striped table-bordered table-responsive" id="tblPrioritas">
+                    <thead>
+                    <tr>
+                        <th>Nomor Prioritas</th>
+                        <th>Tanggal Prioritas</th>
+                        <th>Negara/Kantor Merek</th>
+                        <th>Note</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

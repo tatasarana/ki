@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body">
+	<nav class="navbar navbar-default navbar-fixed-top" th:fragment="navbar">
+		<div class="container-fluid">
+			<div class="navbar-header" style="display: flex;">
+				<a class="navbar-brand">
+					<img th:src="@{/img/logo.png}"/>
+				</a>
+				<img th:src="@{/img/temankita-left.png}" class="logoTemanKita" />
+				<img th:src="@{/img/temankita-right.png}" class="descTemanKita" />
+			</div>
+		</div>
+	</nav>
+	<div class="my-wrapper full-layer" id="my-wrapper">
+		<div class="authentic-wrap display--flex" th:style="'background:url(' + @{/img/bg-login.jpg} + ') no-repeat center center fixed'">
+			<form class="form-horizontal" style="background-color: white;box-shadow: rgb(136, 136, 136) 0px 0px 15px;padding: 24px 48px;border-radius: 5px;width: 95%">
+				<div th:if="${txTmGeneral == null}" th:remove="tag">
+					<div class="alert alert-danger alert-block fade in">
+						<button data-dismiss="alert" class="close close-sm" type="button">
+							<i class="icon-remove"></i>
+						</button>
+						<p>Sertifikat tidak ditemukan</p>
+					</div>
+				</div>
+				<div th:if="${txTmGeneral != null}" th:object="${txTmGeneral}" th:remove="tag">
+					<div class="row">
+						<div class="form-group">
+							<label class="col-sm-3 col-xs-12 col-form-label">Jenis Dokumen</label>
+							<label class="col-sm-9 col-xs-12 col-form-label">Form Sertifikat Merek</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group">
+							<label class="col-sm-3 col-xs-12 col-form-label">Nomor Permohonan</label>
+							<label class="col-sm-9 col-xs-12 col-form-label">[[*{applicationNo}]]</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group">
+							<label class="col-sm-3 col-xs-12 col-form-label">Nomor Registrasi</label>
+							<label class="col-sm-9 col-xs-12 col-form-label">[[*{txRegistration.no}]]</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group">
+							<label class="col-sm-3 col-xs-12 col-form-label">Tanggal Penerimaan</label>
+							<label class="col-sm-9 col-xs-12 col-form-label">[[*{filingDateTemp}]]</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group">
+							<label class="col-sm-3 col-xs-12 col-form-label">Tanggal Kadaluarsa</label>
+							<label class="col-sm-9 col-xs-12 col-form-label">[[*{txRegistration.endDate()}]]</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group">
+							<label class="col-sm-3 col-xs-12 col-form-label">Nama Merek</label>
+							<label class="col-sm-9 col-xs-12 col-form-label">[[*{txTmBrand.name}]]</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group">
+							<label class="col-sm-3 col-xs-12 col-form-label">Nama Pemohon / Pemilik</label>
+							<!-- <label class="col-sm-9 col-xs-12 col-form-label">[[*{txTmOwner.name}]]</label> -->
+							<div th:each="owner :*{txTmOwner}" th:remove="tag" th:if="${(owner.status)}">
+								<label class="col-sm-9 col-xs-12 col-form-label">[[${owner.name}]]</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group">
+							<label class="col-sm-3 col-xs-12 col-form-label">Alamat Pemohon / Pemilik</label>
+							<!-- <label class="col-sm-9 col-xs-12 col-form-label">[[*{txTmOwner.address}]][[*{txTmOwner.mCity == null ? "" : (", " + txTmOwner.mCity.name)}]], [[*{txTmOwner.zipCode}]]</label> -->
+							<div th:each="owner :*{txTmOwner}" th:remove="tag" th:if="${(owner.status)}">
+								<label class="col-sm-9 col-xs-12 col-form-label">[[${owner.address}]][[${owner.mCity == null ? "" : (", " + owner.mCity.name)}]], [[${owner.zipCode}]]</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group">
+							<label class="col-sm-3 col-xs-12 col-form-label">Nama Konsultan</label>
+							<!-- <label class="col-sm-9 col-xs-12 col-form-label">[[*{(txTmRepresentative != null and txTmRepresentative.mRepresentative != null) ? txTmRepresentative.mRepresentative.name : "-"}]]</label> -->
+							<div th:each="reprs :*{txTmRepresentative}" th:remove="tag" th:if="${(reprs.status)}">
+								<label class="col-sm-9 col-xs-12 col-form-label">[[${(reprs != null and reprs.mRepresentative != null) ? reprs.mRepresentative.name : "-"}]]</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group">
+							<label class="col-sm-3 col-xs-12 col-form-label">Alamat Konsultan</label>
+							<!-- <label class="col-sm-9 col-xs-12 col-form-label">
+								<div th:remove="tag" th:if="*{(txTmRepresentative != null and txTmRepresentative.mRepresentative != null)}">
+									[[*{txTmRepresentative.mRepresentative.address}]]<div th:remove="tag" th:if="*{txTmRepresentative.mRepresentative.mCity != null}">, [[*{txTmRepresentative.mRepresentative.mCity.name}]]</div>, [[*{txTmRepresentative.mRepresentative.zipCode}]]
+								</div>
+								<div th:remove="tag" th:if="*{(txTmRepresentative == null or txTmRepresentative.mRepresentative == null)}">-</div>
+							</label> -->
+							<div th:each="reprs :*{txTmRepresentative}" th:remove="tag" th:if="${(reprs.status)}">
+								<label class="col-sm-9 col-xs-12 col-form-label">[[${reprs.mRepresentative.address}]][[${reprs.mRepresentative.mCity == null ? "" : (", " + reprs.mRepresentative.name)}]], [[${reprs.mRepresentative.zipCode}]]</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group">
+							<label class="col-xs-12 col-form-label">Adalah benar dan tercatat dalam database kami.</label>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div><div th:replace="fragment/js :: default"></div>
+</body>
+</html>

@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="8" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5074e2f0-89f8-4eb6-b3ef-03243fdf7c9f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<parameter name="approve" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="draftLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ttdp" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ttEmployee" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logoKI" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+A.STATUS_ID,A.APPLICATION_ID,A.UPDATED_BY,
+COALESCE(to_char(A.APPROVED_DATE,'DD/MM/YYYY'),' ') AS APPROVED_DATE,
+B.EMPLOYEE_NAME,
+COALESCE(B.EMPLOYEE_EMAIL,' ') AS EMPLOYEE_EMAIL
+FROM TX_TM_GENERAL A
+LEFT JOIN M_EMPLOYEE B ON A.APPROVED_BY = B.EMPLOYEE_ID
+WHERE A.APPLICATION_ID=$P{applicationId}]]>
+	</queryString>
+	<field name="STATUS_ID" class="java.lang.String"/>
+	<field name="APPLICATION_ID" class="java.lang.String"/>
+	<field name="UPDATED_BY" class="java.lang.String"/>
+	<field name="APPROVED_DATE" class="java.lang.String"/>
+	<field name="EMPLOYEE_NAME" class="java.lang.String"/>
+	<field name="EMPLOYEE_EMAIL" class="java.lang.String"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="100" y="25" width="225" height="224" uuid="8016c2f4-8165-4cb1-829b-94e4b34c8dda">
+					<printWhenExpression><![CDATA[$P{approve}!=null && $P{approve}.equals("0")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{draftLogo}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<summary>
+		<band height="802" splitType="Stretch">
+			<image>
+				<reportElement x="48" y="89" width="80" height="40" uuid="7efe9489-78d4-4a7d-b812-53ab6dfc2bef">
+					<printWhenExpression><![CDATA[$P{ttdp}!=null && !$P{ttdp}.equals("") && !$P{ttdp}.equals(" ")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{ttdp}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="47" y="89" width="485" height="40" uuid="302ec6f6-24df-4a17-9325-048c884ca106"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["...................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="15" y="15" width="525" height="124" uuid="9e96ffd2-251c-4a81-aedf-2cd0a6f6876f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="15" y="141" width="525" height="489" uuid="e5033e00-c3ae-4cbd-949d-16fa6b05e847"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="470" y="0" width="70" height="15" uuid="6d69f93d-14c3-4b22-a274-da79a9f1098a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[MM2(E), page 7]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="47" y="20" width="307" height="20" uuid="aab8f2eb-6067-4ae0-b6b6-4459bc6076cc"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SIGNATURE BY THE APPLICANT AND/OR HIS REPRESENTATIVE ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="48" y="40" width="485" height="18" uuid="3b54ead2-f361-4436-be99-64aa2cd2d6da"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(if required or allowed by the Office of origin)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="48" y="59" width="485" height="30" uuid="f81a5c6c-22a9-4e7e-a3b7-35b2b853ee4c"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["By signing this form, I declare that I am entitled to sign it under the applicable law :"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="22" y="21" width="20" height="20" backcolor="#000000" uuid="59e216bb-d4a1-4f85-a7a8-3951b90c56f8"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="22" y="21" width="20" height="19" forecolor="#FFFFFF" uuid="81d3c3d1-8aa3-4f61-8a9c-15c98cbc439b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[12]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="91" y="211" width="317" height="20" uuid="388a1c7f-6dd8-4463-b362-b602042def65"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["that the request to present this application was received on "+($F{APPROVED_DATE}==null?"":$F{APPROVED_DATE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="326" y="214" width="86" height="20" uuid="d0fc4277-33d9-4bc9-a4b6-bdaf2ff97587"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[".............................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="47" y="147" width="486" height="20" uuid="8d6ad231-54f3-4635-81e8-1f1d3e174bd0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CERTIFICATION AND SIGNATURE OF THE INTERNATIONAL APPLICATION BY THE OFFICE OF ORIGIN]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="22" y="147" width="20" height="20" backcolor="#000000" uuid="e57f0e1a-ebd4-4a22-9c33-123db6e2a4ce"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="22" y="147" width="20" height="19" forecolor="#FFFFFF" uuid="bd17323c-4ecf-4e73-85cf-eb72fe20f4b5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[13]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="15" y="783" width="100" height="17" uuid="5a225c0e-afa2-4ac2-a95a-240f9c5a0952"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MM2(E) - "+$P{lookup}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="65" y="171" width="468" height="20" uuid="cc47ff98-a352-4537-a685-862602cea069"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Certification"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="47" y="171" width="13" height="20" uuid="7ae49576-00ac-4f95-83d2-516ea461f404"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(a)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="65" y="191" width="468" height="20" uuid="b59719d6-c122-4123-a97a-6db79238a853"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["The Office of origin certifies"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="42" y="419" width="13" height="20" uuid="c3880059-cca3-40ff-b3f9-1e0dc0b04c9b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(b)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="65" y="419" width="468" height="20" uuid="515a970d-097a-435e-9c12-0d88d899f2e3"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Name of the Office : Directorate General of Intellectual Property, Indonesia"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="65" y="439" width="468" height="30" uuid="8049ea7d-8406-4115-8f77-fa4a249daea9"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["...................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="64" y="566" width="469" height="17" uuid="f5f4f9df-18e0-4114-b08e-ca6449a0aca3"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["...................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="65" y="211" width="13" height="20" uuid="c3252d37-31e3-41b6-90c3-3fc25b224e9a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(i)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="412" y="211" width="73" height="20" uuid="445af976-5405-418a-9da5-6f2d4f59cfb7"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(dd/mm/yyyy)."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="231" width="442" height="30" uuid="293396f4-ba6c-47cb-b766-4b1d0da1a601"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["that the applicant named in item 2 is the same as the applicant named in the basic application or the holder named in the basic registration mentioned in item 5, as the case may be,"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="65" y="231" width="13" height="20" uuid="e66f7412-22c0-4d95-a6ea-16b58f1bdbb9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(ii)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="91" y="261" width="442" height="30" uuid="db8cf274-fdaf-4839-8f3a-82c3e3f25de8"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["that any indication given in item 7(d), 9(d) or 9(e)(i) appears also in the basic application or the basic registration, as the case may be,"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="289" width="442" height="20" uuid="bb2fadee-d820-48a6-a924-6fdaa3b366db"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["that the mark in item 7(a) is the same as in the basic application or the basic registration, as the case may be,"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="309" width="442" height="45" uuid="701a609a-58a3-4f67-8348-d6d47c2cea59"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["that, if color is claimed as a distinctive feature of the mark in the basic application or the basic registration, the same claim is included in item 8 or that, if color is claimed in item 8 without having being claimed in the basic application or basic registration, the mark in the basic application or basic registration is in fact in the color or combination of colors claimed, and"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="354" width="442" height="30" uuid="4698abf4-19a1-44f2-b127-a25ed9dd5910"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["that the goods and services listed in item 10 are covered by the list of goods and services appearing in the basic application or basic registration, as the case may be."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="65" y="384" width="468" height="30" uuid="35d67bff-0ae5-4729-83a7-2f9dda2f2768"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Where the international application is based on two or more basic applications or basic registrations, the above declaration shall be deemed to apply to all those basic applications or basic registrations."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="43" y="471" width="13" height="20" uuid="6ffc31a5-2574-4486-92c7-e94e2d5ea54c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(c)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="66" y="471" width="468" height="20" uuid="d33f8962-c635-45a5-aecb-6c6c5365654a"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Name and signature of the official signing on behalf of the Office :"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="66" y="491" width="468" height="20" uuid="5cc900f9-7982-4de7-afeb-ae80632b9541"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["By signing this form, I declare that I am entitled to sign it under the applicable law :"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="41" y="590" width="13" height="20" uuid="ba2b4bcb-4439-4bc3-aa03-6ce3aebe3ebd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[(d)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="64" y="590" width="469" height="40" uuid="6eba0ac3-f6bd-4593-aeb8-2afd3887e6a7"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Name and e-mail address of the contact person in the Office : "+($F{EMPLOYEE_NAME}==null?"":$F{EMPLOYEE_NAME}.toUpperCase())+" - madrid.indonesia@dgip.go.id"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="65" y="602" width="469" height="28" uuid="fb372ea1-6886-4c03-bf24-78b350dfd998"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["...................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="311" y="592" width="218" height="20" uuid="1341f131-0e62-45db-a72c-d229a1675e5c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[".................................................................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="146" y="421" width="387" height="20" uuid="3946ec1b-53f6-4922-a21e-dc04232a621c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["................................................................................................................................................................................."]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="66" y="509" width="113" height="70" uuid="27bea525-34b2-4865-8d51-d87ae0967e4a">
+					<printWhenExpression><![CDATA[$P{ttEmployee}!=null && !$P{ttEmployee}.equals("") && !$P{ttEmployee}.equals(" ")]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<imageExpression><![CDATA[$P{ttEmployee}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="100" y="509" width="113" height="70" uuid="0c09bb07-84d2-4dc1-b3e7-cebc3b9d75e9">
+					<printWhenExpression><![CDATA[$P{logoKI}!=null && !$P{logoKI}.equals("") && !$P{logoKI}.equals(" ")]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<imageExpression><![CDATA[$P{logoKI}]]></imageExpression>
+			</image>
+		</band>
+	</summary>
+</jasperReport>

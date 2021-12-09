@@ -1,0 +1,232 @@
+<div class="row" th:classappend="${isEdit ? '' : 'display--none'}"
+	 th:attr="js-direction=${isEdit ? '' : 'step-form-place'}, js-id=${isEdit ? '' : '4'}"
+	 xmlns:th="http://www.w3.org/1999/xhtml">
+	<form class="form-horizontal" id="idForm5" th:object="${txTmBrand}"
+		  method="POST" enctype="multipart/form-data">
+		<!--<style>-->
+		<!--.agreeChekboxes input {-->
+		<!--margin: 0 5px 0 20px;-->
+		<!--width: 14px;-->
+		<!--height: 14px-->
+		<!--}-->
+
+		<!--li.disclaimerList {-->
+		<!--counter-increment: li-->
+		<!--}-->
+
+		<!--li.disclaimerList:before {-->
+		<!--content: '.'counter(li);-->
+		<!--color: black;-->
+		<!--display: inline-block;-->
+		<!--width: 1em;-->
+		<!--margin-left: -1.5em;-->
+		<!--margin-right: 0.5em;-->
+		<!--text-align: right;-->
+		<!--direction: rtl-->
+		<!--}-->
+
+		<!--</style>-->
+		<!--Header Judul-->
+		<div class="row col-md-12" style="margin-bottom: 15px">
+			<div class="col-md-4">
+				<h3>Data Merek</h3>
+			</div>
+			<div class="col-md-8">
+				<div class="pull-right" th:if="${!isEdit}">
+					<li js-direction="step-form" class="current" js-id="3"
+						style="list-style-type: none; float: left">
+						<button type="button" class="btn btn-warning">Sebelumnya</button>
+					</li>
+					<li style="list-style-type: none; float: right; margin-left: 5px;">
+						<button type="button" class="btn btn-primary" id="btnSaveForm5">Simpan
+							dan Lanjutkan</button>
+					</li>
+				</div>
+				<div class="pull-right" th:if="${isEdit}">
+					<button type="button" class="btn btn-danger"
+							onclick="window.history.go(-1); return false;">
+						<i class="fa fa-arrow-left"></i> Kembali
+					</button>
+					<button type="button" class="btn btn-primary" id="btnSaveForm5">
+						<i class="fas fa-save"></i> Simpan
+					</button>
+				</div>
+			</div>
+			<div class="pull-right">
+				<label class="col-form-label notice">Field Diisi dengan Bahasa Inggris; *) Wajib Diisi</label>
+			</div>
+		</div>
+
+		<div class="row col-md-12">
+			<div class="col-md-12">
+				<div class="m-portlet__body">
+					<div class="form-group m-form__group row">
+						<label class="col-md-3 col-form-label required-label">Tipe
+							Merek </label>
+						<div class="col-md-9">
+							<select class="form-control" th:field="*{mBrandType.id}"
+									id="mBrandType" th:required="true">
+								<option style="display: none" value="">-Pilih Tipe Merek-</option>
+								<option th:each="item,iterationStatus : ${listBrandType}"
+										th:value="${item.id}" th:text="${item.name}"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group required m-form__group row">
+					<label class="col-md-3 col-form-label required-label">Label Merek </label>
+					<div class="col-md-4">
+						<div class="custom-file input-group">
+							<input type="hidden" id="checkFileMerek" value="0"/>
+							<input type="file" style="display: none;"
+								   accept="image/jpeg,image/jpg" th:field="*{fileMerek}" /> <input
+								type="text" class="form-control"
+								placeholder="Tidak ada berkas dipilih" th:field="*{fileName}"
+								readonly="true" /> <img th:src="${imgMerek}" id="prevForm5"
+														style="max-width: 100%;" /><span
+								style="color: red; font-size: 12px">(Format File : Hanya
+							JPG, Max 5 MB, Dimensi Gambar Max. 1024 x 1024 Pixel) </span> <span id="file_error"
+																								style="color: red"></span>
+						</div>
+					</div>
+					<button type="button" class="btn btn-primary"
+							onclick="$('#fileMerek').trigger('click')">Pilih File
+					</button>
+				</div>
+				<div class="form-group m-form__group row">
+					<label class="col-md-3 col-form-label">Tandai sesuai dengan merek yang diajukan</label>
+					<div class="col-md-9">
+						<input type="checkbox" id="standardChar" th:field="*{standardChar}"/>
+						<label>Jika tipe merek adalah merek kata akan dianggap sebagai merek dalam karakter standar</label>
+					</div>
+
+					<div class="col-md-3 col-form-label"></div>
+					<div class="col-md-9">
+						<input type="checkbox" id="colorCombination" th:field="*{colorCombination}"/>
+						<label>Label merek merupakan merek warna atau susunan warna (warna abstrak tanpa elemen figuratif)</label>
+					</div>
+
+					<div class="col-md-3 col-form-label"></div>
+					<div class="col-md-9">
+						<input type="checkbox" id="typeCollective" th:field="*{typeCollective}"/>
+						<label>Merek kolektif</label>
+					</div>
+				</div>
+				<div class="form-group m-form__group row">
+					<label class="col-md-3 col-form-label">Elemen Kata Merek
+					</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" placeholder="Elemen kata dalam label merek (jika tersedia)."
+							   th:field="*{name}" id="nama" maxlength="255" />
+						<span class="help-block" th:if="${#fields.hasErrors('name')}"
+							  th:errors="*{name}"></span>
+					</div>
+				</div>
+
+				<div class="form-group m-form__group row">
+					<label class="col-md-3 col-form-label">Deskripsi
+						Merek </label>
+					<div class="col-md-9">
+						<textarea id="deskripsi"
+								  placeholder="Diisi dengan Bahasa Inggris."
+								  class="form-control" th:field="*{description}" maxlength="255"></textarea>
+						<span class="help-block"
+							  th:if="${#fields.hasErrors('description')}"
+							  th:errors="*{description}"></span>
+					</div>
+				</div>
+				<div class="form-group m-form__group row">
+					<label class="col-md-3 col-form-label">Unsur warna dalam
+						Label Merek </label>
+					<div class="col-md-9">
+						<textarea
+								placeholder="Diisi dengan Bahasa Inggris."
+								class="form-control" id="warna" th:field="*{color}"
+								maxlength="255"></textarea>
+						<span class="help-block" th:if="${#fields.hasErrors('color')}"
+							  th:errors="*{color}"> </span>
+					</div>
+				</div>
+				<div class="form-group m-form__group row">
+					<label class="col-md-3 col-form-label">Indikasi unsur warna dalam Merek jika ingin diperjelas </label>
+					<div class="col-md-9">
+						<textarea
+								placeholder="Diisi dengan Bahasa Inggris."
+								class="form-control" id="colorIndication" th:field="*{colorIndication}"
+								maxlength="255"></textarea>
+						<span class="help-block" th:if="${#fields.hasErrors('colorIndication')}"
+							  th:errors="*{colorIndication}"> </span>
+					</div>
+				</div>
+				<div class="form-group m-form__group row">
+					<label class="col-md-3 col-form-label"> </label>
+					<div class="col-md-9">
+						<label class="radio-inline"> <input type="radio"
+															class="btnRadio" name="adaRadio" value="disable" id="terjmh1" />Ada
+							Terjemahan
+						</label>
+						<label class="radio-inline"> <input type="radio"
+															class="btnRadio" name="adaRadio" value="disable" id="terjmh2" />Tidak
+							Ada Terjemahan
+						</label>
+					</div>
+				</div>
+				<div class="form-group m-form__group row">
+					<label class="col-md-3 col-form-label"> Terjemahan jika
+						Merek menggunakan istilah asing </label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" placeholder="English"
+							   th:field="*{translation}" id="translation" maxlength="150" />
+						<input type="text" class="form-control" placeholder="French"
+							   th:field="*{translationFr}" id="translationFr" maxlength="150" />
+						<input type="text" class="form-control" placeholder="Spanish"
+							   th:field="*{translationSp}" id="translationSp" maxlength="150" />
+						<span class="help-block"
+							  th:if="${#fields.hasErrors('translation')}"
+							  th:errors="*{translation}"> Tidak Ada Terjemahan </span>
+					</div>
+				</div>
+				<div class="form-group m-form__group row">
+					<label class="col-md-3 col-form-label"> Pengucapan jika
+						Merek menggunakan karakter huruf non-latin </label>
+					<div class="col-md-9">
+						<textarea id="pengucapanNonLatin"
+								  placeholder="Diisi dengan Bahasa Inggris."
+								  class="form-control" th:field="*{descChar}" maxlength="255"></textarea>
+						<span class="help-block" th:if="${#fields.hasErrors('descChar')}"
+							  th:errors="*{descChar}"> </span>
+					</div>
+				</div>
+				<div class="form-group m-form__group row">
+					<div class="col-md-3">
+						<label class="col-form-label"> Disclaimer </label> <br /> <span
+							style="color: black; font-size: 12px">(Tidak dilindungi
+							sebagai Merek)</span>
+					</div>
+					<div class="col-md-9">
+						<textarea placeholder="Diisi dengan Bahasa Inggris." class="form-control"
+								  id="disclaimer" th:field="*{disclaimer}" maxlength="255"></textarea>
+						<span class="help-block"
+							  th:if="${#fields.hasErrors('disclaimer')}"
+							  th:errors="*{disclaimer}"> </span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<!--<div style="margin-top:7px;" class="agreeChekboxes pull-left">-->
+			<!-- <label><b><input style="margin-left: 15px;" id="agreeDisclaimerVal"
+                type="checkbox" name="disclaimerCheckbox"
+                th:value="*{agreeDisclaimer}">Saya menyetujui dengan
+                persyaratan yang berlaku.</input></b></label> -->
+			<!--</div>-->
+			<!-- <button type="button" id="btnBatalDisclaimer" class="btn btn-danger">
+				<i class="fas fa-times"></i> Batal
+			</button>
+			<button type="submit" id="btnAgree" class="btn btn-primary">
+				<i class="fas fa-check-square"></i> Submit
+			</button> -->
+		</div>
+	</form>
+</div>

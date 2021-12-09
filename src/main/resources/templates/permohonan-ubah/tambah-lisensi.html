@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <div class="my-wrapper" id="my-wrapper">
+        <div class="my-wrapper--inner">
+            <div class="wrapper-content" id="general">
+                <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="fas fa-edit"></i> Data Lisensi
+                            </h3>
+                            <small class="sub-header">Lisensi - Tambah</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="content--center padding-content--left-right">
+                    <div class="wrapper--bg">
+                        <form id="idTambahLicense" class="form form-horizontal" th:object="${txLicense}">
+                            <input type="hidden" th:field="*{txTmGeneral.applicationNo}" id="formTambahLicenseAppId"
+                                   th:value="${noGeneral}"/>
+                            <input type="hidden" th:field="${txLicense.id}" th:value="${txLicense.id}" id="idLicense"/>
+                            <input type="hidden" value="isEdit" id="isEdit"/>
+                            <input type="hidden" th:field="${txLicense.status}" th:value="${txLicense.status}" id="status"/>
+                            <!--Header Judul-->
+                            <div class="row col-md-12" style="margin-bottom: 15px">
+                                <div class="col-md-4">
+                                    <h3>Data Lisensi</h3>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="pull-right">
+
+                                        <button type="button" class="btn btn-primary" id="SaveLicense">
+                                            <i class="fas fa-save"></i> Simpan
+                                        </button>
+                                        <button type="button" class="btn btn-danger"
+                                                onclick="window.history.go(-1); return false;"><i class="fa fa-arrow-left"></i>
+                                            Kembali
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="pull-right">
+                                    <label class="col-form-label notice">*) Wajib Diisi</label>
+                                </div>
+                            </div>
+                            <!--Form-->
+                            <div class="row col-md-12">
+                                <div class="row col-md-10">
+                                    <div class="col-md-12">
+                                       <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-4">Pilih Parent</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control"
+                                                        th:field="*{txLicenseParent}" id="parent">
+                                                    <option selected="selected" value="" paramLevel="0">UTAMA
+                                                    </option>
+                                                    <option th:each="listLicense : ${licenseList}"
+                                                    		th:value="${listLicense.id}"
+                                                            th:text="${listLicense.name}"
+                                                            th:attr="paramLevel=${listLicense.level == null ? 0 : listLicense.level}">
+                                                    </option>
+                                                </select>
+                                                <input type="hidden" th:field="*{level}" id="level"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label col-sm-4">Nomor Transaksi Pasca Permohonan</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control"
+                                                       placeholder="Nomor Transaksi Pasca Permohonan"
+                                                       th:field="*{txPostReception}" maxlength="255"/>
+                                                <span class="help-block"
+                                                      th:if="${#fields.hasErrors('txPostReception')}"
+                                                      th:errors="*{txPostReception}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-4">Nama</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control"
+                                                       placeholder="Nama Pemohon"
+                                                       th:field="*{name}" th:required="true" maxlength="100"/>
+                                                <span class="help-block"
+                                                      th:if="${#fields.hasErrors('name')}"
+                                                      th:errors="*{name}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-4">Kewarganegaraan</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control"
+                                                        th:field="*{nationality.id}"
+                                                        id="nationality" th:required="true">
+                                                    <option style="display: none" value="">-Pilih Kewarganegaraan-
+                                                    </option>
+                                                    <option th:each="listCountry : ${listCountry}"
+                                                            th:value="${listCountry.id}"
+                                                            th:text="${listCountry.name}">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label col-sm-4">Jenis
+                                                Lisensi</label>
+                                            <div class="col-sm-8">
+                                                <label class="radio-inline">
+                                                    <input type="radio" class="isChecked"
+                                                           name="jPerusahaan"
+                                                           th:field="*{type}" value="Perorangan"
+                                                           id="jp1"/>Perorangan
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="jPerusahaan"
+                                                           th:field="*{type}"
+                                                           value="Badan Hukum" id="jp2"/>Badan Hukum
+                                                </label>
+                                                <input type="hidden" th:value="*{type}"
+                                                       id="temp_licenseType"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-4">Negara</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" th:field="*{mCountry.id}"
+                                                        id="idCountry" th:required="true">
+                                                    <option style="display: none" value="">-Pilih Negara-
+                                                    </option>
+                                                    <option th:each="listCountry : ${listCountry}"
+                                                            th:value="${listCountry.id}"
+                                                            th:text="${listCountry.name}"></option>
+                                                </select>
+                                                <input type="hidden" th:value="*{mCountry.id}"
+                                                       id="temp_mCountry"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label col-sm-4">Provinsi</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control cDisable"
+                                                        th:field="*{mProvince.id}"
+                                                        id="idProvinsi">
+                                                    <option style="display: none" value="">-Pilih Provinsi-
+                                                    </option>
+                                                    <option th:each="listProvince : ${listProvince}"
+                                                            th:value="${listProvince.id}"
+                                                            th:text="${listProvince.name}"></option>
+                                                </select>
+                                                <input type="hidden" th:value="*{mProvince.id}"
+                                                       id="temp_mProvince"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label col-sm-4">Kabupaten/Kota</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control cDisable"
+                                                        th:field="*{mCity.id}" id="idKota">
+                                                        <option style="display: none" value="">-Pilih Kabupaten/Kota-</option>
+                                                        <option class="optCity" th:each="listCity : ${listCity}"
+                                                            th:value="${listCity.id}"
+                                                            th:text="${listCity.name}" th:classappend="${listCity.mProvince.id}">
+                                                    </option>
+                                                </select>
+                                                <input type="hidden" th:value="*{mCity.id}"
+                                                       id="temp_mCity"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-4">Alamat</label>
+                                            <div class="col-sm-8">
+                                                <textarea class="form-control" placeholder="Alamat"
+                                                          th:field="*{address}"
+                                                          th:required="true"
+                                                          maxlength="100">
+                                                </textarea>
+                                                <span class="help-block"
+                                                      th:if="${#fields.hasErrors('address')}"
+                                                      th:errors="*{address}">
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label col-sm-4">Kode Pos</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control"
+                                                       placeholder="Kode Pos"
+                                                       th:field="*{zipCode}" maxlength="9"/>
+                                                <span class="help-block"
+                                                      th:if="${#fields.hasErrors('zipCode')}"
+                                                      th:errors="*{zipCode}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label col-sm-4">Telepon</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control"
+                                                       placeholder="Nomor Telepon"
+                                                       th:field="*{phone}" maxlength="16"/>
+                                                <span class="help-block"
+                                                      th:if="${#fields.hasErrors('phone')}"
+                                                      th:errors="*{phone}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label col-sm-4">Email</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" placeholder="Email"
+                                                       th:field="*{email}"/>
+                                                <span class="help-block" th:if="${#fields.hasErrors('email')}"
+                                                      th:errors="*{email}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+												<label class="col-form-label required-label col-sm-4">Tanggal Mulai</label>
+											<div class="col-sm-8">
+												<input type="text" id="startDateLicense" th:field="*{startDateTemp}" th:required="true" class="form-control datepicker" placeholder="Tanggal Mulai"/>
+											</div>
+										</div>
+										<div class="form-group">
+												<label class="col-form-label required-label col-sm-4">Tanggal Berakhir</label>
+											<div class="col-sm-8">
+												<input type="text" id="endDateLicense" th:field="*{endDateTemp}" th:required="true" class="form-control datepicker" placeholder="Tanggal Berakhir"/>
+											</div>
+										</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	/*<![CDATA[*/ 
+		var csrf = /*[[${_csrf.token}]]*/'';
+		var redirect = /*[[@{/layanan/pratinjau-permohonan(no=${noGeneral})}]]*/'';
+        var isEdit = $("#isEdit").val();
+		var header = "X-CSRF-TOKEN";
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, csrf);
+        });
+        
+        var name = null;
+        var indVal = "ID";
+        var temp_mProvince = $('#temp_mProvince').val();
+        var temp_mCity = $('#temp_mCity').val();
+        var temp_country = $('#temp_mCountry').val();
+        
+        $(document).ready(function () {
+        	$("#idTambahLicense").validate({
+                messages: {
+                    "name": {
+                        required: "Field Nama Pemohon Wajib Diisi"
+                    },
+                    "nationality.id": {
+                        required: "Field Kewarganegaraan Diisi"
+                    },
+                    "mCountry.id": {
+                        required: "Field Negara Wajib Diisi"
+                    },
+                    "address": {
+                        required: "Field Alamat Wajib Diisi"
+                    },
+                    "startDateTemp":{
+                        required: "Field Tanggal Mulai Wajib Diisi"
+                    },
+                    "endDateTemp":{
+                        required: "Field Tanggal Berakhir Wajib Diisi"
+                    }
+                },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+            });
+        	
+        	$('#parent').change(function () {
+        		var level = $('option:selected', this).attr('paramLevel');
+        		$('#level').val(level);
+        	});
+        	
+        	$('#ckIdentitasSama').change(function () {       	
+                if (this.checked) {           	            	
+                    $('.ckIsDisable').attr("disabled", false);
+                } else {
+                    $('.ckIsDisable').closest('.form-group').removeClass('has-error');
+                    $('.ckIsDisable').next().remove();
+                    $('.ckIsDisable').attr("disabled", true);
+                    $('.ckIsDisable').val(null);
+                    $('.cDisable2').attr("disabled", true);
+                    $('.cDisable2').val(null);
+                }
+            });      
+        	
+        	$('.datepicker').datepicker({
+    			format: 'dd/mm/yyyy',
+    			autoclose: true,
+    			todayBtn: 'linked',
+    			todayHighlight: true,
+    			orientation: "top",
+    		});
+            
+            $('#idCountry').change(function () {
+                var kodeVal = this.value;
+                if (kodeVal === 'ID') <!--KODE INDONESIA-->
+                 {
+                    $('.cDisable').attr("disabled", false);
+                } else {
+                    $('.cDisable').attr("disabled", true);
+                     $('.cDisable').val(null);
+                }
+            });
+            
+            $('#idProvinsi').change(function () {
+                var idProv = this.value;
+                getCity(idProv, null);
+            });
+            
+            function getCity(idProv, value) {
+    	        $('.optCity').attr('hidden',true);
+    	        $('.optCity').attr("disabled", true);
+    	        $('.optCity.'+idProv).attr('hidden',false);
+    	        $('.optCity.'+idProv).attr('disabled',false);
+    	        $('#idKota').val($('#idProvinsi').val()==idProv ? value : null);
+            }
+        	
+        	$('.ckIsDisable').attr("disabled", true);
+            $('.cDisable').attr("disabled", true);
+            $('.isChecked').attr("checked", true);
+            $('.cDisable2').attr("disabled", true);
+            
+            if ($('#temp_licenseType').val() === "Perorangan") {
+                $('#jp1').prop('checked', true)
+            } else if ($('#temp_licenseType').val() === "Badan Hukum") {
+                $('#jp2').prop('checked', true)
+            }
+            if ($('#temp_mCountry').val() === indVal) {
+                $('.cDisable').attr("disabled", false);
+            }
+            getCity(temp_mProvince, temp_mCity);
+            if ($('#ckIdentitasSama').is(':checked')) {            	
+                $('.ckIsDisable').attr("disabled", false);
+            }
+        	
+        	$('#SaveLicense').on('click', function (e) {
+                 var isValidFormLicense = $("#idTambahLicense").valid();
+                 if (isValidFormLicense) {
+                     e.preventDefault();
+                     doSave();
+                 }
+            });
+        	
+        	function doSave() {
+				var level = $('#level').val();
+        		var parent = $('#parent').val();
+                var id = $('#idLicense').val();
+                var txTmGeneral = {
+                    applicationNo: $('#formTambahLicenseAppId').val()
+                };
+                var name = $('#name').val();
+                var nationality = {
+                    id: $('#nationality').val()
+                };
+                var type = $('input[name=type]:checked').val();
+                var mCountry = {
+                    id: $('#idCountry').val()
+                };
+                var mProvince = {
+                    id: $('#idProvinsi').val()
+                };
+                var mCity = {
+                    id: $('#idKota').val()
+                };
+                var address = $('#address').val();
+                var status = $('#status').val();
+                var zipCode = $('#zipCode').val();
+                var txPostReception = $('#txPostReception').val();
+                var phone = $('#phone').val();
+                var email = $('#email').val();
+                var startDate = $('#startDateLicense').val();
+                var endDate = $('#endDateLicense').val();
+                
+                var formData = {
+                	level: level,
+                	txLicenseParent: parent,
+                    id: id,
+                    txTmGeneral: txTmGeneral,
+                    name: name,
+                    nationality: nationality,
+                    type: type,
+                    mCountry: mCountry,
+                    mProvince: mProvince,
+                    mCity: mCity,
+                    address: address,
+                    status: status,
+                    zipCode: zipCode,
+                    txPostReception: txPostReception,
+                    phone: phone,
+                    email: email,
+                    startDate: startDate,
+                    endDate: endDate
+                };
+                $.ajax({
+                    type: 'POST',
+                    contentType: "application/json",
+                    url: /*[[@{/layanan/save-tambah-lisensi-petugas}]]*/'',
+                    data: JSON.stringify(formData),
+                    dataType: 'json',
+    	            beforeSend:function(){
+    		            showLoading();
+    	            },
+    	            complete:function(){
+    		            hideLoading();
+    	            },
+    	            success: function (data) {
+                        console.log("Sukses Save Form License");
+                        if (isEdit != undefined) {
+                            window.location.replace(redirect);
+                        }
+                    },
+    	            error: function (xhr, status) {
+    		            swal("Error", "Terjadi kesalahan pada aplikasi. Silakan muat ulang halaman ini.", "error");
+    	            }
+                });
+            }
+        });
+	/*]]>*/
+</script>
+</body>
+</html>

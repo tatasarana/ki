@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="7_country" language="groovy" pageWidth="110" pageHeight="842" columnWidth="110" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c758da60-27fb-4dc1-b67f-5e33d64ffc4d">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="start" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("0")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="applicationId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT *
+FROM(
+    SELECT ROWNUM AS R, GABUNG.*
+    FROM(
+        SELECT
+        COUNTRY.COUNTRY_CODE,
+        COUNTRY.COUNTRY_NAME,
+        CASE WHEN DETAIL.TM_MADRID_FEE_DETAIL_COUNTRY = COUNTRY.COUNTRY_CODE THEN 1 ELSE 0 END AS DETAIL
+        FROM M_COUNTRY COUNTRY
+        LEFT JOIN (
+        SELECT C.TM_MADRID_FEE_DETAIL_COUNTRY
+        FROM TX_TM_MADRID_FEE_DETAIL C
+        INNER JOIN TX_TM_MADRID_FEE B ON B.TM_MADRID_FEE_ID=C.TM_MADRID_FEE_ID
+        WHERE B.APPLICATION_ID = $P{applicationId}) DETAIL ON DETAIL.TM_MADRID_FEE_DETAIL_COUNTRY = COUNTRY.COUNTRY_CODE
+        WHERE IS_MADRID = 1
+        ORDER BY COUNTRY_CODE ASC
+        ) GABUNG)
+WHERE R BETWEEN $P{start} AND $P{end}]]>
+	</queryString>
+	<field name="R" class="java.math.BigDecimal"/>
+	<field name="COUNTRY_CODE" class="java.lang.String"/>
+	<field name="COUNTRY_NAME" class="java.lang.String"/>
+	<field name="DETAIL" class="java.math.BigDecimal"/>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField>
+				<reportElement x="15" y="0" width="18" height="13" uuid="5fb4fcf0-1f0e-41e3-9dd3-666fcf5c73ca"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COUNTRY_CODE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="10" height="10" uuid="28db75e1-d45c-4c9f-8a37-b442d6899a10"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DETAIL}.intValue() >0 ?"X":""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="33" y="0" width="76" height="13" uuid="b3f7acec-94d8-476d-a01e-49c07ac9b128"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COUNTRY_NAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

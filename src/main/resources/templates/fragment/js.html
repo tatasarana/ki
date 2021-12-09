@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="default" th:remove="tag">
+<script type="text/javascript" th:src="@{/js/jquery.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.validate.js}"></script>
+<script type="text/javascript" th:src="@{/js/additional-methods.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.js}"></script>
+<script type="text/javascript" th:src="@{/js/sweetalert.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/form.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery-ui.js}"></script>
+<script src="text/javascript" th:src="@{/js/combo-auto.js}"></script>
+<script src="text/javascript" th:src="@{/js/jquery-resizable.js}"></script>
+
+</div>
+<div th:fragment="main" th:remove="tag">
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var csrf = /*[[${_csrf.token}]]*/'';
+	var header = "X-CSRF-TOKEN";
+	$(document).ajaxSend(function (e, xhr, options) {
+		xhr.setRequestHeader(header, csrf);
+	});
+
+	function guid() {
+		return "ss-s-s-s-sss".replace(/s/g, s4);
+	}
+
+	function s4() {
+		return Math.floor((1 + Math.random()) * 0x10000)
+			.toString(16)
+			.substring(1);
+	}
+
+	var tabId = guid();
+	$(window).focus(function(){
+		localStorage.setItem("activeTab", tabId);
+	});
+
+	$(document).ready(function(){
+		localStorage.setItem("activeTab", tabId);
+		var userSessionTimeout=/*[[${#ctx.servletContext.getAttribute('userSessionTimeout')}]]*/-1;
+		if (!isNaN(userSessionTimeout) && userSessionTimeout > 0) {
+			localStorage.setItem("idleMs", 0);
+			window.setTimeout(checkIdle, 1000);
+			$(document).bind('mousemove', function(){resetActive()});
+			$(document).bind('keydown', function(){resetActive()});
+			$(document).bind('click', function(){resetActive()});
+		}
+
+		function checkIdle() {
+			var idleMs = 0;
+			if (localStorage.getItem("idleMs")) {
+				idleMs = parseInt(localStorage.getItem("idleMs"));
+			} else {
+				window.location.href=/*[[@{/login(error='ses-exp')}]]*/'';
+			}
+            if(idleMs >= userSessionTimeout) {
+                window.location.href=/*[[@{/login(error='ses-exp')}]]*/'';
+            } else {
+	            var activeTab = localStorage.getItem("activeTab");
+	            if (activeTab == tabId) {
+		            localStorage.setItem("idleMs", idleMs + 1000);
+	            }
+	            window.setTimeout(checkIdle, 1000);
+            }
+        }
+
+		function resetActive(){
+			localStorage.setItem("idleMs", 0);
+		}
+	});
+
+    // DRAG FLEXIBLE SIDEBAR $
+    (".panel-left").resizable({     handleSelector: ".splitter",     resizeHeight: false });
+    $("#myDragBar").click(function(){
+        var sbWidth = $("#mySideBar").width();
+        var wWidth = $(window).width();
+        console.log(sbWidth);
+        if(wWidth<=1024){
+            if(sbWidth==3){
+                if(wWidth<480){
+                    $("#mySideBar").width("200px");
+                    $("#mySideBar").css("max-width","100%");
+                    $(".ui-sidebar").width("200px");
+                    $("#myMain").css("margin-left","10%");
+                }else{
+                    $("#mySideBar").width("30%");
+                }
+            }else{
+                $("#mySideBar").width(3);
+                $(".ui-sidebar").width("100%");
+                $("#myMain").css("margin-left","");
+            }
+        }
+    });
+
+    /*]]>*/
+</script>
+</div>
+<div th:fragment="datatables" th:remove="tag">
+<script type="text/javascript" th:src="@{/js/datatables.js}"></script>
+<script type="text/javascript" th:src="@{/js/datatables.bootstrap.js}"></script>
+<script type="text/javascript" th:src="@{/js/datatables.buttons.js}"></script>
+<script type="text/javascript" th:src="@{/js/jszip.js}"></script>
+<script type="text/javascript" th:src="@{/js/buttons.html5.js}"></script>
+<script type="text/javascript" th:src="@{/js/datatables.responsive.js}"></script>
+<script type="text/javascript" th:src="@{/js/datatables.select.js}"></script>
+<script type="text/javascript">
+	$.fn.dataTable.ext.errMode = 'none';
+</script>
+</div>
+<div th:fragment="typeahead" th:remove="tag">
+<script type="text/javascript" th:src="@{/js/bootstrap3-typeahead.js}"></script>
+</div>
+<div th:fragment="datepicker" th:remove="tag">
+<script type="text/javascript" th:src="@{/js/bootstrap-datepicker.js}"></script>
+</div>
+<div th:fragment="pwstrength" th:remove="tag">
+<script type="text/javascript" th:src="@{/js/pwstrength.js}"></script>
+</div>
+<div th:fragment="datepickerEndDate" th:remove="tag">
+    <script type="text/javascript" th:src="@{/js/bootstrap-datepicker.js}"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            $('.datepickerEndDate').datepicker({
+                format: 'dd/mm/yyyy',
+                autoclose: true,
+                todayBtn: 'linked',
+                todayHighlight: true,
+            });
+        });
+    </script>
+</div>
+<div th:fragment="printarea" th:remove="tag">
+<script type="text/javascript" th:src="@{/js/jquery.PrintArea.js}"></script>
+</div>
+<div th:fragment="multiupload" th:remove="tag">
+<script type="text/javascript" th:src="@{/js/jquery.ui.widget.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.iframe-transport.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.fileupload.js}"></script>
+</div>
+</html>

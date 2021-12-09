@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+	<p th:replace="fragment/header :: navbar"/>
+	<div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+		<form class="form-horizontal" th:action="@{/layanan/detail-ubah-tipe-permohonan(no=${form.applicationNo})}" th:object="${form}" th:method="post">
+			<!-- <form class="form-horizontal" th:object="${form}"> -->
+			<div class="my-wrapper" id="my-wrapper">
+				<div class="my-wrapper--inner">
+					<div class="wrapper-content" id="permohonan-baru">
+						<div class="content--top border--bottom padding-content--left-right">
+							<div class="row">
+								<div class="col-md-12">
+									<h3 class="content--title text--bold">
+										<i class="fas fa-file-alt"></i> Permohonan - Ubah Tipe Permohonan [[${form.applicationNo}]]
+									</h3>
+									<small class="sub-header">Permohonan / Ubah Tipe Permohonan</small>
+								</div>
+							</div>
+						</div>
+						<div class="content--center padding-content--left-right">
+							<div class="wrapper--bg">
+								<div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+									<button data-dismiss="alert" class="close close-sm" type="button">
+										<i class="icon-remove"></i>
+									</button>
+									<p>[[${errorMessage}]]</p>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="col-sm-6 col-form-label">Asal Permohonan</label>
+											<label class="col-sm-6 col-form-label text-left" th:text="*{mFileSequence.desc}"></label>
+
+										</div>
+										<div class="form-group">
+											<label class="col-sm-6 col-form-label">Tipe Permohonan</label>
+											<label th:if="${isMadrid == 0}" class="col-sm-6 col-form-label text-left" th:text="*{mFileType.desc}"></label>
+											<label th:unless="${isMadrid == 0}" class="col-sm-6 col-form-label text-left" th:text="*{mFileTypeDetail.desc}"></label>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-6 col-form-label">Jenis Permohonan</label>
+											<label class="col-sm-6 col-form-label text-left"  th:text="*{mFileTypeDetail.desc}"></label>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-6 col-form-label">Tanggal Pengajuan</label>
+											<label class="col-sm-6 col-form-label text-left" th:value="*{applicationDate != null} ? *{#dates.format(applicationDate, 'dd/MM/yyyy HH:mm:ss')} : ''"
+												   th:text="*{#dates.format(applicationDate, 'dd/MM/yyyy HH:mm:ss')}"></label>
+										</div>
+										<input type="hidden" id="idNomorPermohonan"  th:value="*{applicationNo}" th:field="*{applicationNo}" />
+										<div class="form-group field--gap">
+											<label class="col-form-label col-sm-6 required-label">Tipe Permohonan Baru</label>
+											<div class="col-sm-6">
+												<select class="form-control"  id="idTypeFileNew"  th:field="*{mFileType.id}">
+													<option th:each="mFileType :${fileTypeList}" th:value="${mFileType.id}" th:text="${mFileType.desc}"/>
+												</select>
+											</div>
+										</div>
+										<div class="form-group field--gap">
+											<label class="col-form-label col-sm-6 required-label" >Nomor Permohonan Baru</label>
+											<div class="col-sm-6">
+												<input type="text" class="form-control" id="idNomorPermohonanNew" name="idNomorPermohonanNew" th:field="*{applicationNoNew}"
+													   th:required="true" maxlength="16"/>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="col-sm-6 col-form-label">Kode Billing</label>
+											<label class="col-sm-6 col-form-label text-left" th:text="*{bankCode}"></label>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-6 col-form-label">Jumlah Pembayaran</label>
+											<label class="col-sm-6 col-form-label text-left" th:text="*{totalPaymentTemp}"></label>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-6 col-form-label">Tanggal Pembayaran</label>
+											<label class="col-sm-6 col-form-label text-left" th:text="*{#dates.format(paymentDate, 'dd/MM/yyyy HH:mm:ss')}"></label>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-6 col-form-label">Jumlah Kelas</label>
+											<label class="col-sm-6 col-form-label text-left"  th:text="*{totalClassTemp}"></label>
+										</div>
+									</div>
+								</div>
+								<label class="col-form-label notice">*) Wajib Diisi</label>
+								<hr/>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="col-offset-sm-5 col-sm-7">
+												<a th:href="@{/layanan/list-data-permohonan}" class="btn btn-danger"><i class="fas fa-times"></i> Batal</a>
+												<button type="button" id="btnSimpan" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Proses </button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+	
+	$(document).ready(function(){
+		var no = $('#idNomorPermohonan').val();
+		
+		if($('#idTypeFileNew').val()=='MEREK_JASA') {
+			$('#idNomorPermohonanNew').val('J' + no.substring(1));
+		} else if($('#idTypeFileNew').val()=='MEREK_KOLEKTIF') {
+			$('#idNomorPermohonanNew').val('K' + no.substring(1));
+		} else if($('#idTypeFileNew').val()=='MEREK_DAGANG') {
+			$('#idNomorPermohonanNew').val('D' + no.substring(1));
+		} else if($('#idTypeFileNew').val()=='MEREK_DAGANG_JASA') {
+			$('#idNomorPermohonanNew').val('D' + no.substring(1));
+		}
+		
+		$('.datepicker2').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            todayBtn: 'linked',
+            todayHighlight: true,
+            endDate:'today',
+            orientation: "bottom"
+        });
+		$('form').validate({
+			messages:{
+				'applicationNoNew':{
+					required:/*[[#{field.error.required('Nomor Permohonan Baru')}]]*/''
+				},
+			},
+			highlight: function(element) {
+				$(element).closest('.form-group').addClass('has-error');
+			},
+			unhighlight: function(element) {
+				$(element).closest('.form-group').removeClass('has-error');
+			},
+			errorElement: 'span',
+			errorClass: 'help-block',
+			errorPlacement: function(error, element) {
+				if(element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else {
+					error.insertAfter(element);
+				}
+			},
+			submitHandler: function(form) {
+				showLoading();
+				$('form')[0].submit();
+			}
+		});
+		
+		$('#idTypeFileNew').change(function(e) {			
+			if($('#idTypeFileNew').val()=='MEREK_JASA') {
+				$('#idNomorPermohonanNew').val('J' + no.substring(1));
+			} else if($('#idTypeFileNew').val()=='MEREK_KOLEKTIF') {
+				$('#idNomorPermohonanNew').val('K' + no.substring(1));
+			} else if($('#idTypeFileNew').val()=='MEREK_DAGANG') {
+				$('#idNomorPermohonanNew').val('D' + no.substring(1));
+			} else if($('#idTypeFileNew').val()=='MEREK_DAGANG_JASA') {
+				$('#idNomorPermohonanNew').val('D' + no.substring(1));
+			}
+		});
+		
+		 $('#btnSimpan').click(function () {
+		    	if ($('form').valid()) {
+			    	swal("Konfirmasi", "Apakah Anda yakin akan proses data ini?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+			  		.then((value) => {
+			  			if (value) {
+			  				$('form').submit();	
+			  		  	} 
+			  		});
+		    	}
+		    });	
+		
+	});
+
+	
+</script>
+</body>
+</html>

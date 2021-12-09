@@ -1,0 +1,100 @@
+body,html{width:100%;height:100%;padding:0;margin:0;}
+
+
+.my-wrapper--inner {
+	color: #032741;
+	font-size: 18px;
+	font-weight: bold;
+	height: 80vh;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.my-wrapper--inner img {
+	margin-bottom: 12px;
+	margin-top: 15vh;
+	height: auto;
+	width: 240px;
+}
+
+.casaka{
+	background: url('../img/casaka2.jpg') no-repeat fixed;
+	background-size: cover;
+}
+
+.bghome{
+	/*background-color: #FFE20A;*/
+	display: flex;
+	flex-direction: row;border: 1px solid silver;
+	overflow: hidden;
+	/* avoid browser level touch actions */
+	xtouch-action: none;
+}
+
+.wrapcasaka{
+	/*padding-left:250px;*/
+	/*padding-top:52px;*/
+	overflow-y: none;
+	height:100vh;
+	background-color: white;
+}
+
+.casakatitle{
+    margin:10px;
+}
+
+.casakatop{
+	width: 100%;
+	height: 100%;
+	object-fit: scale-down;
+}
+
+.casakabot{
+	width: 100%;
+}
+
+@media (max-width: 1025px){
+	.wrapcasaka{
+		padding-left:100px;
+		padding-top:50px;
+	}
+
+	.bghome{
+		background-color: #16224A;
+		display: flex;
+		flex-direction: row;
+		border: 1px solid silver;
+		overflow: hidden;
+		/* avoid browser level touch actions */
+		xtouch-action: none;
+	}
+
+	.casakabot{
+		position: absolute;
+		bottom: 26px;
+		width: 100%;
+	}
+}
+
+
+
+@media (max-width: 768px){
+	.wrapcasaka{
+		padding-left:0px;
+		padding-top:50px;
+	}
+
+	.casakatop{
+		position: absolute;
+		top:30%;
+		width: 100%;
+	}
+}
+
+@media (max-width: 560px){
+	.casakabot{
+		position: absolute;
+		bottom: 64px;
+		width: 100%;
+	}
+}

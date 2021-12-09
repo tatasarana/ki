@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head">
+</head>
+<body th:inline="text">
+<div class="my-wrapper-body">
+    <div class="my-wrapper full-layer" id="my-wrapper">
+        <div class="my-wrapper--inner">
+            <div class="wrapper-content">
+                <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table>
+                                <tr>
+                                    <td rowspan="2" style="padding-right:5px"><img class="img-thumbnail" th:src="@{/img/pengayoman.png}" width="40px"/></td>
+                                    <td><h3><span>Registrasi Akun Aplikasi Merek, Paten dan Desain Industri</span></h3></td>
+                                </tr>
+                                <tr>
+                                    <td><small class="sub-header">Direktorat Jenderal Kekayaan Intelektual</small></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="permohonan-baru--step col-md-12">
+                    <div class="wrapper--bg">
+                    	<div th:if="${errorMessage}" class="alert alert-danger alert-block fade in">
+							<button data-dismiss="alert" class="close close-sm" type="button">
+								<i class="icon-remove"></i>
+							</button>
+							<p>[[${errorMessage}]]</p>
+						</div>
+                        <form class="form-horizontal" th:action="@{/daftar-online}" method="post" th:object="${form}" enctype="multipart/form-data">
+							
+                            <div class="row display">
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                    	<div class="form-group">
+                                            <div class="col-sm-5">
+                                                <label class="col-form-label required-label">Email</label>
+                                                <br/>
+                                                <span style="color: red;font-size:12px">Mohon menggunakan email yang aktif dan cek email secara berkala</span>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="email" class="form-control" placeholder="Email" th:field="*{email}" th:required="true" maxlength="255"/>
+                                                <span class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-5">Password</label>
+                                            <div class="col-sm-6" id="pwd-container">
+                                                <input type="password" class="form-control" placeholder="Password" th:field="*{password}" th:required="true" id="password" maxlength="255"/>
+                                                <span class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                                                <div class="pwstrength_viewport_progress" style="padding-top: 5px;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-5">Konfirmasi Password</label>
+                                            <div class="col-sm-6">
+                                                <input type="password" class="form-control" placeholder="Konfirmasi Password" th:field="*{passwordTemp}" th:required="true" maxlength="255"/>
+                                                <span class="help-block" th:if="${#fields.hasErrors('passwordTemp')}" th:errors="*{passwordTemp}"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 row">
+                                    	<div class="form-group">
+                                            <label class="col-form-label required-label col-sm-5">Jenis Pemohon</label>
+                                            <div class="col-sm-6">
+                                                <select class="form-control" th:field="*{applicantType}" th:required="true" id="applicantType" onchange="checkingChange()">
+                                                    <option style="display: none" value="">-Pilih Jenis Pemohon-</option>
+                                                    <option th:each="list : ${listJenisPemohon}"
+                                                            th:value="${list.name}"
+                                                            th:text="${list.name}"></option>
+                                                </select>
+                                                  <span class="help-block" th:if="${#fields.hasErrors('applicantType')}" th:errors="*{applicantType}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-5">
+                                                <label class="required-label">Pilih Wilayah</label>
+                                                <br/>
+                                                <span style="color: black;font-size:12px">(Jika Jenis Pemohon = Kanwil)</span>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <select class="form-control" th:field="*{fileSeqId}" id="fileSequenceId" th:required="true" disabled="true">
+                                                    <option style="display: none" value="">-Pilih Wilayah-</option>
+                                                    <option th:each="fileSeqlist : ${fileSequenceList}"
+                                                            th:value="${fileSeqlist.id}"
+                                                            th:text="${fileSeqlist.desc}"></option>
+                                                </select>
+                                                <span class="help-block" th:if="${#fields.hasErrors('fileSeqId')}" th:errors="*{fileSeqId}"></span>
+                                            </div>
+                                        </div>
+                                    	<div class="form-group">
+                						<input type="hidden" class="form-control kuasa" disabled="disabled" id="txTmReprsId" th:field="*{id}"/>
+                                            <div class="col-sm-5">
+                                                <label class="required-label">Masukkan No. Konsultan</label>
+                                                <br/>
+                                                <span style="color: black;font-size:12px">(Jika Jenis Pemohon = Konsultan KI)</span>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <!--<select class="form-control" th:field="*{mReprs.id}" id="reprsId" th:required="true" disabled="true">-->
+                                                    <!--<option style="display: none" value="">-Pilih Konsultan-</option>-->
+                                                    <!--<option th:each="list : ${listReprs}"-->
+                                                            <!--th:value="${list.id}"-->
+                                                            <!--th:text="${list.name} +' - '+ ${list.no}"></option>-->
+                                                <!--</select>-->
+                                                <input type="text" class="form-control" placeholder="Contoh:0010-2019" name="mReprs.id" value=""   th:required="true" id="reprsId" maxlength="255"/>
+                                                <span  id="pilihKonsultanBtn"></span>
+                                                <span class="help-block" th:if="${#fields.hasErrors('mReprs')}" th:errors="*{mReprs}"></span>
+                                                <div style="font-size: 15px">
+                                                <span id="dataKonsultanREST"></span>
+                                                    <span id="ERRORdataKonsultanREST" style="color:red;"></span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="uploadDoc" hidden="true">
+                                        	<div class="col-sm-5">
+	                                            <label>Upload Dokumen Pendukung</label>
+	                                            <br/>
+	                                            <span style="color: black;font-size:12px">(Format File : PDF | JPG)</span>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="file" class="form-control-file"
+                                                       accept="image/*,application/pdf,application/msword"
+                                                       th:field="*{fileCard}" th:required="true" disabled="true" data-msg-accept="File upload hanya boleh dengan format PDF/JPG" id="fileCard"/>
+                                                <span id="file_error2" style="color: red"></span>
+                                                <img th:src="${imgCard}" id="prev2" style="max-width: 30%; margin-top: 10px" class="image-thumbnail"/>
+                                                <input type="hidden" th:value="*{fileNameCard}"/>
+                                                <span class="help-block" th:if="${#fields.hasErrors('fileCard')}" th:errors="*{fileCard}"></span>
+                                            </div>
+                                        </div>
+                                        <span style="color: red;font-size:14px;font-style: italic">Untuk Pemohon Asing (WNA) wajib menggunakan Jasa Konsultan KI.</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="border-top: 1px solid #d6d6d6;padding-top: 30px;">
+                                    <div class="col-md-6">
+                                    	<div class="form-group">
+                                            <label class="col-form-label required-label col-sm-5">Nama Sesuai KTP</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" placeholder="Nama Sesuai KTP" th:field="*{name}" th:required="true" maxlength="255"/>
+                                                <span class="help-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-5">Nomor KTP</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" placeholder="Masukkan 16 digit Nomor KTP" th:field="*{no}" th:required="true" maxlength="16"  />
+                                                <span class="help-block" th:if="${#fields.hasErrors('no')}" th:errors="*{no}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-5">Jenis Kelamin</label>
+                                            <div class="col-sm-6">
+                                                <select class="form-control" th:field="*{gender.id}" id="gender" th:required="true">
+                                                    <option style="display: none" value="">-Pilih Jenis Kelamin-</option>
+                                                    <option th:each="list : ${listGender}"
+                                                            th:value="${list.id}"
+                                                            th:text="${list.name}"></option>
+                                                </select>
+                                                <span class="help-block" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></span>
+                                            </div>
+                                        </div>   
+                                        <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-5">Tanggal Lahir</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" th:field="*{birthDateTemp}" class="form-control datepicker" placeholder="Tanggal Lahir" th:required="true"/>
+                                            	<span class="help-block" th:if="${#fields.hasErrors('birthDateTemp')}" th:errors="*{birthDateTemp}"></span>
+                                            </div>
+                                        </div>    
+                                        <div class="form-group">
+					                        <label class="col-form-label required-label col-sm-5">Kewarganegaraan</label>
+					                        <div class="col-sm-6">
+					                            <select class="form-control" th:field="*{nationality.id}" id="nationality" th:required="true">
+					                                <option style="display: none" value="">-Pilih Kewarganegaraan-</option>
+					                                <option th:each="list : ${listCountry}" 
+					                                		th:value="${list.id}"
+					                                        th:text="${list.name}"></option>
+					                            </select>
+					                            <span class="help-block" th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}"></span>
+					                        </div>
+					                    </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-5">Nomor HP</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" placeholder="Nomor HP" th:field="*{phone}" th:required="true" maxlength="16"/>
+                                                <span class="help-block" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+                                            </div>
+                                            <label class="col-form-label notice">*) Wajib Diisi</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 row">
+                                    	<div class="form-group">
+                                            <label class="col-form-label required-label col-sm-5">Provinsi</label>
+                                            <div class="col-sm-6">
+                                                <select class="form-control" th:field="*{mProvince.id}" id="idProvinsi" th:required="true">
+                                                    <option style="display: none" value="">-Pilih Provinsi-</option>
+                                                    <option th:each="list : ${listProvince}"
+                                                            th:value="${list.id}"
+                                                            th:text="${list.name}"></option>
+                                                </select>
+                                                <span class="help-block" th:if="${#fields.hasErrors('mProvince')}" th:errors="*{mProvince}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-5">Kabupaten/Kota</label>
+                                            <div class="col-sm-6">
+                                                <select class="form-control" th:field="*{mCity.id}" id="idKota" th:required="true">
+                                                    <option style="display: none" value="">-Pilih Kabupaten/Kota-</option>
+                                                    <option th:each="list : ${listCity}"
+                                                            th:value="${list.id}"
+                                                            th:text="${list.name}"
+                                                            th:classappend="${list.mProvince.id}"
+                                                            class="optCity" hidden="true"></option>
+                                                </select>
+                                                <span class="help-block" th:if="${#fields.hasErrors('mCity')}" th:errors="*{mCity}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-5">Alamat Sesuai KTP</label>
+                                            <div class="col-sm-6">
+                                                <textarea class="form-control" th:field="*{address}" th:required="true" placeholder="Alamat Sesuai KTP" maxlength="255"></textarea>
+                                                <span class="help-block" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label required-label col-sm-5">Kode Pos</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" placeholder="Kode Pos" th:field="*{zipCode}" th:required="true" maxlength="9"/>
+                                                <span class="help-block" th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" hidden="true">
+                                        	<div class="col-sm-5">
+	                                            <label class="required-label">Upload KTP</label>
+	                                            <br/>
+	                                            <span style="color: red;font-size:12px">(Format File : PDF | JPG)</span>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="file" class="form-control-file"
+                                                       accept="image/*,application/pdf,application/msword"
+                                                       th:field="*{fileKtp}" th:required="true"/>
+                                                <span id="file_error1" style="color: red"></span>
+                                                <img th:src="${imgKtp}" id="prev1" style="max-width: 30%; margin-top: 10px" class="image-thumbnail"/>
+                                                <input type="hidden" th:value="*{fileNameNik}"/>
+                                                <span class="help-block" th:if="${#fields.hasErrors('fileKtp')}" th:errors="*{fileKtp}"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="border-top: 1px solid #d6d6d6;padding-top: 15px;">
+                                    <div class="col-md-12">
+                                     <div class="form-group">
+                                        <label class="col-form-label required-label">Pernyataan</label>
+                                        <div class="col-sm-12 input-group" style="display: flex;">
+                                            <input type="checkbox" id="ckSetuju" name="ckSetuju" th:required="true"/> &nbsp;
+                                            <label for="ckSetuju"> Bahwa pembuatan akun ini dibuat dengan data yang benar.
+                                                Apabila data yang dimasukkan tidak benar menjadi tanggung jawab pemohon,
+                                                dan DJKI berhak menghapus akun beserta permohonannya.
+                                            </label>
+                                        </div>
+                                        <span class="help-block" th:if="${ckSetujuError != null}" th:text="${ckSetujuError}"></span>
+                                     </div>
+                                    </div>
+                                </div>
+	                            <div class="col-md-12">
+		                            <div class="col-md-6">
+			                            <div class="form-group">
+				                            <label class="col-form-label required-label col-sm-5">Saya Bukan Robot</label>
+				                            <div class="col-sm-12">
+					                            <div class="col-sm-6">
+						                            <img th:src="${imgCaptcha}" style="width: 100%; height: auto;margin-bottom: 8px; display: block"/>
+						                            <input type="text" name="captchaAnswer" class="form-control" placeholder="Input captcha di atas" th:required="true"/>
+						                            <input type="hidden" name="captchaKey" th:value="${captchaKey}"/>
+						                            <span class="help-block" th:if="${captchaError != null}" th:text="${captchaError}"></span>
+					                            </div>
+				                            </div>
+			                            </div>
+		                            </div>
+	                            </div>
+                                <div class="col-md-12">
+                                    <a th:href="@{/login}" class="btn btn-danger"><i class="fas fa-times"></i> Batal</a>
+
+
+                                        <button id="submitButton"  type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Proses</button>
+
+
+                                    <span id="errorForm" style="color: red; display: none">Terjadi Kesalahan Harap Perbaiki !!</span>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <span style="font-size: 10px; text-align: right" th:text="${@environment.getProperty('app.releasedate')}">  </span>
+
+    </div>
+   </div>
+<!-- The Modal Zoom Preview -->
+<div id="modalImage" class="modal modal-image">
+
+  <!-- The Close Button -->
+  <span class="modal-image-close" id="modalImageClose">&times;</span>
+
+  <!-- Modal Content (The Image) -->
+  <img class="modal-image-content" id="modalImageContent"/>
+
+  <!-- Modal Caption (Image Text) -->
+  <div class="modal-image-caption" id="modalImageCaption"></div>
+
+<!-- The Modal Zoom Preview -->
+</div><div th:replace="fragment/js :: default"></div> <div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datepicker"></div>
+<div th:replace="fragment/js :: pwstrength"></div>
+<div th:replace="fragment/permohonan-online/js-form-3 :: form-3"></div>
+<div th:replace="fragment/js-registrasi-online :: registrasi-online"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    $(document).ready(function () {
+
+
+
+
+
+        var password_clone = $("#password");
+
+    	function translateThisThing(key) {
+    	    var translation = {
+    	    	errorList: "Errors:",
+   	    		wordMinLength: "Kata sandi Anda terlalu pendek (minimal 7 karakter)",
+   	    		wordLetterNumberCombo: "Password harus terdiri dari huruf besar, huruf kecil, angka",
+   	        	veryWeak: "Very Weak",
+   	         	weak: "Weak",
+   	            normal: "Normal",
+   	            medium: "Medium",
+   	            strong: "Strong",
+   	            veryStrong: "Very Strong"
+    	    };
+    	    return translation[key] || key;
+    	}
+    	var options = {
+    	    i18n: {
+    	        t: function(key) {
+	    			'use strict';
+	    			var result = translateThisThing(key); 
+	    			return result === key ? '' : result; 
+    	        }
+    	    },
+    	    ui: {
+    	    	bootstrap3: true,
+    	        raisePower: 1.1,
+    	        scores: [5, 25, 45, 60, 80],
+    	        showVerdictsInsideProgressBar: true,
+    	        showErrors: true,
+    	        colorClasses: ["danger", "danger", "warning", "warning", "success", "success"]
+    	    }
+    	};
+    	password_clone.pwstrength(options);
+        
+    	$('.datepicker').datepicker({
+			format: 'dd/mm/yyyy',
+			autoclose: true,
+			endDate: new Date((new Date()).getFullYear() - 19, 11, 31)
+		});
+    	
+    	$('#nationality').val('ID').change();
+    	
+    	$('form').validate({
+    		rules: {
+    			'password':{
+    				minlength: 7
+    				,hasAlphanumeric: true
+    			},
+    			'passwordTemp':{
+    				equalTo: "#password"
+				},
+				'no' : {
+					digits: '#no'
+					,minlength: 16
+					,maxlength: 16
+				},
+    	        'zipCode' : {
+					digits: '#zipCode'
+					,maxlength: 9
+				},
+				'phone' : {
+					digits: '#phone'
+					,maxlength: 16
+				}
+    		},
+			messages:{
+				'email':{
+					required:/*[[#{field.error.required('Email')}]]*/'',
+					email:/*[[#{field.error.invalid.format.email('Email')}]]*/''
+				},
+				'password':{
+					required:/*[[#{field.error.required('Password')}]]*/''
+					,minlength : /*[[#{field.error.minlength('Password', 7)}]]*/''
+				},
+				'passwordTemp':{
+					required:/*[[#{field.error.required('Konfirmasi Password')}]]*/'',
+					equalTo:/*[[#{field.error.not.match.field('Konfirmasi Password','Password')}]]*/''
+				},
+				'applicantType':{
+					required:/*[[#{field.error.required('Jenis Pemohon')}]]*/''
+				},
+				'name':{
+					required:/*[[#{field.error.required('Nama')}]]*/''
+				},
+				'no':{
+					required:/*[[#{field.error.required('No KTP')}]]*/''
+					,digits: /*[[#{field.error.not.numeric('No KTP')}]]*/''
+					,minlength : /*[[#{field.error.minlength('No KTP', 16)}]]*/''
+					,maxlength : /*[[#{field.error.maxlength('No KTP', 16)}]]*/''
+				},
+				'gender.id':{
+					required:/*[[#{field.error.required('Jenis Kelamin')}]]*/''
+				},
+				'birthDateTemp':{
+					required:/*[[#{field.error.required('Tanggal Lahir')}]]*/''
+				},
+				'nationality.id':{
+					required:/*[[#{field.error.required('Kewarganegaraan')}]]*/''
+				},
+				'phone':{
+					required:/*[[#{field.error.required('Telepon')}]]*/''
+					,digits: /*[[#{field.error.not.numeric('Telepon')}]]*/''
+					,maxlength : /*[[#{field.error.maxlength('Telepon', 16)}]]*/''
+				},
+				'mProvince.id':{
+					required:/*[[#{field.error.required('Provinsi')}]]*/''
+				},
+				'mCity.id':{
+					required:/*[[#{field.error.required('Kabupaten/Kota')}]]*/''
+				},
+				'address':{
+					required:/*[[#{field.error.required('Alamat')}]]*/''
+				},
+				'zipCode':{
+					required:/*[[#{field.error.required('Kode Pos')}]]*/''
+					,digits: /*[[#{field.error.not.numeric('Kode Pos')}]]*/''
+					,maxlength : /*[[#{field.error.maxlength('Kode Pos', 9)}]]*/''
+				},				
+				'mReprs.id':{
+					required:/*[[#{field.error.required('Pilih Konsultan')}]]*/''
+				},
+				'fileSeqId':{
+					required:/*[[#{field.error.required('Pilih Wilayah')}]]*/''
+				},
+				'fileCard':{
+					required:/*[[#{field.error.required('Upload Dokumen Pendukung')}]]*/''
+				},
+				'ckSetuju':{
+					required:/*[[#{field.error.required('Pernyataan')}]]*/''
+				},
+				'captchaAnswer':{
+					required:/*[[#{field.error.required('Captcha')}]]*/''
+				}
+			},
+			highlight: function(element) {
+				$(element).closest('.form-group').addClass('has-error');
+			},
+			unhighlight: function(element) {
+				$(element).closest('.form-group').removeClass('has-error');
+			},
+			errorElement: 'span',
+			errorClass: 'help-block',
+			errorPlacement: function(error, element) {
+				if(element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else {
+					error.insertAfter(element);
+				}
+			},
+			submitHandler: function(form) {
+				swal("Konfirmasi", "Apakah data sudah diisi dengan benar dan akan diproses lebih lanjut?", "warning", {buttons: { cancel:'Tidak', confirm:'Ya'}})
+	      		.then((value) => {
+	      			if (value) {
+				        showLoading();
+				        $('form')[0].submit();
+	      		  	}
+	      		});
+			}
+		});
+    	
+    	$('form').submit(function(){
+    		$("#file_error2").html("");
+    		$("#file_error1").html("");
+   		});
+    });
+    
+    $.validator.addMethod("hasAlphanumeric", function(value, element) {
+    	if (this.optional(element)) {
+    		return true;
+    	} else if (!/[A-Z]/.test(value)) {
+            return false;
+        } else if (!/[a-z]/.test(value)) {
+            return false;
+        } else if (!/[0-9]/.test(value)) {
+            return false;
+        }
+        return true;
+    }, "Field Password harus mengandung huruf besar, huruf kecil dan angka");
+    
+    $('#applicantType').change(function () {
+    	$('#reprsId').val(null);
+		$('#fileCard').val(null);
+		$('#fileSequenceId').val(null);
+		$("#file_error2").html("");
+		$('#prev2').attr('src', null);
+		
+    	if(this.value=='Konsultan KI') {
+    		$('#reprsId').attr('disabled',false);
+    		$('#fileCard').attr('disabled',true);
+    		$('#fileSequenceId').attr('disabled',true);
+    		$('#uploadDoc').attr('hidden', true);
+    	} else if(this.value=='Kanwil') {
+    		$('#fileSequenceId').attr('disabled',false);
+    		$('#reprsId').attr('disabled',true);
+    		$('#fileCard').attr('disabled',true);
+    		$('#uploadDoc').attr('hidden', true);
+    	} else if(this.value=='Lembaga Pendidikan' || this.value=='Lembaga Penelitian dan Pengembangan' || this.value=='Usaha Mikro, Kecil dan Menengah' || this.value=='Sentra KI'){
+    		$('#fileCard').attr('disabled',false);
+    		$('#fileSequenceId').attr('disabled',true);
+    		$('#reprsId').attr('disabled',true);
+    		$('#uploadDoc').attr('hidden', false);
+    	} else {
+
+    		$('#prev2').attr('src', null);
+            $('#prev2').attr('alt', null);
+            $('#fileCard').val(null);
+    		
+    		
+    		$('#reprsId').attr('disabled',true);
+    		$('#fileCard').attr('disabled',true);
+    		$('#fileSequenceId').attr('disabled',true);
+    		$('#uploadDoc').attr('hidden', true);
+    		
+    		$('#reprsId').closest('.form-group').removeClass('has-error');
+    		$('#reprsId').next().remove();
+    		$('#fileCard').closest('.form-group').removeClass('has-error');
+    		$('#fileSequenceId').closest('.form-group').removeClass('has-error');
+    		$('#fileSequenceId').next().remove();
+    		$('#fileCard').next().remove();
+    	}
+    });
+
+    if($('#applicantType').val()=='Konsultan KI') {
+	    $('#reprsId').attr('disabled',false);
+	    $('#fileCard').attr('disabled',true);
+	    $('#fileSequenceId').attr('disabled',true);
+	    $('#uploadDoc').attr('hidden', true);
+    } else if($('#applicantType').val()=='Kanwil') {
+    	$('#fileSequenceId').attr('disabled',false);
+    	$('#reprsId').attr('disabled',true);
+	    $('#fileCard').attr('disabled',true);
+	    $('#uploadDoc').attr('hidden', true);
+    } else if($('#applicantType').val()=='Lembaga Pendidikan' || $('#applicantType').val()=='Lembaga Penelitian dan Pengembangan' || $('#applicantType').val()=='Usaha Mikro, Kecil dan Menengah' || $('#applicantType').val()=='Sentra KI') {
+    	$('#fileSequenceId').attr('disabled',true);
+    	$('#reprsId').attr('disabled',true);
+	    $('#fileCard').attr('disabled',false);
+	    $('#uploadDoc').attr('hidden', false);
+    } else {
+	    $('#reprsId').attr('disabled',true);
+	    $('#fileCard').attr('disabled',true);
+	    $('#fileSequenceId').attr('disabled',true);
+	    $('#uploadDoc').attr('hidden', true);
+    }
+    
+    $('#idProvinsi').change(function () {
+    	$('.optCity').attr('hidden',true);
+    	$('.optCity').attr('disabled',true);
+    	$('.'+this.value).attr('hidden',false);
+    	$('.'+this.value).attr('disabled',false);
+    	$('#idKota').val(null);
+    });
+    
+    /* Button Limit Upload Label*/
+    /*$('#fileKtp').change(function () {
+    	var fileName = this.files[0].name;
+    	
+        $("#file_error1").html("");
+        $('#prev1').attr('src', null);
+        if (this.files[0].size > 5097152) {
+            $("#file_error1").html("Ukuran File harus dibawah 5 MB!");
+            $("#fileKtp").css("border-color", "#FF0000");
+            this.value = "";
+        }
+        if (this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#prev1').attr('src', e.target.result);
+                $('#prev1').attr('alt', fileName);
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });*/
+    $('#fileCard').change(function () {
+    	var fileName = this.files[0].name;
+    	
+        $("#file_error2").html("");
+        $('#prev2').attr('src', null);
+        if (this.files[0].size > 5097152) {
+            $("#file_error2").html("Ukuran File harus dibawah 5 MB!");
+            $("#fileCard").css("border-color", "#FF0000");
+            this.value = "";
+        }
+        if (this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {            	
+                $('#prev2').attr('src', e.target.result);
+                $('#prev2').attr('alt', fileName);
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    /* Button Limit Upload Label*/
+	
+    $(".image-thumbnail").click(function(){
+    	$("#modalImage").show();
+        $("#modalImageContent").attr("src", $(this).attr("src"));
+        $("#modalImageCaption").html($(this).attr("alt"));
+    });
+    
+    $("#modalImageClose").click(function(){
+    	$("#modalImage").hide();
+    });
+
+    function checkingChange() {
+        var apptype = $('#applicantType').val();
+        if (apptype == 'Konsultan KI'){
+            $('#pilihKonsultanBtn').show();
+        }
+        else{
+            $('#pilihKonsultanBtn').hide();
+        }
+    }
+
+
+
+</script>
+</body>
+</html>

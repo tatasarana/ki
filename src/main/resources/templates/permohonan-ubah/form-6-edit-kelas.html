@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragment/head :: head"></head>
+<body th:inline="text">
+<div class="my-wrapper-body bghome panel-container">
+    <p th:replace="fragment/header :: navbar"/>
+    <div id="mySideBar" class="panel-left">
+		<span id="position"></span>
+		<p th:replace="fragment/sidebar :: left"/>
+	</div>
+	<div id="myDragBar" class="splitter"></div>
+	<div id="myMain" class="panel-right">
+    <div class="my-wrapper" id="my-wrapper">
+        <div class="my-wrapper--inner">
+            <div class="wrapper-content">
+                <div class="content--top border--bottom padding-content--left-right">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="content--title text--bold">
+                                <i class="fas fa-edit"></i> Permohonan - Ubah
+                            </h3>
+                            <small class="sub-header">Pratinjau / Kelas</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="content--center padding-content--left-right">
+                    <div class="wrapper--bg">
+                        <form id="idForm1" class="form form-horizontal">
+                            <input type="hidden" id="form1AppId" th:value="${noGeneral}"/>
+                            <input type="hidden" value="isEdit" id="isEdit"/>
+                            <!--Header Judul-->
+                            <div class="row col-md-12" style="margin-bottom: 15px">
+                                <div class="col-md-4">
+                                    <h3>Data Kelas</h3>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="pull-right">
+                                        <button type="submit" class="btn btn-primary" id="form6push" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PSKLS')}"><i class="fas fa-save"></i>
+                                            Simpan
+                                        </button>
+                                        <button type="button" class="btn btn-danger"
+                                                onclick="window.history.go(-1); return false;"><i class="fa fa-arrow-left"></i>
+                                            Kembali
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--Form-->
+                            <div class="row col-md-12">
+                                <div class="col-md-12">
+                                    <!--Button-->
+                                    <div style="margin-bottom: 15px;">
+                                        <a class="btn btn-info" data-toggle="modal" data-target="#tambahKelas"
+                                           id="btnTambahKelas" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PTKLS')}">
+                                            <i class="fas fa-plus"></i>
+                                            Tambah
+                                        </a>
+                                        <a class="btn btn-primary" th:href="@{/layanan/form-edit-kelas/setujui-semua(no=${txTmGeneral.applicationNo})}"
+                                           id="btnSetujuiSemua" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PSTJSKLS')}">
+                                            <i class="fas fa-check"></i>
+                                            Setujui SEMUA
+                                        </a>
+                                        <a class="btn btn-warning" th:href="@{/layanan/form-edit-kelas/tolak-semua(no=${txTmGeneral.applicationNo})}"
+                                           id="btnTolakSemua" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PTLKSKLS')}">
+                                            <i class="fas fa-ban"></i>
+                                            Tolak SEMUA
+                                        </a>
+
+                                    </div>
+                                    <div style="margin-bottom: 15px;">
+                                        <div>Pilih Kelas untuk seleksi:</div>
+                                        <div class="col-md-4" style="padding-left: 0;z">
+                                            <select class="form-control m-input" id="classListPermohonan" name="classOption"></select>
+                                        </div>
+                                        <a class="btn btn-primary" id="btnSelectSemua" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PSTJ1KLS')}">
+                                            <i class="fas fa-check"></i>
+                                            Terima Per Kelas
+                                        </a>
+                                        <a class="btn btn-warning" id="btnUnSelectSemua" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PTLK1KLS')}">
+                                            <i class="fas fa-ban"></i>
+                                            Tolak Per Kelas
+                                        </a>
+                                        <a class="btn btn-danger" id="btnHapusPerKelas" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PHPS1KLS')}">
+                                            <i class="fas fa-times"></i>
+                                            Hapus Per Kelas
+                                        </a>
+                                    </div>
+
+                                    <!-- Modal Tambah Uraian -->
+                                    <div class="modal fade" id="tambahUraian" tabindex="-1" role="dialog"
+                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <form role="form" id="modalTambahUraian">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">
+                                                            Data Kelas Detail
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input type="hidden" id="txIdClass"/>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group txclassTambahUraian">
+                                                                    <label class="col-sm-4 col-form-label">Kelas</label>
+                                                                    <div class="col-sm-8">
+                                                                        <select class="form-control txclassTambahUraian"
+                                                                                id="insertUraian_classNo">
+                                                                            <option th:each="item : ${listMClass}"
+                                                                                    th:value="${item.id}" th:text="${item.no}"></option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group txclassTambahUraian">
+                                                                    <label class="col-sm-4 required-label col-form-label">Uraian
+                                                                        Barang/Jasa</label>
+                                                                    <div class="col-sm-8">
+																			<textarea class="form-control" name="desc"
+                                                                                      placeholder="Uraian Barang/Jasa" required="required" style="height: 130px" id="insertUraian_Uraian" maxlength="4000"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group txclassTambahUraian">
+                                                                    <label class="col-sm-4 required-label col-form-label">Uraian
+                                                                        Barang/Jasa (E)</label>
+                                                                    <div class="col-sm-8">
+																			<textarea class="form-control" name="descEn"
+                                                                                      placeholder="Uraian Barang/Jasa (English)"
+                                                                                      id="insertUraian_UraianEng" style="height: 130px" maxlength="4000"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group txclassTambahUraian">
+                                                                    <label class="col-sm-4 col-form-label">Serial E</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input class="form-control" name="serial1"
+                                                                               placeholder="Serial E"
+                                                                               id="insertUraian_serialE" maxlength="255"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group txclassTambahUraian">
+                                                                    <label class="col-sm-4 col-form-label">Serial F</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input class="form-control" name="serial2"
+                                                                               placeholder="Serial F"
+                                                                               id="insertUraian_serialF" maxlength="255"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group txclassTambahUraian">
+                                                                    <label class="col-sm-4 col-form-label">Nomor Dasar</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input class="form-control" name="baseNo"
+                                                                               placeholder="Nomor Dasar"
+                                                                               id="insertUraian_nomorDasar" maxlength="255"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group txclassTambahUraian">
+                                                                    <label class="col-form-label col-sm-4">Status</label>
+                                                                    <div class="col-sm-8">
+                                                                        <select class="form-control txclassTambahUraian"
+                                                                                id="insertUraian_statusFlag"
+                                                                                required="required">
+                                                                            <!--<option value="true">Aktif</option>-->
+                                                                            <option value="false">Tidak Aktif</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="pull-right">
+                                                                    <label class="col-form-label notice">*) Wajib Diisi</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-danger"
+                                                                data-dismiss="modal"><i class="fas fa-times"></i>
+                                                            Batal
+                                                        </button>
+                                                        <button type="button" id="btnSubmitTambahUraian"
+                                                                class="btn btn-primary"><i class="fas fa-save"></i>
+                                                            Proses
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Modal Tambah Kelas-->
+                                    <div class="modal fade" id="tambahKelas" tabindex="-1" role="dialog"
+                                         aria-labelledby="tambahKelas" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PTKLS')}">
+                                        <div class="modal-dialog" role="document" style="width:1200px; height:700px;">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title" id="myModalLabel">Kelas Barang/Jasa</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form id="formSearch6" method="post" class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 col-form-label">Kelas</label>
+                                                            <div class="col-sm-4">
+                                                                <select class="form-control m-input" id="idListMClass"
+                                                                        name="classOption" onchange="renderDescKelas()">
+                                                                    <option value="">-Semua Kelas-</option>
+                                                                    <option th:each="item : ${listMClass}"
+                                                                            th:value="${item.id}"
+                                                                            th:text="${item.desc}"
+                                                                            th:label="${item.no}"
+                                                                            th:classappend="'optClass' + ${item.type}">
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 col-form-label">Penjelasan Kelas</label>
+                                                            <div class="col-sm-8">
+                                                                <span id="resultdesc" style="height:auto" class="form-control"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 col-form-label">Uraian
+                                                                Barang/Jasa</label>
+                                                            <div class="col-sm-8">
+                                                                <textarea class="form-control"
+                                                                          placeholder="Uraian Barang/Jasa" id="uraian"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 col-form-label">Uraian Barang/Jasa
+                                                                (E)</label>
+                                                            <div class="col-sm-8">
+                                                                <textarea class="form-control"
+                                                                          placeholder="Uraian Barang/Jasa (English)"
+                                                                          id="uraianEng"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-sm-offset-4 col-sm-8">
+                                                                <button id="btnCariKelas" type="button"
+                                                                        class="btn btn-primary">
+                                                                        <i class="fas fa-search"></i> Cari
+                                                                </button>
+                                                                <a class="btn btn-warning" data-toggle="modal" data-target="#tambahUraian"
+                                                                   id="btnTambahUraian" th:if="${#authentication.getPrincipal().hasAccessMenu('T-PTUKLS')}">
+                                                                    <i class="fas fa-plus"></i>
+                                                                    Tambah Uraian
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+
+                                                    <div class="table-container">
+                                                        <table id="table6" class="table table-striped table-bordered table-responsive">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>
+                                                                    <input name="select_all" value="1" id="select-all-class" type="checkbox"/>
+                                                                </th>
+                                                                <th>Kelas</th>
+                                                                <th hidden="true"></th>
+                                                                <th width="40%">Uraian Barang/Jasa</th>
+                                                                <th width="40%">Uraian Barang/Jasa (E)</th>
+                                                            </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-danger"
+                                                                data-dismiss="modal"><i class="fas fa-times"></i>
+                                                            Batal
+                                                        </button>
+                                                        <button type="button" class="btn btn-primary"
+                                                                id="btnPilihKelas"><i class="fas fa-check"></i>
+                                                            Pilih
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--Modal Update TxClass-->
+                                    <div class="modal fade" id="updateTxClass" tabindex="-1" role="dialog"
+                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document" style="width: 900px; height: 700px;">
+                                            <div class="modal-content">
+                                            <form id="frmUpdateTxClass" class="form-horizontal">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">
+                                                            Catatan Untuk Kelas
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input type="hidden" id="txClassId" value=""/>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group txClass">
+                                                                    <label class="col-form-label col-sm-3">Catatan Kelas</label>
+                                                                    <div class="col-sm-9">
+	                                                                    <textarea id="noteTxClass" style="height:100px"
+	                                                                    		  placeholder="Catatan Kelas maximal 1000 karakter"
+                                                                                  class="form-control txClass"
+                                                                                  maxlength="1000"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                	<div class="modal-footer">
+                                                        <button type="button" class="btn btn-danger"
+                                                                data-dismiss="modal"><i class="fas fa-times"></i>
+                                                            Batal
+                                                        </button>
+                                                        <button type="button" id="btnUpdateTxClass"
+                                                                class="btn btn-primary"><i class="fas fa-save"></i>
+                                                            Tambahkan
+                                                        </button>
+                                                    </div>
+                                                    </div>
+                                                    </form>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <!--Modal Update Kelas-->
+                                    <div class="modal fade" id="updatedatakelas" tabindex="-1" role="dialog"
+                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <form role="form" id="modalUpdateKelas">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">
+                                                            Update Data Kelas Detail
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input type="hidden" id="txIdClass"/>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group txclassupdate">
+                                                                    <label class="col-sm-4 col-form-label">Kelas</label>
+																		<div class="col-sm-8">
+																			<select class="form-control txclassupdate"
+																				id="classNo">
+																				<option th:each="item : ${listMClass}"
+																					th:value="${item.id}" th:text="${item.no}"></option>
+																			</select>
+																		</div>
+																	</div>
+																	<div class="form-group txclassupdate">
+																		<label class="col-sm-4 col-form-label">Uraian
+																			Barang/Jasa</label>
+																		<div class="col-sm-8">
+																			<textarea class="form-control" name="desc"
+																				placeholder="Uraian Barang/Jasa" required="required" style="height: 130px" id="updateUraian" maxlength="4000"/>
+																		</div>
+																	</div>
+																	<div class="form-group txclassupdate">
+																		<label class="col-sm-4 col-form-label">Uraian
+																			Barang/Jasa (E)</label>
+																		<div class="col-sm-8">
+																			<textarea class="form-control" name="descEn"
+																				placeholder="Uraian Barang/Jasa (English)"
+																				id="updateUraianEng" style="height: 130px" maxlength="4000"/>
+																		</div>
+																	</div>
+																	<div class="form-group txclassupdate">
+																		<label class="col-sm-4 col-form-label">Serial E</label>
+																		<div class="col-sm-8">
+																			<input class="form-control" name="serial1"
+																				placeholder="Serial E"
+																				id="serialE" maxlength="255"/>
+																		</div>
+																	</div>
+																	<div class="form-group txclassupdate">
+																		<label class="col-sm-4 col-form-label">Serial F</label>
+																		<div class="col-sm-8">
+																			<input class="form-control" name="serial2"
+																				placeholder="Serial F"
+																				id="serialF" maxlength="255"/>
+																		</div>
+																	</div>
+																	<div class="form-group txclassupdate">
+																		<label class="col-sm-4 col-form-label">Nomor Dasar</label>
+																		<div class="col-sm-8">
+																			<input class="form-control" name="baseNo"
+																				placeholder="Nomor Dasar"
+																				id="nomorDasar" maxlength="255"/>
+																		</div>
+																	</div>
+																	<div class="form-group txclassupdate">
+																	<label class="col-form-label col-sm-4">Status</label>
+                                                                    <div class="col-sm-8">
+                                                                        <select class="form-control txclassupdate"
+                                                                                id="statusFlag"
+                                                                                required="required">
+                                                                                <option value="true">Aktif</option>
+                                               									<option value="false">Tidak Aktif</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    </div>
+																</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-danger"
+                                                                data-dismiss="modal"><i class="fas fa-times"></i>
+                                                            Batal
+                                                        </button>
+                                                        <button type="submit" id="btnUpdateKelas"
+                                                                class="btn btn-primary"><i class="fas fa-save"></i>
+                                                            Proses
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--End Modal Update Kelas-->
+
+                                    <!--Data Kelas-->
+                                    <div class="table-container">
+                                        <table class="table table-striped table-bordered table-responsive" id="tableTxTmClass">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>No.</th>
+                                                    <th>Kelas</th>
+                                                    <th style="width: 100px;">ID Kelas</th>
+                                                    <th style="width: 300px;">Uraian Barang/Jasa</th>
+                                                    <th style="width: 300px;">Uraian Barang/Jasa (E)</th>
+                                                    <th>Edition</th>
+                                                    <th style="width: 100px;">Catatan</th>
+                                                    <th>Username</th>
+                                                    <th style="width: 100px;">Status</th>
+                                                    <th>Koreksi</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div><div th:replace="fragment/js :: default"></div>
+<div th:replace="fragment/js :: main"></div>
+<div th:replace="fragment/js :: datatables"></div>
+<div th:replace="fragment/permohonan/js-form-6 :: form-6"></div>
+<script type="text/javascript" language="javascript" th:inline="javascript"></script>
+</body>
+</html>
